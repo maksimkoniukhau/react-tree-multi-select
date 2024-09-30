@@ -1,0 +1,15 @@
+{
+  "name": "rts",
+  "version": "1.0.0",
+  "description": "React tree select component",
+  "author": "Maksim Koniukau",
+  "keywords": [
+    "react",
+    "react-tree-select",
+    "tree-select",
+    "select",
+    "dropdown",
+    "typescript"
+  ],
+  "license": "MIT"
+}
