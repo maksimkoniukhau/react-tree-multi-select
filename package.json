@@ -16,8 +16,9 @@
     "typescript"
   ],
   "license": "MIT",
+  "main": "dist/index.umd.js",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack --config webpack.config.ts"
   },
   "dependencies": {
     "react-window": "1.8.10"
