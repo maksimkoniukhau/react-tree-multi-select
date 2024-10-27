@@ -3,7 +3,6 @@
     "outDir": "./dist",
     "removeComments": false,
     "noImplicitAny": false,
-    "suppressImplicitAnyIndexErrors": true,
     "jsx": "react",
     "sourceMap": true,
     "emitDecoratorMetadata": true,
@@ -17,8 +16,9 @@
     "allowSyntheticDefaultImports": true,
     "module": "esnext",
     "moduleResolution": "node",
-    "target": "es6",
-    "declaration": true
+    "target": "esnext",
+    "declaration": true,
+    "emitDeclarationOnly": true
   },
   "ts-node": {
     "compilerOptions": {
