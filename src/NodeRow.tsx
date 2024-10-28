@@ -1,0 +1,53 @@
+import React, {FC} from 'react';
+
+import {Node} from './Node';
+import {NodeExpandIcon} from './NodeExpandIcon';
+import {Checkbox} from './Checkbox';
+
+export interface NodeRowProps {
+  node: Node;
+  focused: boolean;
+  expanded: boolean;
+  onToggleNode: (e: React.MouseEvent<Element>) => void;
+  onClickExpandIcon: (e: React.MouseEvent<Element>) => void;
+}
+
+export const NodeRow: FC<NodeRowProps> = (props) => {
+
+  const {
+    node,
+    focused,
+    expanded,
+    onToggleNode,
+    onClickExpandIcon
+  } = props;
+
+  const expandIconWidth = node.hasChildren() ? 19 : 0;
+  const pL = node.deep * 19 - expandIconWidth;
+
+  const getNodeRowClasses = (): string => {
+    const disabledClass = node.disabled ? ' disabled' : '';
+    const selectedClass = node.selected ? ' selected' : node.partiallySelected ? ' partial' : '';
+    const expandedClass = node.expanded ? ' expanded' : '';
+    const focusedClass = focused ? ' focused' : '';
+    const matchedClass = node.matched ? ' matched' : '';
+    return `rts-node-row${disabledClass}${selectedClass}${expandedClass}${focusedClass}${matchedClass}`;
+  };
+
+  return (
+    <div
+      className={getNodeRowClasses()}
+      style={{paddingLeft: `${pL}px`}}
+    >
+      {node.hasChildren() && (
+        <NodeExpandIcon expanded={expanded} onClick={onClickExpandIcon}/>
+      )}
+      <div className="rts-node-wrapper" onClick={onToggleNode}>
+        <Checkbox checked={node.selected} partial={node.partiallySelected} disabled={node.disabled}/>
+        <span className="rts-label">
+           {node.name}
+        </span>
+      </div>
+    </div>
+  );
+};
