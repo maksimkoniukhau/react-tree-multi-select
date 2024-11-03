@@ -86,7 +86,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
     );
   };
 
-  const Row = (index) => (
+  const Row = (index: number) => (
     <div className="rts-node-row-wrapper">
       {withSelectAll && index === 0 ? (
         <SelectAll
