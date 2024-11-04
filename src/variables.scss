@@ -1,0 +1,12 @@
+/* ==========================================================================
+Variables
+========================================================================== */
+
+$checkbox-width-num: 16;
+$checkbox-height-num: 16;
+$checkbox-margin-right-num: 3;
+$checkbox-padding-left-num: $checkbox-width-num + $checkbox-margin-right-num;
+
+$checkbox-width: $checkbox-width-num + px;
+$checkbox-height: $checkbox-height-num + px;
+$checkbox-margin-right: $checkbox-margin-right-num + px;

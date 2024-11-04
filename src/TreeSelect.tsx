@@ -3,7 +3,13 @@ import './tree-select.scss';
 import React, {useCallback, useEffect, useReducer, useRef, useState} from 'react';
 
 import {CLEAR_ALL, INPUT, PATH_DELIMITER, SELECT_ALL} from './constants';
-import {areAllExcludingDisabledSelected, convertTreeArrayToArray, filterChips, mapNodeToDataType} from './utils';
+import {
+  areAllExcludingDisabledSelected,
+  convertTreeArrayToArray,
+  filterChips,
+  isAnyHasChildren,
+  mapNodeToDataType
+} from './utils';
 import {SelectAllCheckedState, TreeNode, Type} from './models';
 import {useOnClickOutside} from './hooks';
 import {
@@ -508,7 +514,9 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     }
   };
 
-  const containerClasses = 'rts-tree-select' + (className ? ` ${className}` : '');
+  const containerClasses = 'rts-tree-select'
+    + (!isAnyHasChildren(state.nodes) ? ' simple-select' : '')
+    + (className ? ` ${className}` : '');
 
   useOnClickOutside(treeSelectRef, handleOutsideEvent);
 

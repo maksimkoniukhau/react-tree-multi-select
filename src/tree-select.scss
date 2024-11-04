@@ -1,8 +1,20 @@
 /* ==========================================================================
 TreeSelect styles
 ========================================================================== */
+@import 'variables';
 
 .rts-tree-select {
+  &.simple-select {
+    .pl-1 {
+      padding-left: 0;
+    }
+  }
+
+  @for $i from 0 through 100 {
+    .pl-#{$i} {
+      padding-left: calc($checkbox-padding-left-num * $i) + px;
+    }
+  }
 
   @import 'checkbox';
 
@@ -155,7 +167,8 @@ TreeSelect styles
   .rts-node-row, .rts-select-all-container {
     display: flex;
     align-items: center;
-    padding: 3px 0;
+    padding-top: 3px;
+    padding-bottom: 3px;
     outline: none;
     color: #212529;
 
@@ -195,15 +208,13 @@ TreeSelect styles
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 16px;
-    height: 16px;
     cursor: pointer;
-    margin-right: 3px;
+    margin-right: $checkbox-margin-right;
   }
 
   .rts-node-expand-icon {
-    width: 16px;
-    height: 16px;
+    width: $checkbox-width;
+    height: $checkbox-height;
     opacity: 0.5;
 
     &.expanded {

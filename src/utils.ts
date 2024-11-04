@@ -47,6 +47,12 @@ export const isAnyExcludingDisabledSelected = (nodes: Node[]): boolean => {
     .some(node => node.selected);
 };
 
+export const isAnyHasChildren = (nodes: Node[]): boolean => {
+  return nodes
+    .filter(node => node.hasChildren())
+    .length > 0;
+};
+
 export const filterChips = (nodes: Node[], type: Type): Node[] => {
   return type === Type.MULTISELECT_TREE
     ? nodes.filter(node => node.selected && !node.parent?.selected)

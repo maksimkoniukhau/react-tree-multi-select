@@ -22,8 +22,8 @@ export const NodeRow: FC<NodeRowProps> = (props) => {
     onClickExpandIcon
   } = props;
 
-  const expandIconWidth = node.hasChildren() ? 19 : 0;
-  const pL = node.deep * 19 - expandIconWidth;
+  const expandIconWidth = node.hasChildren() ? 1 : 0;
+  const pL = node.deep - expandIconWidth;
 
   const getNodeRowClasses = (): string => {
     const disabledClass = node.disabled ? ' disabled' : '';
@@ -31,14 +31,12 @@ export const NodeRow: FC<NodeRowProps> = (props) => {
     const expandedClass = node.expanded ? ' expanded' : '';
     const focusedClass = focused ? ' focused' : '';
     const matchedClass = node.matched ? ' matched' : '';
-    return `rts-node-row${disabledClass}${selectedClass}${expandedClass}${focusedClass}${matchedClass}`;
+    const plClass = ` pl-${pL}`;
+    return `rts-node-row${disabledClass}${selectedClass}${expandedClass}${focusedClass}${matchedClass}${plClass}`;
   };
 
   return (
-    <div
-      className={getNodeRowClasses()}
-      style={{paddingLeft: `${pL}px`}}
-    >
+    <div className={getNodeRowClasses()}>
       {node.hasChildren() && (
         <NodeExpandIcon expanded={expanded} onClick={onClickExpandIcon}/>
       )}
