@@ -1,5 +1,5 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
-import {Virtuoso, VirtuosoHandle} from 'react-virtuoso'
+import {CalculateViewLocation, StateSnapshot, Virtuoso, VirtuosoHandle} from 'react-virtuoso'
 
 import {DEFAULT_OPTIONS_CONTAINER_HEIGHT, DEFAULT_OPTIONS_CONTAINER_WIDTH, NO_OPTIONS, SELECT_ALL} from './constants';
 import {preventDefaultOnMouseEvent} from './utils';
@@ -44,13 +44,45 @@ export const Dropdown: FC<DropdownProps> = (props) => {
 
   const itemCount = (displayedNodes.length || 1) + (withSelectAll ? 1 : 0);
 
+  const defaultCalculateViewLocation: CalculateViewLocation = (params) => {
+    const {
+      itemTop,
+      itemBottom,
+      viewportTop,
+      viewportBottom,
+      locationParams: {behavior, align, ...rest},
+    } = params;
+
+    let topElmSize = 0;
+    if (withSelectAll) {
+      virtuosoRef.current.getState((state: StateSnapshot) => {
+        topElmSize = state?.ranges
+          ?.find(range => range.startIndex === 0)
+          ?.size;
+      });
+    }
+
+    if (itemTop - topElmSize < viewportTop) {
+      return {...rest, behavior, align: align ?? 'start'};
+    }
+
+    if (itemBottom > viewportBottom) {
+      return {...rest, behavior, align: align ?? 'end'};
+    }
+
+    return null;
+  };
+
   useEffect(() => {
     if (focusedElement && virtuosoRef.current && displayedNodes.length) {
       const elementIndex = focusedElement === SELECT_ALL
         ? 0
-        : displayedNodes.indexOf(nodeMap?.get(focusedElement));
+        : displayedNodes.indexOf(nodeMap?.get(focusedElement)) + (withSelectAll ? 1 : 0);
       if (elementIndex >= 0) {
-        virtuosoRef.current.scrollToIndex(elementIndex);
+        virtuosoRef.current.scrollIntoView({
+          index: elementIndex,
+          calculateViewLocation: defaultCalculateViewLocation
+        });
       }
     }
   }, [focusedElement]);

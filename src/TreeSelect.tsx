@@ -277,9 +277,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     }
   };
 
-  const handleToggleNode = (node: Node) => (
-    e: React.MouseEvent<Element> | React.KeyboardEvent<Element>
-  ): void => {
+  const handleToggleNode = (node: Node) => (e: React.MouseEvent<Element> | React.KeyboardEvent<Element>): void => {
     node.handleToggle(type);
 
     const selectedNodes = node.disabled
