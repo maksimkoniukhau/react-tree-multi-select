@@ -4,10 +4,10 @@ import {CLEAR_ALL} from './constants';
 import {filterChips, isAnyExcludingDisabledSelected} from './utils';
 import {Type} from './models';
 import {Node} from './Node';
-import {FieldExpandIcon} from './FieldExpandIcon';
 import {Input} from './Input';
 import {Chip} from './Chip';
-import {ClearIcon} from './ClearIcon';
+import {FieldClear} from './FieldClear';
+import {FieldExpand} from './FieldExpand';
 
 export interface FieldProps {
   inputRef: RefObject<HTMLInputElement>;
@@ -96,9 +96,9 @@ export const Field: FC<FieldProps> = (props) => {
       </div>
       <div className="rts-actions">
         {withClearAll && isAnyExcludingDisabledSelected(nodes) && (
-          <ClearIcon focused={focusedFieldElement === CLEAR_ALL} onClick={onDeleteAll}/>
+          <FieldClear focused={focusedFieldElement === CLEAR_ALL} onClick={onDeleteAll}/>
         )}
-        <FieldExpandIcon expanded={showDropdown}/>
+        <FieldExpand expanded={showDropdown}/>
       </div>
     </div>
   );

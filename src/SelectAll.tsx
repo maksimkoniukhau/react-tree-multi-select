@@ -20,7 +20,7 @@ export const SelectAll: FC<SelectAllProps> = (props) => {
   const getSelectAllClasses = (): string => {
     const selectedClass = selected ? ' selected' : partial ? ' partial' : '';
     const focusedClass = focused ? ' focused' : '';
-    return `rts-select-all-container${selectedClass}${focusedClass}`;
+    return `rts-header-item${selectedClass}${focusedClass}`;
   };
 
   return (

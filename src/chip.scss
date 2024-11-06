@@ -1,0 +1,41 @@
+.rts-chip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 24px;
+  margin: 4px 4px 4px 0;
+  padding: 0 8px;
+  background-color: rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  cursor: default;
+
+  &.focused, &:hover {
+    box-shadow: 0 0 5px 1px rgba(161, 161, 161, 1);
+
+    &:not(.disabled) {
+      path {
+        fill: #ff3b3b;
+      }
+    }
+  }
+
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+
+    .rts-chip-clear-icon {
+      cursor: not-allowed;
+    }
+  }
+
+  .rts-chip-clear-icon {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    margin-left: 4px;
+
+    path {
+      fill: #6c6c6c;
+    }
+  }
+}

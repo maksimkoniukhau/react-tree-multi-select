@@ -32,7 +32,7 @@ export const NodeRow: FC<NodeRowProps> = (props) => {
     const focusedClass = focused ? ' focused' : '';
     const matchedClass = node.matched ? ' matched' : '';
     const plClass = ` pl-${pL}`;
-    return `rts-node-row${disabledClass}${selectedClass}${expandedClass}${focusedClass}${matchedClass}${plClass}`;
+    return `rts-list-item${disabledClass}${selectedClass}${expandedClass}${focusedClass}${matchedClass}${plClass}`;
   };
 
   return (

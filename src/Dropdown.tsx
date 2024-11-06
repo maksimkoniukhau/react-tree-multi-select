@@ -119,16 +119,14 @@ export const Dropdown: FC<DropdownProps> = (props) => {
   };
 
   const Row = (index: number) => (
-    <div className="rts-node-row-wrapper">
-      {withSelectAll && index === 0 ? (
+      withSelectAll && index === 0 ? (
         <SelectAll
           label={SELECT_ALL}
           checkedState={selectAllCheckedState}
           focused={focusedElement === SELECT_ALL}
           onChange={onChangeSelectAll}
         />
-      ) : renderNode(index)}
-    </div>
+      ) : renderNode(index)
   );
 
   return (

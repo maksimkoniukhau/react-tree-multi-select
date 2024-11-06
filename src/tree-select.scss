@@ -16,6 +16,8 @@ TreeSelect styles
     }
   }
 
+  @import 'chip';
+  @import 'input';
   @import 'checkbox';
 
   .rts-field {
@@ -49,61 +51,6 @@ TreeSelect styles
     width: 100%;
   }
 
-  .rts-chip {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 24px;
-    margin: 4px 4px 4px 0;
-    padding: 0 8px;
-    background-color: rgba(0, 0, 0, 0.08);
-    border-radius: 16px;
-    cursor: default;
-
-    &.focused, &:hover {
-      box-shadow: 0 0 5px 1px rgba(161, 161, 161, 1);
-    }
-
-    &.disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-  }
-
-  .rts-chip-clear-icon {
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-    margin-left: 4px;
-
-    path {
-      fill: #6c6c6c;
-    }
-
-    &.focused, &:hover {
-      &:not(.disabled) {
-        path {
-          fill: #ff3b3b;
-        }
-      }
-    }
-
-    &.disabled {
-      cursor: not-allowed;
-    }
-  }
-
-  .rts-input {
-    width: 0;
-    min-width: 70px;
-    flex-grow: 1;
-    min-height: 24px;
-    margin: 4px 0;
-    padding: 0;
-    border: none;
-    outline: none;
-  }
-
   .rts-actions {
     display: flex;
     align-items: center;
@@ -111,7 +58,7 @@ TreeSelect styles
     padding: 4px;
   }
 
-  .rts-icon-container {
+  .rts-field-clear, .rts-field-expand {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -119,11 +66,7 @@ TreeSelect styles
     padding: 4px;
   }
 
-  .rts-clear-icon-container {
-    border: 2px solid transparent;
-    border-radius: 100px;
-    padding: 2px;
-
+  .rts-field-clear {
     &.focused, &:hover {
       path {
         fill: #ff3b3b;
@@ -131,7 +74,13 @@ TreeSelect styles
     }
   }
 
-  .rts-clear-icon {
+  .rts-field-expand {
+    &.expanded {
+      transform: rotate(180deg);
+    }
+  }
+
+  .rts-field-clear-icon {
     width: 16px;
     height: 16px;
 
@@ -143,10 +92,6 @@ TreeSelect styles
   .rts-field-expand-icon {
     width: 16px;
     height: 16px;
-
-    &.expanded {
-      transform: rotate(180deg);
-    }
 
     path {
       fill: #6c6c6c;
@@ -160,11 +105,11 @@ TreeSelect styles
     border-radius: 4px;
   }
 
-  .rts-node-row-wrapper {
+  .rts-dropdown-row {
     background-color: #ffffff;
   }
 
-  .rts-node-row, .rts-select-all-container {
+  .rts-list-item, .rts-header-item {
     display: flex;
     align-items: center;
     padding-top: 3px;
@@ -177,7 +122,8 @@ TreeSelect styles
     }
   }
 
-  .rts-node-row {
+  .rts-list-item {
+    background-color: #ffffff;
     padding-right: $row-base-padding;
 
     &.matched .rts-label {
@@ -190,7 +136,8 @@ TreeSelect styles
     }
   }
 
-  .rts-select-all-container {
+  .rts-header-item {
+    background-color: #ffffff;
     border-bottom: 1px solid #ced4da;
     padding-left: $row-base-padding;
     padding-right: $row-base-padding;
