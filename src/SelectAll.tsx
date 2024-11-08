@@ -17,15 +17,13 @@ export const SelectAll: FC<SelectAllProps> = (props) => {
   const selected = checkedState === SelectAllCheckedState.SELECTED;
   const partial = checkedState === SelectAllCheckedState.PARTIAL;
 
-  const getSelectAllClasses = (): string => {
-    const selectedClass = selected ? ' selected' : partial ? ' partial' : '';
-    const focusedClass = focused ? ' focused' : '';
-    return `rts-header-item${selectedClass}${focusedClass}`;
-  };
+  const selectedClass = selected ? ' selected' : partial ? ' partial' : '';
+  const focusedClass = focused ? ' focused' : '';
+  const selectAllClasses = `rts-header-item${selectedClass}${focusedClass}`;
 
   return (
-    <div className={getSelectAllClasses()}>
-      <div className="rts-select-all-wrapper" onClick={onChange}>
+    <div className={selectAllClasses}>
+      <div className="rts-select-all" onClick={onChange}>
         <Checkbox checked={selected} partial={partial}/>
         <span className="rts-label">{label}</span>
       </div>

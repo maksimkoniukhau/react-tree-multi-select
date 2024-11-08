@@ -7,7 +7,7 @@ import {SelectAllCheckedState} from './models';
 import {Node} from './Node';
 import {NodeRow} from './NodeRow';
 import {SelectAll} from './SelectAll';
-import {EmptyRow} from './EmptyRow';
+import {NoOptions} from './NoOptions';
 
 export interface DropdownProps {
   nodeMap: Map<string, Node>;
@@ -98,7 +98,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
   const renderNode = (index: number): JSX.Element => {
     if (displayedNodes.length === 0) {
       return (
-        <EmptyRow label={NO_OPTIONS}/>
+        <NoOptions label={NO_OPTIONS}/>
       );
     }
     const nodeIndex = withSelectAll && nodesAmount > 0 ? index - 1 : index;
@@ -119,14 +119,14 @@ export const Dropdown: FC<DropdownProps> = (props) => {
   };
 
   const Row = (index: number) => (
-      withSelectAll && index === 0 ? (
-        <SelectAll
-          label={SELECT_ALL}
-          checkedState={selectAllCheckedState}
-          focused={focusedElement === SELECT_ALL}
-          onChange={onChangeSelectAll}
-        />
-      ) : renderNode(index)
+    withSelectAll && index === 0 ? (
+      <SelectAll
+        label={SELECT_ALL}
+        checkedState={selectAllCheckedState}
+        focused={focusedElement === SELECT_ALL}
+        onChange={onChangeSelectAll}
+      />
+    ) : renderNode(index)
   );
 
   return (

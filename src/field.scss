@@ -1,0 +1,72 @@
+.rts-field {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  padding: 4px;
+  font-weight: 400;
+  line-height: 1;
+  color: #212529;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+  &.focused {
+    border-color: #7777ff;
+    box-shadow: 0 0 3px 0 #0000ff;
+  }
+
+  .rts-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+  }
+
+  .rts-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+
+    .rts-field-clear, .rts-field-expand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .rts-field-clear {
+      &.focused, &:hover {
+        path {
+          fill: #ff3b3b;
+        }
+      }
+    }
+
+    .rts-field-expand {
+      &.expanded {
+        transform: rotate(180deg);
+      }
+    }
+
+    .rts-field-clear-icon {
+      width: 16px;
+      height: 16px;
+
+      path {
+        fill: #6c6c6c;
+      }
+    }
+
+    .rts-field-expand-icon {
+      width: 16px;
+      height: 16px;
+
+      path {
+        fill: #6c6c6c;
+      }
+    }
+  }
+}

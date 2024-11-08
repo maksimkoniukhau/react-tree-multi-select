@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 
 import {Node} from './Node';
-import {NodeExpandIcon} from './NodeExpandIcon';
+import {NodeExpand} from './NodeExpand';
 import {Checkbox} from './Checkbox';
 
 export interface NodeRowProps {
@@ -38,9 +38,9 @@ export const NodeRow: FC<NodeRowProps> = (props) => {
   return (
     <div className={getNodeRowClasses()}>
       {node.hasChildren() && (
-        <NodeExpandIcon expanded={expanded} onClick={onClickExpandIcon}/>
+        <NodeExpand expanded={expanded} onClick={onClickExpandIcon}/>
       )}
-      <div className="rts-node-wrapper" onClick={onToggleNode}>
+      <div className="rts-node" onClick={onToggleNode}>
         <Checkbox checked={node.selected} partial={node.partiallySelected} disabled={node.disabled}/>
         <span className="rts-label">
            {node.name}
