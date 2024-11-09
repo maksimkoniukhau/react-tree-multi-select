@@ -12,7 +12,7 @@ export interface NodeRowProps {
   onClickExpandIcon: (e: React.MouseEvent<Element>) => void;
 }
 
-export const NodeRow: FC<NodeRowProps> = (props) => {
+const NodeRowFC: FC<NodeRowProps> = (props) => {
 
   const {
     node,
@@ -49,3 +49,5 @@ export const NodeRow: FC<NodeRowProps> = (props) => {
     </div>
   );
 };
+
+export const NodeRow = React.memo(NodeRowFC);

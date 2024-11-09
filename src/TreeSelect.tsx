@@ -279,7 +279,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     }
   };
 
-  const handleToggleNode = (node: Node) => (e: React.MouseEvent<Element> | React.KeyboardEvent<Element>): void => {
+  const handleToggleNode = useCallback((node: Node) => (e: React.MouseEvent<Element> | React.KeyboardEvent<Element>): void => {
     node.handleToggle(type);
 
     const selectedNodes = node.disabled
@@ -296,7 +296,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     });
 
     callNodeChangeHandler(node, selectedNodes);
-  };
+  }, [state]);
 
   const handleExpandNode = (node: Node, expand: boolean): void => {
     node.handleExpand(Boolean(state.searchValue), expand);
@@ -315,12 +315,12 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     callNodeToggleHandler(node, state.nodes.filter(nod => nod.expanded));
   };
 
-  const handleClickExpandNode = (node: Node) => (e: React.MouseEvent<Element>): void => {
+  const handleClickExpandNode = useCallback((node: Node) => (e: React.MouseEvent<Element>): void => {
     const expand = state.searchValue
       ? !node.searchExpanded
       : !node.expanded;
     handleExpandNode(node, expand);
-  };
+  }, [state]);
 
   const handleKeyDownExpandNode = (expand: boolean): void => {
     if (state.showDropdown && state.focusedElement && state.focusedElement !== SELECT_ALL) {

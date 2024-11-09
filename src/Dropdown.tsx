@@ -1,13 +1,11 @@
-import React, {FC, useEffect, useRef, useState} from 'react';
+import React, {FC, JSX, useEffect, useRef, useState} from 'react';
 import {CalculateViewLocation, StateSnapshot, Virtuoso, VirtuosoHandle} from 'react-virtuoso'
 
-import {DEFAULT_OPTIONS_CONTAINER_HEIGHT, DEFAULT_OPTIONS_CONTAINER_WIDTH, NO_OPTIONS, SELECT_ALL} from './constants';
+import {DEFAULT_OPTIONS_CONTAINER_HEIGHT, DEFAULT_OPTIONS_CONTAINER_WIDTH, SELECT_ALL} from './constants';
 import {preventDefaultOnMouseEvent} from './utils';
 import {SelectAllCheckedState} from './models';
 import {Node} from './Node';
-import {NodeRow} from './NodeRow';
-import {SelectAll} from './SelectAll';
-import {NoOptions} from './NoOptions';
+import {ListItem} from './ListItem';
 
 export interface DropdownProps {
   nodeMap: Map<string, Node>;
@@ -44,7 +42,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
 
   const itemCount = (displayedNodes.length || 1) + (withSelectAll ? 1 : 0);
 
-  const defaultCalculateViewLocation: CalculateViewLocation = (params) => {
+  const calculateViewLocation: CalculateViewLocation = (params) => {
     const {
       itemTop,
       itemBottom,
@@ -81,53 +79,30 @@ export const Dropdown: FC<DropdownProps> = (props) => {
       if (elementIndex >= 0) {
         virtuosoRef.current.scrollIntoView({
           index: elementIndex,
-          calculateViewLocation: defaultCalculateViewLocation
+          calculateViewLocation
         });
       }
     }
   }, [focusedElement]);
 
-  const getDisplayedNode = (index: number): Node => {
-    return displayedNodes[index];
-  };
-
   const handleTotalListHeightChanged = (height: number): void => {
     setHeight(Math.min(DEFAULT_OPTIONS_CONTAINER_HEIGHT, height));
   };
 
-  const renderNode = (index: number): JSX.Element => {
-    if (displayedNodes.length === 0) {
-      return (
-        <NoOptions label={NO_OPTIONS}/>
-      );
-    }
-    const nodeIndex = withSelectAll && nodesAmount > 0 ? index - 1 : index;
-    const node = getDisplayedNode(nodeIndex);
-    const focused = focusedElement === node.path;
-    const expanded = searchValue ? node.searchExpanded : node.expanded;
-
-    return (
-      <NodeRow
-        key={node.path}
-        node={node}
-        focused={focused}
-        expanded={expanded}
-        onToggleNode={onToggleNode(node)}
-        onClickExpandIcon={onClickExpandNode(node)}
-      />
-    );
+  const itemContent = (index: number): JSX.Element => {
+    return <ListItem
+      index={index}
+      nodesAmount={nodesAmount}
+      displayedNodes={displayedNodes}
+      searchValue={searchValue}
+      withSelectAll={withSelectAll}
+      selectAllCheckedState={selectAllCheckedState}
+      focusedElement={focusedElement}
+      onChangeSelectAll={onChangeSelectAll}
+      onToggleNode={onToggleNode}
+      onClickExpandNode={onClickExpandNode}
+    />
   };
-
-  const Row = (index: number) => (
-    withSelectAll && index === 0 ? (
-      <SelectAll
-        label={SELECT_ALL}
-        checkedState={selectAllCheckedState}
-        focused={focusedElement === SELECT_ALL}
-        onChange={onChangeSelectAll}
-      />
-    ) : renderNode(index)
-  );
 
   return (
     <div
@@ -141,7 +116,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
         totalListHeightChanged={handleTotalListHeightChanged}
         totalCount={itemCount}
         topItemCount={withSelectAll ? 1 : 0}
-        itemContent={Row}
+        itemContent={itemContent}
       />
     </div>
   );
