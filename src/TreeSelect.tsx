@@ -147,15 +147,17 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
   }, [data]);
 
   const handleOutsideEvent = (event: MouseEvent | TouchEvent | FocusEvent) => {
-    dispatch({
-      type: ActionType.RESET,
-      payload: {
-        showDropdown: false,
-        searchValue: '',
-        focusedFieldElement: '',
-        focusedElement: ''
-      } as ResetPayload
-    });
+    if (state.showDropdown || state.searchValue || state.focusedFieldElement || state.focusedElement) {
+      dispatch({
+        type: ActionType.RESET,
+        payload: {
+          showDropdown: false,
+          searchValue: '',
+          focusedFieldElement: '',
+          focusedElement: ''
+        } as ResetPayload
+      });
+    }
   };
 
   const handleClickField = (e: React.MouseEvent<Element>): void => {
