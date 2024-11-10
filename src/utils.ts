@@ -1,7 +1,7 @@
+import React from 'react';
 import {PATH_DELIMITER} from './constants';
 import {Node} from './Node';
 import {TreeNode, Type} from './models';
-import React from "react";
 
 const fillArrayFromTreeArray = (treeArray: Node[], nodeArray: Node[]): void => {
   treeArray?.forEach(node => {
@@ -12,7 +12,7 @@ const fillArrayFromTreeArray = (treeArray: Node[], nodeArray: Node[]): void => {
   });
 };
 
-export const convertTreeArrayToArray = (treeArray: Node[]): Node[] => {
+export const convertTreeArrayToFlatArray = (treeArray: Node[]): Node[] => {
   const nodeArray: Node[] = [];
   fillArrayFromTreeArray(treeArray, nodeArray);
   return nodeArray;
@@ -59,7 +59,7 @@ export const filterChips = (nodes: Node[], type: Type): Node[] => {
     : nodes.filter(node => node.selected);
 };
 
-export const mapNodeToDataType = (node: Node, treeNode: TreeNode, treeNodeMap: Map<string, TreeNode>): TreeNode => {
+export const mapNodeToTreeNode = (node: Node, treeNode: TreeNode, treeNodeMap: Map<string, TreeNode>): TreeNode => {
   const data: TreeNode = {
     ...treeNode,
     label: node.name,
@@ -70,7 +70,7 @@ export const mapNodeToDataType = (node: Node, treeNode: TreeNode, treeNodeMap: M
   let children = [];
 
   if (node.children?.length) {
-    children = node.children.map(nod => mapNodeToDataType(nod, treeNodeMap.get(nod.path), treeNodeMap));
+    children = node.children.map(nod => mapNodeToTreeNode(nod, treeNodeMap.get(nod.path), treeNodeMap));
   }
 
   data.children = children;

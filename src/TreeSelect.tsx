@@ -5,10 +5,10 @@ import React, {useCallback, useEffect, useReducer, useRef, useState} from 'react
 import {CLEAR_ALL, INPUT, PATH_DELIMITER, SELECT_ALL} from './constants';
 import {
   areAllExcludingDisabledSelected,
-  convertTreeArrayToArray,
+  convertTreeArrayToFlatArray,
   filterChips,
   isAnyHasChildren,
-  mapNodeToDataType
+  mapNodeToTreeNode
 } from './utils';
 import {SelectAllCheckedState, TreeNode, Type} from './models';
 import {useOnClickOutside} from './hooks';
@@ -60,8 +60,8 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
   const treeSelectRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [treeNodeMap, setTreeNodeMap] = useState<Map<string, TreeNode>>(new Map());
-  const [nodeMap, setNodeMap] = useState<Map<string, Node>>(new Map());
+  const treeNodeMapRef = useRef<Map<string, TreeNode>>(new Map());
+  const nodeMapRef = useRef<Map<string, Node>>(new Map());
 
   const [state, dispatch] = useReducer<typeof reducer>(reducer, initialState);
 
@@ -89,8 +89,8 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
 
     node.children = children.map((child, idx) => mapTreeNodeToNode(child, idx.toString(), node));
 
-    treeNodeMap.set(nodePath, treeNode);
-    nodeMap.set(nodePath, node);
+    treeNodeMapRef.current.set(nodePath, treeNode);
+    nodeMapRef.current.set(nodePath, node);
 
     return node;
   };
@@ -109,10 +109,10 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
       nodeTree.push(mapTreeNodeToNode(treeNode, index.toString(), null));
     });
 
-    const nodes = convertTreeArrayToArray(nodeTree);
+    const nodes = convertTreeArrayToFlatArray(nodeTree);
 
     nodes.forEach(node => {
-      const treeNode = treeNodeMap.get(node.path);
+      const treeNode = treeNodeMapRef.current.get(node.path);
       if (treeNode?.selected) {
         // handleSelect (not handleToggle) should be used!!!
         node.handleSelect(type);
@@ -121,7 +121,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     // disabled should be processed in separate cycle after selected,
     // cause disabled node initially might be selected!!!
     nodes.forEach(node => {
-      const treeNode = treeNodeMap.get(node.path);
+      const treeNode = treeNodeMapRef.current.get(node.path);
       if (treeNode?.disabled) {
         node.handleDisable(type);
       }
@@ -222,9 +222,9 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
 
   const callNodeToggleHandler = (currentNode: Node, expandedNodes: Node[]): void => {
     if (onNodeToggle) {
-      const currentTreeNode = mapNodeToDataType(currentNode, treeNodeMap.get(currentNode.path), treeNodeMap);
+      const currentTreeNode = mapNodeToTreeNode(currentNode, treeNodeMapRef.current.get(currentNode.path), treeNodeMapRef.current);
       const expandedTreeNodes = expandedNodes
-        .map(node => mapNodeToDataType(node, treeNodeMap.get(node.path), treeNodeMap));
+        .map(node => mapNodeToTreeNode(node, treeNodeMapRef.current.get(node.path), treeNodeMapRef.current));
 
       onNodeToggle(currentTreeNode, expandedTreeNodes);
     }
@@ -232,11 +232,11 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
 
   const callNodeChangeHandler = (selectedNode: Node, selectedNodes: Node[]): void => {
     if (onNodeChange && !selectedNode.disabled) {
-      const currentNode = mapNodeToDataType(selectedNode, treeNodeMap.get(selectedNode.path), treeNodeMap);
+      const currentTreeNode = mapNodeToTreeNode(selectedNode, treeNodeMapRef.current.get(selectedNode.path), treeNodeMapRef.current);
       const selectedTreeNodes = selectedNodes
-        .map(node => mapNodeToDataType(node, treeNodeMap.get(node.path), treeNodeMap));
+        .map(node => mapNodeToTreeNode(node, treeNodeMapRef.current.get(node.path), treeNodeMapRef.current));
 
-      onNodeChange(currentNode, selectedTreeNodes);
+      onNodeChange(currentTreeNode, selectedTreeNodes);
     }
   };
 
@@ -313,7 +313,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
 
   const handleKeyDownExpandNode = (expand: boolean): void => {
     if (state.showDropdown && state.focusedElement && state.focusedElement !== SELECT_ALL) {
-      const node = nodeMap.get(state.focusedElement);
+      const node = nodeMapRef.current.get(state.focusedElement);
       if (node?.hasChildren()) {
         handleExpandNode(node, expand);
       }
@@ -472,7 +472,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
           if (state.focusedElement === SELECT_ALL) {
             handleSelectAllNodes();
           } else {
-            handleToggleNode(nodeMap?.get(state.focusedElement))(e);
+            handleToggleNode(nodeMapRef.current?.get(state.focusedElement))(e);
           }
         }
         e.preventDefault();
@@ -482,7 +482,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
           if (state.focusedFieldElement === CLEAR_ALL) {
             handleDeleteAll(e);
           } else {
-            handleDeleteNode(nodeMap?.get(state.focusedFieldElement))(e);
+            handleDeleteNode(nodeMapRef.current?.get(state.focusedFieldElement))(e);
           }
         }
         break;
@@ -509,6 +509,9 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
 
   useOnClickOutside(treeSelectRef, handleOutsideEvent);
 
+  console.log('treeNodeMap = ', treeNodeMapRef.current);
+  console.log('nodeMap = ', nodeMapRef.current);
+
   return (
     <div ref={treeSelectRef} id={id} className={containerClasses} onKeyDown={handleComponentKeyDown}>
       <Field
@@ -529,7 +532,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
       />
       {state.showDropdown ? (
         <Dropdown
-          nodeMap={nodeMap}
+          nodeMap={nodeMapRef.current}
           nodesAmount={state.nodes.length}
           displayedNodes={state.displayedNodes}
           searchValue={state.searchValue}
