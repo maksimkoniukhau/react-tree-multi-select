@@ -6,7 +6,6 @@ export interface InputProps {
   inputRef: RefObject<HTMLInputElement>;
   inputPlaceholder: string;
   value: string;
-  onClickInput: (e: React.MouseEvent<HTMLInputElement>) => void;
   onChangeInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -16,7 +15,6 @@ const InputFC: FC<InputProps> = (props) => {
     inputRef,
     inputPlaceholder = INPUT_PLACEHOLDER,
     value = '',
-    onClickInput,
     onChangeInput
   } = props;
 
@@ -26,7 +24,6 @@ const InputFC: FC<InputProps> = (props) => {
       value={value}
       placeholder={inputPlaceholder}
       className="rts-input"
-      onClick={onClickInput}
       onChange={onChangeInput}
     />
   );

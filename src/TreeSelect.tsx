@@ -79,7 +79,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     const delimiter = parentPath ? PATH_DELIMITER : '';
     const nodePath = parentPath + delimiter + path;
     const children: TreeNode[] = treeNode.children || [];
-    const expanded = children.length && expandAllAtStart ? true : false;
+    const expanded = children.length && expandAllAtStart;
 
     const node: Node = new Node(
       nodePath,
@@ -89,11 +89,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
       expanded
     );
 
-    const nodeChildren: Node[] = children.map((child, idx) => {
-      return mapTreeNodeToNode(child, idx.toString(), node);
-    });
-
-    node.children = nodeChildren;
+    node.children = children.map((child, idx) => mapTreeNodeToNode(child, idx.toString(), node));
 
     treeNodeMap.set(nodePath, treeNode);
     nodeMap.set(nodePath, node);
@@ -176,11 +172,6 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     });
   };
 
-  // remove if not needed
-  const handleClickInput = useCallback((e: React.MouseEvent<HTMLInputElement>): void => {
-    // handle click input
-  }, []);
-
   const handleChangeInput = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
     const value = e.currentTarget.value;
 
@@ -234,10 +225,10 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
   const callNodeToggleHandler = (currentNode: Node, expandedNodes: Node[]): void => {
     if (onNodeToggle) {
       const currentTreeNode = mapNodeToDataType(currentNode, treeNodeMap.get(currentNode.path), treeNodeMap);
-      const expandededTreeNodes = expandedNodes
+      const expandedTreeNodes = expandedNodes
         .map(node => mapNodeToDataType(node, treeNodeMap.get(node.path), treeNodeMap));
 
-      onNodeToggle(currentTreeNode, expandededTreeNodes);
+      onNodeToggle(currentTreeNode, expandedTreeNodes);
     }
   };
 
@@ -533,7 +524,6 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
         searchValue={state.searchValue}
         focusedFieldElement={state.focusedFieldElement}
         onClickField={handleClickField}
-        onClickInput={handleClickInput}
         onChangeInput={handleChangeInput}
         onClickChip={handleClickChip}
         onDeleteNode={handleDeleteNode}

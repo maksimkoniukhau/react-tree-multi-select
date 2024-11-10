@@ -20,7 +20,6 @@ export interface FieldProps {
   searchValue: string;
   focusedFieldElement: string;
   onClickField: (e: React.MouseEvent<Element>) => void;
-  onClickInput: (e: React.MouseEvent<HTMLInputElement>) => void;
   onChangeInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClickChip: (node: Node) => (e: React.MouseEvent<Element>) => void;
   onDeleteNode: (node: Node) => (e: React.MouseEvent<Element>) => void;
@@ -40,7 +39,6 @@ export const Field: FC<FieldProps> = (props) => {
     searchValue,
     focusedFieldElement = '',
     onClickField,
-    onClickInput,
     onChangeInput,
     onClickChip,
     onDeleteNode,
@@ -90,7 +88,6 @@ export const Field: FC<FieldProps> = (props) => {
           inputRef={inputRef}
           inputPlaceholder={inputPlaceholder}
           value={searchValue}
-          onClickInput={onClickInput}
           onChangeInput={onChangeInput}
         />
       </div>
