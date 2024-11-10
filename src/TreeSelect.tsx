@@ -40,7 +40,6 @@ export interface TreeSelectProps {
   inputPlaceholder?: string;
   withClearAll?: boolean;
   withSelectAll?: boolean;
-  expandAllAtStart?: boolean;
   onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
   onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
 }
@@ -54,7 +53,6 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     inputPlaceholder,
     withClearAll = true,
     withSelectAll = false,
-    expandAllAtStart = false,
     onNodeChange,
     onNodeToggle
   } = props;
@@ -79,7 +77,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     const delimiter = parentPath ? PATH_DELIMITER : '';
     const nodePath = parentPath + delimiter + path;
     const children: TreeNode[] = treeNode.children || [];
-    const expanded = children.length && expandAllAtStart;
+    const expanded = children.length && treeNode.expanded;
 
     const node: Node = new Node(
       nodePath,
