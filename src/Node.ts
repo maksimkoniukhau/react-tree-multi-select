@@ -1,4 +1,4 @@
-import {Type} from './models';
+import {TreeNode, Type} from './models';
 
 export class Node {
 
@@ -18,7 +18,9 @@ export class Node {
   private _ancestors: Node[];
   private _descendants: Node[];
 
-  constructor(path?: string, name?: string, parent?: Node, deep?: number, expanded?: boolean) {
+  private _initTreeNode: TreeNode;
+
+  constructor(path: string, name: string, parent: Node, deep: number, expanded: boolean, initTreeNode: TreeNode) {
     this._path = path || '';
     this._name = name || '';
     this._parent = parent || null;
@@ -31,6 +33,7 @@ export class Node {
     this._searchExpanded = false;
     this._matched = false;
     this._filtered = true;
+    this._initTreeNode = initTreeNode;
   }
 
   get path(): string {
@@ -145,6 +148,18 @@ export class Node {
     return this._descendants;
   }
 
+  get initTreeNode(): any {
+    return this._initTreeNode;
+  }
+
+  set initTreeNode(value: TreeNode) {
+    this._initTreeNode = value;
+  }
+
+  public toTreeNode = (): TreeNode => {
+    return this.mapToTreeNode(this);
+  };
+
   public hasChildren = (): boolean => {
     return this.children?.length > 0;
   };
@@ -247,6 +262,25 @@ export class Node {
 
   public isDisplayed = (isSearchMode: boolean): boolean => {
     return this.filtered && this.isVisible(isSearchMode);
+  };
+
+  private mapToTreeNode = (node: Node): TreeNode => {
+    const treeNode: TreeNode = {
+      ...node.initTreeNode,
+      selected: node.selected,
+      expanded: node.expanded,
+      disabled: node.disabled
+    };
+
+    let children = [];
+
+    if (node.children?.length) {
+      children = node.children.map(nod => this.mapToTreeNode(nod));
+    }
+
+    treeNode.children = children;
+
+    return treeNode;
   };
 
   private shouldBeUnselected = (): boolean => {

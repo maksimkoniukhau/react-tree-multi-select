@@ -1,7 +1,7 @@
 import React from 'react';
 import {PATH_DELIMITER} from './constants';
 import {Node} from './Node';
-import {TreeNode, Type} from './models';
+import {Type} from './models';
 
 const fillArrayFromTreeArray = (treeArray: Node[], nodeArray: Node[]): void => {
   treeArray?.forEach(node => {
@@ -57,25 +57,6 @@ export const filterChips = (nodes: Node[], type: Type): Node[] => {
   return type === Type.MULTISELECT_TREE
     ? nodes.filter(node => node.selected && !node.parent?.selected)
     : nodes.filter(node => node.selected);
-};
-
-export const mapNodeToTreeNode = (node: Node, treeNode: TreeNode, treeNodeMap: Map<string, TreeNode>): TreeNode => {
-  const data: TreeNode = {
-    ...treeNode,
-    label: node.name,
-    selected: node.selected,
-    expanded: node.expanded
-  };
-
-  let children = [];
-
-  if (node.children?.length) {
-    children = node.children.map(nod => mapNodeToTreeNode(nod, treeNodeMap.get(nod.path), treeNodeMap));
-  }
-
-  data.children = children;
-
-  return data;
 };
 
 export const preventDefaultOnMouseEvent = (e: React.MouseEvent<Element>): void => {
