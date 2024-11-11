@@ -4,7 +4,7 @@ export class Node {
 
   private _path: string;
   private _name: string;
-  private _parent: Node;
+  private _parent: Node | null;
   private _children: Node[];
   private _deep: number;
   private _disabled: boolean;
@@ -20,7 +20,7 @@ export class Node {
 
   private _initTreeNode: TreeNode;
 
-  constructor(path: string, name: string, parent: Node, deep: number, expanded: boolean, initTreeNode: TreeNode) {
+  constructor(path: string, name: string, parent: Node | null, deep: number, expanded: boolean, initTreeNode: TreeNode) {
     this._path = path || '';
     this._name = name || '';
     this._parent = parent || null;
@@ -52,12 +52,12 @@ export class Node {
     this._name = value || '';
   }
 
-  get parent(): Node {
+  get parent(): Node | null {
     return this._parent;
   }
 
-  set parent(value: Node) {
-    this._parent = value || null;
+  set parent(value: Node | null) {
+    this._parent = value;
   }
 
   get children(): Node[] {
@@ -136,16 +136,24 @@ export class Node {
     if (this._ancestors) {
       return this._ancestors;
     }
-    this._ancestors = this.getAllAncestors();
+    this.ancestors = this.getAllAncestors();
     return this._ancestors;
+  }
+
+  set ancestors(value: Node[]) {
+    this._ancestors = value || [];
   }
 
   get descendants(): Node[] {
     if (this._descendants) {
       return this._descendants;
     }
-    this._descendants = this.getAllDescendants();
+    this.descendants = this.getAllDescendants();
     return this._descendants;
+  }
+
+  set descendants(value: Node[]) {
+    this._descendants = value || [];
   }
 
   get initTreeNode(): any {
@@ -272,7 +280,7 @@ export class Node {
       disabled: node.disabled
     };
 
-    let children = [];
+    let children: TreeNode[] = [];
 
     if (node.children?.length) {
       children = node.children.map(nod => this.mapToTreeNode(nod));
@@ -285,7 +293,7 @@ export class Node {
 
   private shouldBeUnselected = (): boolean => {
     return this.selected
-      || (this.descendants.length && this.areAllExcludingDisabledDescendantsSelected(this));
+      || Boolean(this.descendants.length && this.areAllExcludingDisabledDescendantsSelected(this));
   };
 
   private getAllAncestors = (): Node[] => {
@@ -294,7 +302,7 @@ export class Node {
     return ancestors;
   };
 
-  private addAncestors = (node: Node, ancestors: Node[]): void => {
+  private addAncestors = (node: Node | null, ancestors: Node[]): void => {
     if (node) {
       ancestors.push(node);
       if (node.parent) {

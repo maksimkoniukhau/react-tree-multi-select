@@ -1,7 +1,5 @@
 import React, {FC, RefObject} from 'react';
 
-import {INPUT_PLACEHOLDER} from './constants';
-
 export interface InputProps {
   inputRef: RefObject<HTMLInputElement>;
   inputPlaceholder: string;
@@ -13,7 +11,7 @@ const InputFC: FC<InputProps> = (props) => {
 
   const {
     inputRef,
-    inputPlaceholder = INPUT_PLACEHOLDER,
+    inputPlaceholder,
     value = '',
     onChangeInput
   } = props;

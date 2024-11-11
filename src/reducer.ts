@@ -119,7 +119,7 @@ export const initialState: State = {
   selectAllCheckedState: SelectAllCheckedState.UNSELECTED
 };
 
-export const reducer = (state = initialState, action: Action) => {
+export const reducer = (state = initialState, action: Action): State => {
   switch (action.type) {
     case ActionType.INIT: {
       const payload = action.payload as InitPayload;

@@ -2,7 +2,7 @@ import './tree-select.scss';
 
 import React, {useCallback, useEffect, useReducer, useRef} from 'react';
 
-import {CLEAR_ALL, INPUT, PATH_DELIMITER, SELECT_ALL} from './constants';
+import {CLEAR_ALL, INPUT, INPUT_PLACEHOLDER, PATH_DELIMITER, SELECT_ALL} from './constants';
 import {areAllExcludingDisabledSelected, convertTreeArrayToFlatArray, filterChips, isAnyHasChildren} from './utils';
 import {SelectAllCheckedState, TreeNode, Type} from './models';
 import {useOnClickOutside} from './hooks';
@@ -44,7 +44,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     type = Type.MULTISELECT_TREE,
     id = '',
     className = '',
-    inputPlaceholder,
+    inputPlaceholder = INPUT_PLACEHOLDER,
     withClearAll = true,
     withSelectAll = false,
     onNodeChange,
@@ -65,12 +65,12 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     });
   };
 
-  const mapTreeNodeToNode = (treeNode: TreeNode, path: string, parent: Node): Node => {
+  const mapTreeNodeToNode = (treeNode: TreeNode, path: string, parent: Node | null): Node => {
     const parentPath = parent?.path || '';
     const delimiter = parentPath ? PATH_DELIMITER : '';
     const nodePath = parentPath + delimiter + path;
     const children: TreeNode[] = treeNode.children || [];
-    const expanded = children.length && treeNode.expanded;
+    const expanded = Boolean(children.length && treeNode.expanded);
 
     const {children: omitChildren, ...initTreeNode} = treeNode;
 
@@ -465,6 +465,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
           if (state.focusedElement === SELECT_ALL) {
             handleSelectAllNodes();
           } else {
+            // @ts-ignore
             handleToggleNode(nodeMapRef.current?.get(state.focusedElement))(e);
           }
         }
@@ -475,6 +476,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
           if (state.focusedFieldElement === CLEAR_ALL) {
             handleDeleteAll(e);
           } else {
+            // @ts-ignore
             handleDeleteNode(nodeMapRef.current?.get(state.focusedFieldElement))(e);
           }
         }

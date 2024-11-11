@@ -53,10 +53,10 @@ export const Dropdown: FC<DropdownProps> = (props) => {
 
     let topElmSize = 0;
     if (withSelectAll) {
-      virtuosoRef.current.getState((state: StateSnapshot) => {
+      virtuosoRef.current?.getState((state: StateSnapshot) => {
         topElmSize = state?.ranges
           ?.find(range => range.startIndex === 0)
-          ?.size;
+          ?.size || 0;
       });
     }
 
