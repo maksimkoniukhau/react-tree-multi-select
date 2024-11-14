@@ -1,0 +1,44 @@
+.app {
+  padding: 10px;
+
+  .header {
+    text-align: center;
+  }
+
+  .content {
+    padding: 0 20px;
+    display: flex;
+    gap: 50px;
+
+    .menu-container {
+      flex: 1 1 300px;
+
+      .menu {
+        list-style: none;
+        margin: 0;
+        padding: 5px;
+
+        .menu-item {
+          margin: 10px 0;
+          padding: 5px 0;
+          cursor: pointer;
+
+          &.selected {
+            color: #12bef3;
+          }
+        }
+      }
+    }
+
+    .page-container {
+      flex: 1 1 100%;
+
+      .page {
+
+        .bd-select {
+          margin-bottom: 15px;
+        }
+      }
+    }
+  }
+}

@@ -1,68 +1,42 @@
-import React from 'react';
-import './App.css';
-import {TreeNode, TreeSelect} from '../../src';
-import {optionTreeNodeData} from './utils';
+import React, {JSX, useCallback, useState} from 'react';
+import './App.scss';
+import {Menu, MENU_ITEM} from './Menu';
+import {GetStartedPage} from './GetStartedPage';
+import {BasicPage} from './BasicPage';
+import {BigDataPage} from './BigDataPage';
+import {SelectPage} from './SelectPage';
 
 function App() {
 
-  const handleNodeToggle = (node: TreeNode, expandedNodes: TreeNode[]): void => {
-    console.log('NODE TOGGLE = ', node);
-    console.log('EXPANDED NODES = ', expandedNodes);
-  };
+  const [page, setPage] = useState<MENU_ITEM>(MENU_ITEM.GET_STARTED);
 
-  const handleNodeChange = (node: TreeNode, selectedNodes: TreeNode[]): void => {
-    console.log('NODE CHANGE = ', node);
-    console.log('SELECTED NODES = ', selectedNodes);
-  };
+  const handleMenuItemClick = useCallback((menuitem: MENU_ITEM): void => {
+    setPage(menuitem);
+  }, []);
+
+  const getPage = useCallback((): JSX.Element => {
+    switch (page) {
+      case MENU_ITEM.BASIC:
+        return (<BasicPage/>);
+      case MENU_ITEM.BIG_DATA:
+        return (<BigDataPage/>);
+      case MENU_ITEM.SELECT:
+        return (<SelectPage/>);
+      default:
+        return (<GetStartedPage/>);
+    }
+  }, [page]);
 
   return (
     <div className="app">
       <h2 className="header">RTS tree select</h2>
       <div className="content">
-        <div className="tree-select-wrapper">
-          <div className="label">Select</div>
-          <TreeSelect
-            data={[
-              {
-                label: 'label1',
-                name: 'name1'
-              },
-              {
-                label: 'label2',
-                name: 'name2'
-              },
-              {
-                label: 'label3',
-                name: 'name3'
-              }
-            ]}
-            id="my-rts-select"
-            withSelectAll
-            onNodeChange={handleNodeChange}
-            onNodeToggle={handleNodeToggle}
-          />
+        <div className="menu-container">
+          <Menu onMenuItemClick={handleMenuItemClick}/>
         </div>
-        <div className="tree-select-wrapper">
-          <div className="label">Tree Select</div>
-          <TreeSelect
-            data={optionTreeNodeData}
-            id="my-tree-select"
-            className="mts-custom-class one-more-mts-custom-class"
-            onNodeChange={handleNodeChange}
-            onNodeToggle={handleNodeToggle}
-          />
+        <div className="page-container">
+          {getPage()}
         </div>
-        {/*       <div className="tree-select-wrapper">
-          <div className="label">Tree Select Big Data</div>
-          <TreeSelect
-            data={bigTreeNodeData}
-            id="rts-big-data"
-            className="bd-custom-class one-more-bd-custom-class"
-            withSelectAll
-            onNodeChange={handleNodeChange}
-            onNodeToggle={handleNodeToggle}
-          />
-        </div>*/}
       </div>
     </div>
   );
