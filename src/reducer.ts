@@ -18,6 +18,12 @@ export interface ChangeInputPayload {
   displayedNodes: Node[];
 }
 
+export interface ClickChipPayload {
+  showDropdown: boolean;
+  focusedFieldElement: string;
+  focusedElement: string;
+}
+
 export interface TogglePayload {
   selectedNodes: Node[];
   selectAllCheckedState: SelectAllCheckedState;
@@ -64,6 +70,7 @@ export enum ActionType {
   INIT,
   TOGGLE_DROPDOWN,
   CHANGE_INPUT,
+  CLICK_CHIP,
   TOGGLE,
   TOGGLE_ALL,
   UNSELECT,
@@ -77,6 +84,7 @@ export enum ActionType {
 export type Payload = InitPayload
   | ToggleDropdownPayload
   | ChangeInputPayload
+  | ClickChipPayload
   | TogglePayload
   | ToggleAllPayload
   | UnselectPayload
@@ -101,7 +109,6 @@ export interface State {
 
   focusedFieldElement: string;
   focusedElement: string;
-  prevFocusedElement: string;
   selectAllCheckedState: SelectAllCheckedState;
 }
 
@@ -115,7 +122,6 @@ export const initialState: State = {
 
   focusedFieldElement: '',
   focusedElement: '',
-  prevFocusedElement: '',
   selectAllCheckedState: SelectAllCheckedState.UNSELECTED
 };
 
@@ -133,8 +139,7 @@ export const reducer = (state = initialState, action: Action): State => {
       return {
         ...state,
         ...payload,
-        focusedElement: !payload.showDropdown ? '' : state.focusedElement,
-        prevFocusedElement: state.focusedElement
+        focusedElement: !payload.showDropdown ? '' : state.focusedElement
       };
     }
     case ActionType.CHANGE_INPUT: {
@@ -143,8 +148,14 @@ export const reducer = (state = initialState, action: Action): State => {
         ...state,
         ...payload,
         focusedFieldElement: INPUT,
-        focusedElement: '',
-        prevFocusedElement: state.focusedElement
+        focusedElement: ''
+      };
+    }
+    case ActionType.CLICK_CHIP: {
+      const payload = action.payload as ClickChipPayload;
+      return {
+        ...state,
+        ...payload
       };
     }
     case ActionType.TOGGLE: {
@@ -169,8 +180,7 @@ export const reducer = (state = initialState, action: Action): State => {
         ...state,
         ...payload,
         focusedFieldElement: INPUT,
-        focusedElement: '',
-        prevFocusedElement: state.focusedElement
+        focusedElement: ''
       };
     }
     case ActionType.UNSELECT_ALL: {
@@ -179,8 +189,7 @@ export const reducer = (state = initialState, action: Action): State => {
         ...state,
         ...payload,
         focusedFieldElement: INPUT,
-        focusedElement: '',
-        prevFocusedElement: state.focusedElement
+        focusedElement: ''
       };
     }
     case ActionType.EXPAND: {
@@ -198,8 +207,7 @@ export const reducer = (state = initialState, action: Action): State => {
         ...payload,
         focusedFieldElement: payload.focusedElement
           ? ''
-          : state.focusedFieldElement,
-        prevFocusedElement: state.focusedElement
+          : state.focusedFieldElement
       };
     }
     case ActionType.FOCUS_FIELD_ELEMENT: {
@@ -209,8 +217,7 @@ export const reducer = (state = initialState, action: Action): State => {
         ...payload,
         focusedElement: payload.focusedFieldElement
           ? ''
-          : state.focusedElement,
-        prevFocusedElement: state.focusedElement
+          : state.focusedElement
       };
     }
     case ActionType.RESET: {

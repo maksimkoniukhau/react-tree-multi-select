@@ -9,6 +9,7 @@ import {useOnClickOutside} from './hooks';
 import {
   ActionType,
   ChangeInputPayload,
+  ClickChipPayload,
   ExpandPayload,
   FocusElementPayload,
   FocusFieldElementPayload,
@@ -151,7 +152,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     dispatchToggleDropdown(!state.showDropdown);
   };
 
-  const handleDeleteAll = (e: React.MouseEvent<Element> | React.KeyboardEvent<Element>): void => {
+  const handleDeleteAll = useCallback((e: React.MouseEvent<Element> | React.KeyboardEvent<Element>): void => {
     state.nodes.forEach(node => node.handleUnselect(type));
     const selectedNodes = state.nodes.filter(nod => nod.selected);
     dispatch({
@@ -161,7 +162,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
         selectAllCheckedState: getSelectAllCheckedState(selectedNodes, state.nodes)
       } as UnselectAllPayload
     });
-  };
+  }, [state.nodes, type]);
 
   const handleChangeInput = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
     const value = e.currentTarget.value;
@@ -233,18 +234,21 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     }
   };
 
-  const handleClickChip = (node: Node) => (e: React.MouseEvent<Element>): void => {
-    if (state.displayedNodes.find(displayedNode => displayedNode.path === node.path)) {
-      dispatch({
-        type: ActionType.FOCUS_ELEMENT,
-        payload: {
-          focusedElement: node.path
-        } as FocusElementPayload
-      });
-    }
-  };
+  const handleClickChip = useCallback((node: Node) => (e: React.MouseEvent<Element> | React.KeyboardEvent<Element>): void => {
+    const focusedElementFound = state.displayedNodes.find(displayedNode => displayedNode.path === node.path)
+      && !state.showDropdown;
+    dispatch({
+      type: ActionType.CLICK_CHIP,
+      payload: {
+        showDropdown: !state.showDropdown,
+        focusedFieldElement: state.showDropdown || !focusedElementFound ? node.path : '',
+        focusedElement: focusedElementFound ? node.path : ''
+      } as ClickChipPayload
+    });
 
-  const handleDeleteNode = (node: Node) => (e: React.MouseEvent<Element> | React.KeyboardEvent<Element>): void => {
+  }, [state.displayedNodes, state.showDropdown]);
+
+  const handleDeleteNode = useCallback((node: Node) => (e: React.MouseEvent<Element> | React.KeyboardEvent<Element>): void => {
     if (!node.disabled) {
       node.handleUnselect(type);
       const selectedNodes = state.nodes.filter(nod => nod.selected);
@@ -259,7 +263,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
 
       callNodeChangeHandler(node, selectedNodes);
     }
-  };
+  }, [state.nodes, type]);
 
   const handleToggleNode = useCallback((node: Node) => (e: React.MouseEvent<Element> | React.KeyboardEvent<Element>): void => {
     node.handleToggle(type);
@@ -460,7 +464,14 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
         break;
       case 'Enter':
         if (!state.focusedElement) {
-          dispatchToggleDropdown(!state.showDropdown);
+          const chipNode = filterChips(state.selectedNodes, type)
+            ?.find(node => node.path === state.focusedFieldElement);
+          if (chipNode) {
+            // @ts-ignore
+            handleClickChip(chipNode)(e);
+          } else {
+            dispatchToggleDropdown(!state.showDropdown);
+          }
         } else if (state.showDropdown) {
           if (state.focusedElement === SELECT_ALL) {
             handleSelectAllNodes();

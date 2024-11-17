@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, memo} from 'react';
 
 import {preventDefaultOnMouseEvent} from './utils';
 
@@ -7,7 +7,7 @@ export interface FieldClearProps {
   onClick: (e: React.MouseEvent<Element>) => void;
 }
 
-export const FieldClear: FC<FieldClearProps> = (props) => {
+export const FieldClear: FC<FieldClearProps> = memo((props) => {
 
   const {focused, onClick} = props;
 
@@ -30,4 +30,4 @@ export const FieldClear: FC<FieldClearProps> = (props) => {
       </svg>
     </div>
   );
-};
+});

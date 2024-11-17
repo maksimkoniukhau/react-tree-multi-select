@@ -1,10 +1,10 @@
-import React, {FC} from 'react';
+import React, {FC, memo} from 'react';
 
 export interface FieldExpandProps {
   expanded: boolean;
 }
 
-export const FieldExpand: FC<FieldExpandProps> = ({expanded}) => {
+export const FieldExpand: FC<FieldExpandProps> = memo(({expanded}) => {
 
   const fieldExpandClasses = `rts-field-expand${expanded ? ' expanded' : ''}`;
 
@@ -16,4 +16,4 @@ export const FieldExpand: FC<FieldExpandProps> = ({expanded}) => {
       </svg>
     </div>
   );
-};
+});

@@ -47,6 +47,14 @@ export const Field: FC<FieldProps> = (props) => {
 
   const fieldRef = useRef<HTMLDivElement>(null);
 
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>): void => {
+    fieldRef?.current?.classList?.add('focused');
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>): void => {
+    fieldRef?.current?.classList?.remove('focused');
+  };
+
   const handleClickField = (e: React.MouseEvent<Element>): void => {
     inputRef?.current?.focus();
     // defaultPrevented is on click field clear icon
@@ -54,14 +62,6 @@ export const Field: FC<FieldProps> = (props) => {
       e.preventDefault();
       onClickField(e);
     }
-  };
-
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>): void => {
-    fieldRef?.current?.classList?.add('focused');
-  };
-
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>): void => {
-    fieldRef?.current?.classList?.remove('focused');
   };
 
   return (
