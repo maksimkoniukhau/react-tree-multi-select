@@ -49,7 +49,7 @@ export const Field: FC<FieldProps> = (props) => {
 
   const handleClickField = (e: React.MouseEvent<Element>): void => {
     inputRef?.current?.focus();
-    // defaultPrevented is on click clear icons
+    // defaultPrevented is on click field clear icon
     if (!e.defaultPrevented) {
       e.preventDefault();
       onClickField(e);

@@ -1,4 +1,4 @@
-import React, {FC, RefObject} from 'react';
+import React, {FC, memo, RefObject} from 'react';
 
 export interface InputProps {
   inputRef: RefObject<HTMLInputElement>;
@@ -7,7 +7,7 @@ export interface InputProps {
   onChangeInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const InputFC: FC<InputProps> = (props) => {
+export const Input: FC<InputProps> = memo((props) => {
 
   const {
     inputRef,
@@ -25,6 +25,4 @@ const InputFC: FC<InputProps> = (props) => {
       onChange={onChangeInput}
     />
   );
-};
-
-export const Input = React.memo(InputFC);
+});
