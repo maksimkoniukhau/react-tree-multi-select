@@ -1,6 +1,6 @@
 export enum Type {
-  MULTISELECT_TREE,
-  MULTISELECT_FLAT
+  MULTI_SELECT_TREE = 'MULTI_SELECT_TREE',
+  MULTI_SELECT_FLAT = 'MULTI_SELECT_FLAT'
 }
 
 export interface TreeNode {
@@ -14,7 +14,7 @@ export interface TreeNode {
 }
 
 export enum SelectAllCheckedState {
-  SELECTED,
-  PARTIAL,
-  UNSELECTED
+  SELECTED = 'SELECTED',
+  PARTIAL = 'PARTIAL',
+  UNSELECTED = 'UNSELECTED'
 }

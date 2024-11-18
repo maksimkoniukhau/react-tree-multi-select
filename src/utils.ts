@@ -54,7 +54,7 @@ export const isAnyHasChildren = (nodes: Node[]): boolean => {
 };
 
 export const filterChips = (nodes: Node[], type: Type): Node[] => {
-  return type === Type.MULTISELECT_TREE
+  return type === Type.MULTI_SELECT_TREE
     ? nodes.filter(node => node.selected && !node.parent?.selected)
     : nodes.filter(node => node.selected);
 };

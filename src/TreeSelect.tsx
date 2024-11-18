@@ -37,19 +37,23 @@ export interface TreeSelectProps {
   withSelectAll?: boolean;
   onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
   onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
+  onClearAll?: (selectAllCheckedState: SelectAllCheckedState, selectedNodes: TreeNode[]) => void;
+  onSelectAllChange?: (selectAllCheckedState: SelectAllCheckedState, selectedNodes: TreeNode[]) => void;
 }
 
 export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
   const {
     data = [],
-    type = Type.MULTISELECT_TREE,
+    type = Type.MULTI_SELECT_TREE,
     id = '',
     className = '',
     inputPlaceholder = INPUT_PLACEHOLDER,
     withClearAll = true,
     withSelectAll = false,
     onNodeChange,
-    onNodeToggle
+    onNodeToggle,
+    onClearAll,
+    onSelectAllChange
   } = props;
 
   const treeSelectRef = useRef<HTMLDivElement>(null);
@@ -152,16 +156,26 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     dispatchToggleDropdown(!state.showDropdown);
   };
 
+  const callClearAllHandler = (selectAllCheckedState: SelectAllCheckedState, selectedNodes: Node[]): void => {
+    if (onClearAll) {
+      const selectedTreeNodes = selectedNodes.map(node => node.toTreeNode());
+      onClearAll(selectAllCheckedState, selectedTreeNodes);
+    }
+  };
+
   const handleDeleteAll = useCallback((e: React.MouseEvent<Element> | React.KeyboardEvent<Element>): void => {
     state.nodes.forEach(node => node.handleUnselect(type));
     const selectedNodes = state.nodes.filter(nod => nod.selected);
+    const selectAllCheckedState = getSelectAllCheckedState(selectedNodes, state.nodes);
     dispatch({
       type: ActionType.UNSELECT_ALL,
       payload: {
         selectedNodes,
-        selectAllCheckedState: getSelectAllCheckedState(selectedNodes, state.nodes)
+        selectAllCheckedState
       } as UnselectAllPayload
     });
+
+    callClearAllHandler(selectAllCheckedState, selectedNodes);
   }, [state.nodes, type]);
 
   const handleChangeInput = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -183,6 +197,13 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     });
   }, [state.nodes]);
 
+  const callSelectAllChangeHandler = (selectAllCheckedState: SelectAllCheckedState, selectedNodes: Node[]): void => {
+    if (onSelectAllChange) {
+      const selectedTreeNodes = selectedNodes.map(node => node.toTreeNode());
+      onSelectAllChange(selectAllCheckedState, selectedTreeNodes);
+    }
+  };
+
   const handleSelectAllNodes = (): void => {
     const shouldBeUnselected = state.selectAllCheckedState === SelectAllCheckedState.SELECTED
       || (state.selectAllCheckedState === SelectAllCheckedState.PARTIAL
@@ -199,15 +220,18 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     });
 
     const selectedNodes = state.nodes.filter(node => node.selected);
+    const selectAllCheckedState = getSelectAllCheckedState(selectedNodes, state.nodes);
 
     dispatch({
       type: ActionType.TOGGLE_ALL,
       payload: {
         selectedNodes,
-        selectAllCheckedState: getSelectAllCheckedState(selectedNodes, state.nodes),
+        selectAllCheckedState,
         focusedElement: SELECT_ALL
       } as ToggleAllPayload
     });
+
+    callSelectAllChangeHandler(selectAllCheckedState, selectedNodes);
   };
 
   const handleChangeSelectAll = (e: React.MouseEvent<Element>): void => {
@@ -217,9 +241,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
   const callNodeToggleHandler = (toggledNode: Node, expandedNodes: Node[]): void => {
     if (onNodeToggle) {
       const toggledTreeNode = toggledNode.toTreeNode();
-      const expandedTreeNodes = expandedNodes
-        .map(node => node.toTreeNode());
-
+      const expandedTreeNodes = expandedNodes.map(node => node.toTreeNode());
       onNodeToggle(toggledTreeNode, expandedTreeNodes);
     }
   };
@@ -227,9 +249,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
   const callNodeChangeHandler = (changedNode: Node, selectedNodes: Node[]): void => {
     if (onNodeChange && !changedNode.disabled) {
       const changedTreeNode = changedNode.toTreeNode();
-      const selectedTreeNodes = selectedNodes
-        .map(node => node.toTreeNode());
-
+      const selectedTreeNodes = selectedNodes.map(node => node.toTreeNode());
       onNodeChange(changedTreeNode, selectedTreeNodes);
     }
   };

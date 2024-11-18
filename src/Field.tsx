@@ -30,7 +30,7 @@ export const Field: FC<FieldProps> = (props) => {
 
   const {
     inputRef,
-    type = Type.MULTISELECT_TREE,
+    type = Type.MULTI_SELECT_TREE,
     nodes = [],
     selectedNodes = [],
     showDropdown = false,

@@ -184,7 +184,7 @@ export class Node {
 
   public handleDisable = (type: Type): void => {
     this.disabled = true;
-    if (type === Type.MULTISELECT_TREE) {
+    if (type === Type.MULTI_SELECT_TREE) {
       this.descendants.forEach(descendant => descendant.disabled = true);
     }
   };
@@ -193,7 +193,7 @@ export class Node {
     if (!this.disabled) {
       this.selected = true;
       this.partiallySelected = false;
-      if (type === Type.MULTISELECT_TREE) {
+      if (type === Type.MULTI_SELECT_TREE) {
         this.selectDescendants(this);
         const allDescendantsSelected = this.areAllDescendantsSelected(this);
         this.selected = allDescendantsSelected;
@@ -207,7 +207,7 @@ export class Node {
     if (!this.disabled) {
       this.selected = false;
       this.partiallySelected = false;
-      if (type === Type.MULTISELECT_TREE) {
+      if (type === Type.MULTI_SELECT_TREE) {
         this.unselectDescendants(this);
         this.unselectAncestors(this);
         this.partiallySelected = this.areAnyDescendantsSelected(this);
@@ -228,7 +228,7 @@ export class Node {
   public handleCheckAndSetPartiallySelected = (type: Type): void => {
     if (!this.disabled) {
       this.partiallySelected = false;
-      if (type === Type.MULTISELECT_TREE) {
+      if (type === Type.MULTI_SELECT_TREE) {
         this.partiallySelected = this.areAnyDescendantsSelected(this);
       }
     }
