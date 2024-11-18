@@ -24,6 +24,7 @@ export const SelectPage: FC = memo(() => {
           ]}
           id="rts-multi-select"
           withSelectAll
+          withClearAll
         />
       </div>
     </div>

@@ -26,9 +26,12 @@ export const Menu: FC<MenuProps> = memo(({onMenuItemClick}) => {
     <ul className="menu">
       {menuItems
         .map((item: MENU_ITEM, idx: number) => (
-          <li key={idx} className={`menu-item ${menuItem === item ? ' selected' : ''}`}
-              onClick={handleMenuItemClick(item)}>
-            {item}
+          <li
+            key={idx}
+            className={`menu-item ${menuItem === item ? ' selected' : ''}`}
+            onClick={handleMenuItemClick(item)}
+          >
+            <span>{item}</span>
           </li>
         ))}
     </ul>
