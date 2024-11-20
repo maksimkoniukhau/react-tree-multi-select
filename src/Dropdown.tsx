@@ -15,6 +15,7 @@ export interface DropdownProps {
   withSelectAll: boolean;
   selectAllCheckedState: CheckedState;
   focusedElement: string;
+  noMatchesText: string;
   onChangeSelectAll: (e: React.MouseEvent<Element>) => void;
   onToggleNode: (node: Node) => (e: React.MouseEvent<Element>) => void;
   onClickExpandNode: (node: Node) => (e: React.MouseEvent<Element>) => void;
@@ -31,6 +32,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
     withSelectAll = false,
     selectAllCheckedState = CheckedState.UNSELECTED,
     focusedElement = '',
+    noMatchesText,
     onChangeSelectAll,
     onToggleNode,
     onClickExpandNode
@@ -98,6 +100,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
       withSelectAll={withSelectAll}
       selectAllCheckedState={selectAllCheckedState}
       focusedElement={focusedElement}
+      noMatchesText={noMatchesText}
       onChangeSelectAll={onChangeSelectAll}
       onToggleNode={onToggleNode}
       onClickExpandNode={onClickExpandNode}

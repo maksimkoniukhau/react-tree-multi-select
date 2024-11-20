@@ -1,10 +1,10 @@
-import React, {FC} from 'react';
+import React, {FC, memo} from 'react';
 
-import {NO_OPTIONS, SELECT_ALL} from './constants';
+import {SELECT_ALL} from './constants';
 import {CheckedState} from './models';
 import {NodeRow} from './NodeRow';
 import {SelectAll} from './SelectAll';
-import {NoOptions} from './NoOptions';
+import {NoMatches} from './NoMatches';
 import {Node} from './Node';
 
 export interface ListItemProps {
@@ -15,12 +15,13 @@ export interface ListItemProps {
   withSelectAll: boolean;
   selectAllCheckedState: CheckedState;
   focusedElement: string;
+  noMatchesText: string;
   onChangeSelectAll: (e: React.MouseEvent<Element>) => void;
   onToggleNode: (node: Node) => (e: React.MouseEvent<Element>) => void;
   onClickExpandNode: (node: Node) => (e: React.MouseEvent<Element>) => void;
 }
 
-const ListItemFC: FC<ListItemProps> = (props) => {
+export const ListItem: FC<ListItemProps> = memo((props) => {
 
   const {
     index,
@@ -30,6 +31,7 @@ const ListItemFC: FC<ListItemProps> = (props) => {
     withSelectAll = false,
     selectAllCheckedState = CheckedState.UNSELECTED,
     focusedElement = '',
+    noMatchesText,
     onChangeSelectAll,
     onToggleNode,
     onClickExpandNode
@@ -47,7 +49,7 @@ const ListItemFC: FC<ListItemProps> = (props) => {
   }
   if (displayedNodes.length === 0) {
     return (
-      <NoOptions label={NO_OPTIONS}/>
+      <NoMatches label={noMatchesText}/>
     );
   }
 
@@ -66,6 +68,4 @@ const ListItemFC: FC<ListItemProps> = (props) => {
       onClickExpandIcon={onClickExpandNode(node)}
     />
   );
-};
-
-export const ListItem = React.memo(ListItemFC);
+});

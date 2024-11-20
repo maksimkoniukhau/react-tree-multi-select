@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, memo} from 'react';
 
 import {Node} from './Node';
 import {NodeExpand} from './NodeExpand';
@@ -12,7 +12,7 @@ export interface NodeRowProps {
   onClickExpandIcon: (e: React.MouseEvent<Element>) => void;
 }
 
-const NodeRowFC: FC<NodeRowProps> = (props) => {
+export const NodeRow: FC<NodeRowProps> = memo((props) => {
 
   const {
     node,
@@ -48,6 +48,4 @@ const NodeRowFC: FC<NodeRowProps> = (props) => {
       </div>
     </div>
   );
-};
-
-export const NodeRow = React.memo(NodeRowFC);
+});

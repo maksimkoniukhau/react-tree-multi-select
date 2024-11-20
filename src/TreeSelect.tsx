@@ -2,7 +2,7 @@ import './tree-select.scss';
 
 import React, {useCallback, useEffect, useReducer, useRef} from 'react';
 
-import {CLEAR_ALL, INPUT, INPUT_PLACEHOLDER, PATH_DELIMITER, SELECT_ALL} from './constants';
+import {CLEAR_ALL, INPUT, INPUT_PLACEHOLDER, NO_MATCHES, PATH_DELIMITER, SELECT_ALL} from './constants';
 import {areAllExcludingDisabledSelected, convertTreeArrayToFlatArray, filterChips, isAnyHasChildren} from './utils';
 import {CheckedState, TreeNode, Type} from './models';
 import {useOnClickOutside} from './hooks';
@@ -33,6 +33,7 @@ export interface TreeSelectProps {
   id?: string;
   className?: string;
   inputPlaceholder?: string;
+  noMatchesText?: string;
   withClearAll?: boolean;
   withSelectAll?: boolean;
   onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
@@ -48,6 +49,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     id = '',
     className = '',
     inputPlaceholder = INPUT_PLACEHOLDER,
+    noMatchesText = NO_MATCHES,
     withClearAll = true,
     withSelectAll = false,
     onNodeChange,
@@ -562,6 +564,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
           withSelectAll={withSelectAll}
           selectAllCheckedState={state.selectAllCheckedState}
           focusedElement={state.focusedElement}
+          noMatchesText={noMatchesText}
           onChangeSelectAll={handleChangeSelectAll}
           onToggleNode={handleToggleNode}
           onClickExpandNode={handleClickExpandNode}

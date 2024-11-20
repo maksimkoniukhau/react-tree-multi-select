@@ -1,13 +1,13 @@
 import React, {FC} from 'react';
 
-export interface NoOptionsProps {
+export interface NoMatchesProps {
   label: string;
 }
 
-export const NoOptions: FC<NoOptionsProps> = ({label}) => {
+export const NoMatches: FC<NoMatchesProps> = ({label}) => {
 
   return (
-    <div className="rts-no-options">
+    <div className="rts-no-matches">
       <span className="rts-label">
         {label}
       </span>
