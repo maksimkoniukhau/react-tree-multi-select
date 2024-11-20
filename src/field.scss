@@ -9,6 +9,7 @@
   background-color: #fff;
   border: 1px solid #ced4da;
   border-radius: 4px;
+  box-sizing: border-box;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
   &.focused {

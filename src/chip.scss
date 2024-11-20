@@ -5,12 +5,12 @@
   min-height: 24px;
   margin: 4px 4px 4px 0;
   padding: 0 8px;
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: #ebebeb;;
   border-radius: 16px;
   cursor: default;
 
   &.focused, &:hover {
-    box-shadow: 0 0 5px 1px rgba(161, 161, 161, 1);
+    box-shadow: 0 0 5px 1px #a1a1a1;
 
     &:not(.disabled) {
       path {

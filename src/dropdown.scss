@@ -4,8 +4,9 @@
   z-index: 1;
   margin-top: 7px;
   background-color: #ffffff;
-  box-shadow: 0 0 3px 0 rgba(153, 158, 171, 1);
+  border: 1px solid #ced4da;
   border-radius: 4px;
+  box-sizing: border-box;
 
   .rts-list-item, .rts-header-item {
     display: flex;
@@ -16,7 +17,7 @@
     color: #212529;
 
     &.focused {
-      background-color: rgba(0, 0, 0, 0.08);
+      background-color: #ebebeb;
     }
   }
 
