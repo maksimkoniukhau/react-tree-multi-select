@@ -4,7 +4,7 @@ import React, {useCallback, useEffect, useReducer, useRef} from 'react';
 
 import {CLEAR_ALL, INPUT, INPUT_PLACEHOLDER, PATH_DELIMITER, SELECT_ALL} from './constants';
 import {areAllExcludingDisabledSelected, convertTreeArrayToFlatArray, filterChips, isAnyHasChildren} from './utils';
-import {SelectAllCheckedState, TreeNode, Type} from './models';
+import {CheckedState, TreeNode, Type} from './models';
 import {useOnClickOutside} from './hooks';
 import {
   ActionType,
@@ -37,8 +37,8 @@ export interface TreeSelectProps {
   withSelectAll?: boolean;
   onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
   onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
-  onClearAll?: (selectAllCheckedState: SelectAllCheckedState, selectedNodes: TreeNode[]) => void;
-  onSelectAllChange?: (selectAllCheckedState: SelectAllCheckedState, selectedNodes: TreeNode[]) => void;
+  onClearAll?: (selectAllCheckedState: CheckedState, selectedNodes: TreeNode[]) => void;
+  onSelectAllChange?: (selectAllCheckedState: CheckedState, selectedNodes: TreeNode[]) => void;
 }
 
 export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
@@ -95,12 +95,12 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     return node;
   };
 
-  const getSelectAllCheckedState = (selectedNodes: Node[], allNodes: Node[]): SelectAllCheckedState => {
+  const getSelectAllCheckedState = (selectedNodes: Node[], allNodes: Node[]): CheckedState => {
     return selectedNodes.length === allNodes.length
-      ? SelectAllCheckedState.SELECTED
+      ? CheckedState.SELECTED
       : selectedNodes.length === 0
-        ? SelectAllCheckedState.UNSELECTED
-        : SelectAllCheckedState.PARTIAL;
+        ? CheckedState.UNSELECTED
+        : CheckedState.PARTIAL;
   };
 
   useEffect(() => {
@@ -156,7 +156,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     dispatchToggleDropdown(!state.showDropdown);
   };
 
-  const callClearAllHandler = (selectAllCheckedState: SelectAllCheckedState, selectedNodes: Node[]): void => {
+  const callClearAllHandler = (selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onClearAll) {
       const selectedTreeNodes = selectedNodes.map(node => node.toTreeNode());
       onClearAll(selectAllCheckedState, selectedTreeNodes);
@@ -197,7 +197,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     });
   }, [state.nodes]);
 
-  const callSelectAllChangeHandler = (selectAllCheckedState: SelectAllCheckedState, selectedNodes: Node[]): void => {
+  const callSelectAllChangeHandler = (selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onSelectAllChange) {
       const selectedTreeNodes = selectedNodes.map(node => node.toTreeNode());
       onSelectAllChange(selectAllCheckedState, selectedTreeNodes);
@@ -205,8 +205,8 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
   };
 
   const handleSelectAllNodes = (): void => {
-    const shouldBeUnselected = state.selectAllCheckedState === SelectAllCheckedState.SELECTED
-      || (state.selectAllCheckedState === SelectAllCheckedState.PARTIAL
+    const shouldBeUnselected = state.selectAllCheckedState === CheckedState.SELECTED
+      || (state.selectAllCheckedState === CheckedState.PARTIAL
         && areAllExcludingDisabledSelected(state.nodes));
     state.nodes.forEach(node => {
       if (!node.disabled) {

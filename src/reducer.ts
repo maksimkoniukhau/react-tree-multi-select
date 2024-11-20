@@ -1,12 +1,12 @@
 import {INPUT} from './constants';
-import {SelectAllCheckedState} from './models';
+import {CheckedState} from './models';
 import {Node} from './Node';
 
 export interface InitPayload {
   nodes: Node[];
   displayedNodes: Node[];
   selectedNodes: Node[];
-  selectAllCheckedState: SelectAllCheckedState;
+  selectAllCheckedState: CheckedState;
 }
 
 export interface ToggleDropdownPayload {
@@ -26,24 +26,24 @@ export interface ClickChipPayload {
 
 export interface TogglePayload {
   selectedNodes: Node[];
-  selectAllCheckedState: SelectAllCheckedState;
+  selectAllCheckedState: CheckedState;
   focusedElement: string;
 }
 
 export interface ToggleAllPayload {
   selectedNodes: Node[];
-  selectAllCheckedState: SelectAllCheckedState;
+  selectAllCheckedState: CheckedState;
   focusedElement: string;
 }
 
 export interface UnselectPayload {
   selectedNodes: Node[];
-  selectAllCheckedState: SelectAllCheckedState;
+  selectAllCheckedState: CheckedState;
 }
 
 export interface UnselectAllPayload {
   selectedNodes: Node[];
-  selectAllCheckedState: SelectAllCheckedState;
+  selectAllCheckedState: CheckedState;
 }
 
 export interface ExpandPayload {
@@ -109,7 +109,7 @@ export interface State {
 
   focusedFieldElement: string;
   focusedElement: string;
-  selectAllCheckedState: SelectAllCheckedState;
+  selectAllCheckedState: CheckedState;
 }
 
 export const initialState: State = {
@@ -122,7 +122,7 @@ export const initialState: State = {
 
   focusedFieldElement: '',
   focusedElement: '',
-  selectAllCheckedState: SelectAllCheckedState.UNSELECTED
+  selectAllCheckedState: CheckedState.UNSELECTED
 };
 
 export const reducer = (state = initialState, action: Action): State => {

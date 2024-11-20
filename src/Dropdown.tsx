@@ -3,7 +3,7 @@ import {CalculateViewLocation, StateSnapshot, Virtuoso, VirtuosoHandle} from 're
 
 import {DEFAULT_OPTIONS_CONTAINER_HEIGHT, DEFAULT_OPTIONS_CONTAINER_WIDTH, SELECT_ALL} from './constants';
 import {preventDefaultOnMouseEvent} from './utils';
-import {SelectAllCheckedState} from './models';
+import {CheckedState} from './models';
 import {Node} from './Node';
 import {ListItem} from './ListItem';
 
@@ -13,7 +13,7 @@ export interface DropdownProps {
   displayedNodes: Node[];
   searchValue: string;
   withSelectAll: boolean;
-  selectAllCheckedState: SelectAllCheckedState;
+  selectAllCheckedState: CheckedState;
   focusedElement: string;
   onChangeSelectAll: (e: React.MouseEvent<Element>) => void;
   onToggleNode: (node: Node) => (e: React.MouseEvent<Element>) => void;
@@ -29,7 +29,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
     displayedNodes = [],
     searchValue = '',
     withSelectAll = false,
-    selectAllCheckedState = SelectAllCheckedState.UNSELECTED,
+    selectAllCheckedState = CheckedState.UNSELECTED,
     focusedElement = '',
     onChangeSelectAll,
     onToggleNode,

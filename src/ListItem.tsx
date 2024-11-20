@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 
 import {NO_OPTIONS, SELECT_ALL} from './constants';
-import {SelectAllCheckedState} from './models';
+import {CheckedState} from './models';
 import {NodeRow} from './NodeRow';
 import {SelectAll} from './SelectAll';
 import {NoOptions} from './NoOptions';
@@ -13,7 +13,7 @@ export interface ListItemProps {
   displayedNodes: Node[];
   searchValue: string;
   withSelectAll: boolean;
-  selectAllCheckedState: SelectAllCheckedState;
+  selectAllCheckedState: CheckedState;
   focusedElement: string;
   onChangeSelectAll: (e: React.MouseEvent<Element>) => void;
   onToggleNode: (node: Node) => (e: React.MouseEvent<Element>) => void;
@@ -28,7 +28,7 @@ const ListItemFC: FC<ListItemProps> = (props) => {
     displayedNodes = [],
     searchValue = '',
     withSelectAll = false,
-    selectAllCheckedState = SelectAllCheckedState.UNSELECTED,
+    selectAllCheckedState = CheckedState.UNSELECTED,
     focusedElement = '',
     onChangeSelectAll,
     onToggleNode,

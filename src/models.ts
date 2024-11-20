@@ -13,7 +13,7 @@ export interface TreeNode {
   [key: PropertyKey]: unknown;
 }
 
-export enum SelectAllCheckedState {
+export enum CheckedState {
   SELECTED = 'SELECTED',
   PARTIAL = 'PARTIAL',
   UNSELECTED = 'UNSELECTED'
