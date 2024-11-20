@@ -1,6 +1,6 @@
 export enum Type {
   MULTI_SELECT_TREE = 'MULTI_SELECT_TREE',
-  MULTI_SELECT_FLAT = 'MULTI_SELECT_FLAT'
+  MULTI_SELECT_TREE_FLAT = 'MULTI_SELECT_TREE_FLAT'
 }
 
 export interface TreeNode {
