@@ -48,6 +48,16 @@ export const RtsApp: FC = () => {
     console.log('expandedNodes', expandedNodes);
   };
 
+  const handleClearAll = (selectAllCheckedState: CheckedState, selectedNodes: TreeNode[]) => {
+    console.log('handleClearAll selectAllCheckedState', selectAllCheckedState);
+    console.log('handleClearAll selectedNodes', selectedNodes);
+  };
+
+  const handleSelectAllChange = (selectAllCheckedState: CheckedState, selectedNodes: TreeNode[]) => {
+    console.log('handleSelectAllChange selectAllCheckedState', selectAllCheckedState);
+    console.log('handleSelectAllChange selectedNodes', selectedNodes);
+  };
+
   return (
     <TreeSelect
       id="my-id"
@@ -57,6 +67,29 @@ export const RtsApp: FC = () => {
       withClearAll
       onNodeChange={handleNodeChange}
       onNodeToggle={handleNodeToggle}
+      onClearAll={handleClearAll}
+      onSelectAllChange={handleSelectAllChange}
     />
   );
 });`;
+
+export const rtsTypes = `enum Type {
+  MULTI_SELECT_TREE = 'MULTI_SELECT_TREE',
+  MULTI_SELECT_TREE_FLAT = 'MULTI_SELECT_TREE_FLAT'
+}
+
+interface TreeNode {
+  label: string;
+  children?: TreeNode[];
+  selected?: boolean;
+  expanded?: boolean;
+  disabled?: boolean;
+
+  [key: PropertyKey]: unknown;
+}
+
+enum CheckedState {
+  SELECTED = 'SELECTED',
+  PARTIAL = 'PARTIAL',
+  UNSELECTED = 'UNSELECTED'
+}`;

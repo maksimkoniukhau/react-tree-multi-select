@@ -1,13 +1,14 @@
 import React, {FC, memo, useState} from 'react';
 
 export enum MENU_ITEM {
-  GET_STARTED = 'Get Started',
+  GETTING_STARTED = 'Getting Started',
+  API = 'API',
   BASIC = 'Basic',
   BIG_DATA = 'Big Data',
   SELECT = "Select"
 }
 
-const menuItems = [MENU_ITEM.GET_STARTED, MENU_ITEM.BASIC, MENU_ITEM.BIG_DATA, MENU_ITEM.SELECT];
+const menuItems = [MENU_ITEM.GETTING_STARTED, MENU_ITEM.API, MENU_ITEM.BASIC, MENU_ITEM.BIG_DATA, MENU_ITEM.SELECT];
 
 export interface MenuProps {
   onMenuItemClick: (menuitem: MENU_ITEM) => void;
@@ -15,7 +16,7 @@ export interface MenuProps {
 
 export const Menu: FC<MenuProps> = memo(({onMenuItemClick}) => {
 
-  const [menuItem, setMenuItem] = useState<MENU_ITEM>(MENU_ITEM.GET_STARTED);
+  const [menuItem, setMenuItem] = useState<MENU_ITEM>(MENU_ITEM.GETTING_STARTED);
 
   const handleMenuItemClick = (clickedItem: MENU_ITEM) => (e: React.MouseEvent<Element>): void => {
     setMenuItem(clickedItem);

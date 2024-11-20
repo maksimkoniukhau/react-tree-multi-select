@@ -2,12 +2,12 @@ import React, {FC} from 'react';
 import {basicUsageCode} from './code-data';
 import {CodeBlock} from './CodeBlock';
 
-export const GetStartedPage: FC = () => {
+export const GettingStartedPage: FC = () => {
 
   return (
     <div className="page">
-      <h3>Getting Started with RTS tree select</h3>
-      <div className="title">Installation:</div>
+      <h3>{'Getting Started with RTS tree select'}</h3>
+      <div className="title">{'Installation:'}</div>
       <div className="paragraph">
         {'RTS is distributed as an NPM package.\n'}
         {'In order to use, install rts in your React project.'}

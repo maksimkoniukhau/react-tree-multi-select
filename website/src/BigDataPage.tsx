@@ -13,7 +13,7 @@ export const BigDataPage: FC = memo(() => {
 
   return (
     <div className="page">
-      <h3>Tree select big data</h3>
+      <h3>{'Tree select big data'}</h3>
       <select className="bd-select" onChange={handleOptionChange}>
         <option value="30">{`Nodes amount: ${bigTreeNodeData30.amount}`}</option>
         <option value="50">{`Nodes amount: ${bigTreeNodeData50.amount}`}</option>

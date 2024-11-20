@@ -5,7 +5,7 @@ export const SelectPage: FC = memo(() => {
 
   return (
     <div className="page">
-      <h3>Multi-select</h3>
+      <h3>{'Multi-select'}</h3>
       <div className="tree-select-wrapper">
         <TreeSelect
           data={[
