@@ -55,6 +55,12 @@ export const ApiPage: FC = () => {
           <td>{'custom input placeholder'}</td>
         </tr>
         <tr>
+          <td>{'noMatchesText'}</td>
+          <td>{'string'}</td>
+          <td>{`'No matches'`}</td>
+          <td>{'custom text displayed when no items found during the search'}</td>
+        </tr>
+        <tr>
           <td>{'withClearAll'}</td>
           <td>{'boolean'}</td>
           <td>{'true'}</td>
