@@ -153,6 +153,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
         nodes,
         displayedNodes,
         selectedNodes,
+        showSelectAll: withSelectAll,
         selectAllCheckedState: getSelectAllCheckedState(selectedNodes, nodes)
       } as InitPayload
     });
@@ -212,7 +213,8 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
       type: ActionType.CHANGE_INPUT,
       payload: {
         searchValue: value,
-        displayedNodes
+        displayedNodes,
+        showSelectAll: withSelectAll && !Boolean(value)
       } as ChangeInputPayload
     });
   }, [state.nodes]);
@@ -359,7 +361,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
 
   const getFirstFocusedElement = (): string => {
     let focusedEl = '';
-    if (withSelectAll) {
+    if (state.showSelectAll) {
       focusedEl = SELECT_ALL;
     } else if (state.displayedNodes.length) {
       focusedEl = state.displayedNodes[0].path;
@@ -393,7 +395,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     if (state.displayedNodes.length) {
       const current = state.displayedNodes.find(node => node.path === state.focusedElement);
       const index = current ? state.displayedNodes.indexOf(current) : state.displayedNodes.length;
-      if (index === 0 && withSelectAll) {
+      if (index === 0 && state.showSelectAll) {
         focusedEl = SELECT_ALL;
       } else {
         const prev = index === 0
@@ -566,7 +568,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
           nodesAmount={state.nodes.length}
           displayedNodes={state.displayedNodes}
           searchValue={state.searchValue}
-          withSelectAll={withSelectAll}
+          showSelectAll={state.showSelectAll}
           selectAllCheckedState={state.selectAllCheckedState}
           focusedElement={state.focusedElement}
           noMatchesText={noMatchesText}

@@ -12,7 +12,7 @@ export interface DropdownProps {
   nodesAmount: number;
   displayedNodes: Node[];
   searchValue: string;
-  withSelectAll: boolean;
+  showSelectAll: boolean;
   selectAllCheckedState: CheckedState;
   focusedElement: string;
   noMatchesText: string;
@@ -29,7 +29,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
     nodesAmount = 0,
     displayedNodes = [],
     searchValue = '',
-    withSelectAll = false,
+    showSelectAll = false,
     selectAllCheckedState = CheckedState.UNSELECTED,
     focusedElement = '',
     noMatchesText,
@@ -42,7 +42,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
 
   const [height, setHeight] = useState<number>(DEFAULT_OPTIONS_CONTAINER_HEIGHT);
 
-  const itemCount = (displayedNodes.length || 1) + (withSelectAll ? 1 : 0);
+  const itemCount = (displayedNodes.length || 1) + (showSelectAll ? 1 : 0);
 
   const calculateViewLocation: CalculateViewLocation = (params) => {
     const {
@@ -54,7 +54,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
     } = params;
 
     let topElmSize = 0;
-    if (withSelectAll) {
+    if (showSelectAll) {
       virtuosoRef.current?.getState((state: StateSnapshot) => {
         topElmSize = state?.ranges
           ?.find(range => range.startIndex === 0)
@@ -77,7 +77,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
     if (focusedElement && virtuosoRef.current && displayedNodes.length) {
       const elementIndex = focusedElement === SELECT_ALL
         ? 0
-        : displayedNodes.indexOf(nodeMap?.get(focusedElement)) + (withSelectAll ? 1 : 0);
+        : displayedNodes.indexOf(nodeMap?.get(focusedElement)) + (showSelectAll ? 1 : 0);
       if (elementIndex >= 0) {
         virtuosoRef.current.scrollIntoView({
           index: elementIndex,
@@ -85,7 +85,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
         });
       }
     }
-  }, [focusedElement]);
+  }, [focusedElement, showSelectAll]);
 
   const handleTotalListHeightChanged = (height: number): void => {
     setHeight(Math.min(DEFAULT_OPTIONS_CONTAINER_HEIGHT, height));
@@ -97,7 +97,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
       nodesAmount={nodesAmount}
       displayedNodes={displayedNodes}
       searchValue={searchValue}
-      withSelectAll={withSelectAll}
+      showSelectAll={showSelectAll}
       selectAllCheckedState={selectAllCheckedState}
       focusedElement={focusedElement}
       noMatchesText={noMatchesText}
@@ -118,7 +118,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
         style={{height: `${height}px`, width: DEFAULT_OPTIONS_CONTAINER_WIDTH, borderRadius: '4px'}}
         totalListHeightChanged={handleTotalListHeightChanged}
         totalCount={itemCount}
-        topItemCount={withSelectAll ? 1 : 0}
+        topItemCount={showSelectAll ? 1 : 0}
         itemContent={itemContent}
       />
     </div>

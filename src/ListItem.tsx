@@ -12,7 +12,7 @@ export interface ListItemProps {
   nodesAmount: number;
   displayedNodes: Node[];
   searchValue: string;
-  withSelectAll: boolean;
+  showSelectAll: boolean;
   selectAllCheckedState: CheckedState;
   focusedElement: string;
   noMatchesText: string;
@@ -28,7 +28,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     nodesAmount = 0,
     displayedNodes = [],
     searchValue = '',
-    withSelectAll = false,
+    showSelectAll = false,
     selectAllCheckedState = CheckedState.UNSELECTED,
     focusedElement = '',
     noMatchesText,
@@ -37,7 +37,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     onClickExpandNode
   } = props;
 
-  if (withSelectAll && index === 0) {
+  if (showSelectAll && index === 0) {
     return (
       <SelectAll
         label={SELECT_ALL}
@@ -47,13 +47,14 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
       />
     );
   }
+
   if (displayedNodes.length === 0) {
     return (
       <NoMatches label={noMatchesText}/>
     );
   }
 
-  const nodeIndex = withSelectAll && nodesAmount > 0 ? index - 1 : index;
+  const nodeIndex = showSelectAll && nodesAmount > 0 ? index - 1 : index;
   const node = displayedNodes[nodeIndex];
   const focused = focusedElement === node.path;
   const expanded = searchValue ? node.searchExpanded : node.expanded;

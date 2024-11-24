@@ -6,6 +6,7 @@ export interface InitPayload {
   nodes: Node[];
   displayedNodes: Node[];
   selectedNodes: Node[];
+  showSelectAll: boolean;
   selectAllCheckedState: CheckedState;
 }
 
@@ -16,6 +17,7 @@ export interface ToggleDropdownPayload {
 export interface ChangeInputPayload {
   searchValue: string;
   displayedNodes: Node[];
+  showSelectAll: boolean;
 }
 
 export interface ClickChipPayload {
@@ -106,6 +108,7 @@ export interface State {
 
   searchValue: string;
   showDropdown: boolean;
+  showSelectAll: boolean;
 
   focusedFieldElement: string;
   focusedElement: string;
@@ -119,6 +122,7 @@ export const initialState: State = {
 
   searchValue: '',
   showDropdown: false,
+  showSelectAll: false,
 
   focusedFieldElement: '',
   focusedElement: '',
