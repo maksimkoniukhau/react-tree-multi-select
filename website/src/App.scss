@@ -55,8 +55,12 @@
           padding: 5px 0;
         }
 
-        .bd-select {
+        .select-container {
           margin-bottom: 15px;
+
+          label {
+            margin-right: 5px;
+          }
         }
 
         .code-container {
