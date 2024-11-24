@@ -217,7 +217,7 @@ export class Node {
 
   public handleToggle = (type: Type): void => {
     if (!this.disabled) {
-      if (this.shouldBeUnselected()) {
+      if (this.shouldBeUnselected(type)) {
         this.handleUnselect(type);
       } else {
         this.handleSelect(type);
@@ -258,18 +258,17 @@ export class Node {
     }
   };
 
-  public isVisible = (isSearchMode: boolean): boolean => {
+  public isDisplayed = (isSearchMode: boolean): boolean => {
+    return this.filtered && this.isVisible(isSearchMode);
+  };
+
+  private isVisible = (isSearchMode: boolean): boolean => {
     if (!this.parent) {
       return true;
     }
-
     return !this.ancestors.some(ancestor => isSearchMode
       ? !ancestor.searchExpanded
       : !ancestor.expanded);
-  };
-
-  public isDisplayed = (isSearchMode: boolean): boolean => {
-    return this.filtered && this.isVisible(isSearchMode);
   };
 
   private mapToTreeNode = (node: Node): TreeNode => {
@@ -291,9 +290,10 @@ export class Node {
     return treeNode;
   };
 
-  private shouldBeUnselected = (): boolean => {
+  private shouldBeUnselected = (type: Type): boolean => {
     return this.selected
-      || Boolean(this.descendants.length && this.areAllExcludingDisabledDescendantsSelected(this));
+      || (type === Type.MULTI_SELECT_TREE
+        && Boolean(this.descendants.length && this.areAllExcludingDisabledDescendantsSelected(this)));
   };
 
   private getAllAncestors = (): Node[] => {
@@ -336,6 +336,10 @@ export class Node {
     return node.descendants.every(descendant => descendant.selected);
   };
 
+  private areAnyDescendantsSelected = (node: Node): boolean => {
+    return node.descendants.some(descendant => descendant.selected);
+  };
+
   private selectAncestors = (node: Node): void => {
     const parentNode = node.parent;
     if (parentNode) {
@@ -347,10 +351,6 @@ export class Node {
       }
       this.selectAncestors(parentNode);
     }
-  };
-
-  private areAnyDescendantsSelected = (node: Node): boolean => {
-    return node.descendants.some(descendant => descendant.selected);
   };
 
   private unselectAncestors = (node: Node): void => {
