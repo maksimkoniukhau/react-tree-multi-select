@@ -72,6 +72,24 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     });
   };
 
+  const dispatchFocusElement = (focusedElement: string): void => {
+    dispatch({
+      type: ActionType.FOCUS_ELEMENT,
+      payload: {
+        focusedElement
+      } as FocusElementPayload
+    });
+  };
+
+  const dispatchFocusFieldElement = (focusedFieldElement: string): void => {
+    dispatch({
+      type: ActionType.FOCUS_FIELD_ELEMENT,
+      payload: {
+        focusedFieldElement
+      } as FocusFieldElementPayload
+    });
+  };
+
   const mapTreeNodeToNode = (treeNode: TreeNode, path: string, parent: Node | null): Node => {
     const parentPath = parent?.path || '';
     const delimiter = parentPath ? PATH_DELIMITER : '';
@@ -436,12 +454,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
         if (!state.focusedFieldElement && state.focusedElement) {
           handleKeyDownExpandNode(false);
         } else if (!state.searchValue) {
-          dispatch({
-            type: ActionType.FOCUS_FIELD_ELEMENT,
-            payload: {
-              focusedFieldElement: getPrevFocusedFieldElement()
-            } as FocusFieldElementPayload
-          });
+          dispatchFocusFieldElement(getPrevFocusedFieldElement());
         }
         if (state.focusedElement) {
           e.preventDefault();
@@ -451,36 +464,25 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
         if (!state.focusedFieldElement && state.focusedElement) {
           handleKeyDownExpandNode(true);
         } else if (!state.searchValue) {
-          dispatch({
-            type: ActionType.FOCUS_FIELD_ELEMENT,
-            payload: {
-              focusedFieldElement: getNextFocusedFieldElement()
-            } as FocusFieldElementPayload
-          });
+          dispatchFocusFieldElement(getNextFocusedFieldElement());
         }
         if (state.focusedElement) {
           e.preventDefault();
         }
         break;
       case 'ArrowUp':
-        if (state.showDropdown) {
-          dispatch({
-            type: ActionType.FOCUS_ELEMENT,
-            payload: {
-              focusedElement: getPrevFocusedElement()
-            } as FocusElementPayload
-          });
+        if (state.showDropdown && state.focusedElement) {
+          dispatchFocusElement(getPrevFocusedElement());
+        } else {
+          dispatchToggleDropdown(!state.showDropdown);
         }
         e.preventDefault();
         break;
       case 'ArrowDown':
         if (state.showDropdown) {
-          dispatch({
-            type: ActionType.FOCUS_ELEMENT,
-            payload: {
-              focusedElement: getNextFocusedElement()
-            } as FocusElementPayload
-          });
+          dispatchFocusElement(getNextFocusedElement());
+        } else {
+          dispatchToggleDropdown(!state.showDropdown);
         }
         e.preventDefault();
         break;
@@ -489,7 +491,6 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
           const chipNode = filterChips(state.selectedNodes, type)
             ?.find(node => node.path === state.focusedFieldElement);
           if (chipNode) {
-            // @ts-ignore
             handleClickChip(chipNode)(e);
           } else {
             dispatchToggleDropdown(!state.showDropdown);
@@ -498,8 +499,10 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
           if (state.focusedElement === SELECT_ALL) {
             handleSelectAllNodes();
           } else {
-            // @ts-ignore
-            handleToggleNode(nodeMapRef.current?.get(state.focusedElement))(e);
+            const focusedNode = nodeMapRef.current?.get(state.focusedElement);
+            if (focusedNode) {
+              handleToggleNode(focusedNode)(e);
+            }
           }
         }
         e.preventDefault();
@@ -509,8 +512,10 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
           if (state.focusedFieldElement === CLEAR_ALL) {
             handleDeleteAll(e);
           } else {
-            // @ts-ignore
-            handleDeleteNode(nodeMapRef.current?.get(state.focusedFieldElement))(e);
+            const focusedNode = nodeMapRef.current?.get(state.focusedFieldElement);
+            if (focusedNode) {
+              handleDeleteNode(focusedNode)(e);
+            }
           }
         }
         break;
