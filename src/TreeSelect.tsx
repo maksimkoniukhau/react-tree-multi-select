@@ -17,6 +17,7 @@ import {
   InitPayload,
   reducer,
   ResetPayload,
+  ShowSelectAllPayload,
   ToggleAllPayload,
   ToggleDropdownPayload,
   TogglePayload,
@@ -159,6 +160,15 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     });
   }, [data]);
 
+  useEffect(() => {
+    dispatch({
+      type: ActionType.SHOW_SELECT_ALL,
+      payload: {
+        showSelectAll: withSelectAll && !state.searchValue,
+      } as ShowSelectAllPayload
+    });
+  }, [withSelectAll]);
+
   const handleOutsideEvent = (event: MouseEvent | TouchEvent | FocusEvent) => {
     if (state.showDropdown || state.searchValue || state.focusedFieldElement || state.focusedElement) {
       dispatch({
@@ -217,7 +227,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
         showSelectAll: withSelectAll && !Boolean(value)
       } as ChangeInputPayload
     });
-  }, [state.nodes]);
+  }, [state.nodes, withSelectAll]);
 
   const callSelectAllChangeHandler = (selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onSelectAllChange) {

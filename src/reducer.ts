@@ -14,6 +14,10 @@ export interface ToggleDropdownPayload {
   showDropdown: boolean;
 }
 
+export interface ShowSelectAllPayload {
+  showSelectAll: boolean;
+}
+
 export interface ChangeInputPayload {
   searchValue: string;
   displayedNodes: Node[];
@@ -71,6 +75,7 @@ export interface ResetPayload {
 export enum ActionType {
   INIT,
   TOGGLE_DROPDOWN,
+  SHOW_SELECT_ALL,
   CHANGE_INPUT,
   CLICK_CHIP,
   TOGGLE,
@@ -85,6 +90,7 @@ export enum ActionType {
 
 export type Payload = InitPayload
   | ToggleDropdownPayload
+  | ShowSelectAllPayload
   | ChangeInputPayload
   | ClickChipPayload
   | TogglePayload
@@ -144,6 +150,13 @@ export const reducer = (state = initialState, action: Action): State => {
         ...state,
         ...payload,
         focusedElement: !payload.showDropdown ? '' : state.focusedElement
+      };
+    }
+    case ActionType.SHOW_SELECT_ALL: {
+      const payload = action.payload as ShowSelectAllPayload;
+      return {
+        ...state,
+        ...payload
       };
     }
     case ActionType.CHANGE_INPUT: {
