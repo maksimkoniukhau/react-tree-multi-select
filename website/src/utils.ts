@@ -8,24 +8,29 @@ export interface RandomTreeNode extends TreeNode {
   customString?: string;
 }
 
-const mapOptionsToTreeNodes = (opts: Option[]): OptionTreeNode[] => {
+const mapOptionsToTreeNodes = (
+  opts: Option[], selected: boolean, expanded: boolean, disabled: boolean
+): OptionTreeNode[] => {
   return opts.map(option => {
     const treeNode: OptionTreeNode = {
       option,
       label: option.name,
-      selected: option.id === 6 || option.id === 8 || option.id === 3 || option.id === 18 || option.id === 23 || option.id === 28,
-      expanded: option.id === 1 || option.id === 2 || option.id === 11 || option.id === 12,
-      disabled: option.id === 2 || option.id === 7 || option.id === 18
+      selected: selected
+        && (option.id === 6 || option.id === 9 || option.id === 3 || option.id === 18 || option.id === 23 || option.id === 28 || option.id === 29),
+      expanded: expanded
+        && (option.id === 1 || option.id === 2 || option.id === 11 || option.id === 12),
+      disabled: disabled
+        && (option.id === 2 || option.id === 7 || option.id === 18 || option.id === 34 || option.id === 35)
     };
     if (option.children.length) {
-      treeNode.children = mapOptionsToTreeNodes(option.children);
+      treeNode.children = mapOptionsToTreeNodes(option.children, selected, expanded, disabled);
     }
     return treeNode;
   });
 };
 
-const getOptionTreeNodeData = (): OptionTreeNode[] => {
-  return mapOptionsToTreeNodes(options);
+export const getOptionTreeNodeData = (selected: boolean, expanded: boolean, disabled: boolean): OptionTreeNode[] => {
+  return mapOptionsToTreeNodes(options, selected, expanded, disabled);
 };
 
 const randomString = (length: number): string => {
@@ -92,8 +97,6 @@ const generateBigTreeNodeData = (rootAmount: number): { data: RandomTreeNode[], 
   const data = generateData(rootAmount, '0');
   return {data, amount: countData(data)};
 };
-
-export const optionTreeNodeData: OptionTreeNode[] = getOptionTreeNodeData();
 
 export const bigTreeNodeData30: { data: RandomTreeNode[], amount: number } = generateBigTreeNodeData(30);
 export const bigTreeNodeData50: { data: RandomTreeNode[], amount: number } = generateBigTreeNodeData(50);

@@ -7,7 +7,7 @@ export const BigDataPage: FC = memo(() => {
 
   const [data, setData] = useState<RandomTreeNode[]>(bigTreeNodeData30.data);
 
-  const handleOptionChange = (value: string) => {
+  const handleOptionChange = (value: string): void => {
     setData(value === '50' ? bigTreeNodeData50.data : bigTreeNodeData30.data);
   };
 

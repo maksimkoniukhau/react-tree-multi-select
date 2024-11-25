@@ -8,9 +8,8 @@ export interface SelectProps {
 
 export const Select: FC<SelectProps> = memo(({label, options, onChange}) => {
 
-  const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    onChange(value);
+  const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    onChange(e.target.value);
   };
 
   return (

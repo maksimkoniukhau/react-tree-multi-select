@@ -61,7 +61,7 @@ export const options: Option[] = [
   },
   {
     id: 10,
-    name: 'SQL',
+    name: 'XML',
     children: []
   },
   {
@@ -157,6 +157,43 @@ export const options: Option[] = [
             children: []
           }
         ]
+      }
+    ]
+  },
+  {
+    id: 29,
+    name: 'Go',
+    children: [
+      {
+        id: 30,
+        name: 'Gin',
+        children: []
+      },
+      {
+        id: 31,
+        name: 'Echo',
+        children: []
+      },
+      {
+        id: 32,
+        name: 'Beego',
+        children: []
+      }
+    ]
+  },
+  {
+    id: 33,
+    name: 'SQL',
+    children: [
+      {
+        id: 34,
+        name: 'MySQL',
+        children: []
+      },
+      {
+        id: 35,
+        name: 'PostgreSQL',
+        children: []
       }
     ]
   }

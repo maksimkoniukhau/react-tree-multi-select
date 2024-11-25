@@ -55,11 +55,28 @@
           padding: 5px 0;
         }
 
-        .select-container {
-          margin-bottom: 15px;
+        .basic-options {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          border: 1px solid gray;
+          padding: 10px;
+          margin-bottom: 20px;
 
+          .delimiter {
+            border-bottom: 1px solid gray;
+          }
+        }
+
+        .select-container, .input-container {
           label {
             margin-right: 5px;
+          }
+        }
+
+        .checkbox-container {
+          label {
+            margin-left: 5px;
           }
         }
 
