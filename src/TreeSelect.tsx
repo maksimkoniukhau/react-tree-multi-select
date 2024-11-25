@@ -158,7 +158,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
         selectAllCheckedState: getSelectAllCheckedState(selectedNodes, nodes)
       } as InitPayload
     });
-  }, [data]);
+  }, [data, type]);
 
   useEffect(() => {
     dispatch({
