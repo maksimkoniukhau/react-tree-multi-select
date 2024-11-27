@@ -1,5 +1,4 @@
 import React from 'react';
-import {PATH_DELIMITER} from './constants';
 import {Node} from './Node';
 import {Type} from './models';
 
@@ -16,23 +15,6 @@ export const convertTreeArrayToFlatArray = (treeArray: Node[]): Node[] => {
   const nodeArray: Node[] = [];
   fillArrayFromTreeArray(treeArray, nodeArray);
   return nodeArray;
-};
-
-export const getParentPath = (path: string): string => {
-  return path.substring(0, path.lastIndexOf(PATH_DELIMITER));
-};
-
-export const getAllAncestorsPaths = (path: string): string[] => {
-  if (!path || path.length === 1) {
-    return [];
-  }
-  const parentPaths: string[] = [];
-  let parentPath = getParentPath(path);
-  while (parentPath) {
-    parentPaths.push(parentPath);
-    parentPath = getParentPath(parentPath);
-  }
-  return parentPaths;
 };
 
 export const areAllExcludingDisabledSelected = (nodes: Node[]): boolean => {
@@ -59,18 +41,6 @@ export const filterChips = (nodes: Node[], type: Type): Node[] => {
     : nodes.filter(node => node.selected);
 };
 
-export const preventDefaultOnMouseEvent = (e: React.MouseEvent<Element>): void => {
+export const preventDefaultOnMouseEvent = (e: React.MouseEvent): void => {
   e.preventDefault();
-};
-
-/**
- * Gets keyboard-focusable elements within a specified element
- * @param {HTMLElement} [element=document] element
- * @returns {Array}
- */
-export const getKeyboardFocusableElements = (element: Element): Element[] => {
-  return Array.from(element.querySelectorAll(
-    'a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'))
-    .filter(el => !el.hasAttribute('disabled')
-      && !el.getAttribute('aria-hidden'));
 };
