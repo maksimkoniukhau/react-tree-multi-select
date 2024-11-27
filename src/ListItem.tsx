@@ -14,6 +14,8 @@ export interface ListItemProps {
   searchValue: string;
   showSelectAll: boolean;
   selectAllCheckedState: CheckedState;
+  showNodeExpand: boolean;
+  showNodeCheckbox: boolean;
   focusedElement: string;
   noMatchesText: string;
   onChangeSelectAll: (e: React.MouseEvent<Element>) => void;
@@ -30,6 +32,8 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     searchValue = '',
     showSelectAll = false,
     selectAllCheckedState = CheckedState.UNSELECTED,
+    showNodeExpand = false,
+    showNodeCheckbox = false,
     focusedElement = '',
     noMatchesText,
     onChangeSelectAll,
@@ -65,6 +69,8 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
       node={node}
       focused={focused}
       expanded={expanded}
+      showNodeExpand={showNodeExpand}
+      showNodeCheckbox={showNodeCheckbox}
       onToggleNode={onToggleNode(node)}
       onClickExpandIcon={onClickExpandNode(node)}
     />

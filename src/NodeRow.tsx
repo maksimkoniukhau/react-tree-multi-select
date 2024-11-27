@@ -8,6 +8,8 @@ export interface NodeRowProps {
   node: Node;
   focused: boolean;
   expanded: boolean;
+  showNodeExpand: boolean;
+  showNodeCheckbox: boolean;
   onToggleNode: (e: React.MouseEvent<Element>) => void;
   onClickExpandIcon: (e: React.MouseEvent<Element>) => void;
 }
@@ -18,12 +20,15 @@ export const NodeRow: FC<NodeRowProps> = memo((props) => {
     node,
     focused,
     expanded,
+    showNodeExpand,
+    showNodeCheckbox,
     onToggleNode,
     onClickExpandIcon
   } = props;
 
-  const expandIconWidth = node.hasChildren() ? 1 : 0;
-  const pL = node.deep - expandIconWidth;
+  const expandIconWidth = showNodeExpand && node.hasChildren() ? 1 : 0;
+  const checkboxWidth = showNodeCheckbox ? 0 : 1;
+  const pL = node.deep - checkboxWidth - expandIconWidth;
 
   const getNodeRowClasses = (): string => {
     const disabledClass = node.disabled ? ' disabled' : '';
@@ -37,11 +42,13 @@ export const NodeRow: FC<NodeRowProps> = memo((props) => {
 
   return (
     <div className={getNodeRowClasses()}>
-      {node.hasChildren() && (
+      {(showNodeExpand && node.hasChildren()) && (
         <NodeExpand expanded={expanded} onClick={onClickExpandIcon}/>
       )}
       <div className="rts-node" onClick={onToggleNode}>
-        <Checkbox checked={node.selected} partial={node.partiallySelected} disabled={node.disabled}/>
+        {showNodeCheckbox && (
+          <Checkbox checked={node.selected} partial={node.partiallySelected} disabled={node.disabled}/>
+        )}
         <span className="rts-label">
            {node.name}
         </span>

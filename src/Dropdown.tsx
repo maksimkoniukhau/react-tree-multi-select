@@ -14,6 +14,8 @@ export interface DropdownProps {
   searchValue: string;
   showSelectAll: boolean;
   selectAllCheckedState: CheckedState;
+  showNodeExpand: boolean;
+  showNodeCheckbox: boolean;
   focusedElement: string;
   noMatchesText: string;
   onChangeSelectAll: (e: React.MouseEvent<Element>) => void;
@@ -31,6 +33,8 @@ export const Dropdown: FC<DropdownProps> = (props) => {
     searchValue = '',
     showSelectAll = false,
     selectAllCheckedState = CheckedState.UNSELECTED,
+    showNodeExpand = false,
+    showNodeCheckbox = false,
     focusedElement = '',
     noMatchesText,
     onChangeSelectAll,
@@ -99,6 +103,8 @@ export const Dropdown: FC<DropdownProps> = (props) => {
       searchValue={searchValue}
       showSelectAll={showSelectAll}
       selectAllCheckedState={selectAllCheckedState}
+      showNodeExpand={showNodeExpand}
+      showNodeCheckbox={showNodeCheckbox}
       focusedElement={focusedElement}
       noMatchesText={noMatchesText}
       onChangeSelectAll={onChangeSelectAll}

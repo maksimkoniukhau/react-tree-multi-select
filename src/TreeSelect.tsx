@@ -39,8 +39,8 @@ export interface TreeSelectProps {
   withSelectAll?: boolean;
   onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
   onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
-  onClearAll?: (selectAllCheckedState: CheckedState, selectedNodes: TreeNode[]) => void;
-  onSelectAllChange?: (selectAllCheckedState: CheckedState, selectedNodes: TreeNode[]) => void;
+  onClearAll?: (selectedNodes: TreeNode[], selectAllCheckedState?: CheckedState) => void;
+  onSelectAllChange?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => void;
 }
 
 export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
@@ -91,6 +91,14 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     });
   };
 
+  const getSelectAllCheckedState = (selectedNodes: Node[], allNodes: Node[]): CheckedState => {
+    return selectedNodes.length === allNodes.length
+      ? CheckedState.SELECTED
+      : selectedNodes.length === 0
+        ? CheckedState.UNSELECTED
+        : CheckedState.PARTIAL;
+  };
+
   const mapTreeNodeToNode = (treeNode: TreeNode, path: string, parent: Node | null): Node => {
     const parentPath = parent?.path || '';
     const delimiter = parentPath ? PATH_DELIMITER : '';
@@ -116,28 +124,31 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     return node;
   };
 
-  const getSelectAllCheckedState = (selectedNodes: Node[], allNodes: Node[]): CheckedState => {
-    return selectedNodes.length === allNodes.length
-      ? CheckedState.SELECTED
-      : selectedNodes.length === 0
-        ? CheckedState.UNSELECTED
-        : CheckedState.PARTIAL;
-  };
-
   useEffect(() => {
     const nodeTree: Node[] = [];
     data.forEach((treeNode, index) => {
       nodeTree.push(mapTreeNodeToNode(treeNode, index.toString(), null));
     });
 
-    const nodes = convertTreeArrayToFlatArray(nodeTree);
+    let nodes = nodeTree;
 
-    nodes.forEach(node => {
-      if (node.initTreeNode.selected) {
+    if (type === Type.MULTI_SELECT_TREE || type === Type.MULTI_SELECT_TREE_FLAT) {
+      nodes = convertTreeArrayToFlatArray(nodeTree);
+
+      nodes.forEach(node => {
+        if (node.initTreeNode.selected) {
+          // handleSelect (not handleToggle) should be used!!!
+          node.handleSelect(type);
+        }
+      });
+    }
+    if (type === Type.SELECT) {
+      const lastSelectedNode = nodes.findLast(node => node.initTreeNode.selected);
+      if (lastSelectedNode) {
         // handleSelect (not handleToggle) should be used!!!
-        node.handleSelect(type);
+        lastSelectedNode.handleSelect(type);
       }
-    });
+    }
     // disabled should be processed in separate cycle after selected,
     // cause disabled node initially might be selected!!!
     nodes.forEach(node => {
@@ -154,19 +165,21 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
         nodes,
         displayedNodes,
         selectedNodes,
-        showSelectAll: withSelectAll,
+        showSelectAll: type !== Type.SELECT && withSelectAll,
         selectAllCheckedState: getSelectAllCheckedState(selectedNodes, nodes)
       } as InitPayload
     });
   }, [data, type]);
 
   useEffect(() => {
-    dispatch({
-      type: ActionType.SHOW_SELECT_ALL,
-      payload: {
-        showSelectAll: withSelectAll && !state.searchValue,
-      } as ShowSelectAllPayload
-    });
+    if (type !== Type.SELECT) {
+      dispatch({
+        type: ActionType.SHOW_SELECT_ALL,
+        payload: {
+          showSelectAll: withSelectAll && !state.searchValue,
+        } as ShowSelectAllPayload
+      });
+    }
   }, [withSelectAll]);
 
   const handleOutsideEvent = (event: MouseEvent | TouchEvent | FocusEvent) => {
@@ -190,7 +203,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
   const callClearAllHandler = (selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onClearAll) {
       const selectedTreeNodes = selectedNodes.map(node => node.toTreeNode());
-      onClearAll(selectAllCheckedState, selectedTreeNodes);
+      onClearAll(selectedTreeNodes, type !== Type.SELECT ? selectAllCheckedState : undefined);
     }
   };
 
@@ -224,7 +237,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
       payload: {
         searchValue: value,
         displayedNodes,
-        showSelectAll: withSelectAll && !Boolean(value)
+        showSelectAll: type !== Type.SELECT && withSelectAll && !Boolean(value)
       } as ChangeInputPayload
     });
   }, [state.nodes, withSelectAll]);
@@ -232,7 +245,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
   const callSelectAllChangeHandler = (selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onSelectAllChange) {
       const selectedTreeNodes = selectedNodes.map(node => node.toTreeNode());
-      onSelectAllChange(selectAllCheckedState, selectedTreeNodes);
+      onSelectAllChange(selectedTreeNodes, selectAllCheckedState);
     }
   };
 
@@ -318,7 +331,15 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
   }, [state.nodes, type]);
 
   const handleToggleNode = useCallback((node: Node) => (e: React.MouseEvent<Element> | React.KeyboardEvent<Element>): void => {
-    node.handleToggle(type);
+    if (type === Type.MULTI_SELECT_TREE || type === Type.MULTI_SELECT_TREE_FLAT) {
+      node.handleToggle(type);
+    }
+    if (type === Type.SELECT) {
+      if (!node.disabled) {
+        state.selectedNodes.forEach(node => node.handleUnselect(type));
+        node.handleSelect(type);
+      }
+    }
 
     const selectedNodes = node.disabled
       ? state.selectedNodes
@@ -334,7 +355,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     });
 
     callNodeChangeHandler(node, selectedNodes);
-  }, [state]);
+  }, [state.nodes, state.selectedNodes, type]);
 
   const handleExpandNode = (node: Node, expand: boolean): void => {
     node.handleExpand(Boolean(state.searchValue), expand);
@@ -580,6 +601,8 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
           searchValue={state.searchValue}
           showSelectAll={state.showSelectAll}
           selectAllCheckedState={state.selectAllCheckedState}
+          showNodeExpand={type !== Type.SELECT}
+          showNodeCheckbox={type !== Type.SELECT}
           focusedElement={state.focusedElement}
           noMatchesText={noMatchesText}
           onChangeSelectAll={handleChangeSelectAll}
