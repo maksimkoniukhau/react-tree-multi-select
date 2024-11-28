@@ -3,7 +3,7 @@ import './tree-select.scss';
 import React, {useCallback, useEffect, useReducer, useRef} from 'react';
 
 import {CLEAR_ALL, INPUT, INPUT_PLACEHOLDER, NO_MATCHES, PATH_DELIMITER, SELECT_ALL} from './constants';
-import {areAllExcludingDisabledSelected, convertTreeArrayToFlatArray, filterChips, isAnyHasChildren} from './utils';
+import {areAllExcludingDisabledSelected, convertTreeArrayToFlatArray, filterChips, typeToClassName} from './utils';
 import {CheckedState, TreeNode, Type} from './models';
 import {useOnClickOutside} from './hooks';
 import {
@@ -134,7 +134,8 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
 
     if (type === Type.MULTI_SELECT_TREE || type === Type.MULTI_SELECT_TREE_FLAT) {
       nodes = convertTreeArrayToFlatArray(nodeTree);
-
+    }
+    if (type === Type.MULTI_SELECT_TREE || type === Type.MULTI_SELECT_TREE_FLAT || type === Type.MULTI_SELECT) {
       nodes.forEach(node => {
         if (node.initTreeNode.selected) {
           // handleSelect (not handleToggle) should be used!!!
@@ -331,7 +332,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
   }, [state.nodes, type]);
 
   const handleToggleNode = useCallback((node: Node) => (e: React.MouseEvent<Element> | React.KeyboardEvent<Element>): void => {
-    if (type === Type.MULTI_SELECT_TREE || type === Type.MULTI_SELECT_TREE_FLAT) {
+    if (type === Type.MULTI_SELECT_TREE || type === Type.MULTI_SELECT_TREE_FLAT || type === Type.MULTI_SELECT) {
       node.handleToggle(type);
     }
     if (type === Type.SELECT) {
@@ -569,9 +570,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     }
   };
 
-  const containerClasses = 'rts-tree-select'
-    + (!isAnyHasChildren(state.nodes) ? ' simple-select' : '')
-    + (className ? ` ${className}` : '');
+  const containerClasses = `rts-tree-select ${typeToClassName(type)}` + (className ? ` ${className}` : '');
 
   useOnClickOutside(treeSelectRef, handleOutsideEvent);
 
@@ -596,13 +595,13 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
       {state.showDropdown ? (
         <Dropdown
           nodeMap={nodeMapRef.current}
-          nodesAmount={state.nodes.length}
+          nodes={state.nodes}
           displayedNodes={state.displayedNodes}
           searchValue={state.searchValue}
           showSelectAll={state.showSelectAll}
           selectAllCheckedState={state.selectAllCheckedState}
-          showNodeExpand={type !== Type.SELECT}
-          showNodeCheckbox={type !== Type.SELECT}
+          showNodeExpand={type !== Type.MULTI_SELECT && type !== Type.SELECT}
+          showNodeCheckbox={type !== Type.MULTI_SELECT && type !== Type.SELECT}
           focusedElement={state.focusedElement}
           noMatchesText={noMatchesText}
           onChangeSelectAll={handleChangeSelectAll}

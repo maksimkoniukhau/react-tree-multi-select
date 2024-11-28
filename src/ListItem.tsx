@@ -1,6 +1,7 @@
 import React, {FC, memo} from 'react';
 
 import {SELECT_ALL} from './constants';
+import {isAnyHasChildren} from './utils';
 import {CheckedState} from './models';
 import {NodeRow} from './NodeRow';
 import {SelectAll} from './SelectAll';
@@ -9,7 +10,7 @@ import {Node} from './Node';
 
 export interface ListItemProps {
   index: number;
-  nodesAmount: number;
+  nodes: Node[];
   displayedNodes: Node[];
   searchValue: string;
   showSelectAll: boolean;
@@ -27,7 +28,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
 
   const {
     index,
-    nodesAmount = 0,
+    nodes = [],
     displayedNodes = [],
     searchValue = '',
     showSelectAll = false,
@@ -58,7 +59,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     );
   }
 
-  const nodeIndex = showSelectAll && nodesAmount > 0 ? index - 1 : index;
+  const nodeIndex = showSelectAll && nodes.length > 0 ? index - 1 : index;
   const node = displayedNodes[nodeIndex];
   const focused = focusedElement === node.path;
   const expanded = searchValue ? node.searchExpanded : node.expanded;
@@ -69,8 +70,9 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
       node={node}
       focused={focused}
       expanded={expanded}
-      showNodeExpand={showNodeExpand}
+      showNodeExpand={showNodeExpand && node.hasChildren()}
       showNodeCheckbox={showNodeCheckbox}
+      indentation={!isAnyHasChildren(nodes)}
       onToggleNode={onToggleNode(node)}
       onClickExpandIcon={onClickExpandNode(node)}
     />

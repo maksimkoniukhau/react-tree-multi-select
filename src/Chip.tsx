@@ -33,6 +33,7 @@ export const Chip: FC<ChipProps> = (props) => {
     <div
       className={chipClasses}
       onClick={handleClickElement}
+      // needed for staying focus on input
       onMouseDown={preventDefaultOnMouseEvent}
     >
       <span className="rts-label">{label}</span>

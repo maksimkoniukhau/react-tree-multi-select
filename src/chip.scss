@@ -20,7 +20,7 @@
   }
 
   &.disabled {
-    opacity: 0.6;
+    color: var(--rts-disabled-color);
     cursor: not-allowed;
 
     .rts-chip-clear-icon {

@@ -15,22 +15,26 @@
     padding-bottom: 3px;
     outline: none;
     color: #212529;
-
-    &.focused {
-      background-color: #ebebeb;
-    }
   }
 
   .rts-list-item {
     background-color: #ffffff;
     padding-right: $row-base-padding;
 
+    &.selected {
+      background-color: var(--rts-list-item-selected-background-color);
+    }
+
+    &.focused, &:hover {
+      background-color: #ebebeb;
+    }
+
     &.matched .rts-label {
       background-color: #ffffb0b0;
     }
 
     &.disabled .rts-node {
-      color: #808080;
+      color: var(--rts-disabled-color);
       cursor: not-allowed;
     }
 
@@ -64,6 +68,10 @@
     border-bottom: 1px solid #ced4da;
     padding-left: $row-base-padding;
     padding-right: $row-base-padding;
+
+    &.focused, &:hover {
+      background-color: #ebebeb;
+    }
 
     .rts-select-all {
       display: flex;

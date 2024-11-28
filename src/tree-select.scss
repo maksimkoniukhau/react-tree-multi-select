@@ -4,13 +4,13 @@ TreeSelect styles
 @import 'variables';
 
 .rts-tree-select {
-  position: relative;
+  @import 'css-variables';
 
-  &.simple-select {
-    .pl-1 {
-      padding-left: $row-base-padding;
-    }
+  &.rts-multi-select, &.rts-select {
+    --rts-list-item-selected-background-color: #e7f3fc;
   }
+
+  position: relative;
 
   @for $i from 0 through 100 {
     .pl-#{$i} {

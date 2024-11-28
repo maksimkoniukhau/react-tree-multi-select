@@ -41,6 +41,10 @@ export const filterChips = (nodes: Node[], type: Type): Node[] => {
     : nodes.filter(node => node.selected);
 };
 
+export const typeToClassName = (type: Type): string => {
+  return `rts-${type.toLowerCase().replaceAll('_', '-')}`;
+};
+
 export const preventDefaultOnMouseEvent = (e: React.MouseEvent): void => {
   e.preventDefault();
 };

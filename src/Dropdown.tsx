@@ -9,7 +9,7 @@ import {ListItem} from './ListItem';
 
 export interface DropdownProps {
   nodeMap: Map<string, Node>;
-  nodesAmount: number;
+  nodes: Node[];
   displayedNodes: Node[];
   searchValue: string;
   showSelectAll: boolean;
@@ -28,7 +28,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
 
   const {
     nodeMap = new Map(),
-    nodesAmount = 0,
+    nodes = [],
     displayedNodes = [],
     searchValue = '',
     showSelectAll = false,
@@ -98,7 +98,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
   const itemContent = (index: number): JSX.Element => {
     return <ListItem
       index={index}
-      nodesAmount={nodesAmount}
+      nodes={nodes}
       displayedNodes={displayedNodes}
       searchValue={searchValue}
       showSelectAll={showSelectAll}
