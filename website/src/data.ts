@@ -196,5 +196,48 @@ export const options: Option[] = [
         children: []
       }
     ]
+  },
+  {
+    id: 36,
+    name: 'Python',
+    children: [
+      {
+        id: 37,
+        name: 'Django',
+        children: []
+      },
+      {
+        id: 38,
+        name: 'Flask',
+        children: []
+      },
+      {
+        id: 39,
+        name: 'Web2py',
+        children: []
+      }
+    ]
+  }
+  ,
+  {
+    id: 40,
+    name: 'Rust',
+    children: [
+      {
+        id: 41,
+        name: 'Actix Web',
+        children: []
+      },
+      {
+        id: 42,
+        name: 'Rocket',
+        children: []
+      },
+      {
+        id: 43,
+        name: 'Warp',
+        children: []
+      }
+    ]
   }
 ];

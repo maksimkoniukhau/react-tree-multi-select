@@ -1,5 +1,5 @@
 export const basicUsageCode = `import React, {FC} from 'react';
-import {TreeNode, TreeSelect} from 'rts';
+import {CheckedState, TreeNode, TreeSelect} from 'rts';
 
 export const RtsApp: FC = () => {
   
@@ -48,14 +48,14 @@ export const RtsApp: FC = () => {
     console.log('expandedNodes', expandedNodes);
   };
 
-  const handleClearAll = (selectAllCheckedState: CheckedState, selectedNodes: TreeNode[]) => {
-    console.log('handleClearAll selectAllCheckedState', selectAllCheckedState);
+  const handleClearAll = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => {
     console.log('handleClearAll selectedNodes', selectedNodes);
+    console.log('handleClearAll selectAllCheckedState', selectAllCheckedState);
   };
 
-  const handleSelectAllChange = (selectAllCheckedState: CheckedState, selectedNodes: TreeNode[]) => {
-    console.log('handleSelectAllChange selectAllCheckedState', selectAllCheckedState);
+  const handleSelectAllChange = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => {
     console.log('handleSelectAllChange selectedNodes', selectedNodes);
+     console.log('handleSelectAllChange selectAllCheckedState', selectAllCheckedState);
   };
 
   return (

@@ -9,18 +9,18 @@ export interface RandomTreeNode extends TreeNode {
 }
 
 const mapOptionsToTreeNodes = (
-  opts: Option[], selected: boolean, expanded: boolean, disabled: boolean
+  opts: Option[], selected?: boolean, expanded?: boolean, disabled?: boolean
 ): OptionTreeNode[] => {
   return opts.map(option => {
     const treeNode: OptionTreeNode = {
       option,
       label: option.name,
       selected: selected
-        && (option.id === 6 || option.id === 9 || option.id === 3 || option.id === 18 || option.id === 23 || option.id === 28 || option.id === 29),
+        && (option.id === 6 || option.id === 7 || option.id === 3 || option.id === 18 || option.id === 23 || option.id === 28 || option.id === 29 || option.id === 41),
       expanded: expanded
-        && (option.id === 1 || option.id === 2 || option.id === 11 || option.id === 12),
+        && (option.id === 1 || option.id === 2 || option.id === 11 || option.id === 12 || option.id === 40),
       disabled: disabled
-        && (option.id === 2 || option.id === 7 || option.id === 18 || option.id === 34 || option.id === 35)
+        && (option.id === 2 || option.id === 7 || option.id === 18 || option.id === 34 || option.id === 35 || option.id === 40)
     };
     if (option.children.length) {
       treeNode.children = mapOptionsToTreeNodes(option.children, selected, expanded, disabled);
@@ -29,7 +29,7 @@ const mapOptionsToTreeNodes = (
   });
 };
 
-export const getOptionTreeNodeData = (selected: boolean, expanded: boolean, disabled: boolean): OptionTreeNode[] => {
+export const getOptionTreeNodeData = (selected?: boolean, expanded?: boolean, disabled?: boolean): OptionTreeNode[] => {
   return mapOptionsToTreeNodes(options, selected, expanded, disabled);
 };
 

@@ -12,7 +12,7 @@ export const BigDataPage: FC = memo(() => {
   };
 
   return (
-    <div className="page">
+    <div className="page big-data-page">
       <h3>{'Tree select big data'}</h3>
       <Select
         label="Choose amount of nodes:"

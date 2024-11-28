@@ -86,13 +86,13 @@ export const ApiPage: FC = () => {
         </tr>
         <tr>
           <td>{'onClearAll'}</td>
-          <td>{'(selectAllCheckedState: CheckedState, selectedNodes: TreeNode[]) => void'}</td>
+          <td>{'(selectedNodes: TreeNode[], selectAllCheckedState?: CheckedState) => void;'}</td>
           <td>{'-'}</td>
           <td>{'function called on clearAll icon click/press'}</td>
         </tr>
         <tr>
           <td>{'onSelectAllChange'}</td>
-          <td>{'(selectAllCheckedState: CheckedState, selectedNodes: TreeNode[]) => void'}</td>
+          <td>{'(selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => void;'}</td>
           <td>{'-'}</td>
           <td>{'function called on selectAll select/unselect'}</td>
         </tr>

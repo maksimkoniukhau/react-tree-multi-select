@@ -44,6 +44,12 @@
 
       .page {
 
+        &.big-data-page {
+          .select-container {
+            margin-bottom: 10px;
+          }
+        }
+
         .title {
           font-size: 18px;
           font-weight: 600;

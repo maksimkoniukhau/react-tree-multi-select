@@ -63,14 +63,14 @@ export const BasicPage: FC = memo(() => {
     console.log('expandedNodes', expandedNodes);
   };
 
-  const handleClearAll = (selectAllCheckedState: CheckedState, selectedNodes: TreeNode[]): void => {
-    console.log('handleClearAll selectAllCheckedState', selectAllCheckedState);
+  const handleClearAll = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState | undefined): void => {
     console.log('handleClearAll selectedNodes', selectedNodes);
+    console.log('handleClearAll selectAllCheckedState', selectAllCheckedState);
   };
 
-  const handleSelectAllChange = (selectAllCheckedState: CheckedState, selectedNodes: TreeNode[]): void => {
-    console.log('handleSelectAllChange selectAllCheckedState', selectAllCheckedState);
+  const handleSelectAllChange = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState): void => {
     console.log('handleSelectAllChange selectedNodes', selectedNodes);
+    console.log('handleSelectAllChange selectAllCheckedState', selectAllCheckedState);
   };
 
   return (
@@ -82,7 +82,9 @@ export const BasicPage: FC = memo(() => {
           label="Type:"
           options={[
             {name: Type.MULTI_SELECT_TREE, value: Type.MULTI_SELECT_TREE},
-            {name: Type.MULTI_SELECT_TREE_FLAT, value: Type.MULTI_SELECT_TREE_FLAT}
+            {name: Type.MULTI_SELECT_TREE_FLAT, value: Type.MULTI_SELECT_TREE_FLAT},
+            {name: Type.MULTI_SELECT, value: Type.MULTI_SELECT},
+            {name: Type.SELECT, value: Type.SELECT}
           ]}
           onChange={handleOptionChange('type')}/>
         <Input label="Input placeholder:" initValue={INPUT_PLACEHOLDER}
