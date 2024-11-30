@@ -1,4 +1,4 @@
-import React, {FC, memo} from 'react';
+import React, {FC, memo, useMemo} from 'react';
 
 import {SELECT_ALL} from './constants';
 import {isAnyHasChildren} from './utils';
@@ -10,8 +10,9 @@ import {Node} from './Node';
 
 export interface ListItemProps {
   index: number;
-  nodes: Node[];
+  nodesAmount: number;
   displayedNodes: Node[];
+  isAnyHasChildren: boolean;
   searchValue: string;
   showSelectAll: boolean;
   selectAllCheckedState: CheckedState;
@@ -19,17 +20,18 @@ export interface ListItemProps {
   showNodeCheckbox: boolean;
   focusedElement: string;
   noMatchesText: string;
-  onChangeSelectAll: (e: React.MouseEvent<Element>) => void;
-  onToggleNode: (node: Node) => (e: React.MouseEvent<Element>) => void;
-  onClickExpandNode: (node: Node) => (e: React.MouseEvent<Element>) => void;
+  onChangeSelectAll: (e: React.MouseEvent) => void;
+  onToggleNode: (node: Node) => (e: React.MouseEvent) => void;
+  onClickExpandNode: (node: Node) => (e: React.MouseEvent) => void;
 }
 
 export const ListItem: FC<ListItemProps> = memo((props) => {
 
   const {
     index,
-    nodes = [],
+    nodesAmount = 0,
     displayedNodes = [],
+    isAnyHasChildren = false,
     searchValue = '',
     showSelectAll = false,
     selectAllCheckedState = CheckedState.UNSELECTED,
@@ -59,7 +61,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     );
   }
 
-  const nodeIndex = showSelectAll && nodes.length > 0 ? index - 1 : index;
+  const nodeIndex = showSelectAll && nodesAmount > 0 ? index - 1 : index;
   const node = displayedNodes[nodeIndex];
   const focused = focusedElement === node.path;
   const expanded = searchValue ? node.searchExpanded : node.expanded;
@@ -72,7 +74,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
       expanded={expanded}
       showNodeExpand={showNodeExpand && node.hasChildren()}
       showNodeCheckbox={showNodeCheckbox}
-      indentation={!isAnyHasChildren(nodes)}
+      indentation={!isAnyHasChildren}
       onToggleNode={onToggleNode(node)}
       onClickExpandIcon={onClickExpandNode(node)}
     />

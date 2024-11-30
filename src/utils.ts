@@ -30,9 +30,7 @@ export const isAnyExcludingDisabledSelected = (nodes: Node[]): boolean => {
 };
 
 export const isAnyHasChildren = (nodes: Node[]): boolean => {
-  return nodes
-    .filter(node => node.hasChildren())
-    .length > 0;
+  return nodes.some(node => node.hasChildren());
 };
 
 export const filterChips = (nodes: Node[], type: Type): Node[] => {

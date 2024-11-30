@@ -4,14 +4,14 @@ import {preventDefaultOnMouseEvent} from './utils';
 
 export interface FieldClearProps {
   focused: boolean;
-  onClick: (e: React.MouseEvent<Element>) => void;
+  onClick: (e: React.MouseEvent) => void;
 }
 
 export const FieldClear: FC<FieldClearProps> = memo((props) => {
 
   const {focused, onClick} = props;
 
-  const handleClick = (e: React.MouseEvent<Element>): void => {
+  const handleClick = (e: React.MouseEvent): void => {
     onClick(e);
   };
 

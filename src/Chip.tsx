@@ -5,15 +5,15 @@ export interface ChipProps {
   label: string;
   focused: boolean;
   disabled: boolean;
-  onClickElement: (e: React.MouseEvent<Element>) => void;
-  onClickIcon: (e: React.MouseEvent<Element>) => void;
+  onClickElement: (e: React.MouseEvent) => void;
+  onClickIcon: (e: React.MouseEvent) => void;
 }
 
 export const Chip: FC<ChipProps> = (props) => {
 
   const {label, focused, disabled, onClickElement, onClickIcon} = props;
 
-  const handleClickElement = (e: React.MouseEvent<Element>): void => {
+  const handleClickElement = (e: React.MouseEvent): void => {
     // defaultPrevented is on click chip clear icon
     if (!e.defaultPrevented) {
       e.preventDefault();
@@ -21,7 +21,7 @@ export const Chip: FC<ChipProps> = (props) => {
     }
   };
 
-  const handleClickIcon = (e: React.MouseEvent<Element>): void => {
+  const handleClickIcon = (e: React.MouseEvent): void => {
     e.preventDefault();
     onClickIcon && onClickIcon(e);
   };

@@ -1,9 +1,15 @@
 import './tree-select.scss';
 
-import React, {useCallback, useEffect, useReducer, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
 
 import {CLEAR_ALL, INPUT, INPUT_PLACEHOLDER, NO_MATCHES, PATH_DELIMITER, SELECT_ALL} from './constants';
-import {areAllExcludingDisabledSelected, convertTreeArrayToFlatArray, filterChips, typeToClassName} from './utils';
+import {
+  areAllExcludingDisabledSelected,
+  convertTreeArrayToFlatArray,
+  filterChips,
+  isAnyHasChildren,
+  typeToClassName
+} from './utils';
 import {CheckedState, TreeNode, Type} from './models';
 import {useOnClickOutside} from './hooks';
 import {
@@ -197,7 +203,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     }
   };
 
-  const handleClickField = (e: React.MouseEvent<Element>): void => {
+  const handleClickField = (e: React.MouseEvent): void => {
     dispatchToggleDropdown(!state.showDropdown);
   };
 
@@ -208,7 +214,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     }
   };
 
-  const handleDeleteAll = useCallback((e: React.MouseEvent<Element> | React.KeyboardEvent<Element>): void => {
+  const handleDeleteAll = useCallback((e: React.MouseEvent | React.KeyboardEvent): void => {
     state.nodes.forEach(node => node.handleUnselect(type));
     const selectedNodes = state.nodes.filter(nod => nod.selected);
     const selectAllCheckedState = getSelectAllCheckedState(selectedNodes, state.nodes);
@@ -280,7 +286,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     callSelectAllChangeHandler(selectAllCheckedState, selectedNodes);
   };
 
-  const handleChangeSelectAll = (e: React.MouseEvent<Element>): void => {
+  const handleChangeSelectAll = (e: React.MouseEvent): void => {
     handleSelectAllNodes();
   };
 
@@ -300,7 +306,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     }
   };
 
-  const handleClickChip = useCallback((node: Node) => (e: React.MouseEvent<Element> | React.KeyboardEvent<Element>): void => {
+  const handleClickChip = useCallback((node: Node) => (e: React.MouseEvent | React.KeyboardEvent): void => {
     const focusedElementFound = state.displayedNodes.find(displayedNode => displayedNode.path === node.path)
       && !state.showDropdown;
     dispatch({
@@ -314,7 +320,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
 
   }, [state.displayedNodes, state.showDropdown]);
 
-  const handleDeleteNode = useCallback((node: Node) => (e: React.MouseEvent<Element> | React.KeyboardEvent<Element>): void => {
+  const handleDeleteNode = useCallback((node: Node) => (e: React.MouseEvent | React.KeyboardEvent): void => {
     if (!node.disabled) {
       node.handleUnselect(type);
       const selectedNodes = state.nodes.filter(nod => nod.selected);
@@ -331,7 +337,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     }
   }, [state.nodes, type]);
 
-  const handleToggleNode = useCallback((node: Node) => (e: React.MouseEvent<Element> | React.KeyboardEvent<Element>): void => {
+  const handleToggleNode = useCallback((node: Node) => (e: React.MouseEvent | React.KeyboardEvent): void => {
     if (type === Type.MULTI_SELECT_TREE || type === Type.MULTI_SELECT_TREE_FLAT || type === Type.MULTI_SELECT) {
       node.handleToggle(type);
     }
@@ -375,7 +381,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     callNodeToggleHandler(node, state.nodes.filter(nod => nod.expanded));
   };
 
-  const handleClickExpandNode = useCallback((node: Node) => (e: React.MouseEvent<Element>): void => {
+  const handleClickExpandNode = useCallback((node: Node) => (e: React.MouseEvent): void => {
     const expand = state.searchValue
       ? !node.searchExpanded
       : !node.expanded;
@@ -482,7 +488,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     return index !== 0 ? selectedNodes[index - 1].path : state.focusedFieldElement;
   };
 
-  const handleComponentKeyDown = (e: React.KeyboardEvent<Element>): void => {
+  const handleComponentKeyDown = (e: React.KeyboardEvent): void => {
     switch (e.key) {
       case 'ArrowLeft':
         if (!state.focusedFieldElement && state.focusedElement) {
@@ -570,7 +576,8 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     }
   };
 
-  const containerClasses = `rts-tree-select ${typeToClassName(type)}` + (className ? ` ${className}` : '');
+  const typeClassName = useMemo(() => typeToClassName(type), [type]);
+  const containerClasses = `rts-tree-select ${typeClassName}` + (className ? ` ${className}` : '');
 
   useOnClickOutside(treeSelectRef, handleOutsideEvent);
 
@@ -595,8 +602,9 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
       {state.showDropdown ? (
         <Dropdown
           nodeMap={nodeMapRef.current}
-          nodes={state.nodes}
+          nodesAmount={state.nodes.length}
           displayedNodes={state.displayedNodes}
+          isAnyHasChildren={isAnyHasChildren(state.nodes)}
           searchValue={state.searchValue}
           showSelectAll={state.showSelectAll}
           selectAllCheckedState={state.selectAllCheckedState}

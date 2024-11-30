@@ -7,7 +7,7 @@ export interface SelectAllProps {
   label: string;
   checkedState: CheckedState;
   focused: boolean;
-  onChange: (e: React.MouseEvent<Element>) => void;
+  onChange: (e: React.MouseEvent) => void;
 }
 
 export const SelectAll: FC<SelectAllProps> = (props) => {

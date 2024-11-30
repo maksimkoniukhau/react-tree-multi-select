@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 
 export interface NodeExpandProps {
   expanded: boolean;
-  onClick: (e: React.MouseEvent<Element>) => void;
+  onClick: (e: React.MouseEvent) => void;
 }
 
 export const NodeExpand: FC<NodeExpandProps> = (props) => {

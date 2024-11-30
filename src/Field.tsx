@@ -19,11 +19,11 @@ export interface FieldProps {
   inputPlaceholder: string;
   searchValue: string;
   focusedFieldElement: string;
-  onClickField: (e: React.MouseEvent<Element>) => void;
+  onClickField: (e: React.MouseEvent) => void;
   onChangeInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onClickChip: (node: Node) => (e: React.MouseEvent<Element>) => void;
-  onDeleteNode: (node: Node) => (e: React.MouseEvent<Element>) => void;
-  onDeleteAll: (e: React.MouseEvent<Element> | React.KeyboardEvent<Element>) => void;
+  onClickChip: (node: Node) => (e: React.MouseEvent) => void;
+  onDeleteNode: (node: Node) => (e: React.MouseEvent) => void;
+  onDeleteAll: (e: React.MouseEvent | React.KeyboardEvent) => void;
 }
 
 export const Field: FC<FieldProps> = (props) => {
@@ -55,7 +55,7 @@ export const Field: FC<FieldProps> = (props) => {
     fieldRef?.current?.classList?.remove('focused');
   };
 
-  const handleClickField = (e: React.MouseEvent<Element>): void => {
+  const handleClickField = (e: React.MouseEvent): void => {
     inputRef?.current?.focus();
     // defaultPrevented is on click field clear icon
     if (!e.defaultPrevented) {

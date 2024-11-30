@@ -9,8 +9,9 @@ import {ListItem} from './ListItem';
 
 export interface DropdownProps {
   nodeMap: Map<string, Node>;
-  nodes: Node[];
+  nodesAmount: number;
   displayedNodes: Node[];
+  isAnyHasChildren: boolean;
   searchValue: string;
   showSelectAll: boolean;
   selectAllCheckedState: CheckedState;
@@ -18,9 +19,9 @@ export interface DropdownProps {
   showNodeCheckbox: boolean;
   focusedElement: string;
   noMatchesText: string;
-  onChangeSelectAll: (e: React.MouseEvent<Element>) => void;
-  onToggleNode: (node: Node) => (e: React.MouseEvent<Element>) => void;
-  onClickExpandNode: (node: Node) => (e: React.MouseEvent<Element>) => void;
+  onChangeSelectAll: (e: React.MouseEvent) => void;
+  onToggleNode: (node: Node) => (e: React.MouseEvent) => void;
+  onClickExpandNode: (node: Node) => (e: React.MouseEvent) => void;
 }
 
 
@@ -28,8 +29,9 @@ export const Dropdown: FC<DropdownProps> = (props) => {
 
   const {
     nodeMap = new Map(),
-    nodes = [],
+    nodesAmount = 0,
     displayedNodes = [],
+    isAnyHasChildren = false,
     searchValue = '',
     showSelectAll = false,
     selectAllCheckedState = CheckedState.UNSELECTED,
@@ -98,8 +100,9 @@ export const Dropdown: FC<DropdownProps> = (props) => {
   const itemContent = (index: number): JSX.Element => {
     return <ListItem
       index={index}
-      nodes={nodes}
+      nodesAmount={nodesAmount}
       displayedNodes={displayedNodes}
+      isAnyHasChildren={isAnyHasChildren}
       searchValue={searchValue}
       showSelectAll={showSelectAll}
       selectAllCheckedState={selectAllCheckedState}
