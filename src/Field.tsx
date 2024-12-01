@@ -1,4 +1,4 @@
-import React, {FC, RefObject, useRef} from 'react';
+import React, {ComponentType, FC, RefObject, useRef} from 'react';
 
 import {CLEAR_ALL} from './constants';
 import {filterChips, isAnyExcludingDisabledSelected} from './utils';
@@ -24,6 +24,7 @@ export interface FieldProps {
   onClickChip: (node: Node) => (e: React.MouseEvent) => void;
   onDeleteNode: (node: Node) => (e: React.MouseEvent) => void;
   onDeleteAll: (e: React.MouseEvent | React.KeyboardEvent) => void;
+  customComponents?: { Field: ComponentType };
 }
 
 export const Field: FC<FieldProps> = (props) => {
@@ -42,7 +43,8 @@ export const Field: FC<FieldProps> = (props) => {
     onChangeInput,
     onClickChip,
     onDeleteNode,
-    onDeleteAll
+    onDeleteAll,
+    customComponents
   } = props;
 
   const fieldRef = useRef<HTMLDivElement>(null);
@@ -56,47 +58,57 @@ export const Field: FC<FieldProps> = (props) => {
   };
 
   const handleClickField = (e: React.MouseEvent): void => {
-    inputRef?.current?.focus();
-    // defaultPrevented is on click field clear icon
+    if (!customComponents?.Field) {
+      inputRef?.current?.focus();
+    }
+    // defaultPrevented is on click field clear icon or chip (or in custom field)
     if (!e.defaultPrevented) {
-      e.preventDefault();
+      !customComponents?.Field && e.preventDefault();
       onClickField(e);
     }
   };
 
+  const fieldClasses = 'rts-field' + (customComponents?.Field ? ' rts-field-custom' : '');
+
   return (
     <div
       ref={fieldRef}
-      className="rts-field"
+      className={fieldClasses}
       onFocus={handleFocus}
       onBlur={handleBlur}
       onMouseDown={handleClickField}
     >
-      <div className="rts-input-container">
-        {filterChips(selectedNodes, type)
-          .map(node => (
-            <Chip
-              key={node.path}
-              label={node.name}
-              focused={focusedFieldElement === node.path}
-              disabled={node.disabled}
-              onClickElement={onClickChip(node)}
-              onClickIcon={onDeleteNode(node)}
+      {customComponents?.Field ? (
+        <customComponents.Field/>
+      ) : (
+        <>
+          <div className="rts-input-container">
+            {filterChips(selectedNodes, type)
+              .map(node => (
+                <Chip
+                  key={node.path}
+                  label={node.name}
+                  focused={focusedFieldElement === node.path}
+                  disabled={node.disabled}
+                  onClickElement={onClickChip(node)}
+                  onClickIcon={onDeleteNode(node)}
+                />
+              ))}
+            <Input
+              inputRef={inputRef}
+              inputPlaceholder={inputPlaceholder}
+              value={searchValue}
+              onChangeInput={onChangeInput}
             />
-          ))}
-        <Input
-          inputRef={inputRef}
-          inputPlaceholder={inputPlaceholder}
-          value={searchValue}
-          onChangeInput={onChangeInput}
-        />
-      </div>
-      <div className="rts-actions">
-        {withClearAll && isAnyExcludingDisabledSelected(nodes) && (
-          <FieldClear focused={focusedFieldElement === CLEAR_ALL} onClick={onDeleteAll}/>
-        )}
-        <FieldExpand expanded={showDropdown}/>
-      </div>
+          </div>
+          <div className="rts-actions">
+            {withClearAll && isAnyExcludingDisabledSelected(nodes) && (
+              <FieldClear focused={focusedFieldElement === CLEAR_ALL} onClick={onDeleteAll}/>
+            )}
+            <FieldExpand expanded={showDropdown}/>
+          </div>
+        </>
+      )}
     </div>
   );
 };

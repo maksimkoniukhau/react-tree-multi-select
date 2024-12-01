@@ -1,6 +1,6 @@
 import './tree-select.scss';
 
-import React, {useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
+import React, {ComponentType, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
 
 import {CLEAR_ALL, INPUT, INPUT_PLACEHOLDER, NO_MATCHES, PATH_DELIMITER, SELECT_ALL} from './constants';
 import {
@@ -43,6 +43,7 @@ export interface TreeSelectProps {
   noMatchesText?: string;
   withClearAll?: boolean;
   withSelectAll?: boolean;
+  customComponents?: { Field: ComponentType };
   onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
   onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
   onClearAll?: (selectedNodes: TreeNode[], selectAllCheckedState?: CheckedState) => void;
@@ -59,6 +60,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     noMatchesText = NO_MATCHES,
     withClearAll = true,
     withSelectAll = false,
+    customComponents,
     onNodeChange,
     onNodeToggle,
     onClearAll,
@@ -598,6 +600,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
         onClickChip={handleClickChip}
         onDeleteNode={handleDeleteNode}
         onDeleteAll={handleDeleteAll}
+        customComponents={customComponents}
       />
       {state.showDropdown ? (
         <Dropdown
