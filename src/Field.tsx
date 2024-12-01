@@ -1,8 +1,8 @@
-import React, {ComponentType, FC, RefObject, useRef} from 'react';
+import React, {FC, RefObject, useRef} from 'react';
 
 import {CLEAR_ALL} from './constants';
 import {filterChips, isAnyExcludingDisabledSelected} from './utils';
-import {Type} from './models';
+import {CustomComponents, Type} from './models';
 import {Node} from './Node';
 import {Input} from './Input';
 import {Chip} from './Chip';
@@ -24,7 +24,7 @@ export interface FieldProps {
   onClickChip: (node: Node) => (e: React.MouseEvent) => void;
   onDeleteNode: (node: Node) => (e: React.MouseEvent) => void;
   onDeleteAll: (e: React.MouseEvent | React.KeyboardEvent) => void;
-  customComponents?: { Field: ComponentType };
+  customComponents?: CustomComponents;
 }
 
 export const Field: FC<FieldProps> = (props) => {

@@ -1,6 +1,6 @@
 import './tree-select.scss';
 
-import React, {ComponentType, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
 
 import {CLEAR_ALL, INPUT, INPUT_PLACEHOLDER, NO_MATCHES, PATH_DELIMITER, SELECT_ALL} from './constants';
 import {
@@ -10,7 +10,7 @@ import {
   isAnyHasChildren,
   typeToClassName
 } from './utils';
-import {CheckedState, TreeNode, Type} from './models';
+import {CheckedState, CustomComponents, TreeNode, Type} from './models';
 import {useOnClickOutside} from './hooks';
 import {
   ActionType,
@@ -43,7 +43,7 @@ export interface TreeSelectProps {
   noMatchesText?: string;
   withClearAll?: boolean;
   withSelectAll?: boolean;
-  customComponents?: { Field: ComponentType };
+  customComponents?: CustomComponents;
   onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
   onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
   onClearAll?: (selectedNodes: TreeNode[], selectAllCheckedState?: CheckedState) => void;
