@@ -58,17 +58,17 @@ export const Field: FC<FieldProps> = (props) => {
   };
 
   const handleClickField = (e: React.MouseEvent): void => {
-    if (!customComponents?.Field) {
+    if (!customComponents?.field) {
       inputRef?.current?.focus();
     }
     // defaultPrevented is on click field clear icon or chip (or in custom field)
     if (!e.defaultPrevented) {
-      !customComponents?.Field && e.preventDefault();
+      !customComponents?.field && e.preventDefault();
       onClickField(e);
     }
   };
 
-  const fieldClasses = 'rts-field' + (customComponents?.Field ? ' rts-field-custom' : '');
+  const fieldClasses = 'rts-field' + (customComponents?.field ? ' rts-field-custom' : '');
 
   return (
     <div
@@ -78,8 +78,8 @@ export const Field: FC<FieldProps> = (props) => {
       onBlur={handleBlur}
       onMouseDown={handleClickField}
     >
-      {customComponents?.Field ? (
-        <customComponents.Field/>
+      {customComponents?.field ? (
+        customComponents.field
       ) : (
         <>
           <div className="rts-input-container">

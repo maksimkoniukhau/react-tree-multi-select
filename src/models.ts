@@ -1,4 +1,4 @@
-import {ComponentType} from 'react';
+import {ReactNode} from 'react';
 
 export enum Type {
   MULTI_SELECT_TREE = 'MULTI_SELECT_TREE',
@@ -24,5 +24,5 @@ export enum CheckedState {
 }
 
 export interface CustomComponents {
-  Field?: ComponentType;
+  field?: ReactNode;
 }
