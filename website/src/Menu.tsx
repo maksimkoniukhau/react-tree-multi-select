@@ -5,10 +5,18 @@ export enum MENU_ITEM {
   API = 'API',
   BASIC = 'Basic',
   BIG_DATA = 'Big Data',
+  CUSTOM_COMPONENTS = 'Custom Components',
   SELECT = "Select"
 }
 
-const menuItems = [MENU_ITEM.GETTING_STARTED, MENU_ITEM.API, MENU_ITEM.BASIC, MENU_ITEM.BIG_DATA, MENU_ITEM.SELECT];
+const menuItems = [
+  MENU_ITEM.GETTING_STARTED,
+  MENU_ITEM.API,
+  MENU_ITEM.BASIC,
+  MENU_ITEM.BIG_DATA,
+  MENU_ITEM.CUSTOM_COMPONENTS,
+  MENU_ITEM.SELECT
+];
 
 export interface MenuProps {
   onMenuItemClick: (menuitem: MENU_ITEM) => void;
@@ -18,7 +26,7 @@ export const Menu: FC<MenuProps> = memo(({onMenuItemClick}) => {
 
   const [menuItem, setMenuItem] = useState<MENU_ITEM>(MENU_ITEM.GETTING_STARTED);
 
-  const handleMenuItemClick = (clickedItem: MENU_ITEM) => (e: React.MouseEvent<Element>): void => {
+  const handleMenuItemClick = (clickedItem: MENU_ITEM) => (e: React.MouseEvent): void => {
     setMenuItem(clickedItem);
     onMenuItemClick(clickedItem);
   };

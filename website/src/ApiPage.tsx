@@ -31,9 +31,10 @@ export const ApiPage: FC = () => {
           <td>{'Type'}</td>
           <td>{'Type.MULTI_SELECT_TREE'}</td>
           <td>{'MULTI_SELECT_TREE - component behaves as a normal tree structure\n' +
-          'MULTI_SELECT_TREE_FLAT - component behaves as a flat tree structure ' +
-          '(selecting a node have no affect on its descendants or ancestors)\n' +
-          'See examples.'}
+            'MULTI_SELECT_TREE_FLAT - component behaves as a flat tree structure ' +
+            '(selecting a node have no affect on its descendants or ancestors)\n' +
+            'MULTI_SELECT - component behaves as a multiselect\n' +
+            'SELECT - component behaves as a simple select\n'}
           </td>
         </tr>
         <tr>
@@ -71,6 +72,12 @@ export const ApiPage: FC = () => {
           <td>{'boolean'}</td>
           <td>{'false'}</td>
           <td>{`if 'true', select all nodes component displayed in the dropdown header`}</td>
+        </tr>
+        <tr>
+          <td>{'customComponents'}</td>
+          <td>{'CustomComponents'}</td>
+          <td>{'-'}</td>
+          <td>{'custom components applied to the tree select (see examples for more details)'}</td>
         </tr>
         <tr>
           <td>{'onNodeChange'}</td>

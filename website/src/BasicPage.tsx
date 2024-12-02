@@ -1,4 +1,4 @@
-import React, {FC, memo, useCallback, useState} from 'react';
+import React, {FC, memo, useMemo, useState} from 'react';
 import {CheckedState, TreeNode, TreeSelect, Type} from '../../src';
 import {getOptionTreeNodeData} from './utils';
 import {Select} from './Select';
@@ -18,8 +18,8 @@ export const BasicPage: FC = memo(() => {
   const [expandedNodes, setExpandedNodes] = useState<boolean>(true);
   const [disabledNodes, setDisabledNodes] = useState<boolean>(true);
 
-  const getData = useCallback((): OptionTreeNode[] => {
-    return getOptionTreeNodeData(selectedNodes, expandedNodes, disabledNodes)
+  const getData = useMemo((): OptionTreeNode[] => {
+    return getOptionTreeNodeData(selectedNodes, expandedNodes, disabledNodes);
   }, [selectedNodes, expandedNodes, disabledNodes]);
 
   const handleOptionChange = (name: string) => (value: string | boolean): void => {
@@ -75,7 +75,10 @@ export const BasicPage: FC = memo(() => {
 
   return (
     <div className="page">
-      <h3>{'Tree select basic features'}</h3>
+      <h3>{'RTS tree select basic features'}</h3>
+      <div className="paragraph">
+        {'Toggle different options in order to see how the component behaves depends on properties passed to it.'}
+      </div>
       <div className="basic-options">
         <div>{'Component props:'}</div>
         <Select
@@ -100,7 +103,7 @@ export const BasicPage: FC = memo(() => {
       </div>
       <div className="tree-select-wrapper">
         <TreeSelect
-          data={getData()}
+          data={getData}
           type={type}
           id="basic-rts-id"
           className="basic-rts-custom-class"

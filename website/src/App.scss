@@ -59,6 +59,7 @@
         .paragraph {
           white-space: pre-line;
           padding: 5px 0;
+          line-height: 1.5;
         }
 
         .basic-options {
@@ -92,10 +93,15 @@
           margin: 15px 0;
           box-shadow: 0 1px 10px #a7a7a7, inset 0 1px 0 #fff;
           background: #fcfcfc;
-          font-size: 13px;
+          font-size: 12px;
+          overflow-y: scroll;
 
           pre {
             margin: 0;
+
+            code {
+              line-height: 1;
+            }
           }
         }
 
@@ -112,6 +118,37 @@
 
           tr:nth-child(even) {
             background-color: #f3f3f3;
+          }
+        }
+
+        .example-container {
+          display: flex;
+          gap: 30px;
+
+          .code-container {
+            max-height: 450px;
+          }
+        }
+
+        .filter-btn {
+          border: none;
+          background-color: #d1f2fc;
+          padding: 5px 10px;
+          border-radius: 8px;
+          outline: none;
+
+          &:focus {
+            background-color: #82eefe;
+          }
+        }
+
+        .filter-example {
+          margin-top: 15px;
+          display: flex;
+          gap: 15px;
+
+          .rts-dropdown {
+            width: 250px;
           }
         }
       }
