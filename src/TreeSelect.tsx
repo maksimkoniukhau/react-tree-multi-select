@@ -120,7 +120,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
       nodePath,
       treeNode.label,
       parent,
-      nodePath.split(PATH_DELIMITER).length,
+      nodePath.split(PATH_DELIMITER).length - 1,
       expanded,
       initTreeNode
     );
@@ -604,6 +604,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
       />
       {state.showDropdown ? (
         <Dropdown
+          type={type}
           nodeMap={nodeMapRef.current}
           nodesAmount={state.nodes.length}
           displayedNodes={state.displayedNodes}
@@ -611,8 +612,6 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
           searchValue={state.searchValue}
           showSelectAll={state.showSelectAll}
           selectAllCheckedState={state.selectAllCheckedState}
-          showNodeExpand={type !== Type.MULTI_SELECT && type !== Type.SELECT}
-          showNodeCheckbox={type !== Type.MULTI_SELECT && type !== Type.SELECT}
           focusedElement={state.focusedElement}
           noMatchesText={noMatchesText}
           onChangeSelectAll={handleChangeSelectAll}

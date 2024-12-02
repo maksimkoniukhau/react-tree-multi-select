@@ -3,11 +3,12 @@ import {CalculateViewLocation, StateSnapshot, Virtuoso, VirtuosoHandle} from 're
 
 import {DEFAULT_OPTIONS_CONTAINER_HEIGHT, DEFAULT_OPTIONS_CONTAINER_WIDTH, SELECT_ALL} from './constants';
 import {preventDefaultOnMouseEvent} from './utils';
-import {CheckedState} from './models';
+import {CheckedState, Type} from './models';
 import {Node} from './Node';
 import {ListItem} from './ListItem';
 
 export interface DropdownProps {
+  type: Type;
   nodeMap: Map<string, Node>;
   nodesAmount: number;
   displayedNodes: Node[];
@@ -15,8 +16,6 @@ export interface DropdownProps {
   searchValue: string;
   showSelectAll: boolean;
   selectAllCheckedState: CheckedState;
-  showNodeExpand: boolean;
-  showNodeCheckbox: boolean;
   focusedElement: string;
   noMatchesText: string;
   onChangeSelectAll: (e: React.MouseEvent) => void;
@@ -28,6 +27,7 @@ export interface DropdownProps {
 export const Dropdown: FC<DropdownProps> = (props) => {
 
   const {
+    type,
     nodeMap = new Map(),
     nodesAmount = 0,
     displayedNodes = [],
@@ -35,8 +35,6 @@ export const Dropdown: FC<DropdownProps> = (props) => {
     searchValue = '',
     showSelectAll = false,
     selectAllCheckedState = CheckedState.UNSELECTED,
-    showNodeExpand = false,
-    showNodeCheckbox = false,
     focusedElement = '',
     noMatchesText,
     onChangeSelectAll,
@@ -99,6 +97,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
 
   const itemContent = (index: number): JSX.Element => {
     return <ListItem
+      type={type}
       index={index}
       nodesAmount={nodesAmount}
       displayedNodes={displayedNodes}
@@ -106,8 +105,6 @@ export const Dropdown: FC<DropdownProps> = (props) => {
       searchValue={searchValue}
       showSelectAll={showSelectAll}
       selectAllCheckedState={selectAllCheckedState}
-      showNodeExpand={showNodeExpand}
-      showNodeCheckbox={showNodeCheckbox}
       focusedElement={focusedElement}
       noMatchesText={noMatchesText}
       onChangeSelectAll={onChangeSelectAll}

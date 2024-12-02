@@ -25,7 +25,7 @@ export class Node {
     this._name = name || '';
     this._parent = parent || null;
     this._children = [];
-    this._deep = deep || 1;
+    this._deep = deep || 0;
     this._disabled = false;
     this._selected = false;
     this._partiallySelected = false;
@@ -73,7 +73,7 @@ export class Node {
   }
 
   set deep(value: number) {
-    this._deep = value || 1;
+    this._deep = value || 0;
   }
 
   get disabled(): boolean {

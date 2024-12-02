@@ -28,17 +28,13 @@ export const NodeRow: FC<NodeRowProps> = memo((props) => {
     onClickExpandIcon
   } = props;
 
-  const expandIconWidth = showNodeExpand || indentation ? 1 : 0;
-  const checkboxWidth = showNodeCheckbox ? 0 : 1;
-  const pL = node.deep - checkboxWidth - expandIconWidth;
-
   const getNodeRowClasses = (): string => {
     const disabledClass = node.disabled ? ' disabled' : '';
     const selectedClass = node.selected ? ' selected' : node.partiallySelected ? ' partial' : '';
     const expandedClass = node.expanded ? ' expanded' : '';
     const focusedClass = focused ? ' focused' : '';
     const matchedClass = node.matched ? ' matched' : '';
-    const plClass = ` pl-${pL}`;
+    const plClass = ` pl-${node.deep + (indentation ? 1 : 0)}`;
     return `rts-list-item${disabledClass}${selectedClass}${expandedClass}${focusedClass}${matchedClass}${plClass}`;
   };
 
