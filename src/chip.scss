@@ -2,10 +2,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 24px;
-  margin: 4px 4px 4px 0;
-  padding: 0 8px;
-  background-color: #ebebeb;;
+  gap: 4px;
+  margin: 2px;
+  padding: 4px 6px;
+  background-color: #ebebeb;
   border-radius: 16px;
   cursor: default;
 
@@ -29,13 +29,12 @@
   }
 
   .rts-chip-clear-icon {
-    width: 16px;
-    height: 16px;
+    width: var(--rts-chip-clear-icon-width);
+    height: var(--rts-chip-clear-icon-height);
     cursor: pointer;
-    margin-left: 4px;
 
     path {
-      fill: #6c6c6c;
+      fill: var(--rts-icon-base-color);
     }
   }
 }

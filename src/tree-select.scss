@@ -1,7 +1,6 @@
 /* ==========================================================================
 TreeSelect styles
 ========================================================================== */
-@import 'variables';
 
 .rts-tree-select {
   @import 'css-variables';
@@ -14,7 +13,7 @@ TreeSelect styles
 
   @for $i from 0 through 100 {
     .pl-#{$i} {
-      padding-left: calc($checkbox-padding-left-num * $i + $row-base-padding-num) + px;
+      padding-left: calc((var(--rts-checkbox-width) + var(--rts-checkbox-margin-right)) * $i + var(--rts-row-base-padding));
     }
   }
 

@@ -1,4 +1,4 @@
-import React, {FC, RefObject, useRef} from 'react';
+import React, {FC, memo, RefObject, useRef} from 'react';
 
 import {CLEAR_ALL} from './constants';
 import {filterChips, isAnyExcludingDisabledSelected} from './utils';
@@ -27,7 +27,7 @@ export interface FieldProps {
   customComponents?: CustomComponents;
 }
 
-export const Field: FC<FieldProps> = (props) => {
+export const Field: FC<FieldProps> = memo((props) => {
 
   const {
     inputRef,
@@ -82,7 +82,7 @@ export const Field: FC<FieldProps> = (props) => {
         customComponents.field
       ) : (
         <>
-          <div className="rts-input-container">
+          <div className="rts-field-content">
             {filterChips(selectedNodes, type)
               .map(node => (
                 <Chip
@@ -111,4 +111,4 @@ export const Field: FC<FieldProps> = (props) => {
       )}
     </div>
   );
-};
+});

@@ -11,15 +11,15 @@
   .rts-list-item, .rts-header-item {
     display: flex;
     align-items: center;
-    padding-top: 3px;
-    padding-bottom: 3px;
+    padding-top: 2px;
+    padding-bottom: 2px;
     outline: none;
     color: #212529;
   }
 
   .rts-list-item {
     background-color: #ffffff;
-    padding-right: $row-base-padding;
+    padding-right: var(--rts-row-base-padding);
 
     &.selected {
       background-color: var(--rts-list-item-selected-background-color);
@@ -43,16 +43,15 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      margin-right: $checkbox-margin-right;
-
-      &.expanded {
-        transform: rotate(90deg);
-      }
 
       .rts-node-expand-icon {
-        width: $checkbox-width;
-        height: $checkbox-height;
-        opacity: 0.5;
+        width: var(--rts-checkbox-width);
+        height: var(--rts-checkbox-height);
+        margin-right: var(--rts-checkbox-margin-right);
+
+        path {
+          fill: var(--rts-icon-base-color);
+        }
       }
     }
 
@@ -66,8 +65,8 @@
   .rts-header-item {
     background-color: #ffffff;
     border-bottom: 1px solid #ced4da;
-    padding-left: $row-base-padding;
-    padding-right: $row-base-padding;
+    padding-left: var(--rts-row-base-padding);
+    padding-right: var(--rts-row-base-padding);
 
     &.focused, &:hover {
       background-color: #ebebeb;

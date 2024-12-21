@@ -122,6 +122,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
       <Virtuoso
         ref={virtuosoRef}
         style={{height: `${height}px`, width: DEFAULT_OPTIONS_CONTAINER_WIDTH, borderRadius: '4px'}}
+        className="rts-dropdown-virtuoso"
         totalListHeightChanged={handleTotalListHeightChanged}
         totalCount={itemCount}
         topItemCount={showSelectAll ? 1 : 0}

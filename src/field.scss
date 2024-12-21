@@ -2,12 +2,13 @@
   &:not(.rts-field-custom) {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     font-size: 16px;
-    padding: 4px;
+    padding: 2px;
     font-weight: 400;
     line-height: 1;
     color: #212529;
-    background-color: #fff;
+    background-color: #ffffff;
     border: 1px solid #ced4da;
     border-radius: 4px;
     box-sizing: border-box;
@@ -21,18 +22,17 @@
     }
   }
 
-  .rts-input-container {
+  .rts-field-content {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    width: 100%;
+    flex: 1;
   }
 
   .rts-actions {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4px;
 
     .rts-field-clear, .rts-field-expand {
       display: flex;
@@ -56,21 +56,12 @@
       }
     }
 
-    .rts-field-clear-icon {
-      width: 16px;
-      height: 16px;
+    .rts-field-clear-icon, .rts-field-expand-icon {
+      width: var(--rts-field-icon-width);
+      height: var(--rts-field-icon-height);
 
       path {
-        fill: #6c6c6c;
-      }
-    }
-
-    .rts-field-expand-icon {
-      width: 16px;
-      height: 16px;
-
-      path {
-        fill: #6c6c6c;
+        fill: var(--rts-icon-base-color);
       }
     }
   }

@@ -205,9 +205,9 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     }
   };
 
-  const handleClickField = (e: React.MouseEvent): void => {
+  const handleClickField = useCallback((e: React.MouseEvent): void => {
     dispatchToggleDropdown(!state.showDropdown);
-  };
+  }, [state.showDropdown]);
 
   const callClearAllHandler = (selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onClearAll) {
