@@ -23,6 +23,7 @@ export const Chip: FC<ChipProps> = (props) => {
 
   const handleClickIcon = (e: React.MouseEvent): void => {
     e.preventDefault();
+    e.stopPropagation();
     onClickIcon && onClickIcon(e);
   };
 

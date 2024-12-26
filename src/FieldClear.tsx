@@ -12,6 +12,8 @@ export const FieldClear: FC<FieldClearProps> = memo((props) => {
   const {focused, onClick} = props;
 
   const handleClick = (e: React.MouseEvent): void => {
+    e.preventDefault();
+    e.stopPropagation();
     onClick(e);
   };
 

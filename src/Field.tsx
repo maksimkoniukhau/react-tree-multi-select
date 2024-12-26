@@ -57,14 +57,9 @@ export const Field: FC<FieldProps> = memo((props) => {
     fieldRef?.current?.classList?.remove('focused');
   };
 
-  const handleClickField = (e: React.MouseEvent): void => {
+  const handleMouseDown = (e: React.MouseEvent): void => {
     if (!customComponents?.field) {
       inputRef?.current?.focus();
-    }
-    // defaultPrevented is on click field clear icon or chip (or in custom field)
-    if (!e.defaultPrevented) {
-      !customComponents?.field && e.preventDefault();
-      onClickField(e);
     }
   };
 
@@ -76,7 +71,8 @@ export const Field: FC<FieldProps> = memo((props) => {
       className={fieldClasses}
       onFocus={handleFocus}
       onBlur={handleBlur}
-      onMouseDown={handleClickField}
+      onClick={onClickField}
+      onMouseDown={handleMouseDown}
     >
       {customComponents?.field ? (
         customComponents.field
