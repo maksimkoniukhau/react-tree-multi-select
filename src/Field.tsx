@@ -1,7 +1,7 @@
 import React, {FC, memo, RefObject, useRef} from 'react';
 
 import {CLEAR_ALL} from './constants';
-import {filterChips, isAnyExcludingDisabledSelected} from './utils';
+import {filterChips, isAnyExcludingDisabledSelected, preventDefaultOnMouseEvent} from './utils';
 import {CustomComponents, Type} from './models';
 import {Node} from './Node';
 import {Input} from './Input';
@@ -78,7 +78,11 @@ export const Field: FC<FieldProps> = memo((props) => {
         customComponents.field
       ) : (
         <>
-          <div className="rts-field-content">
+          <div
+            className="rts-field-content"
+            // needed for staying focus on input
+            onMouseDown={preventDefaultOnMouseEvent}
+          >
             {filterChips(selectedNodes, type)
               .map(node => (
                 <Chip
