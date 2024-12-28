@@ -1,4 +1,4 @@
-import React, {FC, JSX, useEffect, useRef, useState} from 'react';
+import React, {FC, JSX, ReactNode, useEffect, useRef, useState} from 'react';
 import {CalculateViewLocation, StateSnapshot, Virtuoso, VirtuosoHandle} from 'react-virtuoso'
 
 import {DEFAULT_OPTIONS_CONTAINER_HEIGHT, DEFAULT_OPTIONS_CONTAINER_WIDTH, SELECT_ALL} from './constants';
@@ -21,6 +21,7 @@ export interface DropdownProps {
   onChangeSelectAll: (e: React.MouseEvent) => void;
   onToggleNode: (node: Node) => (e: React.MouseEvent) => void;
   onClickExpandNode: (node: Node) => (e: React.MouseEvent) => void;
+  input: ReactNode;
 }
 
 
@@ -39,14 +40,15 @@ export const Dropdown: FC<DropdownProps> = (props) => {
     noMatchesText,
     onChangeSelectAll,
     onToggleNode,
-    onClickExpandNode
+    onClickExpandNode,
+    input
   } = props;
 
   const virtuosoRef = useRef<VirtuosoHandle>(null);
 
   const [height, setHeight] = useState<number>(DEFAULT_OPTIONS_CONTAINER_HEIGHT);
 
-  const itemCount = (displayedNodes.length || 1) + (showSelectAll ? 1 : 0);
+  const itemCount = (displayedNodes.length || 1) + (showSelectAll || Boolean(input) ? 1 : 0);
 
   const calculateViewLocation: CalculateViewLocation = (params) => {
     const {
@@ -58,7 +60,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
     } = params;
 
     let topElmSize = 0;
-    if (showSelectAll) {
+    if (showSelectAll || Boolean(input)) {
       virtuosoRef.current?.getState((state: StateSnapshot) => {
         topElmSize = state?.ranges
           ?.find(range => range.startIndex === 0)
@@ -81,7 +83,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
     if (focusedElement && virtuosoRef.current && displayedNodes.length) {
       const elementIndex = focusedElement === SELECT_ALL
         ? 0
-        : displayedNodes.indexOf(nodeMap?.get(focusedElement)) + (showSelectAll ? 1 : 0);
+        : displayedNodes.indexOf(nodeMap?.get(focusedElement)) + (showSelectAll || Boolean(input) ? 1 : 0);
       if (elementIndex >= 0) {
         virtuosoRef.current.scrollIntoView({
           index: elementIndex,
@@ -110,6 +112,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
       onChangeSelectAll={onChangeSelectAll}
       onToggleNode={onToggleNode}
       onClickExpandNode={onClickExpandNode}
+      input={input}
     />
   };
 
@@ -125,7 +128,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
         className="rts-dropdown-virtuoso"
         totalListHeightChanged={handleTotalListHeightChanged}
         totalCount={itemCount}
-        topItemCount={showSelectAll ? 1 : 0}
+        topItemCount={showSelectAll || Boolean(input) ? 1 : 0}
         itemContent={itemContent}
       />
     </div>

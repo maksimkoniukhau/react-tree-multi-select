@@ -33,6 +33,7 @@ import {
 import {Field} from './Field';
 import {Dropdown} from './Dropdown';
 import {Node} from './Node';
+import {Input} from './Input';
 
 export interface TreeSelectProps {
   data: TreeNode[];
@@ -43,6 +44,7 @@ export interface TreeSelectProps {
   noMatchesText?: string;
   withClearAll?: boolean;
   withSelectAll?: boolean;
+  withDropdownInput?: boolean;
   customComponents?: CustomComponents;
   onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
   onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
@@ -60,6 +62,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     noMatchesText = NO_MATCHES,
     withClearAll = true,
     withSelectAll = false,
+    withDropdownInput = false,
     customComponents,
     onNodeChange,
     onNodeToggle,
@@ -68,7 +71,8 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
   } = props;
 
   const treeSelectRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputFieldRef = useRef<HTMLInputElement>(null);
+  const inputDropdownRef = useRef<HTMLInputElement>(null);
 
   const nodeMapRef = useRef<Map<string, Node>>(new Map());
 
@@ -516,6 +520,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
         if (state.showDropdown && state.focusedElement) {
           dispatchFocusElement(getPrevFocusedElement());
         } else {
+          withDropdownInput && state.showDropdown && inputFieldRef?.current?.focus();
           dispatchToggleDropdown(!state.showDropdown);
         }
         e.preventDefault();
@@ -535,6 +540,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
           if (chipNode) {
             handleClickChip(chipNode)(e);
           } else {
+            withDropdownInput && state.showDropdown && inputFieldRef?.current?.focus();
             dispatchToggleDropdown(!state.showDropdown);
           }
         } else if (state.showDropdown) {
@@ -563,12 +569,14 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
         break;
       case 'Escape':
         if (state.showDropdown) {
+          withDropdownInput && inputFieldRef?.current?.focus();
           dispatchToggleDropdown(false);
           e.preventDefault();
         }
         break;
       case 'Tab':
         if (state.showDropdown) {
+          withDropdownInput && inputFieldRef?.current?.focus();
           dispatchToggleDropdown(false);
           e.preventDefault();
         }
@@ -586,17 +594,22 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
   return (
     <div ref={treeSelectRef} id={id} className={containerClasses} onKeyDown={handleComponentKeyDown}>
       <Field
-        inputRef={inputRef}
+        inputRef={inputFieldRef}
+        input={<Input
+          inputRef={inputFieldRef}
+          inputPlaceholder={inputPlaceholder}
+          className="rts-input-field"
+          value={state.searchValue}
+          onChangeInput={handleChangeInput}
+          hidden={withDropdownInput}
+        />}
         type={type}
         nodes={state.nodes}
         selectedNodes={state.selectedNodes}
         showDropdown={state.showDropdown}
         withClearAll={withClearAll}
-        inputPlaceholder={inputPlaceholder}
-        searchValue={state.searchValue}
         focusedFieldElement={state.focusedFieldElement}
         onClickField={handleClickField}
-        onChangeInput={handleChangeInput}
         onClickChip={handleClickChip}
         onDeleteNode={handleDeleteNode}
         onDeleteAll={handleDeleteAll}
@@ -617,6 +630,14 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
           onChangeSelectAll={handleChangeSelectAll}
           onToggleNode={handleToggleNode}
           onClickExpandNode={handleClickExpandNode}
+          input={withDropdownInput ? <Input
+            autoFocus={true}
+            inputRef={inputDropdownRef}
+            inputPlaceholder={inputPlaceholder}
+            className="rts-input-dropdown"
+            value={state.searchValue}
+            onChangeInput={handleChangeInput}
+          /> : null}
         />
       ) : null}
     </div>

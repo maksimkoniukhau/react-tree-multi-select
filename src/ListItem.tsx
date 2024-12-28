@@ -1,4 +1,4 @@
-import React, {FC, memo} from 'react';
+import React, {FC, memo, ReactNode} from 'react';
 
 import {SELECT_ALL} from './constants';
 import {CheckedState, Type} from './models';
@@ -21,6 +21,7 @@ export interface ListItemProps {
   onChangeSelectAll: (e: React.MouseEvent) => void;
   onToggleNode: (node: Node) => (e: React.MouseEvent) => void;
   onClickExpandNode: (node: Node) => (e: React.MouseEvent) => void;
+  input: ReactNode;
 }
 
 export const ListItem: FC<ListItemProps> = memo((props) => {
@@ -38,8 +39,13 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     noMatchesText,
     onChangeSelectAll,
     onToggleNode,
-    onClickExpandNode
+    onClickExpandNode,
+    input
   } = props;
+
+  if (Boolean(input) && index === 0) {
+    return input;
+  }
 
   if (showSelectAll && index === 0) {
     return (
@@ -58,7 +64,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     );
   }
 
-  const nodeIndex = showSelectAll && nodesAmount > 0 ? index - 1 : index;
+  const nodeIndex = (showSelectAll || Boolean(input)) && nodesAmount > 0 ? index - 1 : index;
   const node = displayedNodes[nodeIndex];
   const focused = focusedElement === node.path;
   const expanded = searchValue ? node.searchExpanded : node.expanded;

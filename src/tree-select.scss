@@ -9,6 +9,15 @@ TreeSelect styles
     --rts-list-item-selected-background-color: #e7f3fc;
   }
 
+  &:focus-within {
+    .rts-field {
+      &:not(.rts-field-custom) {
+        border-color: #92bcff;
+        box-shadow: 0 0 3px 0 #016aff;
+      }
+    }
+  }
+
   position: relative;
 
   @for $i from 0 through 100 {

@@ -7,19 +7,12 @@
     padding: 2px;
     font-weight: 400;
     line-height: 1;
+    outline: none;
     color: #212529;
     background-color: #ffffff;
     border: 1px solid #ced4da;
     border-radius: 4px;
     box-sizing: border-box;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  }
-
-  &.focused {
-    &:not(.rts-field-custom) {
-      border-color: #92bcff;
-      box-shadow: 0 0 3px 0 #016aff;
-    }
   }
 
   .rts-field-content {

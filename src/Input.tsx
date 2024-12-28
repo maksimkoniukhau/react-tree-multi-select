@@ -1,10 +1,11 @@
-import React, {FC, memo, RefObject} from 'react';
+import React, {FC, HTMLProps, memo, RefObject} from 'react';
 
-export interface InputProps {
+export interface InputProps extends HTMLProps<HTMLInputElement> {
   inputRef: RefObject<HTMLInputElement>;
   inputPlaceholder: string;
   value: string;
   onChangeInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  hidden?: boolean;
 }
 
 export const Input: FC<InputProps> = memo((props) => {
@@ -13,16 +14,26 @@ export const Input: FC<InputProps> = memo((props) => {
     inputRef,
     inputPlaceholder,
     value = '',
-    onChangeInput
+    onChangeInput,
+    hidden,
+    className,
+    ...rest
   } = props;
 
+  const inputClasses = `rts-input` + (className ? ` ${className}` : '');
+
   return (
-    <input
-      ref={inputRef}
-      value={value}
-      placeholder={inputPlaceholder}
-      className="rts-input"
-      onChange={onChangeInput}
-    />
+    <div className="rts-input-container">{hidden ? (
+      <input ref={inputRef} className="rts-input-hidden"/>
+    ) : (
+      <input
+        {...rest}
+        ref={inputRef}
+        value={value}
+        placeholder={inputPlaceholder}
+        className={inputClasses}
+        onChange={onChangeInput}
+      />
+    )}</div>
   );
 });
