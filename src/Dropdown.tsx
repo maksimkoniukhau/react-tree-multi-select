@@ -48,7 +48,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
 
   const [height, setHeight] = useState<number>(DEFAULT_OPTIONS_CONTAINER_HEIGHT);
 
-  const itemCount = (displayedNodes.length || 1) + (showSelectAll || Boolean(input) ? 1 : 0);
+  const itemCount = (displayedNodes.length || 1) + (showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0);
 
   const calculateViewLocation: CalculateViewLocation = (params) => {
     const {
@@ -62,9 +62,14 @@ export const Dropdown: FC<DropdownProps> = (props) => {
     let topElmSize = 0;
     if (showSelectAll || Boolean(input)) {
       virtuosoRef.current?.getState((state: StateSnapshot) => {
-        topElmSize = state?.ranges
+        topElmSize = topElmSize + (state?.ranges
           ?.find(range => range.startIndex === 0)
-          ?.size || 0;
+          ?.size || 0);
+        if (showSelectAll && Boolean(input)) {
+          topElmSize = topElmSize + (state?.ranges
+            ?.find(range => range.startIndex === 1)
+            ?.size || 0);
+        }
       });
     }
 
@@ -83,7 +88,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
     if (focusedElement && virtuosoRef.current && displayedNodes.length) {
       const elementIndex = focusedElement === SELECT_ALL
         ? 0
-        : displayedNodes.indexOf(nodeMap?.get(focusedElement)) + (showSelectAll || Boolean(input) ? 1 : 0);
+        : displayedNodes.indexOf(nodeMap?.get(focusedElement)) + (showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0);
       if (elementIndex >= 0) {
         virtuosoRef.current.scrollIntoView({
           index: elementIndex,
@@ -91,7 +96,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
         });
       }
     }
-  }, [focusedElement, showSelectAll]);
+  }, [focusedElement, showSelectAll, input]);
 
   const handleTotalListHeightChanged = (height: number): void => {
     setHeight(Math.min(DEFAULT_OPTIONS_CONTAINER_HEIGHT, height));
@@ -128,7 +133,7 @@ export const Dropdown: FC<DropdownProps> = (props) => {
         className="rts-dropdown-virtuoso"
         totalListHeightChanged={handleTotalListHeightChanged}
         totalCount={itemCount}
-        topItemCount={showSelectAll || Boolean(input) ? 1 : 0}
+        topItemCount={(showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0)}
         itemContent={itemContent}
       />
     </div>

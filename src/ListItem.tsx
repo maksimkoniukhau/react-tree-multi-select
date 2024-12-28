@@ -47,7 +47,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     return input;
   }
 
-  if (showSelectAll && index === 0) {
+  if ((showSelectAll && Boolean(input) && index === 1) || (showSelectAll && index === 0)) {
     return (
       <SelectAll
         label={SELECT_ALL}
@@ -64,7 +64,10 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     );
   }
 
-  const nodeIndex = (showSelectAll || Boolean(input)) && nodesAmount > 0 ? index - 1 : index;
+  let nodeIndex = index;
+  if ((showSelectAll || Boolean(input)) && nodesAmount > 0) {
+    nodeIndex = showSelectAll && Boolean(input) ? index - 2 : index - 1;
+  }
   const node = displayedNodes[nodeIndex];
   const focused = focusedElement === node.path;
   const expanded = searchValue ? node.searchExpanded : node.expanded;
