@@ -1,4 +1,4 @@
-import React, {FC, JSX, ReactNode, useEffect, useRef, useState} from 'react';
+import React, {FC, JSX, memo, ReactNode, useEffect, useRef, useState} from 'react';
 import {CalculateViewLocation, StateSnapshot, Virtuoso, VirtuosoHandle} from 'react-virtuoso'
 
 import {DEFAULT_OPTIONS_CONTAINER_HEIGHT, DEFAULT_OPTIONS_CONTAINER_WIDTH, SELECT_ALL} from './constants';
@@ -25,7 +25,7 @@ export interface DropdownProps {
 }
 
 
-export const Dropdown: FC<DropdownProps> = (props) => {
+export const Dropdown: FC<DropdownProps> = memo((props) => {
 
   const {
     type,
@@ -138,4 +138,4 @@ export const Dropdown: FC<DropdownProps> = (props) => {
       />
     </div>
   );
-};
+});

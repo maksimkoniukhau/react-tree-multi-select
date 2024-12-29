@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, memo} from 'react';
 
 export interface CheckboxProps {
   checked: boolean;
@@ -6,7 +6,7 @@ export interface CheckboxProps {
   disabled?: boolean;
 }
 
-export const Checkbox: FC<CheckboxProps> = (props) => {
+export const Checkbox: FC<CheckboxProps> = memo((props) => {
 
   const {checked, partial, disabled = false} = props;
 
@@ -17,4 +17,4 @@ export const Checkbox: FC<CheckboxProps> = (props) => {
   return (
     <span className={checkboxClasses}/>
   );
-};
+});

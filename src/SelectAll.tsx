@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, memo} from 'react';
 
 import {CheckedState} from './models';
 import {Checkbox} from './Checkbox';
@@ -10,7 +10,7 @@ export interface SelectAllProps {
   onChange: (e: React.MouseEvent) => void;
 }
 
-export const SelectAll: FC<SelectAllProps> = (props) => {
+export const SelectAll: FC<SelectAllProps> = memo((props) => {
 
   const {label, checkedState, focused, onChange} = props;
 
@@ -29,4 +29,4 @@ export const SelectAll: FC<SelectAllProps> = (props) => {
       </div>
     </div>
   );
-};
+});

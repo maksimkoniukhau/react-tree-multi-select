@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, memo} from 'react';
 import {preventDefaultOnMouseEvent} from './utils';
 
 export interface ChipProps {
@@ -9,16 +9,13 @@ export interface ChipProps {
   onClickIcon: (e: React.MouseEvent) => void;
 }
 
-export const Chip: FC<ChipProps> = (props) => {
+export const Chip: FC<ChipProps> = memo((props) => {
 
   const {label, focused, disabled, onClickElement, onClickIcon} = props;
 
   const handleClickElement = (e: React.MouseEvent): void => {
-    // defaultPrevented is on click chip clear icon
-    if (!e.defaultPrevented) {
-      e.preventDefault();
-      onClickElement && onClickElement(e);
-    }
+    e.preventDefault();
+    onClickElement && onClickElement(e);
   };
 
   const handleClickIcon = (e: React.MouseEvent): void => {
@@ -44,4 +41,4 @@ export const Chip: FC<ChipProps> = (props) => {
       </svg>}
     </div>
   );
-};
+});

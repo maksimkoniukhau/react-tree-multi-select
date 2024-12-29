@@ -1,11 +1,11 @@
-import React, {FC} from 'react';
+import React, {FC, memo} from 'react';
 
 export interface NodeExpandProps {
   expanded: boolean;
   onClick: (e: React.MouseEvent) => void;
 }
 
-export const NodeExpand: FC<NodeExpandProps> = (props) => {
+export const NodeExpand: FC<NodeExpandProps> = memo((props) => {
 
   const {expanded, onClick} = props;
 
@@ -24,4 +24,4 @@ export const NodeExpand: FC<NodeExpandProps> = (props) => {
       </svg>
     </div>
   );
-};
+});
