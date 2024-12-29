@@ -127,7 +127,7 @@ export const Filters: FC = () => {
             expanded: true
           }
         ]}
-        withSelectAll={true}
+        withDropdownInput={true}
         customComponents={{field: <Button label="Filter by company"/>}}
       />
       <TreeSelect

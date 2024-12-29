@@ -12,8 +12,9 @@ export const BasicPage: FC = memo(() => {
   const [type, setType] = useState<Type>(Type.MULTI_SELECT_TREE);
   const [inputPlaceholder, setInputPlaceholder] = useState<string>(INPUT_PLACEHOLDER);
   const [noMatchesText, setNoMatchesText] = useState<string>(NO_MATCHES);
-  const [withSelectAll, setWithSelectAll] = useState<boolean>(false);
   const [withClearAll, setWithClearAll] = useState<boolean>(true);
+  const [withSelectAll, setWithSelectAll] = useState<boolean>(false);
+  const [withDropdownInput, setWithDropdownInput] = useState<boolean>(false);
   const [selectedNodes, setSelectedNodes] = useState<boolean>(true);
   const [expandedNodes, setExpandedNodes] = useState<boolean>(true);
   const [disabledNodes, setDisabledNodes] = useState<boolean>(true);
@@ -33,11 +34,14 @@ export const BasicPage: FC = memo(() => {
       case 'noMatchesText' :
         setNoMatchesText(value as string);
         break;
+      case 'withClearAll' :
+        setWithClearAll(value as boolean);
+        break;
       case 'withSelectAll' :
         setWithSelectAll(value as boolean);
         break;
-      case 'withClearAll' :
-        setWithClearAll(value as boolean);
+      case 'withDropdownInput' :
+        setWithDropdownInput(value as boolean);
         break;
       case 'selectedNodes' :
         setSelectedNodes(value as boolean);
@@ -77,12 +81,12 @@ export const BasicPage: FC = memo(() => {
     <div className="page">
       <h3>{'RTS tree select basic features'}</h3>
       <div className="paragraph">
-        {'Toggle different options in order to see how the component behaves depends on properties passed to it.'}
+        {'Toggle different options in order to see how the component behaves and looks depends on properties passed to it.'}
       </div>
       <div className="basic-options">
         <div>{'Component props:'}</div>
         <Select
-          label="Type:"
+          label="type:"
           options={[
             {name: Type.MULTI_SELECT_TREE, value: Type.MULTI_SELECT_TREE},
             {name: Type.MULTI_SELECT_TREE_FLAT, value: Type.MULTI_SELECT_TREE_FLAT},
@@ -90,11 +94,12 @@ export const BasicPage: FC = memo(() => {
             {name: Type.SELECT, value: Type.SELECT}
           ]}
           onChange={handleOptionChange('type')}/>
-        <Input label="Input placeholder:" initValue={INPUT_PLACEHOLDER}
+        <Input label="inputPlaceholder:" initValue={INPUT_PLACEHOLDER}
                onChange={handleOptionChange('inputPlaceholder')}/>
-        <Input label="No matches text:" initValue={NO_MATCHES} onChange={handleOptionChange('noMatchesText')}/>
-        <Checkbox label="withSelectAll" initChecked={false} onChange={handleOptionChange('withSelectAll')}/>
+        <Input label="noMatchesText:" initValue={NO_MATCHES} onChange={handleOptionChange('noMatchesText')}/>
         <Checkbox label="withClearAll" initChecked={true} onChange={handleOptionChange('withClearAll')}/>
+        <Checkbox label="withSelectAll" initChecked={false} onChange={handleOptionChange('withSelectAll')}/>
+        <Checkbox label="withDropdownInput" initChecked={false} onChange={handleOptionChange('withDropdownInput')}/>
         <div className="delimiter"/>
         <div>{'Data initial props:'}</div>
         <Checkbox label="selectedNodes" initChecked={true} onChange={handleOptionChange('selectedNodes')}/>
@@ -109,8 +114,9 @@ export const BasicPage: FC = memo(() => {
           className="basic-rts-custom-class"
           inputPlaceholder={inputPlaceholder}
           noMatchesText={noMatchesText}
-          withSelectAll={withSelectAll}
           withClearAll={withClearAll}
+          withSelectAll={withSelectAll}
+          withDropdownInput={withDropdownInput}
           onNodeChange={handleNodeChange}
           onNodeToggle={handleNodeToggle}
           onClearAll={handleClearAll}

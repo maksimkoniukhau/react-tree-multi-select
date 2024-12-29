@@ -15,7 +15,8 @@ export const CustomComponentsPage: FC = memo(() => {
       <div className="paragraph">
         {'RTS allows you to customize tree select by providing your own components as a property.\n'}
         {`Let's say you have filters on a page that, when clicked, open a dropdown with a range of filter options.\n`}
-        {'It can be achieved by providing filter button as a custom field component like in the example below.'}
+        {'It can be achieved by providing filter button as a custom field component like in the example below.\n'}
+        {'IMPORTANT: your custom field component should be focusable for keyboard navigation to work in dropdown.'}
       </div>
       <div className="example-container">
         <CodeBlock code={filterExample}/>
@@ -38,7 +39,7 @@ export const CustomComponentsPage: FC = memo(() => {
                 expanded: true
               }
             ]}
-            withSelectAll={true}
+            withDropdownInput={true}
             customComponents={{field: <Button label="Filter by company"/>}}
           />
           <TreeSelect
