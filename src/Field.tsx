@@ -1,4 +1,4 @@
-import React, {FC, memo, ReactNode, RefObject, useRef} from 'react';
+import React, {FC, memo, ReactNode, RefObject} from 'react';
 
 import {CLEAR_ALL} from './constants';
 import {filterChips, isAnyExcludingDisabledSelected, preventDefaultOnMouseEvent} from './utils';
@@ -42,8 +42,6 @@ export const Field: FC<FieldProps> = memo((props) => {
     customComponents
   } = props;
 
-  const fieldRef = useRef<HTMLDivElement>(null);
-
   const handleMouseDown = (e: React.MouseEvent): void => {
     if (!customComponents?.field) {
       inputRef?.current?.focus();
@@ -55,7 +53,6 @@ export const Field: FC<FieldProps> = memo((props) => {
 
   return (
     <div
-      ref={fieldRef}
       className={fieldClasses}
       onClick={onClickField}
       onMouseDown={handleMouseDown}

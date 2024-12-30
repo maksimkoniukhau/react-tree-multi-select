@@ -22,6 +22,7 @@ export interface DropdownProps {
   onToggleNode: (node: Node) => (e: React.MouseEvent) => void;
   onClickExpandNode: (node: Node) => (e: React.MouseEvent) => void;
   input: ReactNode;
+  onUnmount: () => void;
 }
 
 
@@ -41,7 +42,8 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     onChangeSelectAll,
     onToggleNode,
     onClickExpandNode,
-    input
+    input,
+    onUnmount,
   } = props;
 
   const virtuosoRef = useRef<VirtuosoHandle>(null);
@@ -83,6 +85,10 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
 
     return null;
   };
+
+  useEffect(() => {
+    return () => onUnmount();
+  }, []);
 
   useEffect(() => {
     if (focusedElement && virtuosoRef.current && displayedNodes.length) {

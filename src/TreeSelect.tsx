@@ -50,6 +50,8 @@ export interface TreeSelectProps {
   onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
   onClearAll?: (selectedNodes: TreeNode[], selectAllCheckedState?: CheckedState) => void;
   onSelectAllChange?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => void;
+  onFocus?: (event: React.FocusEvent) => void;
+  onBlur?: (event: React.FocusEvent) => void;
 }
 
 export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
@@ -67,7 +69,9 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     onNodeChange,
     onNodeToggle,
     onClearAll,
-    onSelectAllChange
+    onSelectAllChange,
+    onFocus,
+    onBlur,
   } = props;
 
   const treeSelectRef = useRef<HTMLDivElement>(null);
@@ -589,13 +593,51 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
     }
   };
 
+  const dropdownUnmountedOnClickOutside = useRef<boolean>(false);
+
+  const handleComponentFocus = (event: React.FocusEvent): void => {
+    if (event.target === inputFieldRef?.current) {
+      if (!withDropdownInput
+        || (withDropdownInput
+          && !event.relatedTarget?.classList?.contains('rts-input-dropdown')
+          && !dropdownUnmountedOnClickOutside.current)) {
+        onFocus?.(event);
+      }
+    }
+    dropdownUnmountedOnClickOutside.current = false;
+  };
+
+  const handleComponentBlur = (event: React.FocusEvent): void => {
+    if (event.target === inputFieldRef?.current) {
+      if (!withDropdownInput
+        || (withDropdownInput
+          && !event.relatedTarget?.classList?.contains('rts-input-dropdown'))) {
+        onBlur?.(event);
+      }
+    }
+  };
+
+  const handleDropdownUnmount = (): void => {
+    if (withDropdownInput && document.activeElement !== inputFieldRef?.current) {
+      dropdownUnmountedOnClickOutside.current = true;
+      inputFieldRef?.current?.focus();
+    }
+  };
+
   const typeClassName = useMemo(() => typeToClassName(type), [type]);
   const containerClasses = `rts-tree-select ${typeClassName}` + (className ? ` ${className}` : '');
 
   useOnClickOutside(treeSelectRef, handleOutsideEvent);
 
   return (
-    <div ref={treeSelectRef} id={id} className={containerClasses} onKeyDown={handleComponentKeyDown}>
+    <div
+      ref={treeSelectRef}
+      id={id}
+      className={containerClasses}
+      onFocus={handleComponentFocus}
+      onBlur={handleComponentBlur}
+      onKeyDown={handleComponentKeyDown}
+    >
       <Field
         inputRef={inputFieldRef}
         input={<Input
@@ -641,6 +683,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
             value={state.searchValue}
             onChangeInput={handleChangeInput}
           /> : null}
+          onUnmount={handleDropdownUnmount}
         />
       ) : null}
     </div>
