@@ -397,7 +397,9 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
   const handleKeyDownExpandNode = (expand: boolean): void => {
     if (state.showDropdown && state.focusedElement && state.focusedElement !== SELECT_ALL) {
       const node = nodeMapRef.current.get(state.focusedElement);
-      if (node?.hasChildren()) {
+      if (node?.hasChildren()
+        && !((Boolean(state.searchValue) && node?.searchExpanded === expand)
+          || (!Boolean(state.searchValue) && node?.expanded === expand))) {
         handleExpandNode(node, expand);
       }
     }
@@ -565,6 +567,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
               handleDeleteNode(focusedNode)(e);
             }
           }
+          e.preventDefault();
         }
         break;
       case 'Escape':
