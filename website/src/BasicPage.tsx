@@ -77,6 +77,14 @@ export const BasicPage: FC = memo(() => {
     console.log('handleSelectAllChange selectAllCheckedState', selectAllCheckedState);
   };
 
+  const handleFocus = (event: React.FocusEvent): void => {
+    console.log('focus', event);
+  };
+
+  const handleBlur = (event: React.FocusEvent): void => {
+    console.log('blur', event);
+  };
+
   return (
     <div className="page">
       <h3>{'RTS tree select basic features'}</h3>
@@ -121,6 +129,39 @@ export const BasicPage: FC = memo(() => {
           onNodeToggle={handleNodeToggle}
           onClearAll={handleClearAll}
           onSelectAllChange={handleSelectAllChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+      </div>
+      <div style={{marginTop: '20px'}} className="paragraph">
+        {'You can pass data without children to component. Component will looks and behaves as a multiselect with checkboxes.'}
+      </div>
+      <div className="tree-select-wrapper">
+        <TreeSelect
+          data={[
+            {
+              label: 'label1',
+              name: 'name1'
+            },
+            {
+              label: 'label2',
+              name: 'name2'
+            },
+            {
+              label: 'label3',
+              name: 'name3'
+            },
+            {
+              label: 'label4',
+              name: 'name4'
+            },
+            {
+              label: 'label5',
+              name: 'name5'
+            }
+          ]}
+          id="rts-multi-select"
+          withClearAll
         />
       </div>
     </div>

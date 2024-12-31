@@ -74,6 +74,12 @@ export const ApiPage: FC = () => {
           <td>{`if 'true', select all nodes component displayed in the dropdown header`}</td>
         </tr>
         <tr>
+          <td>{'withDropdownInput'}</td>
+          <td>{'boolean'}</td>
+          <td>{'false'}</td>
+          <td>{`if 'true', input is displayed in dropdown (hidden input rendered in field for focus to work)`}</td>
+        </tr>
+        <tr>
           <td>{'customComponents'}</td>
           <td>{'CustomComponents'}</td>
           <td>{'-'}</td>
@@ -93,15 +99,27 @@ export const ApiPage: FC = () => {
         </tr>
         <tr>
           <td>{'onClearAll'}</td>
-          <td>{'(selectedNodes: TreeNode[], selectAllCheckedState?: CheckedState) => void;'}</td>
+          <td>{'(selectedNodes: TreeNode[], selectAllCheckedState?: CheckedState) => void'}</td>
           <td>{'-'}</td>
           <td>{'function called on clearAll icon click/press'}</td>
         </tr>
         <tr>
           <td>{'onSelectAllChange'}</td>
-          <td>{'(selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => void;'}</td>
+          <td>{'(selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => void'}</td>
           <td>{'-'}</td>
           <td>{'function called on selectAll select/unselect'}</td>
+        </tr>
+        <tr>
+          <td>{'onFocus'}</td>
+          <td>{'(event: React.FocusEvent) => void'}</td>
+          <td>{'-'}</td>
+          <td>{'function called when component receives focus'}</td>
+        </tr>
+        <tr>
+          <td>{'onBlur'}</td>
+          <td>{'(event: React.FocusEvent) => void'}</td>
+          <td>{'-'}</td>
+          <td>{'function called when component lose focus'}</td>
         </tr>
         </tbody>
       </table>

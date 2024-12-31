@@ -14,6 +14,11 @@ export const BigDataPage: FC = memo(() => {
   return (
     <div className="page big-data-page">
       <h3>{'RTS tree select big data'}</h3>
+      <div className="paragraph">
+        {'RTS uses '}
+        <a href="https://github.com/petyosi/react-virtuoso" target="_blank">Virtuoso</a>
+        {' library to render big amount of nodes.'}
+      </div>
       <Select
         label="Choose amount of nodes:"
         options={[
