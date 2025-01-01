@@ -7,6 +7,7 @@ import {
   areAllExcludingDisabledSelected,
   convertTreeArrayToFlatArray,
   filterChips,
+  getFieldFocusableElement,
   isAnyHasChildren,
   typeToClassName
 } from './utils';
@@ -54,7 +55,7 @@ export interface TreeSelectProps {
   onBlur?: (event: React.FocusEvent) => void;
 }
 
-export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
+export const TreeSelect = <T extends CustomComponents>(props: TreeSelectProps) => {
   const {
     data = [],
     type = Type.MULTI_SELECT_TREE,
@@ -75,6 +76,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
   } = props;
 
   const treeSelectRef = useRef<HTMLDivElement>(null);
+  const fieldRef = useRef<HTMLDivElement>(null);
   const inputFieldRef = useRef<HTMLInputElement>(null);
   const inputDropdownRef = useRef<HTMLInputElement>(null);
 
@@ -526,7 +528,9 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
         if (state.showDropdown && state.focusedElement) {
           dispatchFocusElement(getPrevFocusedElement());
         } else {
-          withDropdownInput && state.showDropdown && inputFieldRef?.current?.focus();
+          withDropdownInput
+          && state.showDropdown
+          && getFieldFocusableElement(customComponents, fieldRef, inputFieldRef)?.focus();
           dispatchToggleDropdown(!state.showDropdown);
         }
         e.preventDefault();
@@ -546,7 +550,9 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
           if (chipNode) {
             handleClickChip(chipNode)(e);
           } else {
-            withDropdownInput && state.showDropdown && inputFieldRef?.current?.focus();
+            withDropdownInput
+            && state.showDropdown
+            && getFieldFocusableElement(customComponents, fieldRef, inputFieldRef)?.focus();
             dispatchToggleDropdown(!state.showDropdown);
           }
         } else if (state.showDropdown) {
@@ -576,14 +582,18 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
         break;
       case 'Escape':
         if (state.showDropdown) {
-          withDropdownInput && inputFieldRef?.current?.focus();
+          withDropdownInput
+          && state.showDropdown
+          && getFieldFocusableElement(customComponents, fieldRef, inputFieldRef)?.focus();
           dispatchToggleDropdown(false);
           e.preventDefault();
         }
         break;
       case 'Tab':
         if (state.showDropdown) {
-          withDropdownInput && inputFieldRef?.current?.focus();
+          withDropdownInput
+          && state.showDropdown
+          && getFieldFocusableElement(customComponents, fieldRef, inputFieldRef)?.focus();
           dispatchToggleDropdown(false);
           e.preventDefault();
         }
@@ -596,11 +606,13 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
   const dropdownUnmountedOnClickOutside = useRef<boolean>(false);
 
   const handleComponentFocus = (event: React.FocusEvent): void => {
-    if (event.target === inputFieldRef?.current) {
+    const fieldFocusableElement = getFieldFocusableElement(customComponents, fieldRef, inputFieldRef);
+    if (event.target === fieldFocusableElement) {
       if (!withDropdownInput
         || (withDropdownInput
           && !event.relatedTarget?.classList?.contains('rts-input-dropdown')
           && !dropdownUnmountedOnClickOutside.current)) {
+        treeSelectRef?.current?.classList?.add('focused');
         onFocus?.(event);
       }
     }
@@ -608,19 +620,24 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
   };
 
   const handleComponentBlur = (event: React.FocusEvent): void => {
-    if (event.target === inputFieldRef?.current) {
+    const fieldFocusableElement = getFieldFocusableElement(customComponents, fieldRef, inputFieldRef);
+    if (event.target === fieldFocusableElement) {
       if (!withDropdownInput
         || (withDropdownInput
           && !event.relatedTarget?.classList?.contains('rts-input-dropdown'))) {
+        treeSelectRef?.current?.classList?.remove('focused');
         onBlur?.(event);
       }
     }
   };
 
   const handleDropdownUnmount = (): void => {
-    if (withDropdownInput && document.activeElement !== inputFieldRef?.current) {
-      dropdownUnmountedOnClickOutside.current = true;
-      inputFieldRef?.current?.focus();
+    if (withDropdownInput) {
+      const fieldFocusableElement = getFieldFocusableElement(customComponents, fieldRef, inputFieldRef);
+      if (document.activeElement !== fieldFocusableElement) {
+        dropdownUnmountedOnClickOutside.current = true;
+        fieldFocusableElement?.focus();
+      }
     }
   };
 
@@ -639,6 +656,7 @@ export const TreeSelect: React.FC<TreeSelectProps> = (props) => {
       onKeyDown={handleComponentKeyDown}
     >
       <Field
+        fieldRef={fieldRef}
         inputRef={inputFieldRef}
         input={<Input
           inputRef={inputFieldRef}

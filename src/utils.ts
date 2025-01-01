@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {RefObject} from 'react';
 import {Node} from './Node';
-import {Type} from './models';
+import {CustomComponents, Type} from './models';
 
 const fillArrayFromTreeArray = (treeArray: Node[], nodeArray: Node[]): void => {
   treeArray?.forEach(node => {
@@ -45,4 +45,23 @@ export const typeToClassName = (type: Type): string => {
 
 export const preventDefaultOnMouseEvent = (e: React.MouseEvent): void => {
   e.preventDefault();
+};
+
+export const getFieldFocusableElement = (
+  customComponents: CustomComponents | null | undefined,
+  fieldRef: RefObject<HTMLDivElement>,
+  inputFieldRef: RefObject<HTMLInputElement>
+): HTMLElement | null => {
+  return customComponents?.Field ? getKeyboardFocusableElements(fieldRef?.current)?.[0] : inputFieldRef?.current;
+};
+
+/**
+ * Gets keyboard-focusable html elements within a specified html element
+ * @param {HTMLElement} htmlElement
+ * @returns {Array<HTMLElement>}
+ */
+export const getKeyboardFocusableElements = (htmlElement: HTMLElement | null): HTMLElement[] => {
+  return Array.from(htmlElement?.querySelectorAll(
+    'a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])') || [])
+    .filter(el => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden')) as HTMLElement[];
 };

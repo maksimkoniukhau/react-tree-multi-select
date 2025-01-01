@@ -1,7 +1,12 @@
 import React, {FC, memo, ReactNode, RefObject} from 'react';
 
 import {CLEAR_ALL} from './constants';
-import {filterChips, isAnyExcludingDisabledSelected, preventDefaultOnMouseEvent} from './utils';
+import {
+  filterChips,
+  getFieldFocusableElement,
+  isAnyExcludingDisabledSelected,
+  preventDefaultOnMouseEvent
+} from './utils';
 import {CustomComponents, Type} from './models';
 import {Node} from './Node';
 import {Chip} from './Chip';
@@ -9,6 +14,7 @@ import {FieldClear} from './FieldClear';
 import {FieldExpand} from './FieldExpand';
 
 export interface FieldProps {
+  fieldRef: RefObject<HTMLDivElement>;
   inputRef: RefObject<HTMLInputElement>;
   input: ReactNode;
   type: Type;
@@ -27,6 +33,7 @@ export interface FieldProps {
 export const Field: FC<FieldProps> = memo((props) => {
 
   const {
+    fieldRef,
     inputRef,
     input,
     type,
@@ -43,22 +50,22 @@ export const Field: FC<FieldProps> = memo((props) => {
   } = props;
 
   const handleMouseDown = (e: React.MouseEvent): void => {
-    if (!customComponents?.field) {
-      inputRef?.current?.focus();
-      e.preventDefault();
-    }
+    const fieldFocusableElement = getFieldFocusableElement(customComponents, fieldRef, inputRef);
+    fieldFocusableElement?.focus();
+    e.preventDefault();
   };
 
-  const fieldClasses = 'rts-field' + (customComponents?.field ? ' rts-field-custom' : '');
+  const fieldClasses = 'rts-field' + (customComponents?.Field ? ' rts-field-custom' : '');
 
   return (
     <div
+      ref={fieldRef}
       className={fieldClasses}
       onClick={onClickField}
       onMouseDown={handleMouseDown}
     >
-      {customComponents?.field ? (
-        customComponents.field
+      {customComponents?.Field ? (
+        <customComponents.Field.component {...customComponents.Field.props} />
       ) : (
         <>
           <div

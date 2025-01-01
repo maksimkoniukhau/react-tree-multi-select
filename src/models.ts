@@ -1,4 +1,4 @@
-import {ReactNode} from 'react';
+import {ComponentType} from 'react';
 
 export enum Type {
   MULTI_SELECT_TREE = 'MULTI_SELECT_TREE',
@@ -23,6 +23,11 @@ export enum CheckedState {
   UNSELECTED = 'UNSELECTED'
 }
 
-export interface CustomComponents {
-  field?: ReactNode;
+export interface CustomComponent<P = {}, InnerProps = {}> {
+  component: ComponentType<P & InnerProps>;
+  props?: P;
+}
+
+export interface CustomComponents<FP = any> {
+  Field?: CustomComponent<FP>;
 }
