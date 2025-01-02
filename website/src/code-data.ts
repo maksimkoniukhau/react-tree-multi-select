@@ -75,7 +75,9 @@ export const RtsApp: FC = () => {
 
 export const rtsTypes = `enum Type {
   MULTI_SELECT_TREE = 'MULTI_SELECT_TREE',
-  MULTI_SELECT_TREE_FLAT = 'MULTI_SELECT_TREE_FLAT'
+  MULTI_SELECT_TREE_FLAT = 'MULTI_SELECT_TREE_FLAT',
+  MULTI_SELECT = 'MULTI_SELECT',
+  SELECT = 'SELECT'
 }
 
 interface TreeNode {
@@ -94,8 +96,13 @@ enum CheckedState {
   UNSELECTED = 'UNSELECTED'
 }
 
-interface CustomComponents {
-  field?: ReactNode;
+interface CustomComponent<P = {}, InnerProps = {}> {
+  component: ComponentType<P & InnerProps>;
+  props?: P;
+}
+
+interface CustomComponents<FP = any> {
+  Field?: CustomComponent<FP>;
 }`;
 
 export const filterExample = `import React, {FC} from 'react';
@@ -128,7 +135,9 @@ export const Filters: FC = () => {
           }
         ]}
         withDropdownInput={true}
-        customComponents={{field: <Button label="Filter by company"/>}}
+        customComponents={{
+          Field: {component: Button, props: {label: 'Filter by company'}}
+        }}
       />
       <TreeSelect
         type={Type.MULTI_SELECT}
@@ -140,7 +149,9 @@ export const Filters: FC = () => {
           {label: 'Brand5', selected: true}
         ]}
         withSelectAll={true}
-        customComponents={{field: <Button label="Filter by brand"/>}}
+        customComponents={{
+          Field: {component: Button, props: {label: 'Filter by brand'}}
+        }}
       />
       <TreeSelect
         type={Type.SELECT}
@@ -151,7 +162,9 @@ export const Filters: FC = () => {
           {label: '400'}, 
           {label: '500'}
         ]}
-        customComponents={{field: <Button label="Filter by price"/>}}
+        customComponents={{
+          Field: {component: Button, props: {label: 'Filter by price'}}
+        }}
       />
     </div>
   );

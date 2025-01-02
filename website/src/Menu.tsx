@@ -5,8 +5,7 @@ export enum MENU_ITEM {
   API = 'API',
   BASIC = 'Basic',
   BIG_DATA = 'Big Data',
-  CUSTOM_COMPONENTS = 'Custom Components',
-  SELECT = "Select"
+  CUSTOM_COMPONENTS = 'Custom Components'
 }
 
 const menuItems = [
@@ -14,8 +13,7 @@ const menuItems = [
   MENU_ITEM.API,
   MENU_ITEM.BASIC,
   MENU_ITEM.BIG_DATA,
-  MENU_ITEM.CUSTOM_COMPONENTS,
-  MENU_ITEM.SELECT
+  MENU_ITEM.CUSTOM_COMPONENTS
 ];
 
 export interface MenuProps {

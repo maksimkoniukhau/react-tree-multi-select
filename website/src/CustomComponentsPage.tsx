@@ -3,8 +3,12 @@ import {TreeSelect, Type} from '../../src';
 import {filterExample} from './code-data';
 import {CodeBlock} from './CodeBlock';
 
-const Button: FC<{ label: string }> = ({label}) => (
-  <button className="filter-btn">{label}</button>
+interface ButtonProps {
+  label: string;
+}
+
+const Button = (props: ButtonProps) => (
+  <button className="filter-btn">{props.label}</button>
 );
 
 export const CustomComponentsPage: FC = memo(() => {
@@ -13,10 +17,14 @@ export const CustomComponentsPage: FC = memo(() => {
     <div className="page">
       <h3>{'RTS tree select custom components'}</h3>
       <div className="paragraph">
-        {'RTS allows you to customize tree select by providing your own components as a property.\n'}
+        {'RTS allows you to customize tree select by providing your own custom components as a property.\n'}
+        {'Below you can find some examples of usage custom components.\n'}
+      </div>
+      <div className="paragraph">
+        <b>{'Field\n'}</b>
         {`Let's say you have filters on a page that, when clicked, open a dropdown with a range of filter options.\n`}
-        {'It can be achieved by providing filter button as a custom field component like in the example below.\n'}
-        {'IMPORTANT: your custom field component should be focusable for keyboard navigation to work in dropdown.'}
+        {'It can be achieved by providing filter button as a custom Field component like in the example below.\n'}
+        <span className="important">{'Important'}</span>{': your custom Field component should be focusable for keyboard navigation to work in dropdown.'}
       </div>
       <div className="example-container">
         <CodeBlock code={filterExample}/>
@@ -40,7 +48,9 @@ export const CustomComponentsPage: FC = memo(() => {
               }
             ]}
             withDropdownInput={true}
-            customComponents={{field: <Button label="Filter by company"/>}}
+            customComponents={{
+              Field: {component: Button, props: {label: 'Filter by company'}}
+            }}
           />
           <TreeSelect
             type={Type.MULTI_SELECT}
@@ -52,7 +62,9 @@ export const CustomComponentsPage: FC = memo(() => {
               {label: 'Brand5', selected: true}
             ]}
             withSelectAll={true}
-            customComponents={{field: <Button label="Filter by brand"/>}}
+            customComponents={{
+              Field: {component: Button, props: {label: 'Filter by brand'}}
+            }}
           />
           <TreeSelect
             type={Type.SELECT}
@@ -63,7 +75,9 @@ export const CustomComponentsPage: FC = memo(() => {
               {label: '400'},
               {label: '500'}
             ]}
-            customComponents={{field: <Button label="Filter by price"/>}}
+            customComponents={{
+              Field: {component: Button, props: {label: 'Filter by price'}}
+            }}
           />
         </div>
       </div>

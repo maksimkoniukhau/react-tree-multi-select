@@ -5,7 +5,6 @@ import {GettingStartedPage} from './GettingStartedPage';
 import {ApiPage} from './ApiPage';
 import {BasicPage} from './BasicPage';
 import {BigDataPage} from './BigDataPage';
-import {SelectPage} from './SelectPage';
 import {CustomComponentsPage} from './CustomComponentsPage';
 
 function App() {
@@ -26,8 +25,6 @@ function App() {
         return (<BigDataPage/>);
       case MENU_ITEM.CUSTOM_COMPONENTS:
         return (<CustomComponentsPage/>)
-      case MENU_ITEM.SELECT:
-        return (<SelectPage/>);
       default:
         return (<GettingStartedPage/>);
     }

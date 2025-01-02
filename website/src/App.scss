@@ -62,6 +62,10 @@
           line-height: 1.5;
         }
 
+        .important {
+          font-weight: 500;
+        }
+
         .basic-options {
           display: flex;
           flex-direction: column;
@@ -130,16 +134,18 @@
           }
         }
 
+        .rts-tree-select.focused {
+          .filter-btn {
+            background-color: #82eefe;
+          }
+        }
+
         .filter-btn {
           border: none;
           background-color: #d1f2fc;
           padding: 5px 10px;
           border-radius: 8px;
           outline: none;
-
-          &:focus {
-            background-color: #82eefe;
-          }
         }
 
         .filter-example {

@@ -6,7 +6,7 @@ export const ApiPage: FC = () => {
 
   return (
     <div className="page">
-      <h3>API</h3>
+      <h3>{'RTS tree select API'}</h3>
       <div className="title">{'Tree select types:'}</div>
       <CodeBlock code={rtsTypes}/>
       <div className="title">{'Tree select props:'}</div>
