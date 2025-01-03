@@ -1,5 +1,5 @@
 .rts-field {
-  &:not(.rts-field-custom) {
+  &:has(> .rts-field-content, > .rts-actions) {
     display: flex;
     align-items: center;
     justify-content: space-between;

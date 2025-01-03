@@ -58,12 +58,10 @@ export const Field: FC<FieldProps> = memo((props) => {
     }
   };
 
-  const fieldClasses = 'rts-field' + (customComponents?.Field ? ' rts-field-custom' : '');
-
   return (
     <div
       ref={fieldRef}
-      className={fieldClasses}
+      className="rts-field"
       onClick={handleClick}
       onMouseDown={preventDefaultOnMouseEvent}
     >

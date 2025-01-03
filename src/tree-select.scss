@@ -11,7 +11,7 @@ TreeSelect styles
 
   &:focus-within {
     .rts-field {
-      &:not(.rts-field-custom) {
+      &:has(> .rts-field-content, > .rts-actions) {
         border-color: #92bcff;
         box-shadow: 0 0 3px 0 #016aff;
       }
