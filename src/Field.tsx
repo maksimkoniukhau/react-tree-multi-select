@@ -49,10 +49,13 @@ export const Field: FC<FieldProps> = memo((props) => {
     customComponents
   } = props;
 
-  const handleMouseDown = (e: React.MouseEvent): void => {
+  const handleClick = (e: React.MouseEvent): void => {
     const fieldFocusableElement = getFieldFocusableElement(customComponents, fieldRef, inputRef);
     fieldFocusableElement?.focus();
-    e.preventDefault();
+    // defaultPrevented is on click field clear icon or chip (or in custom field)
+    if (!e.defaultPrevented) {
+      onClickField(e);
+    }
   };
 
   const fieldClasses = 'rts-field' + (customComponents?.Field ? ' rts-field-custom' : '');
@@ -61,8 +64,8 @@ export const Field: FC<FieldProps> = memo((props) => {
     <div
       ref={fieldRef}
       className={fieldClasses}
-      onClick={onClickField}
-      onMouseDown={handleMouseDown}
+      onClick={handleClick}
+      onMouseDown={preventDefaultOnMouseEvent}
     >
       {customComponents?.Field ? (
         <customComponents.Field.component {...customComponents.Field.props} />

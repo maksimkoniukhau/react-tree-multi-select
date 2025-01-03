@@ -14,14 +14,16 @@ export const Chip: FC<ChipProps> = memo((props) => {
   const {label, focused, disabled, onClickElement, onClickIcon} = props;
 
   const handleClickElement = (e: React.MouseEvent): void => {
-    e.preventDefault();
-    onClickElement && onClickElement(e);
+    // defaultPrevented is on click chip clear icon
+    if (!e.defaultPrevented) {
+      e.preventDefault();
+      onClickElement(e);
+    }
   };
 
   const handleClickIcon = (e: React.MouseEvent): void => {
     e.preventDefault();
-    e.stopPropagation();
-    onClickIcon && onClickIcon(e);
+    onClickIcon(e);
   };
 
   const disabledFocusedClasses = `${disabled ? ' disabled' : ''}${focused ? ' focused' : ''}`;
