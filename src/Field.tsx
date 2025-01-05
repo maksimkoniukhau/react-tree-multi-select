@@ -7,11 +7,11 @@ import {
   isAnyExcludingDisabledSelected,
   preventDefaultOnMouseEvent
 } from './utils';
-import {CustomComponents, Type} from './models';
+import {Components, CustomComponents, Type} from './models';
 import {Node} from './Node';
-import {Chip} from './Chip';
 import {FieldClear} from './FieldClear';
 import {FieldExpand} from './FieldExpand';
+import {getComponents} from './componentsUtils';
 
 export interface FieldProps {
   fieldRef: RefObject<HTMLDivElement>;
@@ -28,6 +28,7 @@ export interface FieldProps {
   onDeleteNode: (node: Node) => (e: React.MouseEvent) => void;
   onDeleteAll: (e: React.MouseEvent | React.KeyboardEvent) => void;
   customComponents?: CustomComponents;
+  components?: Components;
 }
 
 export const Field: FC<FieldProps> = memo((props) => {
@@ -46,7 +47,8 @@ export const Field: FC<FieldProps> = memo((props) => {
     onClickChip,
     onDeleteNode,
     onDeleteAll,
-    customComponents
+    customComponents,
+    components: renderComponents,
   } = props;
 
   const handleClick = (e: React.MouseEvent): void => {
@@ -58,6 +60,21 @@ export const Field: FC<FieldProps> = memo((props) => {
     }
   };
 
+  const handleClickChip = (node: Node) => (e: React.MouseEvent): void => {
+    // defaultPrevented is on click chip clear icon
+    if (!e.defaultPrevented) {
+      e.preventDefault();
+      onClickChip(node)(e);
+    }
+  };
+
+  const handleClickClear = (node: Node) => (e: React.MouseEvent): void => {
+    e.preventDefault();
+    onDeleteNode(node)(e);
+  };
+
+  const components = getComponents(renderComponents);
+
   return (
     <div
       ref={fieldRef}
@@ -66,7 +83,7 @@ export const Field: FC<FieldProps> = memo((props) => {
       onMouseDown={preventDefaultOnMouseEvent}
     >
       {customComponents?.Field ? (
-        <customComponents.Field.component {...customComponents.Field.props} />
+        <customComponents.Field.component {...customComponents.Field.props}/>
       ) : (
         <>
           <div
@@ -76,14 +93,32 @@ export const Field: FC<FieldProps> = memo((props) => {
           >
             {filterChips(selectedNodes, type)
               .map(node => (
-                <Chip
+                <components.Chip.component
                   key={node.path}
-                  label={node.name}
-                  focused={focusedFieldElement === node.path}
-                  disabled={node.disabled}
-                  onClickElement={onClickChip(node)}
-                  onClickIcon={onDeleteNode(node)}
-                />
+                  rootAttributes={{
+                    className: `rts-chip${node.disabled ? ' disabled' : ''}${focusedFieldElement === node.path ? ' focused' : ''}`,
+                    onClick: handleClickChip(node),
+                    // needed for staying focus on input
+                    onMouseDown: preventDefaultOnMouseEvent
+                  }}
+                  componentProps={{
+                    focused: focusedFieldElement === node.path,
+                    disabled: node.disabled,
+                  }}
+                  ownProps={components.Chip.props}
+                >
+                  <components.ChipLabel.component
+                    rootAttributes={{className: 'rts-label'}}
+                    componentProps={{label: node.name}}
+                    ownProps={components.ChipLabel.props}
+                  />
+                  {!node.disabled &&
+                      <components.ChipClear.component
+                          rootAttributes={{className: 'rts-chip-clear-icon', onClick: handleClickClear(node)}}
+                          componentProps={{}}
+                          ownProps={components.ChipClear.props}
+                      />}
+                </components.Chip.component>
               ))}
             {input}
           </div>

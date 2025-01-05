@@ -11,8 +11,12 @@
 
   &.focused, &:hover {
     box-shadow: 0 0 5px 1px #a1a1a1;
+  }
 
-    &:not(.disabled) {
+  &.focused {
+    .rts-chip-clear-icon {
+      color: #ff3b3b;
+
       path {
         fill: #ff3b3b;
       }
@@ -29,12 +33,26 @@
   }
 
   .rts-chip-clear-icon {
-    width: var(--rts-chip-clear-icon-width);
-    height: var(--rts-chip-clear-icon-height);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
 
-    path {
-      fill: var(--rts-icon-base-color);
+    &:hover {
+      color: #ff3b3b;
+
+      path {
+        fill: #ff3b3b;
+      }
+    }
+
+    svg {
+      width: var(--rts-chip-clear-icon-width);
+      height: var(--rts-chip-clear-icon-height);
+
+      path {
+        fill: var(--rts-icon-base-color);
+      }
     }
   }
 }

@@ -11,7 +11,7 @@ import {
   isAnyHasChildren,
   typeToClassName
 } from './utils';
-import {CheckedState, CustomComponents, TreeNode, Type} from './models';
+import {CheckedState, Components, CustomComponents, TreeNode, Type} from './models';
 import {useOnClickOutside} from './hooks';
 import {
   ActionType,
@@ -47,6 +47,7 @@ export interface TreeSelectProps {
   withSelectAll?: boolean;
   withDropdownInput?: boolean;
   customComponents?: CustomComponents;
+  components?: Components;
   onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
   onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
   onClearAll?: (selectedNodes: TreeNode[], selectAllCheckedState?: CheckedState) => void;
@@ -67,6 +68,7 @@ export const TreeSelect = <T extends CustomComponents>(props: TreeSelectProps) =
     withSelectAll = false,
     withDropdownInput = false,
     customComponents,
+    components = {},
     onNodeChange,
     onNodeToggle,
     onClearAll,
@@ -677,6 +679,7 @@ export const TreeSelect = <T extends CustomComponents>(props: TreeSelectProps) =
         onDeleteNode={handleDeleteNode}
         onDeleteAll={handleDeleteAll}
         customComponents={customComponents}
+        components={components}
       />
       {state.showDropdown ? (
         <Dropdown
