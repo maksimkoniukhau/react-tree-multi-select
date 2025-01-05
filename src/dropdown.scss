@@ -38,13 +38,13 @@
       cursor: not-allowed;
     }
 
-    .rts-node-expand {
+    .rts-node-toggle {
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
 
-      .rts-node-expand-icon {
+      .rts-node-toggle-icon {
         width: var(--rts-checkbox-width);
         height: var(--rts-checkbox-height);
         margin-right: var(--rts-checkbox-margin-right);

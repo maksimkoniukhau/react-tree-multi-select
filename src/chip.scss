@@ -14,7 +14,7 @@
   }
 
   &.focused {
-    .rts-chip-clear-icon {
+    .rts-chip-clear {
       color: #ff3b3b;
 
       path {
@@ -27,12 +27,12 @@
     color: var(--rts-disabled-color);
     cursor: not-allowed;
 
-    .rts-chip-clear-icon {
+    .rts-chip-clear {
       cursor: not-allowed;
     }
   }
 
-  .rts-chip-clear-icon {
+  .rts-chip-clear {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -46,7 +46,7 @@
       }
     }
 
-    svg {
+    .rts-chip-clear-icon {
       width: var(--rts-chip-clear-icon-width);
       height: var(--rts-chip-clear-icon-height);
 

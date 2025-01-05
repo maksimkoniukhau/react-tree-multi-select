@@ -1,14 +1,14 @@
 import React, {FC, memo} from 'react';
 
 import {Node} from './Node';
-import {NodeExpand} from './NodeExpand';
+import {NodeToggle} from './NodeToggle';
 import {Checkbox} from './Checkbox';
 
 export interface NodeRowProps {
   node: Node;
   focused: boolean;
   expanded: boolean;
-  showNodeExpand: boolean;
+  showNodeToggle: boolean;
   showNodeCheckbox: boolean;
   indentation: boolean;
   onToggleNode: (e: React.MouseEvent) => void;
@@ -21,7 +21,7 @@ export const NodeRow: FC<NodeRowProps> = memo((props) => {
     node,
     focused,
     expanded,
-    showNodeExpand,
+    showNodeToggle,
     showNodeCheckbox,
     indentation,
     onToggleNode,
@@ -40,8 +40,8 @@ export const NodeRow: FC<NodeRowProps> = memo((props) => {
 
   return (
     <div className={getNodeRowClasses()}>
-      {showNodeExpand && (
-        <NodeExpand expanded={expanded} onClick={onClickExpandIcon}/>
+      {showNodeToggle && (
+        <NodeToggle expanded={expanded} onClick={onClickExpandIcon}/>
       )}
       <div className="rts-node" onClick={onToggleNode}>
         {showNodeCheckbox && (

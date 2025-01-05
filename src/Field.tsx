@@ -10,7 +10,7 @@ import {
 import {Components, CustomComponents, Type} from './models';
 import {Node} from './Node';
 import {FieldClear} from './FieldClear';
-import {FieldExpand} from './FieldExpand';
+import {FieldToggle} from './FieldToggle';
 import {getComponents} from './componentsUtils';
 
 export interface FieldProps {
@@ -114,7 +114,7 @@ export const Field: FC<FieldProps> = memo((props) => {
                   />
                   {!node.disabled &&
                       <components.ChipClear.component
-                          rootAttributes={{className: 'rts-chip-clear-icon', onClick: handleClickClear(node)}}
+                          rootAttributes={{className: 'rts-chip-clear', onClick: handleClickClear(node)}}
                           componentProps={{}}
                           ownProps={components.ChipClear.props}
                       />}
@@ -126,7 +126,7 @@ export const Field: FC<FieldProps> = memo((props) => {
             {withClearAll && isAnyExcludingDisabledSelected(nodes) && (
               <FieldClear focused={focusedFieldElement === CLEAR_ALL} onClick={onDeleteAll}/>
             )}
-            <FieldExpand expanded={showDropdown}/>
+            <FieldToggle expanded={showDropdown}/>
           </div>
         </>
       )}

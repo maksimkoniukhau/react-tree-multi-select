@@ -81,7 +81,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
       node={node}
       focused={focused}
       expanded={expanded}
-      showNodeExpand={type !== Type.MULTI_SELECT && type !== Type.SELECT && node.hasChildren()}
+      showNodeToggle={type !== Type.MULTI_SELECT && type !== Type.SELECT && node.hasChildren()}
       showNodeCheckbox={type !== Type.MULTI_SELECT && type !== Type.SELECT}
       indentation={indentation}
       onToggleNode={onToggleNode(node)}

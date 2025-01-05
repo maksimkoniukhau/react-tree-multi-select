@@ -1,19 +1,19 @@
 import React, {FC, memo} from 'react';
 
-export interface NodeExpandProps {
+export interface NodeToggleProps {
   expanded: boolean;
   onClick: (e: React.MouseEvent) => void;
 }
 
-export const NodeExpand: FC<NodeExpandProps> = memo((props) => {
+export const NodeToggle: FC<NodeToggleProps> = memo((props) => {
 
   const {expanded, onClick} = props;
 
-  const nodeExpandClasses = `rts-node-expand${expanded ? ' expanded' : ''}`;
+  const nodeToggleClasses = `rts-node-toggle${expanded ? ' expanded' : ''}`;
 
   return (
-    <div className={nodeExpandClasses} onClick={onClick}>
-      <svg className="rts-node-expand-icon" viewBox={expanded ? '0 0 448 512' : '0 0 320 512'}>
+    <div className={nodeToggleClasses} onClick={onClick}>
+      <svg className="rts-node-toggle-icon" viewBox={expanded ? '0 0 448 512' : '0 0 320 512'}>
         {expanded ? (
           <path
             d="M224 397.3l22.6-22.6 160-160L429.3 192 384 146.7l-22.6 22.6L224 306.7 86.6 169.4 64 146.7 18.7 192l22.6 22.6 160 160L224 397.3z"/>

@@ -27,7 +27,7 @@
     align-items: center;
     justify-content: center;
 
-    .rts-field-clear, .rts-field-expand {
+    .rts-field-clear, .rts-field-toggle {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -43,13 +43,13 @@
       }
     }
 
-    .rts-field-expand {
+    .rts-field-toggle {
       &.expanded {
         transform: rotate(180deg);
       }
     }
 
-    .rts-field-clear-icon, .rts-field-expand-icon {
+    .rts-field-clear-icon, .rts-field-toggle-icon {
       width: var(--rts-field-icon-width);
       height: var(--rts-field-icon-height);
 
