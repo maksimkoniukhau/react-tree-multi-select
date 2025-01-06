@@ -1,6 +1,6 @@
 import React, {RefObject} from 'react';
 import {Node} from './Node';
-import {CustomComponents, Type} from './models';
+import {Type} from './models';
 
 const fillArrayFromTreeArray = (treeArray: Node[], nodeArray: Node[]): void => {
   treeArray?.forEach(node => {
@@ -47,12 +47,8 @@ export const preventDefaultOnMouseEvent = (e: React.MouseEvent): void => {
   e.preventDefault();
 };
 
-export const getFieldFocusableElement = (
-  customComponents: CustomComponents | null | undefined,
-  fieldRef: RefObject<HTMLDivElement>,
-  inputFieldRef: RefObject<HTMLInputElement>
-): HTMLElement | null => {
-  return customComponents?.Field ? getKeyboardFocusableElements(fieldRef?.current)?.[0] : inputFieldRef?.current;
+export const getFieldFocusableElement = (fieldRef: RefObject<HTMLDivElement>): HTMLElement | null => {
+  return getKeyboardFocusableElements(fieldRef?.current)?.[0];
 };
 
 /**

@@ -38,6 +38,10 @@
     align-items: center;
     cursor: pointer;
 
+    path {
+      fill: var(--rts-icon-base-color);
+    }
+
     &:hover {
       color: #ff3b3b;
 
@@ -49,10 +53,6 @@
     .rts-chip-clear-icon {
       width: var(--rts-chip-clear-icon-width);
       height: var(--rts-chip-clear-icon-height);
-
-      path {
-        fill: var(--rts-icon-base-color);
-      }
     }
   }
 }

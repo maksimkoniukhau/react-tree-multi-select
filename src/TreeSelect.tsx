@@ -1,6 +1,6 @@
 import './tree-select.scss';
 
-import React, {useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
+import React, {FC, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
 
 import {CLEAR_ALL, INPUT, INPUT_PLACEHOLDER, NO_MATCHES, PATH_DELIMITER, SELECT_ALL} from './constants';
 import {
@@ -8,10 +8,13 @@ import {
   convertTreeArrayToFlatArray,
   filterChips,
   getFieldFocusableElement,
+  isAnyExcludingDisabledSelected,
   isAnyHasChildren,
+  preventDefaultOnMouseEvent,
   typeToClassName
 } from './utils';
-import {CheckedState, Components, CustomComponents, TreeNode, Type} from './models';
+import {getComponents} from './componentsUtils';
+import {CheckedState, Components, TreeNode, Type} from './models';
 import {useOnClickOutside} from './hooks';
 import {
   ActionType,
@@ -31,7 +34,6 @@ import {
   UnselectAllPayload,
   UnselectPayload
 } from './reducer';
-import {Field} from './Field';
 import {Dropdown} from './Dropdown';
 import {Node} from './Node';
 import {Input} from './Input';
@@ -46,7 +48,6 @@ export interface TreeSelectProps {
   withClearAll?: boolean;
   withSelectAll?: boolean;
   withDropdownInput?: boolean;
-  customComponents?: CustomComponents;
   components?: Components;
   onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
   onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
@@ -56,7 +57,7 @@ export interface TreeSelectProps {
   onBlur?: (event: React.FocusEvent) => void;
 }
 
-export const TreeSelect = <T extends CustomComponents>(props: TreeSelectProps) => {
+export const TreeSelect: FC<TreeSelectProps> = (props) => {
   const {
     data = [],
     type = Type.MULTI_SELECT_TREE,
@@ -67,8 +68,7 @@ export const TreeSelect = <T extends CustomComponents>(props: TreeSelectProps) =
     withClearAll = true,
     withSelectAll = false,
     withDropdownInput = false,
-    customComponents,
-    components = {},
+    components: propsComponents = {},
     onNodeChange,
     onNodeToggle,
     onClearAll,
@@ -85,6 +85,8 @@ export const TreeSelect = <T extends CustomComponents>(props: TreeSelectProps) =
   const nodeMapRef = useRef<Map<string, Node>>(new Map());
 
   const [state, dispatch] = useReducer<typeof reducer>(reducer, initialState);
+
+  const components = useMemo(() => getComponents(propsComponents), [propsComponents]);
 
   const dispatchToggleDropdown = (showDropdown: boolean): void => {
     dispatch({
@@ -218,8 +220,12 @@ export const TreeSelect = <T extends CustomComponents>(props: TreeSelectProps) =
   };
 
   const handleClickField = useCallback((e: React.MouseEvent): void => {
-    dispatchToggleDropdown(!state.showDropdown);
-  }, [state.showDropdown]);
+    getFieldFocusableElement(fieldRef)?.focus();
+    // defaultPrevented is on click field clear icon or chip (or in custom field)
+    if (!e.defaultPrevented) {
+      dispatchToggleDropdown(!state.showDropdown);
+    }
+  }, [state.showDropdown, fieldRef]);
 
   const callClearAllHandler = (selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onClearAll) {
@@ -229,6 +235,7 @@ export const TreeSelect = <T extends CustomComponents>(props: TreeSelectProps) =
   };
 
   const handleDeleteAll = useCallback((e: React.MouseEvent | React.KeyboardEvent): void => {
+    e.preventDefault();
     state.nodes.forEach(node => node.handleUnselect(type));
     const selectedNodes = state.nodes.filter(nod => nod.selected);
     const selectAllCheckedState = getSelectAllCheckedState(selectedNodes, state.nodes);
@@ -321,20 +328,24 @@ export const TreeSelect = <T extends CustomComponents>(props: TreeSelectProps) =
   };
 
   const handleClickChip = useCallback((node: Node) => (e: React.MouseEvent | React.KeyboardEvent): void => {
-    const focusedElementFound = state.displayedNodes.find(displayedNode => displayedNode.path === node.path)
-      && !state.showDropdown;
-    dispatch({
-      type: ActionType.CLICK_CHIP,
-      payload: {
-        showDropdown: !state.showDropdown,
-        focusedFieldElement: state.showDropdown || !focusedElementFound ? node.path : '',
-        focusedElement: focusedElementFound ? node.path : ''
-      } as ClickChipPayload
-    });
-
+    // defaultPrevented is on click chip clear icon
+    if (!e.defaultPrevented) {
+      e.preventDefault();
+      const focusedElementFound = state.displayedNodes.find(displayedNode => displayedNode.path === node.path)
+        && !state.showDropdown;
+      dispatch({
+        type: ActionType.CLICK_CHIP,
+        payload: {
+          showDropdown: !state.showDropdown,
+          focusedFieldElement: state.showDropdown || !focusedElementFound ? node.path : '',
+          focusedElement: focusedElementFound ? node.path : ''
+        } as ClickChipPayload
+      });
+    }
   }, [state.displayedNodes, state.showDropdown]);
 
   const handleDeleteNode = useCallback((node: Node) => (e: React.MouseEvent | React.KeyboardEvent): void => {
+    e.preventDefault();
     if (!node.disabled) {
       node.handleUnselect(type);
       const selectedNodes = state.nodes.filter(nod => nod.selected);
@@ -530,9 +541,7 @@ export const TreeSelect = <T extends CustomComponents>(props: TreeSelectProps) =
         if (state.showDropdown && state.focusedElement) {
           dispatchFocusElement(getPrevFocusedElement());
         } else {
-          withDropdownInput
-          && state.showDropdown
-          && getFieldFocusableElement(customComponents, fieldRef, inputFieldRef)?.focus();
+          withDropdownInput && state.showDropdown && getFieldFocusableElement(fieldRef)?.focus();
           dispatchToggleDropdown(!state.showDropdown);
         }
         e.preventDefault();
@@ -552,9 +561,7 @@ export const TreeSelect = <T extends CustomComponents>(props: TreeSelectProps) =
           if (chipNode) {
             handleClickChip(chipNode)(e);
           } else {
-            withDropdownInput
-            && state.showDropdown
-            && getFieldFocusableElement(customComponents, fieldRef, inputFieldRef)?.focus();
+            withDropdownInput && state.showDropdown && getFieldFocusableElement(fieldRef)?.focus();
             dispatchToggleDropdown(!state.showDropdown);
           }
         } else if (state.showDropdown) {
@@ -584,18 +591,14 @@ export const TreeSelect = <T extends CustomComponents>(props: TreeSelectProps) =
         break;
       case 'Escape':
         if (state.showDropdown) {
-          withDropdownInput
-          && state.showDropdown
-          && getFieldFocusableElement(customComponents, fieldRef, inputFieldRef)?.focus();
+          withDropdownInput && state.showDropdown && getFieldFocusableElement(fieldRef)?.focus();
           dispatchToggleDropdown(false);
           e.preventDefault();
         }
         break;
       case 'Tab':
         if (state.showDropdown) {
-          withDropdownInput
-          && state.showDropdown
-          && getFieldFocusableElement(customComponents, fieldRef, inputFieldRef)?.focus();
+          withDropdownInput && state.showDropdown && getFieldFocusableElement(fieldRef)?.focus();
           dispatchToggleDropdown(false);
           e.preventDefault();
         }
@@ -608,8 +611,7 @@ export const TreeSelect = <T extends CustomComponents>(props: TreeSelectProps) =
   const dropdownUnmountedOnClickOutside = useRef<boolean>(false);
 
   const handleComponentFocus = (event: React.FocusEvent): void => {
-    const fieldFocusableElement = getFieldFocusableElement(customComponents, fieldRef, inputFieldRef);
-    if (event.target === fieldFocusableElement) {
+    if (event.target === getFieldFocusableElement(fieldRef)) {
       if (!withDropdownInput
         || (withDropdownInput
           && !event.relatedTarget?.classList?.contains('rts-input-dropdown')
@@ -622,8 +624,7 @@ export const TreeSelect = <T extends CustomComponents>(props: TreeSelectProps) =
   };
 
   const handleComponentBlur = (event: React.FocusEvent): void => {
-    const fieldFocusableElement = getFieldFocusableElement(customComponents, fieldRef, inputFieldRef);
-    if (event.target === fieldFocusableElement) {
+    if (event.target === getFieldFocusableElement(fieldRef)) {
       if (!withDropdownInput
         || (withDropdownInput
           && !event.relatedTarget?.classList?.contains('rts-input-dropdown'))) {
@@ -635,7 +636,7 @@ export const TreeSelect = <T extends CustomComponents>(props: TreeSelectProps) =
 
   const handleDropdownUnmount = (): void => {
     if (withDropdownInput) {
-      const fieldFocusableElement = getFieldFocusableElement(customComponents, fieldRef, inputFieldRef);
+      const fieldFocusableElement = getFieldFocusableElement(fieldRef);
       if (document.activeElement !== fieldFocusableElement) {
         dropdownUnmountedOnClickOutside.current = true;
         fieldFocusableElement?.focus();
@@ -657,30 +658,88 @@ export const TreeSelect = <T extends CustomComponents>(props: TreeSelectProps) =
       onBlur={handleComponentBlur}
       onKeyDown={handleComponentKeyDown}
     >
-      <Field
-        fieldRef={fieldRef}
-        inputRef={inputFieldRef}
-        input={<Input
-          inputRef={inputFieldRef}
-          inputPlaceholder={inputPlaceholder}
-          className="rts-input-field"
-          value={state.searchValue}
-          onChangeInput={handleChangeInput}
-          hidden={withDropdownInput}
-        />}
-        type={type}
-        nodes={state.nodes}
-        selectedNodes={state.selectedNodes}
-        showDropdown={state.showDropdown}
-        withClearAll={withClearAll}
-        focusedFieldElement={state.focusedFieldElement}
-        onClickField={handleClickField}
-        onClickChip={handleClickChip}
-        onDeleteNode={handleDeleteNode}
-        onDeleteAll={handleDeleteAll}
-        customComponents={customComponents}
-        components={components}
-      />
+      <components.Field.component
+        rootAttributes={{
+          ref: fieldRef,
+          className: "rts-field",
+          onClick: handleClickField,
+          onMouseDown: preventDefaultOnMouseEvent
+        }}
+        componentProps={{
+          type,
+          selectedNodes: state.selectedNodes,
+          showDropdown: state.showDropdown,
+          withClearAll
+        }}
+        ownProps={components.Field.props}
+      >
+        <div
+          className="rts-field-content"
+          // needed for staying focus on input
+          onMouseDown={preventDefaultOnMouseEvent}
+        >
+          {filterChips(state.selectedNodes, type)
+            .map(node => (
+              <components.Chip.component
+                key={node.path}
+                rootAttributes={{
+                  className: `rts-chip${node.disabled ? ' disabled' : ''}${state.focusedFieldElement === node.path ? ' focused' : ''}`,
+                  onClick: handleClickChip(node),
+                  // needed for staying focus on input
+                  onMouseDown: preventDefaultOnMouseEvent
+                }}
+                componentProps={{
+                  focused: state.focusedFieldElement === node.path,
+                  disabled: node.disabled,
+                }}
+                ownProps={components.Chip.props}
+              >
+                <components.ChipLabel.component
+                  rootAttributes={{className: 'rts-label'}}
+                  componentProps={{label: node.name}}
+                  ownProps={components.ChipLabel.props}
+                />
+                {!node.disabled &&
+                    <components.ChipClear.component
+                        rootAttributes={{className: 'rts-chip-clear', onClick: handleDeleteNode(node)}}
+                        componentProps={{}}
+                        ownProps={components.ChipClear.props}
+                    />}
+              </components.Chip.component>
+            ))}
+          <Input
+            inputRef={inputFieldRef}
+            inputPlaceholder={inputPlaceholder}
+            className="rts-input-field"
+            value={state.searchValue}
+            onChangeInput={handleChangeInput}
+            hidden={withDropdownInput}
+          />
+        </div>
+        <div className="rts-actions">
+          {withClearAll && isAnyExcludingDisabledSelected(state.nodes) && (
+            <components.FieldClear.component
+              rootAttributes={{
+                className: `rts-field-clear${state.focusedFieldElement === CLEAR_ALL ? ' focused' : ''}`,
+                onClick: handleDeleteAll,
+                // needed for staying focus on input
+                onMouseDown: preventDefaultOnMouseEvent
+              }}
+              componentProps={{focused: state.focusedFieldElement === CLEAR_ALL}}
+              ownProps={components.FieldClear.props}
+            />
+          )}
+          <components.FieldToggle.component
+            rootAttributes={{
+              className: `rts-field-toggle${state.showDropdown ? ' expanded' : ''}`,
+              // needed for staying focus on input
+              onMouseDown: preventDefaultOnMouseEvent
+            }}
+            componentProps={{expanded: state.showDropdown}}
+            ownProps={components.FieldToggle.props}
+          />
+        </div>
+      </components.Field.component>
       {state.showDropdown ? (
         <Dropdown
           type={type}
