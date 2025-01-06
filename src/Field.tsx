@@ -9,8 +9,6 @@ import {
 } from './utils';
 import {Components, CustomComponents, Type} from './models';
 import {Node} from './Node';
-import {FieldClear} from './FieldClear';
-import {FieldToggle} from './FieldToggle';
 import {getComponents} from './componentsUtils';
 
 export interface FieldProps {
@@ -68,9 +66,14 @@ export const Field: FC<FieldProps> = memo((props) => {
     }
   };
 
-  const handleClickClear = (node: Node) => (e: React.MouseEvent): void => {
+  const handleClickChipClear = (node: Node) => (e: React.MouseEvent): void => {
     e.preventDefault();
     onDeleteNode(node)(e);
+  };
+
+  const handleClickFieldClear = (e: React.MouseEvent): void => {
+    e.preventDefault();
+    onDeleteAll(e);
   };
 
   const components = getComponents(renderComponents);
@@ -114,7 +117,7 @@ export const Field: FC<FieldProps> = memo((props) => {
                   />
                   {!node.disabled &&
                       <components.ChipClear.component
-                          rootAttributes={{className: 'rts-chip-clear', onClick: handleClickClear(node)}}
+                          rootAttributes={{className: 'rts-chip-clear', onClick: handleClickChipClear(node)}}
                           componentProps={{}}
                           ownProps={components.ChipClear.props}
                       />}
@@ -124,9 +127,26 @@ export const Field: FC<FieldProps> = memo((props) => {
           </div>
           <div className="rts-actions">
             {withClearAll && isAnyExcludingDisabledSelected(nodes) && (
-              <FieldClear focused={focusedFieldElement === CLEAR_ALL} onClick={onDeleteAll}/>
+              <components.FieldClear.component
+                rootAttributes={{
+                  className: `rts-field-clear${focusedFieldElement === CLEAR_ALL ? ' focused' : ''}`,
+                  onClick: handleClickFieldClear,
+                  // needed for staying focus on input
+                  onMouseDown: preventDefaultOnMouseEvent
+                }}
+                componentProps={{focused: focusedFieldElement === CLEAR_ALL}}
+                ownProps={components.FieldClear.props}
+              />
             )}
-            <FieldToggle expanded={showDropdown}/>
+            <components.FieldToggle.component
+              rootAttributes={{
+                className: `rts-field-toggle${showDropdown ? ' expanded' : ''}`,
+                // needed for staying focus on input
+                onMouseDown: preventDefaultOnMouseEvent
+              }}
+              componentProps={{expanded: showDropdown}}
+              ownProps={components.FieldToggle.props}
+            />
           </div>
         </>
       )}

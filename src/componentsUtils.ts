@@ -1,17 +1,25 @@
 import {Components, InnerComponents} from './models';
-import {ChipClear} from './ChipClear';
-import {ChipLabel} from './ChipLabel';
 import {Chip} from './Chip';
+import {ChipLabel} from './ChipLabel';
+import {ChipClear} from './ChipClear';
+import {FieldClear} from './FieldClear';
+import {FieldToggle} from './FieldToggle';
 
 const components: InnerComponents = {
   Chip: {
     component: Chip
   },
+  ChipLabel: {
+    component: ChipLabel
+  },
   ChipClear: {
     component: ChipClear
   },
-  ChipLabel: {
-    component: ChipLabel
+  FieldClear: {
+    component: FieldClear
+  },
+  FieldToggle: {
+    component: FieldToggle
   }
 };
 

@@ -1,6 +1,9 @@
 import {ComponentType, JSX, ReactNode, RefObject} from 'react';
-import {ChipLabelProps} from './ChipLabel';
 import {ChipProps} from './Chip';
+import {ChipLabelProps} from './ChipLabel';
+import {ChipClearProps} from './ChipClear';
+import {FieldClearProps} from './FieldClear';
+import {FieldToggleProps} from './FieldToggle';
 
 export enum Type {
   MULTI_SELECT_TREE = 'MULTI_SELECT_TREE',
@@ -48,14 +51,34 @@ export interface Component<CP = {}, OP = {}> {
   props?: OP;
 }
 
-export interface Components<COP = any, CCOP = any, CLOP = any> {
-  Chip?: Component<ChipProps, COP>;
-  ChipClear?: Component<{}, CCOP>;
-  ChipLabel?: Component<ChipLabelProps, CLOP>;
+export interface Components<
+  ChipOwnProps = any,
+  ChipLabelOwnProps = any,
+  ChipClearOwnProps = any,
+  FieldClearOwnProps = any,
+  FieldToggleOwnProps = any
+> {
+  Chip?: Component<ChipProps, ChipOwnProps>;
+  ChipLabel?: Component<ChipLabelProps, ChipLabelOwnProps>;
+  ChipClear?: Component<ChipClearProps, ChipClearOwnProps>;
+  FieldClear?: Component<FieldClearProps, FieldClearOwnProps>;
+  FieldToggle?: Component<FieldToggleProps, FieldToggleOwnProps>;
 }
 
 export type Required<T> = {
   [K in keyof T]-?: T[K];
 };
 
-export type InnerComponents<COP = any, CCOP = any, CLOP = any> = Required<Components<COP, CCOP, CLOP>>;
+export type InnerComponents<
+  ChipOwnProps = any,
+  ChipLabelOwnProps = any,
+  ChipClearOwnProps = any,
+  FieldClearOwnProps = any,
+  FieldToggleOwnProps = any
+> = Required<Components<
+  ChipOwnProps,
+  ChipLabelOwnProps,
+  ChipClearOwnProps,
+  FieldClearOwnProps,
+  FieldToggleOwnProps
+>>;
