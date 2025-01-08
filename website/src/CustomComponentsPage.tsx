@@ -1,15 +1,10 @@
 import React, {FC, memo} from 'react';
-import {TreeSelect, Type} from '../../src';
-import {filterExample} from './code-data';
+import {chipClearExample, chipExample, chipLabelExample, fieldExample} from './code-data';
 import {CodeBlock} from './CodeBlock';
-
-interface ButtonProps {
-  label: string;
-}
-
-const Button = (props: ButtonProps) => (
-  <button className="filter-btn">{props.label}</button>
-);
+import {CustomFieldExample} from './examples/components/CustomFieldExample';
+import {CustomChipExample} from './examples/components/CustomChipExample';
+import {CustomChipLabelExample} from './examples/components/CustomChipLabelExample';
+import {CustomChipClearExample} from './examples/components/CustomChipClearExample';
 
 export const CustomComponentsPage: FC = memo(() => {
 
@@ -23,63 +18,37 @@ export const CustomComponentsPage: FC = memo(() => {
       <div className="paragraph">
         <b>{'Field\n'}</b>
         {`Let's say you have filters on a page that, when clicked, open a dropdown with a range of filter options.\n`}
-        {'It can be achieved by providing filter button as a custom Field component like in the example below.\n'}
-        <span className="important">{'Important'}</span>{': your custom Field component should be focusable for keyboard navigation to work in dropdown.'}
+        {'It can be achieved by providing custom Field component like in the example below.\n'}
+        <span className="important">{'Important'}</span>
+        {': your custom Field component should have one focusable child for keyboard navigation to work in dropdown.'}
       </div>
       <div className="example-container">
-        <CodeBlock code={filterExample}/>
-        <div className="filter-example">
-          <TreeSelect
-            data={[
-              {
-                label: 'Company1',
-                children: [{label: 'Company1Branch1'}, {label: 'Company1Branch2'}],
-                expanded: true
-              },
-              {
-                label: 'Company2',
-                children: [{label: 'Company2Branch1'}, {label: 'Company2Branch2', selected: true}],
-                expanded: true
-              },
-              {
-                label: 'Company3',
-                children: [{label: 'Company3Branch1', disabled: true}, {label: 'Company3Branch2'}],
-                expanded: true
-              }
-            ]}
-            withDropdownInput={true}
-            customComponents={{
-              Field: {component: Button, props: {label: 'Filter by company'}}
-            }}
-          />
-          <TreeSelect
-            type={Type.MULTI_SELECT}
-            data={[
-              {label: 'Brand1'},
-              {label: 'Brand2'},
-              {label: 'Brand3', selected: true},
-              {label: 'Brand4'},
-              {label: 'Brand5', selected: true}
-            ]}
-            withSelectAll={true}
-            customComponents={{
-              Field: {component: Button, props: {label: 'Filter by brand'}}
-            }}
-          />
-          <TreeSelect
-            type={Type.SELECT}
-            data={[
-              {label: '100'},
-              {label: '200'},
-              {label: '300'},
-              {label: '400'},
-              {label: '500'}
-            ]}
-            customComponents={{
-              Field: {component: Button, props: {label: 'Filter by price'}}
-            }}
-          />
-        </div>
+        <CodeBlock code={fieldExample}/>
+        <CustomFieldExample/>
+      </div>
+      <div className="paragraph">
+        <b>{'Chip\n'}</b>
+        {`Custom Chip component example.\n`}
+      </div>
+      <div className="example-container">
+        <CodeBlock code={chipExample}/>
+        <CustomChipExample/>
+      </div>
+      <div className="paragraph">
+        <b>{'ChipLabel\n'}</b>
+        {`Custom ChipLabel component example.\n`}
+      </div>
+      <div className="example-container">
+        <CodeBlock code={chipLabelExample}/>
+        <CustomChipLabelExample/>
+      </div>
+      <div className="paragraph">
+        <b>{'ChipClear\n'}</b>
+        {`Custom ChipClear component example.\n`}
+      </div>
+      <div className="example-container">
+        <CodeBlock code={chipClearExample}/>
+        <CustomChipClearExample/>
       </div>
     </div>
   );

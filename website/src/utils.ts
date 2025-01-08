@@ -29,7 +29,7 @@ const mapOptionsToTreeNodes = (
   });
 };
 
-export const getOptionTreeNodeData = (selected?: boolean, expanded?: boolean, disabled?: boolean): OptionTreeNode[] => {
+export const getTreeNodeData = (selected?: boolean, expanded?: boolean, disabled?: boolean): OptionTreeNode[] => {
   return mapOptionsToTreeNodes(options, selected, expanded, disabled);
 };
 

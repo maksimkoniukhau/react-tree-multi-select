@@ -80,8 +80,8 @@ export const ApiPage: FC = () => {
           <td>{`if 'true', input is displayed in dropdown (hidden input rendered in field for focus to work)`}</td>
         </tr>
         <tr>
-          <td>{'customComponents'}</td>
-          <td>{'CustomComponents'}</td>
+          <td>{'components'}</td>
+          <td>{'Components'}</td>
           <td>{'-'}</td>
           <td>{'custom components applied to the tree select (see examples for more details)'}</td>
         </tr>

@@ -1,6 +1,6 @@
 import React, {FC, memo, useMemo, useState} from 'react';
 import {CheckedState, TreeNode, TreeSelect, Type} from '../../src';
-import {getOptionTreeNodeData} from './utils';
+import {getTreeNodeData} from './utils';
 import {Select} from './Select';
 import {Checkbox} from './Checkbox';
 import {Input} from './Input';
@@ -20,7 +20,7 @@ export const BasicPage: FC = memo(() => {
   const [disabledNodes, setDisabledNodes] = useState<boolean>(true);
 
   const getData = useMemo((): OptionTreeNode[] => {
-    return getOptionTreeNodeData(selectedNodes, expandedNodes, disabledNodes);
+    return getTreeNodeData(selectedNodes, expandedNodes, disabledNodes);
   }, [selectedNodes, expandedNodes, disabledNodes]);
 
   const handleOptionChange = (name: string) => (value: string | boolean): void => {

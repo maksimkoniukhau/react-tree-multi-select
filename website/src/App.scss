@@ -148,8 +148,12 @@
           outline: none;
         }
 
-        .filter-example {
+        .component-example {
           margin-top: 15px;
+          max-width: 50%;
+        }
+
+        .field-example {
           display: flex;
           gap: 15px;
 
