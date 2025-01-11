@@ -48,7 +48,8 @@ export const preventDefaultOnMouseEvent = (e: React.MouseEvent): void => {
 };
 
 export const getFieldFocusableElement = (fieldRef: RefObject<HTMLDivElement>): HTMLElement | null => {
-  return getKeyboardFocusableElements(fieldRef?.current)?.[0];
+  const focusableElements = getKeyboardFocusableElements(fieldRef?.current);
+  return focusableElements.find(element => element.tagName === 'INPUT') || focusableElements[0] || fieldRef?.current;
 };
 
 /**
