@@ -79,8 +79,6 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
 
   const treeSelectRef = useRef<HTMLDivElement>(null);
   const fieldRef = useRef<HTMLDivElement>(null);
-  const inputFieldRef = useRef<HTMLInputElement>(null);
-  const inputDropdownRef = useRef<HTMLInputElement>(null);
 
   const nodeMapRef = useRef<Map<string, Node>>(new Map());
 
@@ -708,7 +706,6 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
               </components.Chip.component>
             ))}
           <Input
-            inputRef={inputFieldRef}
             inputPlaceholder={inputPlaceholder}
             className="rts-input-field"
             value={state.searchValue}
@@ -757,7 +754,6 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
           onClickExpandNode={handleClickExpandNode}
           input={withDropdownInput ? <Input
             autoFocus={true}
-            inputRef={inputDropdownRef}
             inputPlaceholder={inputPlaceholder}
             className="rts-input-dropdown"
             value={state.searchValue}

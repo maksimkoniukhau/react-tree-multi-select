@@ -1,7 +1,6 @@
 import React, {FC, HTMLProps, memo, RefObject} from 'react';
 
 export interface InputProps extends HTMLProps<HTMLInputElement> {
-  inputRef: RefObject<HTMLInputElement>;
   inputPlaceholder: string;
   value: string;
   onChangeInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -11,7 +10,6 @@ export interface InputProps extends HTMLProps<HTMLInputElement> {
 export const Input: FC<InputProps> = memo((props) => {
 
   const {
-    inputRef,
     inputPlaceholder,
     value = '',
     onChangeInput,
@@ -24,11 +22,10 @@ export const Input: FC<InputProps> = memo((props) => {
 
   return (
     <div className="rts-input-container">{hidden ? (
-      <input ref={inputRef} className="rts-input-hidden"/>
+      <input className="rts-input-hidden"/>
     ) : (
       <input
         {...rest}
-        ref={inputRef}
         value={value}
         placeholder={inputPlaceholder}
         className={inputClasses}
