@@ -665,7 +665,6 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
         }}
         componentProps={{
           type,
-          selectedNodes: state.selectedNodes,
           showDropdown: state.showDropdown,
           withClearAll
         }}

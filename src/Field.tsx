@@ -1,10 +1,8 @@
 import React, {FC, memo} from 'react';
 import {ComponentProps, Type} from './models';
-import {Node} from './Node';
 
 export interface FieldProps {
   type: Type;
-  selectedNodes: Node[];
   showDropdown: boolean;
   withClearAll: boolean;
 }
