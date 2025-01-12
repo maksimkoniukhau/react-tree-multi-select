@@ -5,7 +5,7 @@ export interface FieldToggleProps {
   expanded: boolean;
 }
 
-export const FieldToggle: FC<ComponentProps<FieldToggleProps, any>> = memo((props) => {
+export const FieldToggle: FC<ComponentProps<FieldToggleProps>> = memo((props) => {
 
   return (
     <div {...props.rootAttributes}>

@@ -36,7 +36,6 @@ import {
 } from './reducer';
 import {Dropdown} from './Dropdown';
 import {Node} from './Node';
-import {Input} from './Input';
 
 export interface TreeSelectProps {
   data: TreeNode[];
@@ -704,13 +703,20 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
                     />}
               </components.Chip.component>
             ))}
-          <Input
-            inputPlaceholder={inputPlaceholder}
-            className="rts-input-field"
-            value={state.searchValue}
-            onChangeInput={handleChangeInput}
-            hidden={withDropdownInput}
-          />
+          {withDropdownInput ? (
+            <input className="rts-input-hidden"/>
+          ) : (
+            <components.Input.component
+              rootAttributes={{
+                className: "rts-input",
+                placeholder: inputPlaceholder,
+                value: state.searchValue,
+                onChange: handleChangeInput
+              }}
+              componentProps={{placeholder: inputPlaceholder, value: state.searchValue}}
+              ownProps={components.Input.props}
+            />
+          )}
         </div>
         <div className="rts-actions">
           {withClearAll && isAnyExcludingDisabledSelected(state.nodes) && (
@@ -751,13 +757,19 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
           onChangeSelectAll={handleChangeSelectAll}
           onToggleNode={handleToggleNode}
           onClickExpandNode={handleClickExpandNode}
-          input={withDropdownInput ? <Input
-            autoFocus={true}
-            inputPlaceholder={inputPlaceholder}
-            className="rts-input-dropdown"
-            value={state.searchValue}
-            onChangeInput={handleChangeInput}
-          /> : null}
+          input={withDropdownInput ? (
+            <components.Input.component
+              rootAttributes={{
+                autoFocus: true,
+                className: "rts-input",
+                placeholder: inputPlaceholder,
+                value: state.searchValue,
+                onChange: handleChangeInput
+              }}
+              componentProps={{placeholder: inputPlaceholder, value: state.searchValue}}
+              ownProps={components.Input.props}
+            />
+          ) : null}
           onUnmount={handleDropdownUnmount}
         />
       ) : null}

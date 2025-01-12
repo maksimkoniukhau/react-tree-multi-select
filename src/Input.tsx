@@ -1,36 +1,14 @@
-import React, {FC, HTMLProps, memo, RefObject} from 'react';
+import React, {FC, HTMLProps, memo} from 'react';
+import {ComponentProps} from './models';
 
-export interface InputProps extends HTMLProps<HTMLInputElement> {
-  inputPlaceholder: string;
+export interface InputProps {
+  placeholder: string;
   value: string;
-  onChangeInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  hidden?: boolean;
 }
 
-export const Input: FC<InputProps> = memo((props) => {
-
-  const {
-    inputPlaceholder,
-    value = '',
-    onChangeInput,
-    hidden,
-    className,
-    ...rest
-  } = props;
-
-  const inputClasses = `rts-input` + (className ? ` ${className}` : '');
+export const Input: FC<ComponentProps<InputProps>> = memo((props) => {
 
   return (
-    <div className="rts-input-container">{hidden ? (
-      <input className="rts-input-hidden"/>
-    ) : (
-      <input
-        {...rest}
-        value={value}
-        placeholder={inputPlaceholder}
-        className={inputClasses}
-        onChange={onChangeInput}
-      />
-    )}</div>
+    <input {...props.rootAttributes as HTMLProps<HTMLInputElement>}/>
   );
 });

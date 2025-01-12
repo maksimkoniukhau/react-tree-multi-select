@@ -5,7 +5,7 @@ export interface FieldClearProps {
   focused: boolean;
 }
 
-export const FieldClear: FC<ComponentProps<FieldClearProps, any>> = memo((props) => {
+export const FieldClear: FC<ComponentProps<FieldClearProps>> = memo((props) => {
 
   return (
     <div {...props.rootAttributes}>

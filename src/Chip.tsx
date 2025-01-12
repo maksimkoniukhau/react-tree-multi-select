@@ -6,7 +6,7 @@ export interface ChipProps {
   disabled: boolean;
 }
 
-export const Chip: FC<ComponentProps<ChipProps, any>> = memo((props) => {
+export const Chip: FC<ComponentProps<ChipProps>> = memo((props) => {
 
   return (
     <div {...props.rootAttributes}>

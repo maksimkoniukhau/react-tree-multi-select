@@ -7,7 +7,7 @@ export interface FieldProps {
   withClearAll: boolean;
 }
 
-export const Field: FC<ComponentProps<FieldProps, any>> = memo((props) => {
+export const Field: FC<ComponentProps<FieldProps>> = memo((props) => {
 
   return (
     <div {...props.rootAttributes}>

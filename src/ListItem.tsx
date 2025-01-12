@@ -44,7 +44,13 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
   } = props;
 
   if (Boolean(input) && index === 0) {
-    return input;
+    return (
+      <div className="rts-header-item">
+        <div className="rts-dropdown-input-container">
+          {input}
+        </div>
+      </div>
+    );
   }
 
   if ((showSelectAll && Boolean(input) && index === 1) || (showSelectAll && index === 0)) {

@@ -3,7 +3,7 @@ import {ComponentProps} from './models';
 
 export interface ChipClearProps {}
 
-export const ChipClear: FC<ComponentProps<ChipClearProps, any>> = memo((props) => {
+export const ChipClear: FC<ComponentProps<ChipClearProps>> = memo((props) => {
 
   return (
     <div {...props.rootAttributes}>

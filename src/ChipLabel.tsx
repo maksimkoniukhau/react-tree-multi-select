@@ -5,7 +5,7 @@ export interface ChipLabelProps {
   label: string;
 }
 
-export const ChipLabel: FC<ComponentProps<ChipLabelProps, any>> = memo((props) => {
+export const ChipLabel: FC<ComponentProps<ChipLabelProps>> = memo((props) => {
 
   return (
     <div {...props.rootAttributes}>{props.componentProps.label}</div>

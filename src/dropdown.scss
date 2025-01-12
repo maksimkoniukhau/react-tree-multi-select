@@ -67,7 +67,7 @@
     padding-left: var(--rts-row-base-padding);
     padding-right: var(--rts-row-base-padding);
 
-    &.focused, &:hover {
+    &.focused:not(:has(.rts-dropdown-input-container)), &:hover:not(:has(.rts-dropdown-input-container)) {
       background-color: #ebebeb;
     }
 

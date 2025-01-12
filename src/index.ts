@@ -1,6 +1,7 @@
 export * from './models';
 export {TreeSelect} from './TreeSelect';
 export type {FieldProps} from './Field';
+export type {InputProps} from './Input';
 export type {ChipProps} from './Chip';
 export type {ChipLabelProps} from './ChipLabel';
 export type {ChipClearProps} from './ChipClear';

@@ -1,5 +1,6 @@
-import {ComponentType, JSX, ReactNode} from 'react';
+import {ComponentType, HTMLProps, ReactNode} from 'react';
 import {FieldProps} from './Field';
+import {InputProps} from './Input';
 import {ChipProps} from './Chip';
 import {ChipLabelProps} from './ChipLabel';
 import {ChipClearProps} from './ChipClear';
@@ -29,8 +30,8 @@ export enum CheckedState {
   UNSELECTED = 'UNSELECTED'
 }
 
-export interface ComponentProps<CP, OP> {
-  rootAttributes: JSX.IntrinsicElements['div'];
+export interface ComponentProps<CP, OP = {}> {
+  rootAttributes: HTMLProps<HTMLDivElement | HTMLInputElement>;
   componentProps: CP;
   ownProps: OP;
   children?: ReactNode;
@@ -43,6 +44,7 @@ export interface Component<CP = {}, OP = {}> {
 
 export interface Components<
   FieldOwnProps = any,
+  InputOwnProps = any,
   ChipOwnProps = any,
   ChipLabelOwnProps = any,
   ChipClearOwnProps = any,
@@ -50,6 +52,7 @@ export interface Components<
   FieldToggleOwnProps = any
 > {
   Field?: Component<FieldProps, FieldOwnProps>;
+  Input?: Component<InputProps, InputOwnProps>;
   Chip?: Component<ChipProps, ChipOwnProps>;
   ChipLabel?: Component<ChipLabelProps, ChipLabelOwnProps>;
   ChipClear?: Component<ChipClearProps, ChipClearOwnProps>;
@@ -63,6 +66,7 @@ export type Required<T> = {
 
 export type InnerComponents<
   FieldOwnProps = any,
+  InputOwnProps = any,
   ChipOwnProps = any,
   ChipLabelOwnProps = any,
   ChipClearOwnProps = any,
@@ -70,6 +74,7 @@ export type InnerComponents<
   FieldToggleOwnProps = any
 > = Required<Components<
   FieldOwnProps,
+  InputOwnProps,
   ChipOwnProps,
   ChipLabelOwnProps,
   ChipClearOwnProps,
