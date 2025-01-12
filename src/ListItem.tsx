@@ -46,7 +46,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
   if (Boolean(input) && index === 0) {
     return (
       <div className="rts-header-item">
-        <div className="rts-dropdown-input-container">
+        <div className="rts-input-container">
           {input}
         </div>
       </div>
