@@ -656,7 +656,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
       onKeyDown={handleComponentKeyDown}
     >
       <components.Field.component
-        rootAttributes={{
+        componentAttributes={{
           ref: fieldRef,
           className: "rts-field",
           onClick: handleClickField,
@@ -667,7 +667,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
           showDropdown: state.showDropdown,
           withClearAll
         }}
-        ownProps={components.Field.props}
+        customProps={components.Field.props}
       >
         <div
           className="rts-field-content"
@@ -678,7 +678,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
             .map(node => (
               <components.Chip.component
                 key={node.path}
-                rootAttributes={{
+                componentAttributes={{
                   className: `rts-chip${node.disabled ? ' disabled' : ''}${state.focusedFieldElement === node.path ? ' focused' : ''}`,
                   onClick: handleClickChip(node),
                   // needed for staying focus on input
@@ -688,18 +688,18 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
                   focused: state.focusedFieldElement === node.path,
                   disabled: node.disabled,
                 }}
-                ownProps={components.Chip.props}
+                customProps={components.Chip.props}
               >
                 <components.ChipLabel.component
-                  rootAttributes={{className: 'rts-label'}}
+                  componentAttributes={{className: 'rts-label'}}
                   componentProps={{label: node.name}}
-                  ownProps={components.ChipLabel.props}
+                  customProps={components.ChipLabel.props}
                 />
                 {!node.disabled &&
                     <components.ChipClear.component
-                        rootAttributes={{className: 'rts-chip-clear', onClick: handleDeleteNode(node)}}
+                        componentAttributes={{className: 'rts-chip-clear', onClick: handleDeleteNode(node)}}
                         componentProps={{}}
-                        ownProps={components.ChipClear.props}
+                        customProps={components.ChipClear.props}
                     />}
               </components.Chip.component>
             ))}
@@ -707,38 +707,38 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
             <input className="rts-input-hidden"/>
           ) : (
             <components.Input.component
-              rootAttributes={{
+              componentAttributes={{
                 className: "rts-input",
                 placeholder: inputPlaceholder,
                 value: state.searchValue,
                 onChange: handleChangeInput
               }}
               componentProps={{placeholder: inputPlaceholder, value: state.searchValue}}
-              ownProps={components.Input.props}
+              customProps={components.Input.props}
             />
           )}
         </div>
         <div className="rts-actions">
           {withClearAll && isAnyExcludingDisabledSelected(state.nodes) && (
             <components.FieldClear.component
-              rootAttributes={{
+              componentAttributes={{
                 className: `rts-field-clear${state.focusedFieldElement === CLEAR_ALL ? ' focused' : ''}`,
                 onClick: handleDeleteAll,
                 // needed for staying focus on input
                 onMouseDown: preventDefaultOnMouseEvent
               }}
               componentProps={{focused: state.focusedFieldElement === CLEAR_ALL}}
-              ownProps={components.FieldClear.props}
+              customProps={components.FieldClear.props}
             />
           )}
           <components.FieldToggle.component
-            rootAttributes={{
+            componentAttributes={{
               className: `rts-field-toggle${state.showDropdown ? ' expanded' : ''}`,
               // needed for staying focus on input
               onMouseDown: preventDefaultOnMouseEvent
             }}
             componentProps={{expanded: state.showDropdown}}
-            ownProps={components.FieldToggle.props}
+            customProps={components.FieldToggle.props}
           />
         </div>
       </components.Field.component>
@@ -759,7 +759,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
           onClickExpandNode={handleClickExpandNode}
           input={withDropdownInput ? (
             <components.Input.component
-              rootAttributes={{
+              componentAttributes={{
                 autoFocus: true,
                 className: "rts-input",
                 placeholder: inputPlaceholder,
@@ -767,7 +767,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
                 onChange: handleChangeInput
               }}
               componentProps={{placeholder: inputPlaceholder, value: state.searchValue}}
-              ownProps={components.Input.props}
+              customProps={components.Input.props}
             />
           ) : null}
           onUnmount={handleDropdownUnmount}

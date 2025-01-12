@@ -1,16 +1,16 @@
 import React, {FC, memo} from 'react';
-import {ComponentProps, Type} from './models';
+import {FieldProps, Type} from './models';
 
-export interface FieldProps {
+export interface FieldOwnProps {
   type: Type;
   showDropdown: boolean;
   withClearAll: boolean;
 }
 
-export const Field: FC<ComponentProps<FieldProps>> = memo((props) => {
+export const Field: FC<FieldProps> = memo((props) => {
 
   return (
-    <div {...props.rootAttributes}>
+    <div {...props.componentAttributes}>
       {props.children}
     </div>
   );

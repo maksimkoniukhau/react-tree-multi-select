@@ -1,9 +1,9 @@
 export * from './models';
 export {TreeSelect} from './TreeSelect';
-export type {FieldProps} from './Field';
-export type {InputProps} from './Input';
-export type {ChipProps} from './Chip';
-export type {ChipLabelProps} from './ChipLabel';
-export type {ChipClearProps} from './ChipClear';
-export type {FieldClearProps} from './FieldClear';
-export type {FieldToggleProps} from './FieldToggle';
+export type {FieldOwnProps} from './Field';
+export type {InputOwnProps} from './Input';
+export type {ChipOwnProps} from './Chip';
+export type {ChipLabelOwnProps} from './ChipLabel';
+export type {ChipClearOwnProps} from './ChipClear';
+export type {FieldClearOwnProps} from './FieldClear';
+export type {FieldToggleOwnProps} from './FieldToggle';

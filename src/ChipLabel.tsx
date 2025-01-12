@@ -1,13 +1,13 @@
 import React, {FC, memo} from 'react';
-import {ComponentProps} from './models';
+import {ChipLabelProps} from './models';
 
-export interface ChipLabelProps {
+export interface ChipLabelOwnProps {
   label: string;
 }
 
-export const ChipLabel: FC<ComponentProps<ChipLabelProps>> = memo((props) => {
+export const ChipLabel: FC<ChipLabelProps> = memo((props) => {
 
   return (
-    <div {...props.rootAttributes}>{props.componentProps.label}</div>
+    <div {...props.componentAttributes}>{props.componentProps.label}</div>
   );
 });

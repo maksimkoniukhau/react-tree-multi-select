@@ -1,14 +1,14 @@
-import React, {FC, HTMLProps, memo} from 'react';
-import {ComponentProps} from './models';
+import React, {FC, memo} from 'react';
+import {InputProps} from './models';
 
-export interface InputProps {
+export interface InputOwnProps {
   placeholder: string;
   value: string;
 }
 
-export const Input: FC<ComponentProps<InputProps>> = memo((props) => {
+export const Input: FC<InputProps> = memo((props) => {
 
   return (
-    <input {...props.rootAttributes as HTMLProps<HTMLInputElement>}/>
+    <input {...props.componentAttributes}/>
   );
 });

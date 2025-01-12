@@ -1,11 +1,11 @@
 import {ComponentType, HTMLProps, ReactNode} from 'react';
-import {FieldProps} from './Field';
-import {InputProps} from './Input';
-import {ChipProps} from './Chip';
-import {ChipLabelProps} from './ChipLabel';
-import {ChipClearProps} from './ChipClear';
-import {FieldClearProps} from './FieldClear';
-import {FieldToggleProps} from './FieldToggle';
+import {FieldOwnProps} from './Field';
+import {InputOwnProps} from './Input';
+import {ChipOwnProps} from './Chip';
+import {ChipLabelOwnProps} from './ChipLabel';
+import {ChipClearOwnProps} from './ChipClear';
+import {FieldClearOwnProps} from './FieldClear';
+import {FieldToggleOwnProps} from './FieldToggle';
 
 export enum Type {
   MULTI_SELECT_TREE = 'MULTI_SELECT_TREE',
@@ -30,34 +30,51 @@ export enum CheckedState {
   UNSELECTED = 'UNSELECTED'
 }
 
-export interface ComponentProps<CP, OP = {}> {
-  rootAttributes: HTMLProps<HTMLDivElement | HTMLInputElement>;
-  componentProps: CP;
-  ownProps: OP;
+export interface ComponentProps<CustomProps = {}, OwnProps = {}, ComponentType = {}> {
+  componentAttributes: HTMLProps<ComponentType>;
+  componentProps: OwnProps;
+  customProps: CustomProps;
   children?: ReactNode;
 }
 
-export interface Component<CP = {}, OP = {}> {
-  component: ComponentType<ComponentProps<CP, OP>>;
-  props?: OP;
+export interface Component<CustomProps, ComponentProps> {
+  component: ComponentType<ComponentProps>;
+  props?: CustomProps;
 }
 
+export type FieldProps<CustomProps = {}> = ComponentProps<CustomProps, FieldOwnProps, HTMLDivElement>;
+export type InputProps<CustomProps = {}> = ComponentProps<CustomProps, InputOwnProps, HTMLInputElement>;
+export type ChipProps<CustomProps = {}> = ComponentProps<CustomProps, ChipOwnProps, HTMLDivElement>;
+export type ChipLabelProps<CustomProps = {}> = ComponentProps<CustomProps, ChipLabelOwnProps, HTMLDivElement>;
+export type ChipClearProps<CustomProps = {}> = ComponentProps<CustomProps, ChipClearOwnProps, HTMLDivElement>;
+export type FieldClearProps<CustomProps = {}> = ComponentProps<CustomProps, FieldClearOwnProps, HTMLDivElement>;
+export type FieldToggleProps<CustomProps = {}> = ComponentProps<CustomProps, FieldToggleOwnProps, HTMLDivElement>;
+
+export type FieldType<CustomProps = {}> = Component<CustomProps, FieldProps<CustomProps>>;
+export type InputType<CustomProps = {}> = Component<CustomProps, InputProps<CustomProps>>;
+export type ChipType<CustomProps = {}> = Component<CustomProps, ChipProps<CustomProps>>;
+export type ChipLabelType<CustomProps = {}> = Component<CustomProps, ChipLabelProps<CustomProps>>;
+export type ChipClearType<CustomProps = {}> = Component<CustomProps, ChipClearProps<CustomProps>>;
+export type FieldClearType<CustomProps = {}> = Component<CustomProps, FieldClearProps<CustomProps>>;
+export type FieldToggleType<CustomProps = {}> = Component<CustomProps, FieldToggleProps<CustomProps>>;
+
+
 export interface Components<
-  FieldOwnProps = any,
-  InputOwnProps = any,
-  ChipOwnProps = any,
-  ChipLabelOwnProps = any,
-  ChipClearOwnProps = any,
-  FieldClearOwnProps = any,
-  FieldToggleOwnProps = any
+  FieldCustomProps = any,
+  InputCustomProps = any,
+  ChipCustomProps = any,
+  ChipLabelCustomProps = any,
+  ChipClearCustomProps = any,
+  FieldClearCustomProps = any,
+  FieldToggleCustomProps = any
 > {
-  Field?: Component<FieldProps, FieldOwnProps>;
-  Input?: Component<InputProps, InputOwnProps>;
-  Chip?: Component<ChipProps, ChipOwnProps>;
-  ChipLabel?: Component<ChipLabelProps, ChipLabelOwnProps>;
-  ChipClear?: Component<ChipClearProps, ChipClearOwnProps>;
-  FieldClear?: Component<FieldClearProps, FieldClearOwnProps>;
-  FieldToggle?: Component<FieldToggleProps, FieldToggleOwnProps>;
+  Field?: FieldType<FieldCustomProps>;
+  Input?: InputType<InputCustomProps>;
+  Chip?: ChipType<ChipCustomProps>;
+  ChipLabel?: ChipLabelType<ChipLabelCustomProps>;
+  ChipClear?: ChipClearType<ChipClearCustomProps>;
+  FieldClear?: FieldClearType<FieldClearCustomProps>;
+  FieldToggle?: FieldToggleType<FieldToggleCustomProps>;
 }
 
 export type Required<T> = {
@@ -65,19 +82,19 @@ export type Required<T> = {
 };
 
 export type InnerComponents<
-  FieldOwnProps = any,
-  InputOwnProps = any,
-  ChipOwnProps = any,
-  ChipLabelOwnProps = any,
-  ChipClearOwnProps = any,
-  FieldClearOwnProps = any,
-  FieldToggleOwnProps = any
+  FieldCustomProps = any,
+  InputCustomProps = any,
+  ChipCustomProps = any,
+  ChipLabelCustomProps = any,
+  ChipClearCustomProps = any,
+  FieldClearCustomProps = any,
+  FieldToggleCustomProps = any
 > = Required<Components<
-  FieldOwnProps,
-  InputOwnProps,
-  ChipOwnProps,
-  ChipLabelOwnProps,
-  ChipClearOwnProps,
-  FieldClearOwnProps,
-  FieldToggleOwnProps
+  FieldCustomProps,
+  InputCustomProps,
+  ChipCustomProps,
+  ChipLabelCustomProps,
+  ChipClearCustomProps,
+  FieldClearCustomProps,
+  FieldToggleCustomProps
 >>;

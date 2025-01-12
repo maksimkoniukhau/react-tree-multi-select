@@ -1,15 +1,15 @@
 import React, {FC, memo} from 'react';
-import {ComponentProps} from './models';
+import {ChipProps} from './models';
 
-export interface ChipProps {
+export interface ChipOwnProps {
   focused: boolean;
   disabled: boolean;
 }
 
-export const Chip: FC<ComponentProps<ChipProps>> = memo((props) => {
+export const Chip: FC<ChipProps> = memo((props) => {
 
   return (
-    <div {...props.rootAttributes}>
+    <div {...props.componentAttributes}>
       {props.children}
     </div>
   );
