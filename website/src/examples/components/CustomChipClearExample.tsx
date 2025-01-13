@@ -1,18 +1,17 @@
-import React, {FC, ReactNode} from 'react';
+import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
-import {ChipClearProps, ComponentProps, TreeSelect} from '../../../../src';
+import {ChipClearProps, ChipClearType, Components, TreeSelect} from '../../../../src';
 import {getTreeNodeData} from '../../utils';
 
-interface CustomChipClearProps {
-  icon: ReactNode;
-}
-
-const CustomChipClear: FC<ComponentProps<ChipClearProps, CustomChipClearProps>> = (props) => (
-  <div {...props.rootAttributes}>
-    <div className="custom-clear">{props.ownProps.icon}</div>
+const CustomChipClear: FC<ChipClearProps> = (props) => (
+  <div {...props.componentAttributes}>
+    <div><FontAwesomeIcon icon={faTrash}/></div>
   </div>
 );
+
+const ChipClear: ChipClearType = {component: CustomChipClear};
+const components: Components = {ChipClear};
 
 export const CustomChipClearExample: FC = () => {
 
@@ -20,9 +19,7 @@ export const CustomChipClearExample: FC = () => {
     <div className="component-example">
       <TreeSelect
         data={getTreeNodeData(true)}
-        components={{
-          ChipClear: {component: CustomChipClear, props: {icon: <FontAwesomeIcon icon={faTrash}/>}}
-        }}
+        components={components}
       />
     </div>
   );

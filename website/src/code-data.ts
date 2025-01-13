@@ -96,44 +96,63 @@ enum CheckedState {
   UNSELECTED = 'UNSELECTED'
 }
 
-interface ComponentProps<CP, OP> {
-  rootAttributes: JSX.IntrinsicElements['div'];
-  componentProps: CP;
-  ownProps: OP;
+interface ComponentProps<CustomProps = {}, OwnProps = {}, ComponentType = {}> {
+  componentAttributes: HTMLProps<ComponentType>;
+  componentProps: OwnProps;
+  customProps: CustomProps;
   children?: ReactNode;
 }
 
-interface Component<CP = {}, OP = {}> {
-  component: ComponentType<ComponentProps<CP, OP>>;
-  props?: OP;
+interface Component<CustomProps, ComponentProps> {
+  component: ComponentType<ComponentProps>;
+  props?: CustomProps;
 }
 
+type FieldProps<CustomProps = {}> = ComponentProps<CustomProps, FieldOwnProps, HTMLDivElement>;
+type InputProps<CustomProps = {}> = ComponentProps<CustomProps, InputOwnProps, HTMLInputElement>;
+type ChipProps<CustomProps = {}> = ComponentProps<CustomProps, ChipOwnProps, HTMLDivElement>;
+type ChipLabelProps<CustomProps = {}> = ComponentProps<CustomProps, ChipLabelOwnProps, HTMLDivElement>;
+type ChipClearProps<CustomProps = {}> = ComponentProps<CustomProps, ChipClearOwnProps, HTMLDivElement>;
+type FieldClearProps<CustomProps = {}> = ComponentProps<CustomProps, FieldClearOwnProps, HTMLDivElement>;
+type FieldToggleProps<CustomProps = {}> = ComponentProps<CustomProps, FieldToggleOwnProps, HTMLDivElement>;
+
+type FieldType<CustomProps = {}> = Component<CustomProps, FieldProps<CustomProps>>;
+type InputType<CustomProps = {}> = Component<CustomProps, InputProps<CustomProps>>;
+type ChipType<CustomProps = {}> = Component<CustomProps, ChipProps<CustomProps>>;
+type ChipLabelType<CustomProps = {}> = Component<CustomProps, ChipLabelProps<CustomProps>>;
+type ChipClearType<CustomProps = {}> = Component<CustomProps, ChipClearProps<CustomProps>>;
+type FieldClearType<CustomProps = {}> = Component<CustomProps, FieldClearProps<CustomProps>>;
+type FieldToggleType<CustomProps = {}> = Component<CustomProps, FieldToggleProps<CustomProps>>;
+
+
 interface Components<
-  FieldOwnProps = any,
-  ChipOwnProps = any,
-  ChipLabelOwnProps = any,
-  ChipClearOwnProps = any,
-  FieldClearOwnProps = any,
-  FieldToggleOwnProps = any
+  FieldCustomProps = any,
+  InputCustomProps = any,
+  ChipCustomProps = any,
+  ChipLabelCustomProps = any,
+  ChipClearCustomProps = any,
+  FieldClearCustomProps = any,
+  FieldToggleCustomProps = any
 > {
-  Field?: Component<FieldProps, FieldOwnProps>;
-  Chip?: Component<ChipProps, ChipOwnProps>;
-  ChipLabel?: Component<ChipLabelProps, ChipLabelOwnProps>;
-  ChipClear?: Component<ChipClearProps, ChipClearOwnProps>;
-  FieldClear?: Component<FieldClearProps, FieldClearOwnProps>;
-  FieldToggle?: Component<FieldToggleProps, FieldToggleOwnProps>;
+  Field?: FieldType<FieldCustomProps>;
+  Input?: InputType<InputCustomProps>;
+  Chip?: ChipType<ChipCustomProps>;
+  ChipLabel?: ChipLabelType<ChipLabelCustomProps>;
+  ChipClear?: ChipClearType<ChipClearCustomProps>;
+  FieldClear?: FieldClearType<FieldClearCustomProps>;
+  FieldToggle?: FieldToggleType<FieldToggleCustomProps>;
 }`;
 
 export const fieldExample = `import React, {FC} from 'react';
-import {ComponentProps, FieldProps, TreeSelect, Type} from 'rts';
+import {FieldProps, TreeSelect, Type} from 'rts';
 
 interface CustomFieldProps {
   label: string;
 }
 
-const CustomField: FC<ComponentProps<FieldProps, CustomFieldProps>> = (props) => (
-  <div {...props.rootAttributes}>
-    <button className="filter-btn">{props.ownProps.label}</button>
+const CustomField: FC<FieldProps<CustomFieldProps>> = (props) => (
+  <div {...props.componentAttributes}>
+    <button className="filter-btn">{props.customProps.label}</button>
   </div>
 );
 
@@ -195,22 +214,78 @@ export const CustomFieldExample: FC = () => {
   );
 };`;
 
+export const inputExample = `import React, {FC, HTMLProps} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
+import {Components, FieldProps, FieldType, InputProps, InputType, TreeSelect} from 'rts';
+import {getTreeNodeData} from '../../utils';
+
+const CustomField: FC<FieldProps> = (props) => (
+  <div {...props.componentAttributes}>
+    <button className="filter-btn">Tree select</button>
+  </div>
+);
+
+const CustomFieldInput: FC<InputProps> = (props) => (
+  <textarea {...props.componentAttributes as HTMLProps<HTMLTextAreaElement>}/>
+);
+
+const CustomDropdownInput: FC<InputProps> = (props) => (
+  <div style={{display: 'flex', flex: 1, alignItems: 'center'}}>
+    <input {...props.componentAttributes}/>
+    <div style={{padding: '0 4px'}}><FontAwesomeIcon icon={faMagnifyingGlass}/></div>
+  </div>
+);
+
+const Field: FieldType = {component: CustomField};
+const DropdownInput: InputType = {component: CustomDropdownInput};
+const dropdownComponents: Components = {Field, Input: DropdownInput};
+
+const FieldInput: InputType = {component: CustomFieldInput};
+const fieldComponents: Components = {Input: FieldInput};
+
+export const CustomInputExample: FC = () => {
+
+  return (
+    <div className="component-example input-example">
+      <TreeSelect
+        className="custom-dropdown-input"
+        data={getTreeNodeData()}
+        withDropdownInput={true}
+        components={dropdownComponents}
+      />
+      <TreeSelect
+        className="custom-field-input"
+        data={getTreeNodeData()}
+        components={fieldComponents}
+      />
+    </div>
+  );
+};`;
+
 export const chipExample = `import React, {FC, ReactNode} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faFire} from '@fortawesome/free-solid-svg-icons';
-import {ChipProps, ComponentProps, TreeSelect} from 'rts';
+import {ChipProps, ChipType, Components, TreeSelect} from 'rts';
 import {getTreeNodeData} from '../../utils';
 
 interface CustomChipProps {
   icon: ReactNode;
 }
 
-const CustomChip: FC<ComponentProps<ChipProps, CustomChipProps>> = (props) => (
-  <div {...props.rootAttributes}>
-    <div>{props.ownProps.icon}</div>
+const CustomChip: FC<ChipProps<CustomChipProps>> = (props) => (
+  <div {...props.componentAttributes}>
+    <div>{props.customProps.icon}</div>
     {props.children}
   </div>
 );
+
+const Chip: ChipType<CustomChipProps> = {
+  component: CustomChip,
+  props: {icon: <FontAwesomeIcon icon={faFire}/>}
+};
+
+const components: Components = {Chip};
 
 export const CustomChipExample: FC = () => {
 
@@ -218,31 +293,28 @@ export const CustomChipExample: FC = () => {
     <div className="component-example">
       <TreeSelect
         data={getTreeNodeData(true)}
-        components={{
-          Chip: {component: CustomChip, props: {icon: <FontAwesomeIcon icon={faFire}/>}}
-        }}
+        components={components}
       />
     </div>
   );
 };`;
 
-export const chipLabelExample = `import React, {FC, ReactNode} from 'react';
+export const chipLabelExample = `import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCode} from '@fortawesome/free-solid-svg-icons';
-import {ChipLabelProps, ComponentProps, TreeSelect} from 'rts';
+import {ChipLabelProps, ChipLabelType, Components, TreeSelect} from 'rts';
 import {getTreeNodeData} from '../../utils';
 
-interface CustomChipLabelProps {
-  icon: ReactNode;
-}
-
-const CustomChipLabel: FC<ComponentProps<ChipLabelProps, CustomChipLabelProps>> = (props) => (
-  <div {...props.rootAttributes}>
-    <div className="custom-label">
-      {props.ownProps.icon}{' '}{props.componentProps.label}{' '}{props.ownProps.icon}
+const CustomChipLabel: FC<ChipLabelProps> = (props) => (
+  <div {...props.componentAttributes}>
+    <div>
+      <FontAwesomeIcon icon={faCode}/>{' '}{props.componentProps.label}{' '}<FontAwesomeIcon icon={faCode}/>
     </div>
   </div>
 );
+
+const ChipLabel: ChipLabelType = {component: CustomChipLabel};
+const components: Components = {ChipLabel};
 
 export const CustomChipLabelExample: FC = () => {
 
@@ -250,29 +322,26 @@ export const CustomChipLabelExample: FC = () => {
     <div className="component-example">
       <TreeSelect
         data={getTreeNodeData(true)}
-        components={{
-          ChipLabel: {component: CustomChipLabel, props: {icon: <FontAwesomeIcon icon={faCode}/>}}
-        }}
+        components={components}
       />
     </div>
   );
 };`;
 
-export const chipClearExample = `import React, {FC, ReactNode} from 'react';
+export const chipClearExample = `import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
-import {ChipClearProps, ComponentProps, TreeSelect} from 'rts';
+import {ChipClearProps, ChipClearType, Components, TreeSelect} from '../../../../src';
 import {getTreeNodeData} from '../../utils';
 
-interface CustomChipClearProps {
-  icon: ReactNode;
-}
-
-const CustomChipClear: FC<ComponentProps<ChipClearProps, CustomChipClearProps>> = (props) => (
-  <div {...props.rootAttributes}>
-    <div className="custom-clear">{props.ownProps.icon}</div>
+const CustomChipClear: FC<ChipClearProps> = (props) => (
+  <div {...props.componentAttributes}>
+    <div><FontAwesomeIcon icon={faTrash}/></div>
   </div>
 );
+
+const ChipClear: ChipClearType = {component: CustomChipClear};
+const components: Components = {ChipClear};
 
 export const CustomChipClearExample: FC = () => {
 
@@ -280,9 +349,7 @@ export const CustomChipClearExample: FC = () => {
     <div className="component-example">
       <TreeSelect
         data={getTreeNodeData(true)}
-        components={{
-          ChipClear: {component: CustomChipClear, props: {icon: <FontAwesomeIcon icon={faTrash}/>}}
-        }}
+        components={components}
       />
     </div>
   );

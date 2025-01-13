@@ -1,20 +1,19 @@
-import React, {FC, ReactNode} from 'react';
+import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCode} from '@fortawesome/free-solid-svg-icons';
-import {ChipLabelProps, ComponentProps, TreeSelect} from '../../../../src';
+import {ChipLabelProps, ChipLabelType, Components, TreeSelect} from '../../../../src';
 import {getTreeNodeData} from '../../utils';
 
-interface CustomChipLabelProps {
-  icon: ReactNode;
-}
-
-const CustomChipLabel: FC<ComponentProps<ChipLabelProps, CustomChipLabelProps>> = (props) => (
-  <div {...props.rootAttributes}>
-    <div className="custom-label">
-      {props.ownProps.icon}{' '}{props.componentProps.label}{' '}{props.ownProps.icon}
+const CustomChipLabel: FC<ChipLabelProps> = (props) => (
+  <div {...props.componentAttributes}>
+    <div>
+      <FontAwesomeIcon icon={faCode}/>{' '}{props.componentProps.label}{' '}<FontAwesomeIcon icon={faCode}/>
     </div>
   </div>
 );
+
+const ChipLabel: ChipLabelType = {component: CustomChipLabel};
+const components: Components = {ChipLabel};
 
 export const CustomChipLabelExample: FC = () => {
 
@@ -22,9 +21,7 @@ export const CustomChipLabelExample: FC = () => {
     <div className="component-example">
       <TreeSelect
         data={getTreeNodeData(true)}
-        components={{
-          ChipLabel: {component: CustomChipLabel, props: {icon: <FontAwesomeIcon icon={faCode}/>}}
-        }}
+        components={components}
       />
     </div>
   );

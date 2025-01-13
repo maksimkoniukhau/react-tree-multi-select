@@ -1,13 +1,13 @@
 import React, {FC} from 'react';
-import {ComponentProps, FieldProps, TreeSelect, Type} from '../../../../src';
+import {FieldProps, TreeSelect, Type} from '../../../../src';
 
 interface CustomFieldProps {
   label: string;
 }
 
-const CustomField: FC<ComponentProps<FieldProps, CustomFieldProps>> = (props) => (
-  <div {...props.rootAttributes}>
-    <button className="filter-btn">{props.ownProps.label}</button>
+const CustomField: FC<FieldProps<CustomFieldProps>> = (props) => (
+  <div {...props.componentAttributes}>
+    <button className="filter-btn">{props.customProps.label}</button>
   </div>
 );
 

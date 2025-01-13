@@ -1,7 +1,8 @@
 import React, {FC, memo} from 'react';
-import {chipClearExample, chipExample, chipLabelExample, fieldExample} from './code-data';
+import {chipClearExample, chipExample, chipLabelExample, fieldExample, inputExample} from './code-data';
 import {CodeBlock} from './CodeBlock';
 import {CustomFieldExample} from './examples/components/CustomFieldExample';
+import {CustomInputExample} from './examples/components/CustomInputExample';
 import {CustomChipExample} from './examples/components/CustomChipExample';
 import {CustomChipLabelExample} from './examples/components/CustomChipLabelExample';
 import {CustomChipClearExample} from './examples/components/CustomChipClearExample';
@@ -20,11 +21,19 @@ export const CustomComponentsPage: FC = memo(() => {
         {`Let's say you have filters on a page that, when clicked, open a dropdown with a range of filter options.\n`}
         {'It can be achieved by providing custom Field component like in the example below.\n'}
         <span className="important">{'Important'}</span>
-        {': your custom Field component should have one focusable child for keyboard navigation to work in dropdown.'}
+        {': your custom Field component should have one focusable child (or to be focusable itself) for keyboard navigation to work in dropdown.'}
       </div>
       <div className="example-container">
         <CodeBlock code={fieldExample}/>
         <CustomFieldExample/>
+      </div>
+      <div className="paragraph">
+        <b>{'Input\n'}</b>
+        {`Custom Input component example.\n`}
+      </div>
+      <div className="example-container">
+        <CodeBlock code={inputExample}/>
+        <CustomInputExample/>
       </div>
       <div className="paragraph">
         <b>{'Chip\n'}</b>

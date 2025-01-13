@@ -1,19 +1,26 @@
 import React, {FC, ReactNode} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faFire} from '@fortawesome/free-solid-svg-icons';
-import {ChipProps, ComponentProps, TreeSelect} from '../../../../src';
+import {ChipProps, ChipType, Components, TreeSelect} from '../../../../src';
 import {getTreeNodeData} from '../../utils';
 
 interface CustomChipProps {
   icon: ReactNode;
 }
 
-const CustomChip: FC<ComponentProps<ChipProps, CustomChipProps>> = (props) => (
-  <div {...props.rootAttributes}>
-    <div>{props.ownProps.icon}</div>
+const CustomChip: FC<ChipProps<CustomChipProps>> = (props) => (
+  <div {...props.componentAttributes}>
+    <div>{props.customProps.icon}</div>
     {props.children}
   </div>
 );
+
+const Chip: ChipType<CustomChipProps> = {
+  component: CustomChip,
+  props: {icon: <FontAwesomeIcon icon={faFire}/>}
+};
+
+const components: Components = {Chip};
 
 export const CustomChipExample: FC = () => {
 
@@ -21,9 +28,7 @@ export const CustomChipExample: FC = () => {
     <div className="component-example">
       <TreeSelect
         data={getTreeNodeData(true)}
-        components={{
-          Chip: {component: CustomChip, props: {icon: <FontAwesomeIcon icon={faFire}/>}}
-        }}
+        components={components}
       />
     </div>
   );

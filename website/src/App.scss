@@ -161,6 +161,18 @@
             width: 250px;
           }
         }
+
+        .input-example {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+
+          .custom-dropdown-input {
+            .rts-dropdown {
+              width: 250px;
+            }
+          }
+        }
       }
     }
   }
