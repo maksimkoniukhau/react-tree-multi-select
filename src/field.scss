@@ -43,12 +43,6 @@
       }
     }
 
-    .rts-field-toggle {
-      &.expanded {
-        transform: rotate(180deg);
-      }
-    }
-
     .rts-field-clear-icon, .rts-field-toggle-icon {
       width: var(--rts-field-icon-width);
       height: var(--rts-field-icon-height);
