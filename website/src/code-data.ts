@@ -331,7 +331,7 @@ export const CustomChipLabelExample: FC = () => {
 export const chipClearExample = `import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
-import {ChipClearProps, ChipClearType, Components, TreeSelect} from '../../../../src';
+import {ChipClearProps, ChipClearType, Components, TreeSelect} from 'rts';
 import {getTreeNodeData} from '../../utils';
 
 const CustomChipClear: FC<ChipClearProps> = (props) => (
@@ -344,6 +344,60 @@ const ChipClear: ChipClearType = {component: CustomChipClear};
 const components: Components = {ChipClear};
 
 export const CustomChipClearExample: FC = () => {
+
+  return (
+    <div className="component-example">
+      <TreeSelect
+        data={getTreeNodeData(true)}
+        components={components}
+      />
+    </div>
+  );
+};`;
+
+export const fieldClearExample = `import React, {FC} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faDeleteLeft} from '@fortawesome/free-solid-svg-icons';
+import {Components, FieldClearProps, FieldClearType, TreeSelect} from 'rts';
+import {getTreeNodeData} from '../../utils';
+
+const CustomFieldClear: FC<FieldClearProps> = (props) => (
+  <div {...props.componentAttributes}>
+    <FontAwesomeIcon icon={faDeleteLeft}/>
+  </div>
+);
+
+const FieldClear: FieldClearType = {component: CustomFieldClear};
+const components: Components = {FieldClear};
+
+export const CustomFieldClearExample: FC = () => {
+
+  return (
+    <div className="component-example">
+      <TreeSelect
+        data={getTreeNodeData(true)}
+        components={components}
+      />
+    </div>
+  );
+};`;
+
+export const fieldToggleExample = `import React, {FC} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCaretDown, faCaretUp} from '@fortawesome/free-solid-svg-icons';
+import {Components, FieldToggleProps, FieldToggleType, TreeSelect} from 'rts';
+import {getTreeNodeData} from '../../utils';
+
+const CustomFieldToggle: FC<FieldToggleProps> = (props) => (
+  <div {...props.componentAttributes}>
+    {props.componentProps.expanded ? <FontAwesomeIcon icon={faCaretUp}/> : <FontAwesomeIcon icon={faCaretDown}/>}
+  </div>
+);
+
+const FieldToggle: FieldToggleType = {component: CustomFieldToggle};
+const components: Components = {FieldToggle};
+
+export const CustomFieldToggleExample: FC = () => {
 
   return (
     <div className="component-example">

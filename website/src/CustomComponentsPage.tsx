@@ -1,11 +1,21 @@
 import React, {FC, memo} from 'react';
-import {chipClearExample, chipExample, chipLabelExample, fieldExample, inputExample} from './code-data';
+import {
+  chipClearExample,
+  chipExample,
+  chipLabelExample,
+  fieldClearExample,
+  fieldExample,
+  fieldToggleExample,
+  inputExample
+} from './code-data';
 import {CodeBlock} from './CodeBlock';
 import {CustomFieldExample} from './examples/components/CustomFieldExample';
 import {CustomInputExample} from './examples/components/CustomInputExample';
 import {CustomChipExample} from './examples/components/CustomChipExample';
 import {CustomChipLabelExample} from './examples/components/CustomChipLabelExample';
 import {CustomChipClearExample} from './examples/components/CustomChipClearExample';
+import {CustomFieldClearExample} from './examples/components/CustomFieldClearExample';
+import {CustomFieldToggleExample} from './examples/components/CustomFieldToggleExample';
 
 export const CustomComponentsPage: FC = memo(() => {
 
@@ -58,6 +68,22 @@ export const CustomComponentsPage: FC = memo(() => {
       <div className="example-container">
         <CodeBlock code={chipClearExample}/>
         <CustomChipClearExample/>
+      </div>
+      <div className="paragraph">
+        <b>{'FieldClear\n'}</b>
+        {`Custom FieldClear component example.\n`}
+      </div>
+      <div className="example-container">
+        <CodeBlock code={fieldClearExample}/>
+        <CustomFieldClearExample/>
+      </div>
+      <div className="paragraph">
+        <b>{'FieldToggle\n'}</b>
+        {`Custom FieldToggle component example.\n`}
+      </div>
+      <div className="example-container">
+        <CodeBlock code={fieldToggleExample}/>
+        <CustomFieldToggleExample/>
       </div>
     </div>
   );
