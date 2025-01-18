@@ -6,7 +6,7 @@ import {getTreeNodeData} from '../../utils';
 
 const CustomChipClear: FC<ChipClearProps> = (props) => (
   <div {...props.componentAttributes}>
-    <div><FontAwesomeIcon icon={faTrash}/></div>
+    <FontAwesomeIcon icon={faTrash}/>
   </div>
 );
 

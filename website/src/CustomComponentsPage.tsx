@@ -6,7 +6,10 @@ import {
   fieldClearExample,
   fieldExample,
   fieldToggleExample,
-  inputExample
+  inputExample,
+  nodeCheckboxExample,
+  nodeLabelExample,
+  nodeToggleExample
 } from './code-data';
 import {CodeBlock} from './CodeBlock';
 import {CustomFieldExample} from './examples/components/CustomFieldExample';
@@ -16,6 +19,9 @@ import {CustomChipLabelExample} from './examples/components/CustomChipLabelExamp
 import {CustomChipClearExample} from './examples/components/CustomChipClearExample';
 import {CustomFieldClearExample} from './examples/components/CustomFieldClearExample';
 import {CustomFieldToggleExample} from './examples/components/CustomFieldToggleExample';
+import {CustomNodeToggleExample} from './examples/components/CustomNodeToggleExample';
+import {CustomNodeCheckboxExample} from './examples/components/CustomNodeCheckboxExample';
+import {CustomNodeLabelExample} from './examples/components/CustomNodeLabelExample';
 
 export const CustomComponentsPage: FC = memo(() => {
 
@@ -84,6 +90,30 @@ export const CustomComponentsPage: FC = memo(() => {
       <div className="example-container">
         <CodeBlock code={fieldToggleExample}/>
         <CustomFieldToggleExample/>
+      </div>
+      <div className="paragraph">
+        <b>{'NodeToggle\n'}</b>
+        {`Custom NodeToggle component example.\n`}
+      </div>
+      <div className="example-container">
+        <CodeBlock code={nodeToggleExample}/>
+        <CustomNodeToggleExample/>
+      </div>
+      <div className="paragraph">
+        <b>{'NodeCheckbox\n'}</b>
+        {`Custom NodeCheckbox component example.\n`}
+      </div>
+      <div className="example-container">
+        <CodeBlock code={nodeCheckboxExample}/>
+        <CustomNodeCheckboxExample/>
+      </div>
+      <div className="paragraph">
+        <b>{'NodeLabel\n'}</b>
+        {`Custom NodeLabel component example.\n`}
+      </div>
+      <div className="example-container">
+        <CodeBlock code={nodeLabelExample}/>
+        <CustomNodeLabelExample/>
       </div>
     </div>
   );

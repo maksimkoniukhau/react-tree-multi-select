@@ -307,9 +307,7 @@ import {getTreeNodeData} from '../../utils';
 
 const CustomChipLabel: FC<ChipLabelProps> = (props) => (
   <div {...props.componentAttributes}>
-    <div>
-      <FontAwesomeIcon icon={faCode}/>{' '}{props.componentProps.label}{' '}<FontAwesomeIcon icon={faCode}/>
-    </div>
+    <FontAwesomeIcon icon={faCode}/>{' '}{props.componentProps.label}{' '}<FontAwesomeIcon icon={faCode}/>
   </div>
 );
 
@@ -336,7 +334,7 @@ import {getTreeNodeData} from '../../utils';
 
 const CustomChipClear: FC<ChipClearProps> = (props) => (
   <div {...props.componentAttributes}>
-    <div><FontAwesomeIcon icon={faTrash}/></div>
+    <FontAwesomeIcon icon={faTrash}/>
   </div>
 );
 
@@ -398,6 +396,96 @@ const FieldToggle: FieldToggleType = {component: CustomFieldToggle};
 const components: Components = {FieldToggle};
 
 export const CustomFieldToggleExample: FC = () => {
+
+  return (
+    <div className="component-example">
+      <TreeSelect
+        data={getTreeNodeData(true)}
+        components={components}
+      />
+    </div>
+  );
+};`;
+
+export const nodeToggleExample = `import React, {FC} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faMinus, faPlus} from '@fortawesome/free-solid-svg-icons';
+import {Components, NodeToggleProps, NodeToggleType, TreeSelect} from 'rts';
+import {getTreeNodeData} from '../../utils';
+
+const CustomNodeToggle: FC<NodeToggleProps> = (props) => (
+  <div {...props.componentAttributes}>
+    {props.componentProps.expanded
+      ? <FontAwesomeIcon icon={faMinus}/>
+      : <FontAwesomeIcon icon={faPlus}/>
+    }
+  </div>
+);
+
+const NodeToggle: NodeToggleType = {component: CustomNodeToggle};
+const components: Components = {NodeToggle};
+
+export const CustomNodeToggleExample: FC = () => {
+
+  return (
+    <div className="component-example">
+      <TreeSelect
+        data={getTreeNodeData(true)}
+        components={components}
+      />
+    </div>
+  );
+};`;
+
+export const nodeCheckboxExample = `import React, {FC} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faSquare, faSquareCheck, faSquareMinus} from '@fortawesome/free-regular-svg-icons';
+import {Components, NodeCheckboxProps, NodeCheckboxType, TreeSelect} from 'rts';
+import {getTreeNodeData} from '../../utils';
+
+const CustomNodeCheckbox: FC<NodeCheckboxProps> = (props) => (
+  <div {...props.componentAttributes}>
+    {props.componentProps.checked
+      ? <FontAwesomeIcon icon={faSquareCheck}/>
+      : props.componentProps.partial
+        ? <FontAwesomeIcon icon={faSquareMinus}/>
+        : <FontAwesomeIcon icon={faSquare}/>
+    }
+  </div>
+);
+
+const NodeCheckbox: NodeCheckboxType = {component: CustomNodeCheckbox};
+const components: Components = {NodeCheckbox};
+
+export const CustomNodeCheckboxExample: FC = () => {
+
+  return (
+    <div className="component-example">
+      <TreeSelect
+        data={getTreeNodeData(true)}
+        components={components}
+      />
+    </div>
+  );
+};`;
+
+export const nodeLabelExample = `import React, {FC} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faHandSpock} from '@fortawesome/free-regular-svg-icons';
+import {Components, NodeLabelProps, NodeLabelType, TreeSelect} from 'rts';
+import {getTreeNodeData} from '../../utils';
+
+const CustomNodeLabel: FC<NodeLabelProps> = (props) => (
+  <div {...props.componentAttributes}>
+    <FontAwesomeIcon icon={faHandSpock}/>
+    {props.componentProps.label}
+  </div>
+);
+
+const NodeLabel: NodeLabelType = {component: CustomNodeLabel};
+const components: Components = {NodeLabel};
+
+export const CustomNodeLabelExample: FC = () => {
 
   return (
     <div className="component-example">

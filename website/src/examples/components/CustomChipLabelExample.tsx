@@ -6,9 +6,7 @@ import {getTreeNodeData} from '../../utils';
 
 const CustomChipLabel: FC<ChipLabelProps> = (props) => (
   <div {...props.componentAttributes}>
-    <div>
-      <FontAwesomeIcon icon={faCode}/>{' '}{props.componentProps.label}{' '}<FontAwesomeIcon icon={faCode}/>
-    </div>
+    <FontAwesomeIcon icon={faCode}/>{' '}{props.componentProps.label}{' '}<FontAwesomeIcon icon={faCode}/>
   </div>
 );
 
