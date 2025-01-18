@@ -1,7 +1,5 @@
 import './tree-select.scss';
-
 import React, {FC, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
-
 import {CLEAR_ALL, INPUT, INPUT_PLACEHOLDER, NO_MATCHES, PATH_DELIMITER, SELECT_ALL} from './constants';
 import {
   areAllExcludingDisabledSelected,
@@ -771,6 +769,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
             />
           ) : null}
           onUnmount={handleDropdownUnmount}
+          components={components}
         />
       ) : null}
     </div>

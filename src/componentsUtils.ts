@@ -6,6 +6,9 @@ import {ChipLabel} from './ChipLabel';
 import {ChipClear} from './ChipClear';
 import {FieldClear} from './FieldClear';
 import {FieldToggle} from './FieldToggle';
+import {NodeToggle} from './NodeToggle';
+import {NodeCheckbox} from './NodeCheckbox';
+import {NodeLabel} from './NodeLabel';
 
 const components: InnerComponents = {
   Field: {
@@ -28,6 +31,15 @@ const components: InnerComponents = {
   },
   FieldToggle: {
     component: FieldToggle
+  },
+  NodeToggle: {
+    component: NodeToggle
+  },
+  NodeCheckbox: {
+    component: NodeCheckbox
+  },
+  NodeLabel: {
+    component: NodeLabel
   }
 };
 

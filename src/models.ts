@@ -6,6 +6,9 @@ import {ChipLabelOwnProps} from './ChipLabel';
 import {ChipClearOwnProps} from './ChipClear';
 import {FieldClearOwnProps} from './FieldClear';
 import {FieldToggleOwnProps} from './FieldToggle';
+import {NodeToggleOwnProps} from './NodeToggle';
+import {NodeCheckboxOwnProps} from './NodeCheckbox';
+import {NodeLabelOwnProps} from './NodeLabel';
 
 export enum Type {
   MULTI_SELECT_TREE = 'MULTI_SELECT_TREE',
@@ -49,6 +52,9 @@ export type ChipLabelProps<CustomProps = {}> = ComponentProps<CustomProps, ChipL
 export type ChipClearProps<CustomProps = {}> = ComponentProps<CustomProps, ChipClearOwnProps, HTMLDivElement>;
 export type FieldClearProps<CustomProps = {}> = ComponentProps<CustomProps, FieldClearOwnProps, HTMLDivElement>;
 export type FieldToggleProps<CustomProps = {}> = ComponentProps<CustomProps, FieldToggleOwnProps, HTMLDivElement>;
+export type NodeToggleProps<CustomProps = {}> = ComponentProps<CustomProps, NodeToggleOwnProps, HTMLDivElement>;
+export type NodeCheckboxProps<CustomProps = {}> = ComponentProps<CustomProps, NodeCheckboxOwnProps, HTMLDivElement>;
+export type NodeLabelProps<CustomProps = {}> = ComponentProps<CustomProps, NodeLabelOwnProps, HTMLDivElement>;
 
 export type FieldType<CustomProps = {}> = Component<CustomProps, FieldProps<CustomProps>>;
 export type InputType<CustomProps = {}> = Component<CustomProps, InputProps<CustomProps>>;
@@ -57,6 +63,9 @@ export type ChipLabelType<CustomProps = {}> = Component<CustomProps, ChipLabelPr
 export type ChipClearType<CustomProps = {}> = Component<CustomProps, ChipClearProps<CustomProps>>;
 export type FieldClearType<CustomProps = {}> = Component<CustomProps, FieldClearProps<CustomProps>>;
 export type FieldToggleType<CustomProps = {}> = Component<CustomProps, FieldToggleProps<CustomProps>>;
+export type NodeToggleType<CustomProps = {}> = Component<CustomProps, NodeToggleProps<CustomProps>>;
+export type NodeCheckboxType<CustomProps = {}> = Component<CustomProps, NodeCheckboxProps<CustomProps>>;
+export type NodeLabelType<CustomProps = {}> = Component<CustomProps, NodeLabelProps<CustomProps>>;
 
 
 export interface Components<
@@ -66,7 +75,10 @@ export interface Components<
   ChipLabelCustomProps = any,
   ChipClearCustomProps = any,
   FieldClearCustomProps = any,
-  FieldToggleCustomProps = any
+  FieldToggleCustomProps = any,
+  NodeToggleCustomProps = any,
+  NodeCheckboxCustomProps = any,
+  NodeLabelCustomProps = any
 > {
   Field?: FieldType<FieldCustomProps>;
   Input?: InputType<InputCustomProps>;
@@ -75,6 +87,9 @@ export interface Components<
   ChipClear?: ChipClearType<ChipClearCustomProps>;
   FieldClear?: FieldClearType<FieldClearCustomProps>;
   FieldToggle?: FieldToggleType<FieldToggleCustomProps>;
+  NodeToggle?: NodeToggleType<NodeToggleCustomProps>;
+  NodeCheckbox?: NodeCheckboxType<NodeCheckboxCustomProps>;
+  NodeLabel?: NodeLabelType<NodeLabelCustomProps>;
 }
 
 export type Required<T> = {
@@ -88,7 +103,10 @@ export type InnerComponents<
   ChipLabelCustomProps = any,
   ChipClearCustomProps = any,
   FieldClearCustomProps = any,
-  FieldToggleCustomProps = any
+  FieldToggleCustomProps = any,
+  NodeToggleCustomProps = any,
+  NodeCheckboxCustomProps = any,
+  NodeLabelCustomProps = any
 > = Required<Components<
   FieldCustomProps,
   InputCustomProps,
@@ -96,5 +114,8 @@ export type InnerComponents<
   ChipLabelCustomProps,
   ChipClearCustomProps,
   FieldClearCustomProps,
-  FieldToggleCustomProps
+  FieldToggleCustomProps,
+  NodeToggleCustomProps,
+  NodeCheckboxCustomProps,
+  NodeLabelCustomProps
 >>;

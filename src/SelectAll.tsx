@@ -1,7 +1,6 @@
 import React, {FC, memo} from 'react';
-
 import {CheckedState} from './models';
-import {Checkbox} from './Checkbox';
+import {SelectAllCheckbox} from './SelectAllCheckbox';
 
 export interface SelectAllProps {
   label: string;
@@ -24,7 +23,7 @@ export const SelectAll: FC<SelectAllProps> = memo((props) => {
   return (
     <div className={selectAllClasses}>
       <div className="rts-select-all" onClick={onChange}>
-        <Checkbox checked={selected} partial={partial}/>
+        <SelectAllCheckbox checked={selected} partial={partial}/>
         <span className="rts-label">{label}</span>
       </div>
     </div>

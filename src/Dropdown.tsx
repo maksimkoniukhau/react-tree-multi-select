@@ -1,9 +1,8 @@
 import React, {FC, JSX, memo, ReactNode, useEffect, useRef, useState} from 'react';
 import {CalculateViewLocation, StateSnapshot, Virtuoso, VirtuosoHandle} from 'react-virtuoso'
-
 import {DEFAULT_OPTIONS_CONTAINER_HEIGHT, DEFAULT_OPTIONS_CONTAINER_WIDTH, SELECT_ALL} from './constants';
 import {preventDefaultOnMouseEvent} from './utils';
-import {CheckedState, Type} from './models';
+import {CheckedState, InnerComponents, Type} from './models';
 import {Node} from './Node';
 import {ListItem} from './ListItem';
 
@@ -23,6 +22,7 @@ export interface DropdownProps {
   onClickExpandNode: (node: Node) => (e: React.MouseEvent) => void;
   input: ReactNode;
   onUnmount: () => void;
+  components: InnerComponents;
 }
 
 
@@ -44,6 +44,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     onClickExpandNode,
     input,
     onUnmount,
+    components,
   } = props;
 
   const virtuosoRef = useRef<VirtuosoHandle>(null);
@@ -124,6 +125,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
       onToggleNode={onToggleNode}
       onClickExpandNode={onClickExpandNode}
       input={input}
+      components={components}
     />
   };
 

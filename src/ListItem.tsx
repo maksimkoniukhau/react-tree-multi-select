@@ -1,8 +1,6 @@
 import React, {FC, memo, ReactNode} from 'react';
-
 import {SELECT_ALL} from './constants';
-import {CheckedState, Type} from './models';
-import {NodeRow} from './NodeRow';
+import {CheckedState, InnerComponents, Type} from './models';
 import {SelectAll} from './SelectAll';
 import {NoMatches} from './NoMatches';
 import {Node} from './Node';
@@ -22,6 +20,7 @@ export interface ListItemProps {
   onToggleNode: (node: Node) => (e: React.MouseEvent) => void;
   onClickExpandNode: (node: Node) => (e: React.MouseEvent) => void;
   input: ReactNode;
+  components: InnerComponents;
 }
 
 export const ListItem: FC<ListItemProps> = memo((props) => {
@@ -40,7 +39,8 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     onChangeSelectAll,
     onToggleNode,
     onClickExpandNode,
-    input
+    input,
+    components
   } = props;
 
   if (Boolean(input) && index === 0) {
@@ -81,17 +81,45 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     && isAnyHasChildren
     && !node.hasChildren();
 
+  const nodeToggleClasses = `rts-node-toggle${expanded ? ' expanded' : ''}`;
+  const getCheckboxClasses = () => {
+    const disabledClass = node.disabled ? ' disabled' : '';
+    const checkedClass = node.selected ? ' selected' : node.partiallySelected ? ' partial' : '';
+    return `rts-node-checkbox${disabledClass}${checkedClass}`;
+  };
+  const getNodeRowClasses = (): string => {
+    const disabledClass = node.disabled ? ' disabled' : '';
+    const selectedClass = node.selected ? ' selected' : node.partiallySelected ? ' partial' : '';
+    const expandedClass = node.expanded ? ' expanded' : '';
+    const focusedClass = focused ? ' focused' : '';
+    const matchedClass = node.matched ? ' matched' : '';
+    const plClass = ` pl-${node.deep + (indentation ? 1 : 0)}`;
+    return `rts-list-item${disabledClass}${selectedClass}${expandedClass}${focusedClass}${matchedClass}${plClass}`;
+  };
+
   return (
-    <NodeRow
-      key={node.path}
-      node={node}
-      focused={focused}
-      expanded={expanded}
-      showNodeToggle={type !== Type.MULTI_SELECT && type !== Type.SELECT && node.hasChildren()}
-      showNodeCheckbox={type !== Type.MULTI_SELECT && type !== Type.SELECT}
-      indentation={indentation}
-      onToggleNode={onToggleNode(node)}
-      onClickExpandIcon={onClickExpandNode(node)}
-    />
+    <div className={getNodeRowClasses()}>
+      {type !== Type.MULTI_SELECT && type !== Type.SELECT && node.hasChildren() && (
+        <components.NodeToggle.component
+          componentAttributes={{className: nodeToggleClasses, onClick: onClickExpandNode(node)}}
+          componentProps={{expanded}}
+          customProps={components.NodeToggle.props}
+        />
+      )}
+      <div className="rts-node" onClick={onToggleNode(node)}>
+        {type !== Type.MULTI_SELECT && type !== Type.SELECT && (
+          <components.NodeCheckbox.component
+            componentAttributes={{className: getCheckboxClasses()}}
+            componentProps={{checked: node.selected, partial: node.partiallySelected, disabled: node.disabled}}
+            customProps={components.NodeCheckbox.props}
+          />
+        )}
+        <components.NodeLabel.component
+          componentAttributes={{className: "rts-label"}}
+          componentProps={{label: node.name}}
+          customProps={components.NodeLabel.props}
+        />
+      </div>
+    </div>
   );
 });
