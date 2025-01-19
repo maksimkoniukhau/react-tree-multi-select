@@ -358,30 +358,33 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
   }, [state.nodes, type]);
 
   const handleToggleNode = useCallback((node: Node) => (e: React.MouseEvent | React.KeyboardEvent): void => {
-    if (type === Type.MULTI_SELECT_TREE || type === Type.MULTI_SELECT_TREE_FLAT || type === Type.MULTI_SELECT) {
-      node.handleToggle(type);
-    }
-    if (type === Type.SELECT) {
-      if (!node.disabled) {
-        state.selectedNodes.forEach(node => node.handleUnselect(type));
-        node.handleSelect(type);
+    // defaultPrevented is on click expand node icon
+    if (!e.defaultPrevented) {
+      if (type === Type.MULTI_SELECT_TREE || type === Type.MULTI_SELECT_TREE_FLAT || type === Type.MULTI_SELECT) {
+        node.handleToggle(type);
       }
+      if (type === Type.SELECT) {
+        if (!node.disabled) {
+          state.selectedNodes.forEach(node => node.handleUnselect(type));
+          node.handleSelect(type);
+        }
+      }
+
+      const selectedNodes = node.disabled
+        ? state.selectedNodes
+        : state.nodes.filter(nod => nod.selected);
+
+      dispatch({
+        type: ActionType.TOGGLE,
+        payload: {
+          selectedNodes,
+          selectAllCheckedState: getSelectAllCheckedState(selectedNodes, state.nodes),
+          focusedElement: node.path
+        } as TogglePayload
+      });
+
+      callNodeChangeHandler(node, selectedNodes);
     }
-
-    const selectedNodes = node.disabled
-      ? state.selectedNodes
-      : state.nodes.filter(nod => nod.selected);
-
-    dispatch({
-      type: ActionType.TOGGLE,
-      payload: {
-        selectedNodes,
-        selectAllCheckedState: getSelectAllCheckedState(selectedNodes, state.nodes),
-        focusedElement: node.path
-      } as TogglePayload
-    });
-
-    callNodeChangeHandler(node, selectedNodes);
   }, [state.nodes, state.selectedNodes, type]);
 
   const handleExpandNode = (node: Node, expand: boolean): void => {
@@ -402,6 +405,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
   };
 
   const handleClickExpandNode = useCallback((node: Node) => (e: React.MouseEvent): void => {
+    e.preventDefault();
     const expand = state.searchValue
       ? !node.searchExpanded
       : !node.expanded;

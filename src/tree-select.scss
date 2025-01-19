@@ -22,7 +22,7 @@ TreeSelect styles
 
   @for $i from 0 through 100 {
     .pl-#{$i} {
-      padding-left: calc((var(--rts-checkbox-width) + var(--rts-checkbox-margin-right)) * $i + var(--rts-row-base-padding));
+      padding-left: calc((var(--rts-checkbox-width) + var(--rts-list-items-gap)) * $i + var(--rts-row-base-padding));
     }
   }
 

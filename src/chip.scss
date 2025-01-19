@@ -25,11 +25,6 @@
 
   &.disabled {
     color: var(--rts-disabled-color);
-    cursor: not-allowed;
-
-    .rts-chip-clear {
-      cursor: not-allowed;
-    }
   }
 
   .rts-chip-clear {

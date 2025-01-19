@@ -15,11 +15,13 @@
     padding-bottom: 2px;
     outline: none;
     color: #212529;
+    cursor: pointer;
   }
 
   .rts-list-item {
     background-color: #ffffff;
     padding-right: var(--rts-row-base-padding);
+    gap: var(--rts-list-items-gap);
 
     &.selected {
       background-color: var(--rts-list-item-selected-background-color);
@@ -33,9 +35,8 @@
       background-color: #ffffb0b0;
     }
 
-    &.disabled .rts-node {
+    &.disabled .rts-label {
       color: var(--rts-disabled-color);
-      cursor: not-allowed;
     }
 
     .rts-node-toggle {
@@ -47,18 +48,11 @@
       .rts-node-toggle-icon {
         width: var(--rts-checkbox-width);
         height: var(--rts-checkbox-height);
-        margin-right: var(--rts-checkbox-margin-right);
 
         path {
           fill: var(--rts-icon-base-color);
         }
       }
-    }
-
-    .rts-node {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
     }
 
     .rts-node-checkbox {

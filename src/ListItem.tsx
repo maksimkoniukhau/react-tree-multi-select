@@ -98,7 +98,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
   };
 
   return (
-    <div className={getNodeRowClasses()}>
+    <div className={getNodeRowClasses()} onClick={onToggleNode(node)}>
       {type !== Type.MULTI_SELECT && type !== Type.SELECT && node.hasChildren() && (
         <components.NodeToggle.component
           componentAttributes={{className: nodeToggleClasses, onClick: onClickExpandNode(node)}}
@@ -106,20 +106,18 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
           customProps={components.NodeToggle.props}
         />
       )}
-      <div className="rts-node" onClick={onToggleNode(node)}>
-        {type !== Type.MULTI_SELECT && type !== Type.SELECT && (
-          <components.NodeCheckbox.component
-            componentAttributes={{className: getCheckboxClasses()}}
-            componentProps={{checked: node.selected, partial: node.partiallySelected, disabled: node.disabled}}
-            customProps={components.NodeCheckbox.props}
-          />
-        )}
-        <components.NodeLabel.component
-          componentAttributes={{className: "rts-label"}}
-          componentProps={{label: node.name}}
-          customProps={components.NodeLabel.props}
+      {type !== Type.MULTI_SELECT && type !== Type.SELECT && (
+        <components.NodeCheckbox.component
+          componentAttributes={{className: getCheckboxClasses()}}
+          componentProps={{checked: node.selected, partial: node.partiallySelected, disabled: node.disabled}}
+          customProps={components.NodeCheckbox.props}
         />
-      </div>
+      )}
+      <components.NodeLabel.component
+        componentAttributes={{className: "rts-label"}}
+        componentProps={{label: node.name}}
+        customProps={components.NodeLabel.props}
+      />
     </div>
   );
 });

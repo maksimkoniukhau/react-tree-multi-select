@@ -4,7 +4,6 @@
   cursor: pointer;
   width: var(--rts-checkbox-width);
   height: var(--rts-checkbox-height);
-  margin-right: var(--rts-checkbox-margin-right);
   flex: 0 0 auto;
   background-color: #ffffff;
   border-radius: 3px;
@@ -52,6 +51,5 @@
 
   &.disabled {
     opacity: 0.4;
-    cursor: not-allowed;
   }
 }
