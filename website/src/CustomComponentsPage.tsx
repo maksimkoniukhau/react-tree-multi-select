@@ -8,17 +8,19 @@ import {
   fieldToggleExample,
   inputExample,
   nodeCheckboxExample,
+  nodeContainerExample,
   nodeLabelExample,
   nodeToggleExample
 } from './code-data';
 import {CodeBlock} from './CodeBlock';
 import {CustomFieldExample} from './examples/components/CustomFieldExample';
-import {CustomInputExample} from './examples/components/CustomInputExample';
 import {CustomChipExample} from './examples/components/CustomChipExample';
 import {CustomChipLabelExample} from './examples/components/CustomChipLabelExample';
 import {CustomChipClearExample} from './examples/components/CustomChipClearExample';
+import {CustomInputExample} from './examples/components/CustomInputExample';
 import {CustomFieldClearExample} from './examples/components/CustomFieldClearExample';
 import {CustomFieldToggleExample} from './examples/components/CustomFieldToggleExample';
+import {CustomNodeContainerExample} from './examples/components/CustomNodeContainerExample';
 import {CustomNodeToggleExample} from './examples/components/CustomNodeToggleExample';
 import {CustomNodeCheckboxExample} from './examples/components/CustomNodeCheckboxExample';
 import {CustomNodeLabelExample} from './examples/components/CustomNodeLabelExample';
@@ -42,14 +44,6 @@ export const CustomComponentsPage: FC = memo(() => {
       <div className="example-container">
         <CodeBlock code={fieldExample}/>
         <CustomFieldExample/>
-      </div>
-      <div className="paragraph">
-        <b>{'Input\n'}</b>
-        {`Custom Input component example.\n`}
-      </div>
-      <div className="example-container">
-        <CodeBlock code={inputExample}/>
-        <CustomInputExample/>
       </div>
       <div className="paragraph">
         <b>{'Chip\n'}</b>
@@ -76,6 +70,14 @@ export const CustomComponentsPage: FC = memo(() => {
         <CustomChipClearExample/>
       </div>
       <div className="paragraph">
+        <b>{'Input\n'}</b>
+        {`Custom Input component example.\n`}
+      </div>
+      <div className="example-container">
+        <CodeBlock code={inputExample}/>
+        <CustomInputExample/>
+      </div>
+      <div className="paragraph">
         <b>{'FieldClear\n'}</b>
         {`Custom FieldClear component example.\n`}
       </div>
@@ -90,6 +92,14 @@ export const CustomComponentsPage: FC = memo(() => {
       <div className="example-container">
         <CodeBlock code={fieldToggleExample}/>
         <CustomFieldToggleExample/>
+      </div>
+      <div className="paragraph">
+        <b>{'NodeContainer\n'}</b>
+        {`Custom NodeContainer component example.\n`}
+      </div>
+      <div className="example-container">
+        <CodeBlock code={nodeContainerExample}/>
+        <CustomNodeContainerExample/>
       </div>
       <div className="paragraph">
         <b>{'NodeToggle\n'}</b>

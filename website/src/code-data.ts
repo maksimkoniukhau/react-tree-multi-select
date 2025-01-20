@@ -214,77 +214,20 @@ export const CustomFieldExample: FC = () => {
   );
 };`;
 
-export const inputExample = `import React, {FC, HTMLProps} from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
-import {Components, FieldProps, FieldType, InputProps, InputType, TreeSelect} from 'rts';
-import {getTreeNodeData} from '../../utils';
-
-const CustomField: FC<FieldProps> = (props) => (
-  <div {...props.componentAttributes}>
-    <button className="filter-btn">Tree select</button>
-  </div>
-);
-
-const CustomFieldInput: FC<InputProps> = (props) => (
-  <textarea {...props.componentAttributes as HTMLProps<HTMLTextAreaElement>}/>
-);
-
-const CustomDropdownInput: FC<InputProps> = (props) => (
-  <div style={{display: 'flex', flex: 1, alignItems: 'center'}}>
-    <input {...props.componentAttributes}/>
-    <div style={{padding: '0 4px'}}><FontAwesomeIcon icon={faMagnifyingGlass}/></div>
-  </div>
-);
-
-const Field: FieldType = {component: CustomField};
-const DropdownInput: InputType = {component: CustomDropdownInput};
-const dropdownComponents: Components = {Field, Input: DropdownInput};
-
-const FieldInput: InputType = {component: CustomFieldInput};
-const fieldComponents: Components = {Input: FieldInput};
-
-export const CustomInputExample: FC = () => {
-
-  return (
-    <div className="component-example input-example">
-      <TreeSelect
-        className="custom-dropdown-input"
-        data={getTreeNodeData()}
-        withDropdownInput={true}
-        components={dropdownComponents}
-      />
-      <TreeSelect
-        className="custom-field-input"
-        data={getTreeNodeData()}
-        components={fieldComponents}
-      />
-    </div>
-  );
-};`;
-
-export const chipExample = `import React, {FC, ReactNode} from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faFire} from '@fortawesome/free-solid-svg-icons';
+export const chipExample = `import React, {FC} from 'react';
+import Tooltip from '@atlaskit/tooltip';
 import {ChipProps, ChipType, Components, TreeSelect} from 'rts';
 import {getTreeNodeData} from '../../utils';
 
-interface CustomChipProps {
-  icon: ReactNode;
-}
-
-const CustomChip: FC<ChipProps<CustomChipProps>> = (props) => (
-  <div {...props.componentAttributes}>
-    <div>{props.customProps.icon}</div>
-    {props.children}
-  </div>
+const CustomChip: FC<ChipProps> = (props) => (
+  <Tooltip content={\`Tooltip for the \${props.componentProps.label}\`}>
+    <div {...props.componentAttributes}>
+      {props.children}
+    </div>
+  </Tooltip>
 );
 
-const Chip: ChipType<CustomChipProps> = {
-  component: CustomChip,
-  props: {icon: <FontAwesomeIcon icon={faFire}/>}
-};
-
+const Chip: ChipType = {component: CustomChip};
 const components: Components = {Chip};
 
 export const CustomChipExample: FC = () => {
@@ -353,6 +296,55 @@ export const CustomChipClearExample: FC = () => {
   );
 };`;
 
+export const inputExample = `import React, {FC, HTMLProps} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
+import {Components, FieldProps, FieldType, InputProps, InputType, TreeSelect} from 'rts';
+import {getTreeNodeData} from '../../utils';
+
+const CustomField: FC<FieldProps> = (props) => (
+  <div {...props.componentAttributes}>
+    <button className="filter-btn">Tree select</button>
+  </div>
+);
+
+const CustomFieldInput: FC<InputProps> = (props) => (
+  <textarea {...props.componentAttributes as HTMLProps<HTMLTextAreaElement>}/>
+);
+
+const CustomDropdownInput: FC<InputProps> = (props) => (
+  <div style={{display: 'flex', flex: 1, alignItems: 'center'}}>
+    <input {...props.componentAttributes}/>
+    <div style={{padding: '0 4px'}}><FontAwesomeIcon icon={faMagnifyingGlass}/></div>
+  </div>
+);
+
+const Field: FieldType = {component: CustomField};
+const DropdownInput: InputType = {component: CustomDropdownInput};
+const dropdownComponents: Components = {Field, Input: DropdownInput};
+
+const FieldInput: InputType = {component: CustomFieldInput};
+const fieldComponents: Components = {Input: FieldInput};
+
+export const CustomInputExample: FC = () => {
+
+  return (
+    <div className="component-example input-example">
+      <TreeSelect
+        className="custom-dropdown-input"
+        data={getTreeNodeData()}
+        withDropdownInput={true}
+        components={dropdownComponents}
+      />
+      <TreeSelect
+        className="custom-field-input"
+        data={getTreeNodeData()}
+        components={fieldComponents}
+      />
+    </div>
+  );
+};`;
+
 export const fieldClearExample = `import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faDeleteLeft} from '@fortawesome/free-solid-svg-icons';
@@ -396,6 +388,34 @@ const FieldToggle: FieldToggleType = {component: CustomFieldToggle};
 const components: Components = {FieldToggle};
 
 export const CustomFieldToggleExample: FC = () => {
+
+  return (
+    <div className="component-example">
+      <TreeSelect
+        data={getTreeNodeData(true)}
+        components={components}
+      />
+    </div>
+  );
+};`;
+
+export const nodeContainerExample = `import React, {FC} from 'react';
+import Tooltip from '@atlaskit/tooltip';
+import {Components, NodeContainerProps, NodeContainerType, TreeSelect} from 'rts';
+import {getTreeNodeData} from '../../utils';
+
+const CustomNodeContainer: FC<NodeContainerProps> = (props) => (
+  <Tooltip content={\`Tooltip for the \${props.componentProps.label}\`}>
+    <div {...props.componentAttributes}>
+      {props.children}
+    </div>
+  </Tooltip>
+);
+
+const NodeContainer: NodeContainerType = {component: CustomNodeContainer};
+const components: Components = {NodeContainer};
+
+export const CustomNodeContainerExample: FC = () => {
 
   return (
     <div className="component-example">
