@@ -2,6 +2,7 @@ import React, {FC, memo} from 'react';
 import {ChipProps} from './models';
 
 export interface ChipOwnProps {
+  label: string;
   focused: boolean;
   disabled: boolean;
 }

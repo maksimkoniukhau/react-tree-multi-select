@@ -664,11 +664,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
           onClick: handleClickField,
           onMouseDown: preventDefaultOnMouseEvent
         }}
-        componentProps={{
-          type,
-          showDropdown: state.showDropdown,
-          withClearAll
-        }}
+        componentProps={{type, showDropdown: state.showDropdown, withClearAll}}
         customProps={components.Field.props}
       >
         <div
@@ -687,6 +683,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
                   onMouseDown: preventDefaultOnMouseEvent
                 }}
                 componentProps={{
+                  label: node.name,
                   focused: state.focusedFieldElement === node.path,
                   disabled: node.disabled,
                 }}
