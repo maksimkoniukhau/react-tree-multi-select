@@ -109,38 +109,65 @@ interface Component<CustomProps, ComponentProps> {
 }
 
 type FieldProps<CustomProps = {}> = ComponentProps<CustomProps, FieldOwnProps, HTMLDivElement>;
-type InputProps<CustomProps = {}> = ComponentProps<CustomProps, InputOwnProps, HTMLInputElement>;
 type ChipProps<CustomProps = {}> = ComponentProps<CustomProps, ChipOwnProps, HTMLDivElement>;
 type ChipLabelProps<CustomProps = {}> = ComponentProps<CustomProps, ChipLabelOwnProps, HTMLDivElement>;
 type ChipClearProps<CustomProps = {}> = ComponentProps<CustomProps, ChipClearOwnProps, HTMLDivElement>;
+type InputProps<CustomProps = {}> = ComponentProps<CustomProps, InputOwnProps, HTMLInputElement>;
 type FieldClearProps<CustomProps = {}> = ComponentProps<CustomProps, FieldClearOwnProps, HTMLDivElement>;
 type FieldToggleProps<CustomProps = {}> = ComponentProps<CustomProps, FieldToggleOwnProps, HTMLDivElement>;
+type SelectAllContainerProps<CustomProps = {}> = ComponentProps<CustomProps, SelectAllContainerOwnProps, HTMLDivElement>;
+type SelectAllCheckboxProps<CustomProps = {}> = ComponentProps<CustomProps, SelectAllCheckboxOwnProps, HTMLDivElement>;
+type SelectAllLabelProps<CustomProps = {}> = ComponentProps<CustomProps, SelectAllLabelOwnProps, HTMLDivElement>;
+type NodeContainerProps<CustomProps = {}> = ComponentProps<CustomProps, NodeContainerOwnProps, HTMLDivElement>;
+type NodeToggleProps<CustomProps = {}> = ComponentProps<CustomProps, NodeToggleOwnProps, HTMLDivElement>;
+type NodeCheckboxProps<CustomProps = {}> = ComponentProps<CustomProps, NodeCheckboxOwnProps, HTMLDivElement>;
+type NodeLabelProps<CustomProps = {}> = ComponentProps<CustomProps, NodeLabelOwnProps, HTMLDivElement>;
 
 type FieldType<CustomProps = {}> = Component<CustomProps, FieldProps<CustomProps>>;
-type InputType<CustomProps = {}> = Component<CustomProps, InputProps<CustomProps>>;
 type ChipType<CustomProps = {}> = Component<CustomProps, ChipProps<CustomProps>>;
 type ChipLabelType<CustomProps = {}> = Component<CustomProps, ChipLabelProps<CustomProps>>;
 type ChipClearType<CustomProps = {}> = Component<CustomProps, ChipClearProps<CustomProps>>;
+type InputType<CustomProps = {}> = Component<CustomProps, InputProps<CustomProps>>;
 type FieldClearType<CustomProps = {}> = Component<CustomProps, FieldClearProps<CustomProps>>;
 type FieldToggleType<CustomProps = {}> = Component<CustomProps, FieldToggleProps<CustomProps>>;
-
+type SelectAllContainerType<CustomProps = {}> = Component<CustomProps, SelectAllContainerProps<CustomProps>>;
+type SelectAllCheckboxType<CustomProps = {}> = Component<CustomProps, SelectAllCheckboxProps<CustomProps>>;
+type SelectAllLabelType<CustomProps = {}> = Component<CustomProps, SelectAllLabelProps<CustomProps>>;
+type NodeContainerType<CustomProps = {}> = Component<CustomProps, NodeContainerProps<CustomProps>>;
+type NodeToggleType<CustomProps = {}> = Component<CustomProps, NodeToggleProps<CustomProps>>;
+type NodeCheckboxType<CustomProps = {}> = Component<CustomProps, NodeCheckboxProps<CustomProps>>;
+type NodeLabelType<CustomProps = {}> = Component<CustomProps, NodeLabelProps<CustomProps>>;
 
 interface Components<
   FieldCustomProps = any,
-  InputCustomProps = any,
   ChipCustomProps = any,
   ChipLabelCustomProps = any,
   ChipClearCustomProps = any,
+  InputCustomProps = any,
   FieldClearCustomProps = any,
-  FieldToggleCustomProps = any
+  FieldToggleCustomProps = any,
+  SelectAllContainerCustomProps = any,
+  SelectAllCheckboxCustomProps = any,
+  SelectAllLabelCustomProps = any,
+  NodeContainerCustomProps = any,
+  NodeToggleCustomProps = any,
+  NodeCheckboxCustomProps = any,
+  NodeLabelCustomProps = any
 > {
   Field?: FieldType<FieldCustomProps>;
-  Input?: InputType<InputCustomProps>;
   Chip?: ChipType<ChipCustomProps>;
   ChipLabel?: ChipLabelType<ChipLabelCustomProps>;
   ChipClear?: ChipClearType<ChipClearCustomProps>;
+  Input?: InputType<InputCustomProps>;
   FieldClear?: FieldClearType<FieldClearCustomProps>;
   FieldToggle?: FieldToggleType<FieldToggleCustomProps>;
+  SelectAllContainer?: SelectAllContainerType<SelectAllContainerCustomProps>;
+  SelectAllCheckbox?: SelectAllCheckboxType<SelectAllCheckboxCustomProps>;
+  SelectAllLabel?: SelectAllLabelType<SelectAllLabelCustomProps>;
+  NodeContainer?: NodeContainerType<NodeContainerCustomProps>;
+  NodeToggle?: NodeToggleType<NodeToggleCustomProps>;
+  NodeCheckbox?: NodeCheckboxType<NodeCheckboxCustomProps>;
+  NodeLabel?: NodeLabelType<NodeLabelCustomProps>;
 }`;
 
 export const fieldExample = `import React, {FC} from 'react';
@@ -393,6 +420,96 @@ export const CustomFieldToggleExample: FC = () => {
     <div className="component-example">
       <TreeSelect
         data={getTreeNodeData(true)}
+        components={components}
+      />
+    </div>
+  );
+};`;
+
+export const selectAllContainerExample = `import React, {FC} from 'react';
+import Tooltip from '@atlaskit/tooltip';
+import {Components, SelectAllContainerProps, SelectAllContainerType, TreeSelect} from 'rts';
+import {getTreeNodeData} from '../../utils';
+
+const CustomSelectAllContainer: FC<SelectAllContainerProps> = (props) => (
+  <Tooltip content={\`Tooltip for the \${props.componentProps.label}\`}>
+    <div {...props.componentAttributes}>
+      {props.children}
+    </div>
+  </Tooltip>
+);
+
+const SelectAllContainer: SelectAllContainerType = {component: CustomSelectAllContainer};
+const components: Components = {SelectAllContainer};
+
+export const CustomSelectAllContainerExample: FC = () => {
+
+  return (
+    <div className="component-example">
+      <TreeSelect
+        data={getTreeNodeData(true)}
+        withSelectAll
+        components={components}
+      />
+    </div>
+  );
+};`;
+
+export const selectAllCheckboxExample = `import React, {FC} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faSquare, faSquareCheck, faSquareMinus} from '@fortawesome/free-regular-svg-icons';
+import {Components, SelectAllCheckboxProps, SelectAllCheckboxType, TreeSelect} from 'rts';
+import {getTreeNodeData} from '../../utils';
+
+const CustomSelectAllCheckbox: FC<SelectAllCheckboxProps> = (props) => (
+  <div {...props.componentAttributes}>
+    {props.componentProps.checked
+      ? <FontAwesomeIcon icon={faSquareCheck}/>
+      : props.componentProps.partial
+        ? <FontAwesomeIcon icon={faSquareMinus}/>
+        : <FontAwesomeIcon icon={faSquare}/>
+    }
+  </div>
+);
+
+const SelectAllCheckbox: SelectAllCheckboxType = {component: CustomSelectAllCheckbox};
+const components: Components = {SelectAllCheckbox};
+
+export const CustomSelectAllCheckboxExample: FC = () => {
+
+  return (
+    <div className="component-example">
+      <TreeSelect
+        data={getTreeNodeData(true)}
+        withSelectAll
+        components={components}
+      />
+    </div>
+  );
+};`;
+
+export const selectAllLabelExample = `import React, {FC} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCheckDouble} from '@fortawesome/free-solid-svg-icons';
+import {Components, SelectAllLabelProps, SelectAllLabelType, TreeSelect} from 'rts';
+import {getTreeNodeData} from '../../utils';
+
+const CustomSelectAllLabel: FC<SelectAllLabelProps> = (props) => (
+  <div {...props.componentAttributes}>
+    {props.componentProps.label}{' '}<FontAwesomeIcon icon={faCheckDouble}/>
+  </div>
+);
+
+const SelectAllLabel: SelectAllLabelType = {component: CustomSelectAllLabel};
+const components: Components = {SelectAllLabel};
+
+export const CustomSelectAllLabelExample: FC = () => {
+
+  return (
+    <div className="component-example">
+      <TreeSelect
+        data={getTreeNodeData(true)}
+        withSelectAll
         components={components}
       />
     </div>
