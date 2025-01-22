@@ -1,9 +1,9 @@
 import React, {FC} from 'react';
 import Tooltip from '@atlaskit/tooltip';
-import {ChipProps, ChipType, Components, TreeSelect} from '../../../../src';
+import {ChipContainerProps, ChipContainerType, Components, TreeSelect} from '../../../../src';
 import {getTreeNodeData} from '../../utils';
 
-const CustomChip: FC<ChipProps> = (props) => (
+const CustomChipContainer: FC<ChipContainerProps> = (props) => (
   <Tooltip content={`Tooltip for the ${props.componentProps.label}`}>
     <div {...props.componentAttributes}>
       {props.children}
@@ -11,10 +11,10 @@ const CustomChip: FC<ChipProps> = (props) => (
   </Tooltip>
 );
 
-const Chip: ChipType = {component: CustomChip};
-const components: Components = {Chip};
+const ChipContainer: ChipContainerType = {component: CustomChipContainer};
+const components: Components = {ChipContainer};
 
-export const CustomChipExample: FC = () => {
+export const CustomChipContainerExample: FC = () => {
 
   return (
     <div className="component-example">

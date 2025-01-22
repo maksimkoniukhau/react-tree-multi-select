@@ -109,7 +109,7 @@ interface Component<CustomProps, ComponentProps> {
 }
 
 type FieldProps<CustomProps = {}> = ComponentProps<CustomProps, FieldOwnProps, HTMLDivElement>;
-type ChipProps<CustomProps = {}> = ComponentProps<CustomProps, ChipOwnProps, HTMLDivElement>;
+type ChipContainerProps<CustomProps = {}> = ComponentProps<CustomProps, ChipContainerOwnProps, HTMLDivElement>;
 type ChipLabelProps<CustomProps = {}> = ComponentProps<CustomProps, ChipLabelOwnProps, HTMLDivElement>;
 type ChipClearProps<CustomProps = {}> = ComponentProps<CustomProps, ChipClearOwnProps, HTMLDivElement>;
 type InputProps<CustomProps = {}> = ComponentProps<CustomProps, InputOwnProps, HTMLInputElement>;
@@ -124,7 +124,7 @@ type NodeCheckboxProps<CustomProps = {}> = ComponentProps<CustomProps, NodeCheck
 type NodeLabelProps<CustomProps = {}> = ComponentProps<CustomProps, NodeLabelOwnProps, HTMLDivElement>;
 
 type FieldType<CustomProps = {}> = Component<CustomProps, FieldProps<CustomProps>>;
-type ChipType<CustomProps = {}> = Component<CustomProps, ChipProps<CustomProps>>;
+type ChipContainerType<CustomProps = {}> = Component<CustomProps, ChipContainerProps<CustomProps>>;
 type ChipLabelType<CustomProps = {}> = Component<CustomProps, ChipLabelProps<CustomProps>>;
 type ChipClearType<CustomProps = {}> = Component<CustomProps, ChipClearProps<CustomProps>>;
 type InputType<CustomProps = {}> = Component<CustomProps, InputProps<CustomProps>>;
@@ -140,7 +140,7 @@ type NodeLabelType<CustomProps = {}> = Component<CustomProps, NodeLabelProps<Cus
 
 interface Components<
   FieldCustomProps = any,
-  ChipCustomProps = any,
+  ChipContainerCustomProps = any,
   ChipLabelCustomProps = any,
   ChipClearCustomProps = any,
   InputCustomProps = any,
@@ -155,7 +155,7 @@ interface Components<
   NodeLabelCustomProps = any
 > {
   Field?: FieldType<FieldCustomProps>;
-  Chip?: ChipType<ChipCustomProps>;
+  ChipContainer?: ChipContainerType<ChipContainerCustomProps>;
   ChipLabel?: ChipLabelType<ChipLabelCustomProps>;
   ChipClear?: ChipClearType<ChipClearCustomProps>;
   Input?: InputType<InputCustomProps>;
@@ -241,12 +241,12 @@ export const CustomFieldExample: FC = () => {
   );
 };`;
 
-export const chipExample = `import React, {FC} from 'react';
+export const chipContainerExample = `import React, {FC} from 'react';
 import Tooltip from '@atlaskit/tooltip';
-import {ChipProps, ChipType, Components, TreeSelect} from 'rts';
+import {ChipContainerProps, ChipContainerType, Components, TreeSelect} from 'rts';
 import {getTreeNodeData} from '../../utils';
 
-const CustomChip: FC<ChipProps> = (props) => (
+const CustomChipContainer: FC<ChipContainerProps> = (props) => (
   <Tooltip content={\`Tooltip for the \${props.componentProps.label}\`}>
     <div {...props.componentAttributes}>
       {props.children}
@@ -254,10 +254,10 @@ const CustomChip: FC<ChipProps> = (props) => (
   </Tooltip>
 );
 
-const Chip: ChipType = {component: CustomChip};
-const components: Components = {Chip};
+const ChipContainer: ChipContainerType = {component: CustomChipContainer};
+const components: Components = {ChipContainer};
 
-export const CustomChipExample: FC = () => {
+export const CustomChipContainerExample: FC = () => {
 
   return (
     <div className="component-example">

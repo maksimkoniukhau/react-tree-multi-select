@@ -1,7 +1,7 @@
 import React, {FC, memo} from 'react';
 import {
   chipClearExample,
-  chipExample,
+  chipContainerExample,
   chipLabelExample,
   fieldClearExample,
   fieldExample,
@@ -17,7 +17,7 @@ import {
 } from './code-data';
 import {CodeBlock} from './CodeBlock';
 import {CustomFieldExample} from './examples/components/CustomFieldExample';
-import {CustomChipExample} from './examples/components/CustomChipExample';
+import {CustomChipContainerExample} from './examples/components/CustomChipContainerExample';
 import {CustomChipLabelExample} from './examples/components/CustomChipLabelExample';
 import {CustomChipClearExample} from './examples/components/CustomChipClearExample';
 import {CustomInputExample} from './examples/components/CustomInputExample';
@@ -52,12 +52,12 @@ export const CustomComponentsPage: FC = memo(() => {
         <CustomFieldExample/>
       </div>
       <div className="paragraph">
-        <b>{'Chip\n'}</b>
-        {`Custom Chip component example.\n`}
+        <b>{'ChipContainer\n'}</b>
+        {`Custom ChipContainer component example.\n`}
       </div>
       <div className="example-container">
-        <CodeBlock code={chipExample}/>
-        <CustomChipExample/>
+        <CodeBlock code={chipContainerExample}/>
+        <CustomChipContainerExample/>
       </div>
       <div className="paragraph">
         <b>{'ChipLabel\n'}</b>
