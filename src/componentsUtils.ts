@@ -1,6 +1,6 @@
 import {Components, InnerComponents} from './models';
 import {Field} from './Field';
-import {Chip} from './Chip';
+import {ChipContainer} from './ChipContainer';
 import {ChipLabel} from './ChipLabel';
 import {ChipClear} from './ChipClear';
 import {Input} from './Input';
@@ -18,8 +18,8 @@ const components: InnerComponents = {
   Field: {
     component: Field
   },
-  Chip: {
-    component: Chip
+  ChipContainer: {
+    component: ChipContainer
   },
   ChipLabel: {
     component: ChipLabel

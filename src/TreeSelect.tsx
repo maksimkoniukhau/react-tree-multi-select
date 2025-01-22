@@ -674,7 +674,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
         >
           {filterChips(state.selectedNodes, type)
             .map(node => (
-              <components.Chip.component
+              <components.ChipContainer.component
                 key={node.path}
                 componentAttributes={{
                   className: `rts-chip${node.disabled ? ' disabled' : ''}${state.focusedFieldElement === node.path ? ' focused' : ''}`,
@@ -687,7 +687,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
                   focused: state.focusedFieldElement === node.path,
                   disabled: node.disabled,
                 }}
-                customProps={components.Chip.props}
+                customProps={components.ChipContainer.props}
               >
                 <components.ChipLabel.component
                   componentAttributes={{className: 'rts-label'}}
@@ -700,7 +700,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
                         componentProps={{}}
                         customProps={components.ChipClear.props}
                     />}
-              </components.Chip.component>
+              </components.ChipContainer.component>
             ))}
           {withDropdownInput ? (
             <input className="rts-input-hidden"/>

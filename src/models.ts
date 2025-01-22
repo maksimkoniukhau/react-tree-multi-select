@@ -1,6 +1,6 @@
 import {ComponentType, HTMLProps, ReactNode} from 'react';
 import {FieldOwnProps} from './Field';
-import {ChipOwnProps} from './Chip';
+import {ChipContainerOwnProps} from './ChipContainer';
 import {ChipLabelOwnProps} from './ChipLabel';
 import {ChipClearOwnProps} from './ChipClear';
 import {InputOwnProps} from './Input';
@@ -50,7 +50,7 @@ export interface Component<CustomProps, ComponentProps> {
 }
 
 export type FieldProps<CustomProps = {}> = ComponentProps<CustomProps, FieldOwnProps, HTMLDivElement>;
-export type ChipProps<CustomProps = {}> = ComponentProps<CustomProps, ChipOwnProps, HTMLDivElement>;
+export type ChipContainerProps<CustomProps = {}> = ComponentProps<CustomProps, ChipContainerOwnProps, HTMLDivElement>;
 export type ChipLabelProps<CustomProps = {}> = ComponentProps<CustomProps, ChipLabelOwnProps, HTMLDivElement>;
 export type ChipClearProps<CustomProps = {}> = ComponentProps<CustomProps, ChipClearOwnProps, HTMLDivElement>;
 export type InputProps<CustomProps = {}> = ComponentProps<CustomProps, InputOwnProps, HTMLInputElement>;
@@ -65,7 +65,7 @@ export type NodeCheckboxProps<CustomProps = {}> = ComponentProps<CustomProps, No
 export type NodeLabelProps<CustomProps = {}> = ComponentProps<CustomProps, NodeLabelOwnProps, HTMLDivElement>;
 
 export type FieldType<CustomProps = {}> = Component<CustomProps, FieldProps<CustomProps>>;
-export type ChipType<CustomProps = {}> = Component<CustomProps, ChipProps<CustomProps>>;
+export type ChipContainerType<CustomProps = {}> = Component<CustomProps, ChipContainerProps<CustomProps>>;
 export type ChipLabelType<CustomProps = {}> = Component<CustomProps, ChipLabelProps<CustomProps>>;
 export type ChipClearType<CustomProps = {}> = Component<CustomProps, ChipClearProps<CustomProps>>;
 export type InputType<CustomProps = {}> = Component<CustomProps, InputProps<CustomProps>>;
@@ -82,7 +82,7 @@ export type NodeLabelType<CustomProps = {}> = Component<CustomProps, NodeLabelPr
 
 export interface Components<
   FieldCustomProps = any,
-  ChipCustomProps = any,
+  ChipContainerCustomProps = any,
   ChipLabelCustomProps = any,
   ChipClearCustomProps = any,
   InputCustomProps = any,
@@ -97,7 +97,7 @@ export interface Components<
   NodeLabelCustomProps = any
 > {
   Field?: FieldType<FieldCustomProps>;
-  Chip?: ChipType<ChipCustomProps>;
+  ChipContainer?: ChipContainerType<ChipContainerCustomProps>;
   ChipLabel?: ChipLabelType<ChipLabelCustomProps>;
   ChipClear?: ChipClearType<ChipClearCustomProps>;
   Input?: InputType<InputCustomProps>;
@@ -118,7 +118,7 @@ export type Required<T> = {
 
 export type InnerComponents<
   FieldCustomProps = any,
-  ChipCustomProps = any,
+  ChipContainerCustomProps = any,
   ChipLabelCustomProps = any,
   ChipClearCustomProps = any,
   InputCustomProps = any,
@@ -133,7 +133,7 @@ export type InnerComponents<
   NodeLabelCustomProps = any
 > = Required<Components<
   FieldCustomProps,
-  ChipCustomProps,
+  ChipContainerCustomProps,
   ChipLabelCustomProps,
   ChipClearCustomProps,
   InputCustomProps,
