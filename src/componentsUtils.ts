@@ -6,6 +6,9 @@ import {ChipClear} from './ChipClear';
 import {Input} from './Input';
 import {FieldClear} from './FieldClear';
 import {FieldToggle} from './FieldToggle';
+import {SelectAllContainer} from './SelectAllContainer';
+import {SelectAllCheckbox} from './SelectAllCheckbox';
+import {SelectAllLabel} from './SelectAllLabel';
 import {NodeContainer} from './NodeContainer';
 import {NodeToggle} from './NodeToggle';
 import {NodeCheckbox} from './NodeCheckbox';
@@ -32,6 +35,15 @@ const components: InnerComponents = {
   },
   FieldToggle: {
     component: FieldToggle
+  },
+  SelectAllContainer: {
+    component: SelectAllContainer
+  },
+  SelectAllCheckbox: {
+    component: SelectAllCheckbox
+  },
+  SelectAllLabel: {
+    component: SelectAllLabel
   },
   NodeContainer: {
     component: NodeContainer

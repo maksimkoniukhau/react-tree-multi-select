@@ -16,12 +16,12 @@
     outline: none;
     color: #212529;
     cursor: pointer;
+    gap: var(--rts-list-items-gap);
   }
 
   .rts-list-item {
     background-color: #ffffff;
     padding-right: var(--rts-row-base-padding);
-    gap: var(--rts-list-items-gap);
 
     &.selected {
       background-color: var(--rts-list-item-selected-background-color);
@@ -70,10 +70,9 @@
       background-color: #ebebeb;
     }
 
-    .rts-select-all {
+    .rts-select-all-checkbox {
       display: flex;
       align-items: center;
-      cursor: pointer;
     }
   }
 

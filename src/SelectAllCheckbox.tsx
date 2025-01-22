@@ -1,18 +1,21 @@
 import React, {FC, memo} from 'react';
+import {SelectAllCheckboxProps} from './models';
 
-export interface SelectAllCheckboxProps {
+export interface SelectAllCheckboxOwnProps {
   checked: boolean;
   partial: boolean;
 }
 
 export const SelectAllCheckbox: FC<SelectAllCheckboxProps> = memo((props) => {
 
-  const {checked, partial} = props;
+  const {checked, partial} = props.componentProps;
 
   const checkedClass = checked ? ' selected' : partial ? ' partial' : '';
   const checkboxClasses = `rts-checkbox${checkedClass}`;
 
   return (
-    <span className={checkboxClasses}/>
+    <div {...props.componentAttributes}>
+      <span className={checkboxClasses}/>
+    </div>
   );
 });

@@ -6,6 +6,9 @@ import {ChipClearOwnProps} from './ChipClear';
 import {InputOwnProps} from './Input';
 import {FieldClearOwnProps} from './FieldClear';
 import {FieldToggleOwnProps} from './FieldToggle';
+import {SelectAllContainerOwnProps} from './SelectAllContainer';
+import {SelectAllCheckboxOwnProps} from './SelectAllCheckbox';
+import {SelectAllLabelOwnProps} from './SelectAllLabel';
 import {NodeContainerOwnProps} from './NodeContainer';
 import {NodeToggleOwnProps} from './NodeToggle';
 import {NodeCheckboxOwnProps} from './NodeCheckbox';
@@ -53,6 +56,9 @@ export type ChipClearProps<CustomProps = {}> = ComponentProps<CustomProps, ChipC
 export type InputProps<CustomProps = {}> = ComponentProps<CustomProps, InputOwnProps, HTMLInputElement>;
 export type FieldClearProps<CustomProps = {}> = ComponentProps<CustomProps, FieldClearOwnProps, HTMLDivElement>;
 export type FieldToggleProps<CustomProps = {}> = ComponentProps<CustomProps, FieldToggleOwnProps, HTMLDivElement>;
+export type SelectAllContainerProps<CustomProps = {}> = ComponentProps<CustomProps, SelectAllContainerOwnProps, HTMLDivElement>;
+export type SelectAllCheckboxProps<CustomProps = {}> = ComponentProps<CustomProps, SelectAllCheckboxOwnProps, HTMLDivElement>;
+export type SelectAllLabelProps<CustomProps = {}> = ComponentProps<CustomProps, SelectAllLabelOwnProps, HTMLDivElement>;
 export type NodeContainerProps<CustomProps = {}> = ComponentProps<CustomProps, NodeContainerOwnProps, HTMLDivElement>;
 export type NodeToggleProps<CustomProps = {}> = ComponentProps<CustomProps, NodeToggleOwnProps, HTMLDivElement>;
 export type NodeCheckboxProps<CustomProps = {}> = ComponentProps<CustomProps, NodeCheckboxOwnProps, HTMLDivElement>;
@@ -65,6 +71,9 @@ export type ChipClearType<CustomProps = {}> = Component<CustomProps, ChipClearPr
 export type InputType<CustomProps = {}> = Component<CustomProps, InputProps<CustomProps>>;
 export type FieldClearType<CustomProps = {}> = Component<CustomProps, FieldClearProps<CustomProps>>;
 export type FieldToggleType<CustomProps = {}> = Component<CustomProps, FieldToggleProps<CustomProps>>;
+export type SelectAllContainerType<CustomProps = {}> = Component<CustomProps, SelectAllContainerProps<CustomProps>>;
+export type SelectAllCheckboxType<CustomProps = {}> = Component<CustomProps, SelectAllCheckboxProps<CustomProps>>;
+export type SelectAllLabelType<CustomProps = {}> = Component<CustomProps, SelectAllLabelProps<CustomProps>>;
 export type NodeContainerType<CustomProps = {}> = Component<CustomProps, NodeContainerProps<CustomProps>>;
 export type NodeToggleType<CustomProps = {}> = Component<CustomProps, NodeToggleProps<CustomProps>>;
 export type NodeCheckboxType<CustomProps = {}> = Component<CustomProps, NodeCheckboxProps<CustomProps>>;
@@ -79,6 +88,9 @@ export interface Components<
   InputCustomProps = any,
   FieldClearCustomProps = any,
   FieldToggleCustomProps = any,
+  SelectAllContainerCustomProps = any,
+  SelectAllCheckboxCustomProps = any,
+  SelectAllLabelCustomProps = any,
   NodeContainerCustomProps = any,
   NodeToggleCustomProps = any,
   NodeCheckboxCustomProps = any,
@@ -91,6 +103,9 @@ export interface Components<
   Input?: InputType<InputCustomProps>;
   FieldClear?: FieldClearType<FieldClearCustomProps>;
   FieldToggle?: FieldToggleType<FieldToggleCustomProps>;
+  SelectAllContainer?: SelectAllContainerType<SelectAllContainerCustomProps>;
+  SelectAllCheckbox?: SelectAllCheckboxType<SelectAllCheckboxCustomProps>;
+  SelectAllLabel?: SelectAllLabelType<SelectAllLabelCustomProps>;
   NodeContainer?: NodeContainerType<NodeContainerCustomProps>;
   NodeToggle?: NodeToggleType<NodeToggleCustomProps>;
   NodeCheckbox?: NodeCheckboxType<NodeCheckboxCustomProps>;
@@ -109,6 +124,9 @@ export type InnerComponents<
   InputCustomProps = any,
   FieldClearCustomProps = any,
   FieldToggleCustomProps = any,
+  SelectAllContainerCustomProps = any,
+  SelectAllCheckboxCustomProps = any,
+  SelectAllLabelCustomProps = any,
   NodeContainerCustomProps = any,
   NodeToggleCustomProps = any,
   NodeCheckboxCustomProps = any,
@@ -121,6 +139,9 @@ export type InnerComponents<
   InputCustomProps,
   FieldClearCustomProps,
   FieldToggleCustomProps,
+  SelectAllContainerCustomProps,
+  SelectAllCheckboxCustomProps,
+  SelectAllLabelCustomProps,
   NodeContainerCustomProps,
   NodeToggleCustomProps,
   NodeCheckboxCustomProps,

@@ -1,7 +1,6 @@
 import React, {FC, memo, ReactNode} from 'react';
 import {SELECT_ALL} from './constants';
 import {CheckedState, InnerComponents, Type} from './models';
-import {SelectAll} from './SelectAll';
 import {NoMatches} from './NoMatches';
 import {Node} from './Node';
 
@@ -54,13 +53,36 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
   }
 
   if ((showSelectAll && Boolean(input) && index === 1) || (showSelectAll && index === 0)) {
+    const selected = selectAllCheckedState === CheckedState.SELECTED;
+    const partial = selectAllCheckedState === CheckedState.PARTIAL;
+
+    const selectedClass = selected ? ' selected' : partial ? ' partial' : '';
+    const checkboxClasses = `rts-select-all-checkbox${selectedClass}`;
+
+    const focusedClass = focusedElement === SELECT_ALL ? ' focused' : '';
+    const containerClasses = `rts-header-item${selectedClass}${focusedClass}`;
+
     return (
-      <SelectAll
-        label={SELECT_ALL}
-        checkedState={selectAllCheckedState}
-        focused={focusedElement === SELECT_ALL}
-        onChange={onChangeSelectAll}
-      />
+      <components.SelectAllContainer.component
+        componentAttributes={{className: containerClasses, onClick: onChangeSelectAll}}
+        componentProps={{
+          label: SELECT_ALL,
+          checkedState: selectAllCheckedState,
+          focused: focusedElement === SELECT_ALL,
+        }}
+        customProps={components.SelectAllContainer.props}
+      >
+        <components.SelectAllCheckbox.component
+          componentAttributes={{className: checkboxClasses}}
+          componentProps={{checked: selected, partial}}
+          customProps={components.SelectAllCheckbox.props}
+        />
+        <components.SelectAllLabel.component
+          componentAttributes={{className: "rts-label"}}
+          componentProps={{label: SELECT_ALL}}
+          customProps={components.SelectAllLabel.props}
+        />
+      </components.SelectAllContainer.component>
     );
   }
 
