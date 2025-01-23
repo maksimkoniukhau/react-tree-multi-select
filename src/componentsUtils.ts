@@ -1,4 +1,5 @@
-import {Components, InnerComponents} from './models';
+import {Components} from './types';
+import {InnerComponents} from './innerTypes';
 import {Field} from './Field';
 import {ChipContainer} from './ChipContainer';
 import {ChipLabel} from './ChipLabel';

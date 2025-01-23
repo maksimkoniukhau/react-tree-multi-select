@@ -2,7 +2,8 @@ import React, {FC, JSX, memo, ReactNode, useEffect, useRef, useState} from 'reac
 import {CalculateViewLocation, StateSnapshot, Virtuoso, VirtuosoHandle} from 'react-virtuoso'
 import {DEFAULT_OPTIONS_CONTAINER_HEIGHT, DEFAULT_OPTIONS_CONTAINER_WIDTH, SELECT_ALL} from './constants';
 import {preventDefaultOnMouseEvent} from './utils';
-import {CheckedState, InnerComponents, Type} from './models';
+import {CheckedState, Type} from './types';
+import {InnerComponents} from './innerTypes';
 import {Node} from './Node';
 import {ListItem} from './ListItem';
 

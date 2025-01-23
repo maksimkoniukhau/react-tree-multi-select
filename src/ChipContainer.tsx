@@ -1,5 +1,5 @@
 import React, {FC, memo} from 'react';
-import {ChipContainerProps} from './models';
+import {ChipContainerProps} from './types';
 
 export interface ChipContainerOwnProps {
   label: string;

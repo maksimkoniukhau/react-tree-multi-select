@@ -1,6 +1,7 @@
 import React, {FC, memo, ReactNode} from 'react';
 import {SELECT_ALL} from './constants';
-import {CheckedState, InnerComponents, Type} from './models';
+import {CheckedState, Type} from './types';
+import {InnerComponents} from './innerTypes';
 import {Node} from './Node';
 
 export interface ListItemProps {

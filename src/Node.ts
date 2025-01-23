@@ -1,4 +1,4 @@
-import {TreeNode, Type} from './models';
+import {TreeNode, Type} from './types';
 
 export class Node {
 

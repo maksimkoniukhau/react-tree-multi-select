@@ -1,5 +1,5 @@
 import React, {FC, memo} from 'react';
-import {ChipClearProps} from './models';
+import {ChipClearProps} from './types';
 
 export interface ChipClearOwnProps {
 }

@@ -12,7 +12,7 @@ import {
   typeToClassName
 } from './utils';
 import {getComponents} from './componentsUtils';
-import {CheckedState, Components, TreeNode, Type} from './models';
+import {CheckedState, Components, TreeNode, Type} from './types';
 import {useOnClickOutside} from './hooks';
 import {
   ActionType,

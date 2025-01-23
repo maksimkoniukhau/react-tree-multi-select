@@ -1,5 +1,5 @@
 import React, {FC, memo} from 'react';
-import {ChipLabelProps} from './models';
+import {ChipLabelProps} from './types';
 
 export interface ChipLabelOwnProps {
   label: string;

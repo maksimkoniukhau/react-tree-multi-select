@@ -1,5 +1,5 @@
 import React, {FC, memo} from 'react';
-import {SelectAllLabelProps} from './models';
+import {SelectAllLabelProps} from './types';
 
 export interface SelectAllLabelOwnProps {
   label: string;

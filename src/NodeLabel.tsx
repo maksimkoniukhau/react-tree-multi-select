@@ -1,5 +1,5 @@
 import React, {FC, memo} from 'react';
-import {NodeLabelProps} from './models';
+import {NodeLabelProps} from './types';
 
 export interface NodeLabelOwnProps {
   label: string;

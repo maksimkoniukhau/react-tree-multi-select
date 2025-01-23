@@ -1,5 +1,5 @@
 import {INPUT} from './constants';
-import {CheckedState} from './models';
+import {CheckedState} from './types';
 import {Node} from './Node';
 
 export interface InitPayload {

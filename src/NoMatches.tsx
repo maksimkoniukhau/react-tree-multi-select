@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {NoMatchesProps} from './models';
+import {NoMatchesProps} from './types';
 
 export interface NoMatchesOwnProps {
   label: string;

@@ -1,6 +1,6 @@
 import React, {RefObject} from 'react';
 import {Node} from './Node';
-import {Type} from './models';
+import {Type} from './types';
 
 const fillArrayFromTreeArray = (treeArray: Node[], nodeArray: Node[]): void => {
   treeArray?.forEach(node => {

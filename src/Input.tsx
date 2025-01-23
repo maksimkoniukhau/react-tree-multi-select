@@ -1,5 +1,5 @@
 import React, {FC, memo} from 'react';
-import {InputProps} from './models';
+import {InputProps} from './types';
 
 export interface InputOwnProps {
   placeholder: string;

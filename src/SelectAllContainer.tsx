@@ -1,5 +1,5 @@
 import React, {FC, memo} from 'react';
-import {CheckedState, SelectAllContainerProps} from './models';
+import {CheckedState, SelectAllContainerProps} from './types';
 
 export interface SelectAllContainerOwnProps {
   label: string;

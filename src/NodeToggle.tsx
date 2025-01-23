@@ -1,5 +1,5 @@
 import React, {FC, memo} from 'react';
-import {NodeToggleProps} from './models';
+import {NodeToggleProps} from './types';
 
 export interface NodeToggleOwnProps {
   expanded: boolean;

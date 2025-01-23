@@ -1,5 +1,5 @@
 import React, {FC, memo} from 'react';
-import {FieldClearProps} from './models';
+import {FieldClearProps} from './types';
 
 export interface FieldClearOwnProps {
   focused: boolean;

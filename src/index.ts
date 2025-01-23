@@ -1,4 +1,4 @@
-export * from './models';
+export * from './types';
 export {TreeSelect} from './TreeSelect';
 export type {FieldOwnProps} from './Field';
 export type {ChipContainerOwnProps} from './ChipContainer';
