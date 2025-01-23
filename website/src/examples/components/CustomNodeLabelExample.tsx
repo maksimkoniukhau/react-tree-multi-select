@@ -6,8 +6,7 @@ import {getTreeNodeData} from '../../utils';
 
 const CustomNodeLabel: FC<NodeLabelProps> = (props) => (
   <div {...props.componentAttributes}>
-    <FontAwesomeIcon icon={faHandSpock}/>
-    {props.componentProps.label}
+    <FontAwesomeIcon icon={faHandSpock}/>{' '}{props.componentProps.label}
   </div>
 );
 

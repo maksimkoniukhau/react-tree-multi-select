@@ -122,6 +122,7 @@ type NodeContainerProps<CustomProps = {}> = ComponentProps<CustomProps, NodeCont
 type NodeToggleProps<CustomProps = {}> = ComponentProps<CustomProps, NodeToggleOwnProps, HTMLDivElement>;
 type NodeCheckboxProps<CustomProps = {}> = ComponentProps<CustomProps, NodeCheckboxOwnProps, HTMLDivElement>;
 type NodeLabelProps<CustomProps = {}> = ComponentProps<CustomProps, NodeLabelOwnProps, HTMLDivElement>;
+type NoMatchesProps<CustomProps = {}> = ComponentProps<CustomProps, NoMatchesOwnProps, HTMLDivElement>;
 
 type FieldType<CustomProps = {}> = Component<CustomProps, FieldProps<CustomProps>>;
 type ChipContainerType<CustomProps = {}> = Component<CustomProps, ChipContainerProps<CustomProps>>;
@@ -137,6 +138,7 @@ type NodeContainerType<CustomProps = {}> = Component<CustomProps, NodeContainerP
 type NodeToggleType<CustomProps = {}> = Component<CustomProps, NodeToggleProps<CustomProps>>;
 type NodeCheckboxType<CustomProps = {}> = Component<CustomProps, NodeCheckboxProps<CustomProps>>;
 type NodeLabelType<CustomProps = {}> = Component<CustomProps, NodeLabelProps<CustomProps>>;
+type NoMatchesType<CustomProps = {}> = Component<CustomProps, NoMatchesProps<CustomProps>>;
 
 interface Components<
   FieldCustomProps = any,
@@ -152,7 +154,8 @@ interface Components<
   NodeContainerCustomProps = any,
   NodeToggleCustomProps = any,
   NodeCheckboxCustomProps = any,
-  NodeLabelCustomProps = any
+  NodeLabelCustomProps = any,
+  NoMatchesCustomProps = any
 > {
   Field?: FieldType<FieldCustomProps>;
   ChipContainer?: ChipContainerType<ChipContainerCustomProps>;
@@ -168,6 +171,7 @@ interface Components<
   NodeToggle?: NodeToggleType<NodeToggleCustomProps>;
   NodeCheckbox?: NodeCheckboxType<NodeCheckboxCustomProps>;
   NodeLabel?: NodeLabelType<NodeLabelCustomProps>;
+  NoMatches?: NoMatchesType<NoMatchesCustomProps>;
 }`;
 
 export const fieldExample = `import React, {FC} from 'react';
@@ -623,6 +627,33 @@ const NodeLabel: NodeLabelType = {component: CustomNodeLabel};
 const components: Components = {NodeLabel};
 
 export const CustomNodeLabelExample: FC = () => {
+
+  return (
+    <div className="component-example">
+      <TreeSelect
+        data={getTreeNodeData(true)}
+        components={components}
+      />
+    </div>
+  );
+};`;
+
+export const noMatchesExample = `import React, {FC} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faFaceSadTear} from '@fortawesome/free-regular-svg-icons';
+import {Components, NoMatchesProps, NoMatchesType, TreeSelect} from 'rts';
+import {getTreeNodeData} from '../../utils';
+
+const CustomNoMatches: FC<NoMatchesProps> = (props) => (
+  <div {...props.componentAttributes}>
+    <div><FontAwesomeIcon icon={faFaceSadTear}/>{' '}{props.componentProps.label}</div>
+  </div>
+);
+
+const NoMatches: NoMatchesType = {component: CustomNoMatches};
+const components: Components = {NoMatches};
+
+export const CustomNoMatchesExample: FC = () => {
 
   return (
     <div className="component-example">

@@ -11,6 +11,7 @@ import {
   nodeContainerExample,
   nodeLabelExample,
   nodeToggleExample,
+  noMatchesExample,
   selectAllCheckboxExample,
   selectAllContainerExample,
   selectAllLabelExample
@@ -30,6 +31,7 @@ import {CustomNodeContainerExample} from './examples/components/CustomNodeContai
 import {CustomNodeToggleExample} from './examples/components/CustomNodeToggleExample';
 import {CustomNodeCheckboxExample} from './examples/components/CustomNodeCheckboxExample';
 import {CustomNodeLabelExample} from './examples/components/CustomNodeLabelExample';
+import {CustomNoMatchesExample} from './examples/components/CustomNoMatchesExample';
 
 export const CustomComponentsPage: FC = memo(() => {
 
@@ -154,6 +156,14 @@ export const CustomComponentsPage: FC = memo(() => {
       <div className="example-container">
         <CodeBlock code={nodeLabelExample}/>
         <CustomNodeLabelExample/>
+      </div>
+      <div className="paragraph">
+        <b>{'NoMatches\n'}</b>
+        {`Custom NoMatches component example.\n`}
+      </div>
+      <div className="example-container">
+        <CodeBlock code={noMatchesExample}/>
+        <CustomNoMatchesExample/>
       </div>
     </div>
   );
