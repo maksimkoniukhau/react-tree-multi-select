@@ -1,7 +1,6 @@
 import React, {FC, memo, ReactNode} from 'react';
 import {SELECT_ALL} from './constants';
 import {CheckedState, InnerComponents, Type} from './models';
-import {NoMatches} from './NoMatches';
 import {Node} from './Node';
 
 export interface ListItemProps {
@@ -88,7 +87,11 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
 
   if (displayedNodes.length === 0) {
     return (
-      <NoMatches label={noMatchesText}/>
+      <components.NoMatches.component
+        componentAttributes={{className: "rts-no-matches"}}
+        componentProps={{label: noMatchesText}}
+        customProps={components.NoMatches.props}
+      />
     );
   }
 

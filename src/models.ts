@@ -13,6 +13,7 @@ import {NodeContainerOwnProps} from './NodeContainer';
 import {NodeToggleOwnProps} from './NodeToggle';
 import {NodeCheckboxOwnProps} from './NodeCheckbox';
 import {NodeLabelOwnProps} from './NodeLabel';
+import {NoMatchesOwnProps} from './NoMatches';
 
 export enum Type {
   MULTI_SELECT_TREE = 'MULTI_SELECT_TREE',
@@ -63,6 +64,7 @@ export type NodeContainerProps<CustomProps = {}> = ComponentProps<CustomProps, N
 export type NodeToggleProps<CustomProps = {}> = ComponentProps<CustomProps, NodeToggleOwnProps, HTMLDivElement>;
 export type NodeCheckboxProps<CustomProps = {}> = ComponentProps<CustomProps, NodeCheckboxOwnProps, HTMLDivElement>;
 export type NodeLabelProps<CustomProps = {}> = ComponentProps<CustomProps, NodeLabelOwnProps, HTMLDivElement>;
+export type NoMatchesProps<CustomProps = {}> = ComponentProps<CustomProps, NoMatchesOwnProps, HTMLDivElement>;
 
 export type FieldType<CustomProps = {}> = Component<CustomProps, FieldProps<CustomProps>>;
 export type ChipContainerType<CustomProps = {}> = Component<CustomProps, ChipContainerProps<CustomProps>>;
@@ -78,7 +80,7 @@ export type NodeContainerType<CustomProps = {}> = Component<CustomProps, NodeCon
 export type NodeToggleType<CustomProps = {}> = Component<CustomProps, NodeToggleProps<CustomProps>>;
 export type NodeCheckboxType<CustomProps = {}> = Component<CustomProps, NodeCheckboxProps<CustomProps>>;
 export type NodeLabelType<CustomProps = {}> = Component<CustomProps, NodeLabelProps<CustomProps>>;
-
+export type NoMatchesType<CustomProps = {}> = Component<CustomProps, NoMatchesProps<CustomProps>>;
 
 export interface Components<
   FieldCustomProps = any,
@@ -94,7 +96,8 @@ export interface Components<
   NodeContainerCustomProps = any,
   NodeToggleCustomProps = any,
   NodeCheckboxCustomProps = any,
-  NodeLabelCustomProps = any
+  NodeLabelCustomProps = any,
+  NoMatchesCustomProps = any
 > {
   Field?: FieldType<FieldCustomProps>;
   ChipContainer?: ChipContainerType<ChipContainerCustomProps>;
@@ -110,6 +113,7 @@ export interface Components<
   NodeToggle?: NodeToggleType<NodeToggleCustomProps>;
   NodeCheckbox?: NodeCheckboxType<NodeCheckboxCustomProps>;
   NodeLabel?: NodeLabelType<NodeLabelCustomProps>;
+  NoMatches?: NoMatchesType<NoMatchesCustomProps>;
 }
 
 export type Required<T> = {
@@ -130,7 +134,8 @@ export type InnerComponents<
   NodeContainerCustomProps = any,
   NodeToggleCustomProps = any,
   NodeCheckboxCustomProps = any,
-  NodeLabelCustomProps = any
+  NodeLabelCustomProps = any,
+  NoMatchesCustomProps = any
 > = Required<Components<
   FieldCustomProps,
   ChipContainerCustomProps,
@@ -145,5 +150,6 @@ export type InnerComponents<
   NodeContainerCustomProps,
   NodeToggleCustomProps,
   NodeCheckboxCustomProps,
-  NodeLabelCustomProps
+  NodeLabelCustomProps,
+  NoMatchesCustomProps
 >>;

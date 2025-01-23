@@ -13,6 +13,7 @@ import {NodeContainer} from './NodeContainer';
 import {NodeToggle} from './NodeToggle';
 import {NodeCheckbox} from './NodeCheckbox';
 import {NodeLabel} from './NodeLabel';
+import {NoMatches} from './NoMatches';
 
 const components: InnerComponents = {
   Field: {
@@ -56,6 +57,9 @@ const components: InnerComponents = {
   },
   NodeLabel: {
     component: NodeLabel
+  },
+  NoMatches: {
+    component: NoMatches
   }
 };
 

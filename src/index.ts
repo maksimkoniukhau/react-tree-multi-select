@@ -14,3 +14,4 @@ export type {NodeContainerOwnProps} from './NodeContainer';
 export type {NodeToggleOwnProps} from './NodeToggle';
 export type {NodeCheckboxOwnProps} from './NodeCheckbox';
 export type {NodeLabelOwnProps} from './NodeLabel';
+export type {NoMatchesOwnProps} from './NoMatches';

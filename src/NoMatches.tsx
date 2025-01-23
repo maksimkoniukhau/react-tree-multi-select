@@ -1,15 +1,16 @@
 import React, {FC} from 'react';
+import {NoMatchesProps} from './models';
 
-export interface NoMatchesProps {
+export interface NoMatchesOwnProps {
   label: string;
 }
 
-export const NoMatches: FC<NoMatchesProps> = ({label}) => {
+export const NoMatches: FC<NoMatchesProps> = (props) => {
 
   return (
-    <div className="rts-no-matches">
+    <div {...props.componentAttributes}>
       <span className="rts-label">
-        {label}
+         {props.componentProps.label}
       </span>
     </div>
   );
