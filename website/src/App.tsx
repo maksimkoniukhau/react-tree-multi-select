@@ -32,7 +32,7 @@ function App() {
 
   return (
     <div className="app">
-      <h2 className="header">{'RTS tree select'}</h2>
+      <h1 className="header">{'RTS tree select'}</h1>
       <div className="content">
         <div className="menu-container">
           <Menu onMenuItemClick={handleMenuItemClick}/>

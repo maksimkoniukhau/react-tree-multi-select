@@ -37,134 +37,137 @@ export const CustomComponentsPage: FC = memo(() => {
 
   return (
     <div className="page">
-      <h3>{'RTS tree select custom components'}</h3>
-      <div className="paragraph">
-        {'RTS allows you to customize tree select by providing your own custom components as a property.\n'}
-        {'Below you can find some examples of usage custom components.\n'}
+      <div className="page-content">
+        <h2>{'RTS tree select custom components'}</h2>
+        <div className="paragraph">
+          {'RTS allows you to customize tree select by providing your own custom components as a property.\n'}
+          {'Below you can find some examples of usage custom components.\n'}
+        </div>
+        <div className="paragraph">
+          <h3 className="title">{'Field\n'}</h3>
+          {`Let's say you have filters on a page that, when clicked, open a dropdown with a range of filter options.\n`}
+          {'It can be achieved by providing custom Field component like in the example below.\n'}
+          <span className="important">{'Important'}</span>
+          {': your custom Field component should have one focusable child (or to be focusable itself) for keyboard navigation to work in dropdown.'}
+        </div>
+        <div className="example-container">
+          <CodeBlock code={fieldExample}/>
+          <CustomFieldExample/>
+        </div>
+        <div className="paragraph">
+          <h3 className="title">{'ChipContainer\n'}</h3>
+          {`Custom ChipContainer component example.\n`}
+        </div>
+        <div className="example-container">
+          <CodeBlock code={chipContainerExample}/>
+          <CustomChipContainerExample/>
+        </div>
+        <div className="paragraph">
+          <h3 className="title">{'ChipLabel\n'}</h3>
+          {`Custom ChipLabel component example.\n`}
+        </div>
+        <div className="example-container">
+          <CodeBlock code={chipLabelExample}/>
+          <CustomChipLabelExample/>
+        </div>
+        <div className="paragraph">
+          <h3 className="title">{'ChipClear\n'}</h3>
+          {`Custom ChipClear component example.\n`}
+        </div>
+        <div className="example-container">
+          <CodeBlock code={chipClearExample}/>
+          <CustomChipClearExample/>
+        </div>
+        <div className="paragraph">
+          <h3 className="title">{'Input\n'}</h3>
+          {`Custom Input component example.\n`}
+        </div>
+        <div className="example-container">
+          <CodeBlock code={inputExample}/>
+          <CustomInputExample/>
+        </div>
+        <div className="paragraph">
+          <h3 className="title">{'FieldClear\n'}</h3>
+          {`Custom FieldClear component example.\n`}
+        </div>
+        <div className="example-container">
+          <CodeBlock code={fieldClearExample}/>
+          <CustomFieldClearExample/>
+        </div>
+        <div className="paragraph">
+          <h3 className="title">{'FieldToggle\n'}</h3>
+          {`Custom FieldToggle component example.\n`}
+        </div>
+        <div className="example-container">
+          <CodeBlock code={fieldToggleExample}/>
+          <CustomFieldToggleExample/>
+        </div>
+        <div className="paragraph">
+          <h3 className="title">{'SelectAllContainer\n'}</h3>
+          {`Custom SelectAllContainer component example.\n`}
+        </div>
+        <div className="example-container">
+          <CodeBlock code={selectAllContainerExample}/>
+          <CustomSelectAllContainerExample/>
+        </div>
+        <div className="paragraph">
+          <h3 className="title">{'SelectAllCheckbox\n'}</h3>
+          {`Custom SelectAllCheckbox component example.\n`}
+        </div>
+        <div className="example-container">
+          <CodeBlock code={selectAllCheckboxExample}/>
+          <CustomSelectAllCheckboxExample/>
+        </div>
+        <div className="paragraph">
+          <h3 className="title">{'SelectAllLabel\n'}</h3>
+          {`Custom SelectAllLabel component example.\n`}
+        </div>
+        <div className="example-container">
+          <CodeBlock code={selectAllLabelExample}/>
+          <CustomSelectAllLabelExample/>
+        </div>
+        <div className="paragraph">
+          <h3 className="title">{'NodeContainer\n'}</h3>
+          {`Custom NodeContainer component example.\n`}
+        </div>
+        <div className="example-container">
+          <CodeBlock code={nodeContainerExample}/>
+          <CustomNodeContainerExample/>
+        </div>
+        <div className="paragraph">
+          <h3 className="title">{'NodeToggle\n'}</h3>
+          {`Custom NodeToggle component example.\n`}
+        </div>
+        <div className="example-container">
+          <CodeBlock code={nodeToggleExample}/>
+          <CustomNodeToggleExample/>
+        </div>
+        <div className="paragraph">
+          <h3 className="title">{'NodeCheckbox\n'}</h3>
+          {`Custom NodeCheckbox component example.\n`}
+        </div>
+        <div className="example-container">
+          <CodeBlock code={nodeCheckboxExample}/>
+          <CustomNodeCheckboxExample/>
+        </div>
+        <div className="paragraph">
+          <h3 className="title">{'NodeLabel\n'}</h3>
+          {`Custom NodeLabel component example.\n`}
+        </div>
+        <div className="example-container">
+          <CodeBlock code={nodeLabelExample}/>
+          <CustomNodeLabelExample/>
+        </div>
+        <div className="paragraph">
+          <h3 className="title">{'NoMatches\n'}</h3>
+          {`Custom NoMatches component example.\n`}
+        </div>
+        <div className="example-container">
+          <CodeBlock code={noMatchesExample}/>
+          <CustomNoMatchesExample/>
+        </div>
       </div>
-      <div className="paragraph">
-        <b>{'Field\n'}</b>
-        {`Let's say you have filters on a page that, when clicked, open a dropdown with a range of filter options.\n`}
-        {'It can be achieved by providing custom Field component like in the example below.\n'}
-        <span className="important">{'Important'}</span>
-        {': your custom Field component should have one focusable child (or to be focusable itself) for keyboard navigation to work in dropdown.'}
-      </div>
-      <div className="example-container">
-        <CodeBlock code={fieldExample}/>
-        <CustomFieldExample/>
-      </div>
-      <div className="paragraph">
-        <b>{'ChipContainer\n'}</b>
-        {`Custom ChipContainer component example.\n`}
-      </div>
-      <div className="example-container">
-        <CodeBlock code={chipContainerExample}/>
-        <CustomChipContainerExample/>
-      </div>
-      <div className="paragraph">
-        <b>{'ChipLabel\n'}</b>
-        {`Custom ChipLabel component example.\n`}
-      </div>
-      <div className="example-container">
-        <CodeBlock code={chipLabelExample}/>
-        <CustomChipLabelExample/>
-      </div>
-      <div className="paragraph">
-        <b>{'ChipClear\n'}</b>
-        {`Custom ChipClear component example.\n`}
-      </div>
-      <div className="example-container">
-        <CodeBlock code={chipClearExample}/>
-        <CustomChipClearExample/>
-      </div>
-      <div className="paragraph">
-        <b>{'Input\n'}</b>
-        {`Custom Input component example.\n`}
-      </div>
-      <div className="example-container">
-        <CodeBlock code={inputExample}/>
-        <CustomInputExample/>
-      </div>
-      <div className="paragraph">
-        <b>{'FieldClear\n'}</b>
-        {`Custom FieldClear component example.\n`}
-      </div>
-      <div className="example-container">
-        <CodeBlock code={fieldClearExample}/>
-        <CustomFieldClearExample/>
-      </div>
-      <div className="paragraph">
-        <b>{'FieldToggle\n'}</b>
-        {`Custom FieldToggle component example.\n`}
-      </div>
-      <div className="example-container">
-        <CodeBlock code={fieldToggleExample}/>
-        <CustomFieldToggleExample/>
-      </div>
-      <div className="paragraph">
-        <b>{'SelectAllContainer\n'}</b>
-        {`Custom SelectAllContainer component example.\n`}
-      </div>
-      <div className="example-container">
-        <CodeBlock code={selectAllContainerExample}/>
-        <CustomSelectAllContainerExample/>
-      </div>
-      <div className="paragraph">
-        <b>{'SelectAllCheckbox\n'}</b>
-        {`Custom SelectAllCheckbox component example.\n`}
-      </div>
-      <div className="example-container">
-        <CodeBlock code={selectAllCheckboxExample}/>
-        <CustomSelectAllCheckboxExample/>
-      </div>
-      <div className="paragraph">
-        <b>{'SelectAllLabel\n'}</b>
-        {`Custom SelectAllLabel component example.\n`}
-      </div>
-      <div className="example-container">
-        <CodeBlock code={selectAllLabelExample}/>
-        <CustomSelectAllLabelExample/>
-      </div>
-      <div className="paragraph">
-        <b>{'NodeContainer\n'}</b>
-        {`Custom NodeContainer component example.\n`}
-      </div>
-      <div className="example-container">
-        <CodeBlock code={nodeContainerExample}/>
-        <CustomNodeContainerExample/>
-      </div>
-      <div className="paragraph">
-        <b>{'NodeToggle\n'}</b>
-        {`Custom NodeToggle component example.\n`}
-      </div>
-      <div className="example-container">
-        <CodeBlock code={nodeToggleExample}/>
-        <CustomNodeToggleExample/>
-      </div>
-      <div className="paragraph">
-        <b>{'NodeCheckbox\n'}</b>
-        {`Custom NodeCheckbox component example.\n`}
-      </div>
-      <div className="example-container">
-        <CodeBlock code={nodeCheckboxExample}/>
-        <CustomNodeCheckboxExample/>
-      </div>
-      <div className="paragraph">
-        <b>{'NodeLabel\n'}</b>
-        {`Custom NodeLabel component example.\n`}
-      </div>
-      <div className="example-container">
-        <CodeBlock code={nodeLabelExample}/>
-        <CustomNodeLabelExample/>
-      </div>
-      <div className="paragraph">
-        <b>{'NoMatches\n'}</b>
-        {`Custom NoMatches component example.\n`}
-      </div>
-      <div className="example-container">
-        <CodeBlock code={noMatchesExample}/>
-        <CustomNoMatchesExample/>
-      </div>
+      <div className="page-navigation"></div>
     </div>
   );
 });

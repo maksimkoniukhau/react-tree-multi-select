@@ -12,28 +12,31 @@ export const BigDataPage: FC = memo(() => {
   };
 
   return (
-    <div className="page big-data-page">
-      <h3>{'RTS tree select big data'}</h3>
-      <div className="paragraph">
-        {'RTS uses '}
-        <a href="https://github.com/petyosi/react-virtuoso" target="_blank">Virtuoso</a>
-        {' library to render big amount of nodes.'}
+    <div className="page">
+      <div className="page-content big-data-page">
+        <h2>{'RTS tree select big data'}</h2>
+        <div className="paragraph">
+          {'RTS uses '}
+          <a href="https://github.com/petyosi/react-virtuoso" target="_blank">Virtuoso</a>
+          {' library to render big amount of nodes.'}
+        </div>
+        <Select
+          label="Choose amount of nodes:"
+          options={[
+            {name: `${bigTreeNodeData30.amount}`, value: '30'},
+            {name: `${bigTreeNodeData50.amount}`, value: '50'}
+          ]}
+          onChange={handleOptionChange}/>
+        <div className="tree-select-wrapper">
+          <TreeSelect
+            data={data}
+            id="rts-big-data"
+            className="bd-custom-class"
+            withSelectAll
+          />
+        </div>
       </div>
-      <Select
-        label="Choose amount of nodes:"
-        options={[
-          {name: `${bigTreeNodeData30.amount}`, value: '30'},
-          {name: `${bigTreeNodeData50.amount}`, value: '50'}
-        ]}
-        onChange={handleOptionChange}/>
-      <div className="tree-select-wrapper">
-        <TreeSelect
-          data={data}
-          id="rts-big-data"
-          className="bd-custom-class"
-          withSelectAll
-        />
-      </div>
+      <div className="page-navigation"></div>
     </div>
   );
 });

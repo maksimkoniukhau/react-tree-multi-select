@@ -87,83 +87,86 @@ export const BasicPage: FC = memo(() => {
 
   return (
     <div className="page">
-      <h3>{'RTS tree select basic features'}</h3>
-      <div className="paragraph">
-        {'Toggle different options in order to see how the component behaves and looks depends on properties passed to it.'}
+      <div className="page-content">
+        <h2>{'RTS tree select basic features'}</h2>
+        <div className="paragraph">
+          {'Toggle different options in order to see how the component behaves and looks depends on properties passed to it.'}
+        </div>
+        <div className="basic-options">
+          <div>{'Component props:'}</div>
+          <Select
+            label="type:"
+            options={[
+              {name: Type.MULTI_SELECT_TREE, value: Type.MULTI_SELECT_TREE},
+              {name: Type.MULTI_SELECT_TREE_FLAT, value: Type.MULTI_SELECT_TREE_FLAT},
+              {name: Type.MULTI_SELECT, value: Type.MULTI_SELECT},
+              {name: Type.SELECT, value: Type.SELECT}
+            ]}
+            onChange={handleOptionChange('type')}/>
+          <Input label="inputPlaceholder:" initValue={INPUT_PLACEHOLDER}
+                 onChange={handleOptionChange('inputPlaceholder')}/>
+          <Input label="noMatchesText:" initValue={NO_MATCHES} onChange={handleOptionChange('noMatchesText')}/>
+          <Checkbox label="withClearAll" initChecked={true} onChange={handleOptionChange('withClearAll')}/>
+          <Checkbox label="withSelectAll" initChecked={false} onChange={handleOptionChange('withSelectAll')}/>
+          <Checkbox label="withDropdownInput" initChecked={false} onChange={handleOptionChange('withDropdownInput')}/>
+          <div className="delimiter"/>
+          <div>{'Data initial props:'}</div>
+          <Checkbox label="selectedNodes" initChecked={true} onChange={handleOptionChange('selectedNodes')}/>
+          <Checkbox label="expandedNodes" initChecked={true} onChange={handleOptionChange('expandedNodes')}/>
+          <Checkbox label="disabledNodes" initChecked={true} onChange={handleOptionChange('disabledNodes')}/>
+        </div>
+        <div className="tree-select-wrapper">
+          <TreeSelect
+            data={getData}
+            type={type}
+            id="basic-rts-id"
+            className="basic-rts-custom-class"
+            inputPlaceholder={inputPlaceholder}
+            noMatchesText={noMatchesText}
+            withClearAll={withClearAll}
+            withSelectAll={withSelectAll}
+            withDropdownInput={withDropdownInput}
+            onNodeChange={handleNodeChange}
+            onNodeToggle={handleNodeToggle}
+            onClearAll={handleClearAll}
+            onSelectAllChange={handleSelectAllChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+        </div>
+        <div style={{marginTop: '20px'}} className="paragraph">
+          {'You can pass data without children to component. Component will looks and behaves as a multiselect with checkboxes.'}
+        </div>
+        <div className="tree-select-wrapper">
+          <TreeSelect
+            data={[
+              {
+                label: 'label1',
+                name: 'name1'
+              },
+              {
+                label: 'label2',
+                name: 'name2'
+              },
+              {
+                label: 'label3',
+                name: 'name3'
+              },
+              {
+                label: 'label4',
+                name: 'name4'
+              },
+              {
+                label: 'label5',
+                name: 'name5'
+              }
+            ]}
+            id="rts-multi-select"
+            withClearAll
+          />
+        </div>
       </div>
-      <div className="basic-options">
-        <div>{'Component props:'}</div>
-        <Select
-          label="type:"
-          options={[
-            {name: Type.MULTI_SELECT_TREE, value: Type.MULTI_SELECT_TREE},
-            {name: Type.MULTI_SELECT_TREE_FLAT, value: Type.MULTI_SELECT_TREE_FLAT},
-            {name: Type.MULTI_SELECT, value: Type.MULTI_SELECT},
-            {name: Type.SELECT, value: Type.SELECT}
-          ]}
-          onChange={handleOptionChange('type')}/>
-        <Input label="inputPlaceholder:" initValue={INPUT_PLACEHOLDER}
-               onChange={handleOptionChange('inputPlaceholder')}/>
-        <Input label="noMatchesText:" initValue={NO_MATCHES} onChange={handleOptionChange('noMatchesText')}/>
-        <Checkbox label="withClearAll" initChecked={true} onChange={handleOptionChange('withClearAll')}/>
-        <Checkbox label="withSelectAll" initChecked={false} onChange={handleOptionChange('withSelectAll')}/>
-        <Checkbox label="withDropdownInput" initChecked={false} onChange={handleOptionChange('withDropdownInput')}/>
-        <div className="delimiter"/>
-        <div>{'Data initial props:'}</div>
-        <Checkbox label="selectedNodes" initChecked={true} onChange={handleOptionChange('selectedNodes')}/>
-        <Checkbox label="expandedNodes" initChecked={true} onChange={handleOptionChange('expandedNodes')}/>
-        <Checkbox label="disabledNodes" initChecked={true} onChange={handleOptionChange('disabledNodes')}/>
-      </div>
-      <div className="tree-select-wrapper">
-        <TreeSelect
-          data={getData}
-          type={type}
-          id="basic-rts-id"
-          className="basic-rts-custom-class"
-          inputPlaceholder={inputPlaceholder}
-          noMatchesText={noMatchesText}
-          withClearAll={withClearAll}
-          withSelectAll={withSelectAll}
-          withDropdownInput={withDropdownInput}
-          onNodeChange={handleNodeChange}
-          onNodeToggle={handleNodeToggle}
-          onClearAll={handleClearAll}
-          onSelectAllChange={handleSelectAllChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
-      </div>
-      <div style={{marginTop: '20px'}} className="paragraph">
-        {'You can pass data without children to component. Component will looks and behaves as a multiselect with checkboxes.'}
-      </div>
-      <div className="tree-select-wrapper">
-        <TreeSelect
-          data={[
-            {
-              label: 'label1',
-              name: 'name1'
-            },
-            {
-              label: 'label2',
-              name: 'name2'
-            },
-            {
-              label: 'label3',
-              name: 'name3'
-            },
-            {
-              label: 'label4',
-              name: 'name4'
-            },
-            {
-              label: 'label5',
-              name: 'name5'
-            }
-          ]}
-          id="rts-multi-select"
-          withClearAll
-        />
-      </div>
+      <div className="page-navigation"></div>
     </div>
   );
 });
