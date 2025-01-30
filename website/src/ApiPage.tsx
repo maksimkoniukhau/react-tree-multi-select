@@ -30,9 +30,9 @@ export const ApiPage: FC = () => {
           <tr>
             <td>{'type'}</td>
             <td>{'Type'}</td>
-            <td>{'Type.MULTI_SELECT_TREE'}</td>
-            <td>{'MULTI_SELECT_TREE - component behaves as a normal tree structure\n' +
-              'MULTI_SELECT_TREE_FLAT - component behaves as a flat tree structure ' +
+            <td>{'Type.TREE_SELECT'}</td>
+            <td>{'TREE_SELECT - component behaves as a normal tree structure\n' +
+              'TREE_SELECT_FLAT - component behaves as a flat tree structure ' +
               '(selecting a node have no affect on its descendants or ancestors)\n' +
               'MULTI_SELECT - component behaves as a multiselect\n' +
               'SELECT - component behaves as a simple select\n'}

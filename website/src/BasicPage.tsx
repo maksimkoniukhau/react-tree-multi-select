@@ -9,7 +9,7 @@ import {OptionTreeNode} from './data';
 
 export const BasicPage: FC = memo(() => {
 
-  const [type, setType] = useState<Type>(Type.MULTI_SELECT_TREE);
+  const [type, setType] = useState<Type>(Type.TREE_SELECT);
   const [inputPlaceholder, setInputPlaceholder] = useState<string>(INPUT_PLACEHOLDER);
   const [noMatchesText, setNoMatchesText] = useState<string>(NO_MATCHES);
   const [withClearAll, setWithClearAll] = useState<boolean>(true);
@@ -97,8 +97,8 @@ export const BasicPage: FC = memo(() => {
           <Select
             label="type:"
             options={[
-              {name: Type.MULTI_SELECT_TREE, value: Type.MULTI_SELECT_TREE},
-              {name: Type.MULTI_SELECT_TREE_FLAT, value: Type.MULTI_SELECT_TREE_FLAT},
+              {name: Type.TREE_SELECT, value: Type.TREE_SELECT},
+              {name: Type.TREE_SELECT_FLAT, value: Type.TREE_SELECT_FLAT},
               {name: Type.MULTI_SELECT, value: Type.MULTI_SELECT},
               {name: Type.SELECT, value: Type.SELECT}
             ]}
