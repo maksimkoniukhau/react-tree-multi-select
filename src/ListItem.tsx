@@ -1,4 +1,4 @@
-import React, {FC, memo, ReactNode} from 'react';
+import React, {FC, memo, ReactNode, useEffect} from 'react';
 import {SELECT_ALL} from './constants';
 import {CheckedState, Type} from './types';
 import {InnerComponents} from './innerTypes';
@@ -20,6 +20,7 @@ export interface ListItemProps {
   onClickExpandNode: (node: Node) => (e: React.MouseEvent) => void;
   input: ReactNode;
   components: InnerComponents;
+  onRender: () => void;
 }
 
 export const ListItem: FC<ListItemProps> = memo((props) => {
@@ -39,8 +40,13 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     onToggleNode,
     onClickExpandNode,
     input,
-    components
+    components,
+    onRender
   } = props;
+
+  useEffect(() => {
+    onRender();
+  });
 
   if (Boolean(input) && index === 0) {
     return (

@@ -24,6 +24,7 @@ export interface DropdownProps {
   input: ReactNode;
   onUnmount: () => void;
   components: InnerComponents;
+  onListItemRender: () => void;
 }
 
 
@@ -46,6 +47,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     input,
     onUnmount,
     components,
+    onListItemRender
   } = props;
 
   const virtuosoRef = useRef<VirtuosoHandle>(null);
@@ -127,6 +129,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
       onClickExpandNode={onClickExpandNode}
       input={input}
       components={components}
+      onRender={onListItemRender}
     />
   };
 

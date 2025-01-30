@@ -4,6 +4,7 @@ import {CLEAR_ALL, INPUT, INPUT_PLACEHOLDER, NO_MATCHES, PATH_DELIMITER, SELECT_
 import {
   areAllExcludingDisabledSelected,
   convertTreeArrayToFlatArray,
+  debounce,
   filterChips,
   getFieldFocusableElement,
   isAnyExcludingDisabledSelected,
@@ -76,6 +77,10 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
 
   const treeSelectRef = useRef<HTMLDivElement>(null);
   const fieldRef = useRef<HTMLDivElement>(null);
+  const dropdownInputRef = useRef<HTMLInputElement>(null);
+
+  const isComponentFocused = useRef<boolean>(false);
+  const isDropdownInputFocused = useRef<boolean>(false);
 
   const nodeMapRef = useRef<Map<string, Node>>(new Map());
 
@@ -215,6 +220,9 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
   };
 
   const handleClickField = useCallback((e: React.MouseEvent): void => {
+    if (document.activeElement === dropdownInputRef?.current) {
+      isDropdownInputFocused.current = true;
+    }
     getFieldFocusableElement(fieldRef)?.focus();
     // defaultPrevented is on click field clear icon or chip (or in custom field)
     if (!e.defaultPrevented) {
@@ -514,6 +522,15 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
     return index !== 0 ? selectedNodes[index - 1].path : state.focusedFieldElement;
   };
 
+  const manageComponentFocusOnKeyDown = (): void => {
+    if (withDropdownInput && state.showDropdown) {
+      if (document.activeElement === dropdownInputRef?.current) {
+        isDropdownInputFocused.current = true;
+      }
+      getFieldFocusableElement(fieldRef)?.focus();
+    }
+  };
+
   const handleComponentKeyDown = (e: React.KeyboardEvent): void => {
     switch (e.key) {
       case 'ArrowLeft':
@@ -540,7 +557,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
         if (state.showDropdown && state.focusedElement) {
           dispatchFocusElement(getPrevFocusedElement());
         } else {
-          withDropdownInput && state.showDropdown && getFieldFocusableElement(fieldRef)?.focus();
+          manageComponentFocusOnKeyDown();
           dispatchToggleDropdown(!state.showDropdown);
         }
         e.preventDefault();
@@ -560,7 +577,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
           if (chipNode) {
             handleClickChip(chipNode)(e);
           } else {
-            withDropdownInput && state.showDropdown && getFieldFocusableElement(fieldRef)?.focus();
+            manageComponentFocusOnKeyDown();
             dispatchToggleDropdown(!state.showDropdown);
           }
         } else if (state.showDropdown) {
@@ -590,14 +607,14 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
         break;
       case 'Escape':
         if (state.showDropdown) {
-          withDropdownInput && state.showDropdown && getFieldFocusableElement(fieldRef)?.focus();
+          manageComponentFocusOnKeyDown();
           dispatchToggleDropdown(false);
           e.preventDefault();
         }
         break;
       case 'Tab':
         if (state.showDropdown) {
-          withDropdownInput && state.showDropdown && getFieldFocusableElement(fieldRef)?.focus();
+          manageComponentFocusOnKeyDown();
           dispatchToggleDropdown(false);
           e.preventDefault();
         }
@@ -610,27 +627,22 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
   const dropdownUnmountedOnClickOutside = useRef<boolean>(false);
 
   const handleComponentFocus = (event: React.FocusEvent): void => {
-    if (event.target === getFieldFocusableElement(fieldRef)) {
-      if (!withDropdownInput
-        || (withDropdownInput
-          && !event.relatedTarget?.classList?.contains('rts-input-dropdown')
-          && !dropdownUnmountedOnClickOutside.current)) {
-        treeSelectRef?.current?.classList?.add('focused');
-        onFocus?.(event);
-      }
+    if (!isComponentFocused.current) {
+      isComponentFocused.current = true;
+      treeSelectRef?.current?.classList?.add('focused');
+      onFocus?.(event);
     }
-    dropdownUnmountedOnClickOutside.current = false;
   };
 
   const handleComponentBlur = (event: React.FocusEvent): void => {
-    if (event.target === getFieldFocusableElement(fieldRef)) {
-      if (!withDropdownInput
-        || (withDropdownInput
-          && !event.relatedTarget?.classList?.contains('rts-input-dropdown'))) {
-        treeSelectRef?.current?.classList?.remove('focused');
-        onBlur?.(event);
-      }
+    if (isDropdownInputFocused.current && !dropdownUnmountedOnClickOutside.current) {
+      isDropdownInputFocused.current = false;
+      return;
     }
+    isComponentFocused.current = false;
+    dropdownUnmountedOnClickOutside.current = false;
+    treeSelectRef?.current?.classList?.remove('focused');
+    onBlur?.(event);
   };
 
   const handleDropdownUnmount = (): void => {
@@ -642,6 +654,15 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
       }
     }
   };
+
+  const handleListItemRender = useCallback(() => {
+    if (withDropdownInput && dropdownInputRef?.current && document.activeElement !== dropdownInputRef?.current) {
+      isDropdownInputFocused.current = true;
+      dropdownInputRef?.current?.focus();
+    }
+  }, [withDropdownInput, dropdownInputRef]);
+
+  const debouncedHandleListItemRender = debounce(handleListItemRender, 150);
 
   const typeClassName = useMemo(() => typeToClassName(type), [type]);
   const containerClasses = `rts-tree-select ${typeClassName}` + (className ? ` ${className}` : '');
@@ -759,7 +780,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
           input={withDropdownInput ? (
             <components.Input.component
               componentAttributes={{
-                autoFocus: true,
+                ref: dropdownInputRef,
                 className: "rts-input",
                 placeholder: inputPlaceholder,
                 value: state.searchValue,
@@ -771,6 +792,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
           ) : null}
           onUnmount={handleDropdownUnmount}
           components={components}
+          onListItemRender={debouncedHandleListItemRender}
         />
       ) : null}
     </div>
