@@ -5,7 +5,7 @@ TreeSelect styles
 .rts-tree-select {
   @import 'css-variables';
 
-  &.rts-multi-select, &.rts-select {
+  &.rts-multi-select-type, &.rts-select-type {
     --rts-list-item-selected-background-color: #e7f3fc;
   }
 

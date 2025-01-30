@@ -16,8 +16,8 @@ import {NodeLabelOwnProps} from './NodeLabel';
 import {NoMatchesOwnProps} from './NoMatches';
 
 export enum Type {
-  MULTI_SELECT_TREE = 'MULTI_SELECT_TREE',
-  MULTI_SELECT_TREE_FLAT = 'MULTI_SELECT_TREE_FLAT',
+  TREE_SELECT = 'TREE_SELECT',
+  TREE_SELECT_FLAT = 'TREE_SELECT_FLAT',
   MULTI_SELECT = 'MULTI_SELECT',
   SELECT = 'SELECT'
 }

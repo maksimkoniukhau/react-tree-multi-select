@@ -58,7 +58,7 @@ export interface TreeSelectProps {
 export const TreeSelect: FC<TreeSelectProps> = (props) => {
   const {
     data = [],
-    type = Type.MULTI_SELECT_TREE,
+    type = Type.TREE_SELECT,
     id = '',
     className = '',
     inputPlaceholder = INPUT_PLACEHOLDER,
@@ -154,10 +154,10 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
 
     let nodes = nodeTree;
 
-    if (type === Type.MULTI_SELECT_TREE || type === Type.MULTI_SELECT_TREE_FLAT) {
+    if (type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT) {
       nodes = convertTreeArrayToFlatArray(nodeTree);
     }
-    if (type === Type.MULTI_SELECT_TREE || type === Type.MULTI_SELECT_TREE_FLAT || type === Type.MULTI_SELECT) {
+    if (type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT || type === Type.MULTI_SELECT) {
       nodes.forEach(node => {
         if (node.initTreeNode.selected) {
           // handleSelect (not handleToggle) should be used!!!
@@ -368,7 +368,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
   const handleToggleNode = useCallback((node: Node) => (e: React.MouseEvent | React.KeyboardEvent): void => {
     // defaultPrevented is on click expand node icon
     if (!e.defaultPrevented) {
-      if (type === Type.MULTI_SELECT_TREE || type === Type.MULTI_SELECT_TREE_FLAT || type === Type.MULTI_SELECT) {
+      if (type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT || type === Type.MULTI_SELECT) {
         node.handleToggle(type);
       }
       if (type === Type.SELECT) {

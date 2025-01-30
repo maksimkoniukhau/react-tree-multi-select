@@ -34,13 +34,13 @@ export const isAnyHasChildren = (nodes: Node[]): boolean => {
 };
 
 export const filterChips = (nodes: Node[], type: Type): Node[] => {
-  return type === Type.MULTI_SELECT_TREE
+  return type === Type.TREE_SELECT
     ? nodes.filter(node => node.selected && !node.parent?.selected)
     : nodes.filter(node => node.selected);
 };
 
 export const typeToClassName = (type: Type): string => {
-  return `rts-${type.toLowerCase().replaceAll('_', '-')}`;
+  return `rts-${type.toLowerCase().replaceAll('_', '-')}-type`;
 };
 
 export const preventDefaultOnMouseEvent = (e: React.MouseEvent): void => {
