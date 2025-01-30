@@ -1,5 +1,5 @@
 import React, {FC, memo} from 'react';
-import {NodeCheckboxProps} from './types';
+import {NodeCheckboxProps} from '../types';
 
 export interface NodeCheckboxOwnProps {
   checked: boolean;

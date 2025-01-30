@@ -1,5 +1,5 @@
 import React, {FC, memo} from 'react';
-import {FieldProps, Type} from './types';
+import {FieldProps, Type} from '../types';
 
 export interface FieldOwnProps {
   type: Type;

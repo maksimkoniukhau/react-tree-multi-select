@@ -1,5 +1,5 @@
 import React, {FC, memo} from 'react';
-import {SelectAllCheckboxProps} from './types';
+import {SelectAllCheckboxProps} from '../types';
 
 export interface SelectAllCheckboxOwnProps {
   checked: boolean;

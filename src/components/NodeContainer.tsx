@@ -1,5 +1,5 @@
 import React, {FC, memo} from 'react';
-import {NodeContainerProps} from './types';
+import {NodeContainerProps} from '../types';
 
 export interface NodeContainerOwnProps {
   label: string;

@@ -1,5 +1,5 @@
 import React, {FC, memo} from 'react';
-import {FieldToggleProps} from './types';
+import {FieldToggleProps} from '../types';
 
 export interface FieldToggleOwnProps {
   expanded: boolean;

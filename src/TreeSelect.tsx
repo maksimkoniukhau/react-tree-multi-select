@@ -1,18 +1,15 @@
-import './tree-select.scss';
+import './styles/tree-select.scss';
 import React, {FC, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
 import {CLEAR_ALL, INPUT, INPUT_PLACEHOLDER, NO_MATCHES, PATH_DELIMITER, SELECT_ALL} from './constants';
+import {debounce, getFieldFocusableElement, preventDefaultOnMouseEvent, typeToClassName} from './utils/commonUtils';
 import {
   areAllExcludingDisabledSelected,
   convertTreeArrayToFlatArray,
-  debounce,
   filterChips,
-  getFieldFocusableElement,
   isAnyExcludingDisabledSelected,
-  isAnyHasChildren,
-  preventDefaultOnMouseEvent,
-  typeToClassName
-} from './utils';
-import {getComponents} from './componentsUtils';
+  isAnyHasChildren
+} from './utils/nodesUtils';
+import {getComponents} from './utils/componentsUtils';
 import {CheckedState, Components, TreeNode, Type} from './types';
 import {useOnClickOutside} from './hooks';
 import {
@@ -219,11 +216,15 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
     }
   };
 
-  const handleClickField = useCallback((e: React.MouseEvent): void => {
+  const focusFieldElement = (): void => {
     if (document.activeElement === dropdownInputRef?.current) {
       isDropdownInputFocused.current = true;
     }
     getFieldFocusableElement(fieldRef)?.focus();
+  };
+
+  const handleClickField = useCallback((e: React.MouseEvent): void => {
+    focusFieldElement();
     // defaultPrevented is on click field clear icon or chip (or in custom field)
     if (!e.defaultPrevented) {
       dispatchToggleDropdown(!state.showDropdown);
@@ -240,7 +241,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
   const handleDeleteAll = useCallback((e: React.MouseEvent | React.KeyboardEvent): void => {
     e.preventDefault();
     state.nodes.forEach(node => node.handleUnselect(type));
-    const selectedNodes = state.nodes.filter(nod => nod.selected);
+    const selectedNodes = state.nodes.filter(node => node.selected);
     const selectAllCheckedState = getSelectAllCheckedState(selectedNodes, state.nodes);
     dispatch({
       type: ActionType.UNSELECT_ALL,
@@ -524,10 +525,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
 
   const manageComponentFocusOnKeyDown = (): void => {
     if (withDropdownInput && state.showDropdown) {
-      if (document.activeElement === dropdownInputRef?.current) {
-        isDropdownInputFocused.current = true;
-      }
-      getFieldFocusableElement(fieldRef)?.focus();
+      focusFieldElement();
     }
   };
 

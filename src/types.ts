@@ -1,19 +1,19 @@
 import {ComponentType, HTMLProps, ReactNode} from 'react';
-import {FieldOwnProps} from './Field';
-import {ChipContainerOwnProps} from './ChipContainer';
-import {ChipLabelOwnProps} from './ChipLabel';
-import {ChipClearOwnProps} from './ChipClear';
-import {InputOwnProps} from './Input';
-import {FieldClearOwnProps} from './FieldClear';
-import {FieldToggleOwnProps} from './FieldToggle';
-import {SelectAllContainerOwnProps} from './SelectAllContainer';
-import {SelectAllCheckboxOwnProps} from './SelectAllCheckbox';
-import {SelectAllLabelOwnProps} from './SelectAllLabel';
-import {NodeContainerOwnProps} from './NodeContainer';
-import {NodeToggleOwnProps} from './NodeToggle';
-import {NodeCheckboxOwnProps} from './NodeCheckbox';
-import {NodeLabelOwnProps} from './NodeLabel';
-import {NoMatchesOwnProps} from './NoMatches';
+import {FieldOwnProps} from './components/Field';
+import {ChipContainerOwnProps} from './components/ChipContainer';
+import {ChipLabelOwnProps} from './components/ChipLabel';
+import {ChipClearOwnProps} from './components/ChipClear';
+import {InputOwnProps} from './components/Input';
+import {FieldClearOwnProps} from './components/FieldClear';
+import {FieldToggleOwnProps} from './components/FieldToggle';
+import {SelectAllContainerOwnProps} from './components/SelectAllContainer';
+import {SelectAllCheckboxOwnProps} from './components/SelectAllCheckbox';
+import {SelectAllLabelOwnProps} from './components/SelectAllLabel';
+import {NodeContainerOwnProps} from './components/NodeContainer';
+import {NodeToggleOwnProps} from './components/NodeToggle';
+import {NodeCheckboxOwnProps} from './components/NodeCheckbox';
+import {NodeLabelOwnProps} from './components/NodeLabel';
+import {NoMatchesOwnProps} from './components/NoMatches';
 
 export enum Type {
   TREE_SELECT = 'TREE_SELECT',
