@@ -20,7 +20,10 @@
     "moduleResolution": "node",
     "target": "esnext",
     "declaration": true,
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "types": [
+      "node"
+    ]
   },
   "ts-node": {
     "compilerOptions": {
