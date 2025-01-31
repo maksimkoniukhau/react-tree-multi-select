@@ -1,5 +1,6 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} **/
-module.exports = {
+import {JestConfigWithTsJest} from 'ts-jest';
+
+const config: JestConfigWithTsJest = {
   preset: 'ts-jest',
   testEnvironment: "jsdom",
   transform: {
@@ -11,3 +12,5 @@ module.exports = {
     '\\.scss$': 'identity-obj-proxy',
   },
 };
+
+export default config;
