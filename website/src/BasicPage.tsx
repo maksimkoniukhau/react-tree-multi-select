@@ -1,5 +1,5 @@
 import React, {FC, memo, useMemo, useState} from 'react';
-import {CheckedState, TreeNode, TreeSelect, Type} from '../../src';
+import {CheckedState, TreeMultiSelect, TreeNode, Type} from '../../src';
 import {getTreeNodeData} from './utils';
 import {Select} from './Select';
 import {Checkbox} from './Checkbox';
@@ -88,7 +88,7 @@ export const BasicPage: FC = memo(() => {
   return (
     <div className="page">
       <div className="page-content">
-        <h2>{'RTS tree select basic features'}</h2>
+        <h2>{'React Tree Multi Select basic features'}</h2>
         <div className="paragraph">
           {'Toggle different options in order to see how the component behaves and looks depends on properties passed to it.'}
         </div>
@@ -115,12 +115,12 @@ export const BasicPage: FC = memo(() => {
           <Checkbox label="expandedNodes" initChecked={true} onChange={handleOptionChange('expandedNodes')}/>
           <Checkbox label="disabledNodes" initChecked={true} onChange={handleOptionChange('disabledNodes')}/>
         </div>
-        <div className="tree-select-wrapper">
-          <TreeSelect
+        <div className="tree-multi-select-wrapper">
+          <TreeMultiSelect
             data={getData}
             type={type}
-            id="basic-rts-id"
-            className="basic-rts-custom-class"
+            id="basic-rtms-id"
+            className="basic-rtms-custom-class"
             inputPlaceholder={inputPlaceholder}
             noMatchesText={noMatchesText}
             withClearAll={withClearAll}
@@ -137,8 +137,8 @@ export const BasicPage: FC = memo(() => {
         <div style={{marginTop: '20px'}} className="paragraph">
           {'You can pass data without children to component. Component will looks and behaves as a multiselect with checkboxes.'}
         </div>
-        <div className="tree-select-wrapper">
-          <TreeSelect
+        <div className="tree-multi-select-wrapper">
+          <TreeMultiSelect
             data={[
               {
                 label: 'label1',
@@ -161,7 +161,7 @@ export const BasicPage: FC = memo(() => {
                 name: 'name5'
               }
             ]}
-            id="rts-multi-select"
+            id="rtms-multi-select"
             withClearAll
           />
         </div>

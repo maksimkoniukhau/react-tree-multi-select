@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {FieldProps, TreeSelect, Type} from '../../../../src';
+import {FieldProps, TreeMultiSelect, Type} from '../../../../src';
 
 interface CustomFieldProps {
   label: string;
@@ -15,7 +15,7 @@ export const CustomFieldExample: FC = () => {
 
   return (
     <div className="component-example field-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={[
           {
             label: 'Company1',
@@ -38,7 +38,7 @@ export const CustomFieldExample: FC = () => {
           Field: {component: CustomField, props: {label: 'Filter by company'}}
         }}
       />
-      <TreeSelect
+      <TreeMultiSelect
         type={Type.MULTI_SELECT}
         data={[
           {label: 'Brand1'},
@@ -52,7 +52,7 @@ export const CustomFieldExample: FC = () => {
           Field: {component: CustomField, props: {label: 'Filter by brand'}}
         }}
       />
-      <TreeSelect
+      <TreeMultiSelect
         type={Type.SELECT}
         data={[
           {label: '100'},

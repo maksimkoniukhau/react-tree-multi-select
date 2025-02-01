@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faMinus, faPlus} from '@fortawesome/free-solid-svg-icons';
-import {Components, NodeToggleProps, NodeToggleType, TreeSelect} from '../../../../src';
+import {Components, NodeToggleProps, NodeToggleType, TreeMultiSelect} from '../../../../src';
 import {getTreeNodeData} from '../../utils';
 
 const CustomNodeToggle: FC<NodeToggleProps> = (props) => (
@@ -20,7 +20,7 @@ export const CustomNodeToggleExample: FC = () => {
 
   return (
     <div className="component-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={getTreeNodeData(true)}
         components={components}
       />

@@ -1,7 +1,7 @@
 export const basicUsageCode = `import React, {FC} from 'react';
-import {CheckedState, TreeNode, TreeSelect} from 'rts';
+import {CheckedState, TreeNode, TreeMultiSelect} from 'react-tree-multi-select';
 
-export const RtsApp: FC = () => {
+export const ReactTreeMultiSelectApp: FC = () => {
   
   const data: TreeNode[] = [
     {
@@ -59,7 +59,7 @@ export const RtsApp: FC = () => {
   };
 
   return (
-    <TreeSelect
+    <TreeMultiSelect
       id="my-id"
       className="custom-class"
       data={data}
@@ -73,7 +73,7 @@ export const RtsApp: FC = () => {
   );
 });`;
 
-export const rtsTypes = `enum Type {
+export const rtmsTypes = `enum Type {
   TREE_SELECT = 'TREE_SELECT',
   TREE_SELECT_FLAT = 'TREE_SELECT_FLAT',
   MULTI_SELECT = 'MULTI_SELECT',
@@ -175,7 +175,7 @@ interface Components<
 }`;
 
 export const fieldExample = `import React, {FC} from 'react';
-import {FieldProps, TreeSelect, Type} from 'rts';
+import {FieldProps, TreeMultiSelect, Type} from 'react-tree-multi-select';
 
 interface CustomFieldProps {
   label: string;
@@ -191,7 +191,7 @@ export const CustomFieldExample: FC = () => {
 
   return (
     <div className="component-example field-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={[
           {
             label: 'Company1',
@@ -214,7 +214,7 @@ export const CustomFieldExample: FC = () => {
           Field: {component: CustomField, props: {label: 'Filter by company'}}
         }}
       />
-      <TreeSelect
+      <TreeMultiSelect
         type={Type.MULTI_SELECT}
         data={[
           {label: 'Brand1'},
@@ -228,7 +228,7 @@ export const CustomFieldExample: FC = () => {
           Field: {component: CustomField, props: {label: 'Filter by brand'}}
         }}
       />
-      <TreeSelect
+      <TreeMultiSelect
         type={Type.SELECT}
         data={[
           {label: '100'},
@@ -247,7 +247,7 @@ export const CustomFieldExample: FC = () => {
 
 export const chipContainerExample = `import React, {FC} from 'react';
 import Tooltip from '@atlaskit/tooltip';
-import {ChipContainerProps, ChipContainerType, Components, TreeSelect} from 'rts';
+import {ChipContainerProps, ChipContainerType, Components, TreeMultiSelect} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
 const CustomChipContainer: FC<ChipContainerProps> = (props) => (
@@ -265,7 +265,7 @@ export const CustomChipContainerExample: FC = () => {
 
   return (
     <div className="component-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={getTreeNodeData(true)}
         components={components}
       />
@@ -276,7 +276,7 @@ export const CustomChipContainerExample: FC = () => {
 export const chipLabelExample = `import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCode} from '@fortawesome/free-solid-svg-icons';
-import {ChipLabelProps, ChipLabelType, Components, TreeSelect} from 'rts';
+import {ChipLabelProps, ChipLabelType, Components, TreeMultiSelect} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
 const CustomChipLabel: FC<ChipLabelProps> = (props) => (
@@ -292,7 +292,7 @@ export const CustomChipLabelExample: FC = () => {
 
   return (
     <div className="component-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={getTreeNodeData(true)}
         components={components}
       />
@@ -303,7 +303,7 @@ export const CustomChipLabelExample: FC = () => {
 export const chipClearExample = `import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
-import {ChipClearProps, ChipClearType, Components, TreeSelect} from 'rts';
+import {ChipClearProps, ChipClearType, Components, TreeMultiSelect} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
 const CustomChipClear: FC<ChipClearProps> = (props) => (
@@ -319,7 +319,7 @@ export const CustomChipClearExample: FC = () => {
 
   return (
     <div className="component-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={getTreeNodeData(true)}
         components={components}
       />
@@ -330,12 +330,12 @@ export const CustomChipClearExample: FC = () => {
 export const inputExample = `import React, {FC, HTMLProps} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
-import {Components, FieldProps, FieldType, InputProps, InputType, TreeSelect} from 'rts';
+import {Components, FieldProps, FieldType, InputProps, InputType, TreeMultiSelect} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
 const CustomField: FC<FieldProps> = (props) => (
   <div {...props.componentAttributes}>
-    <button className="filter-btn">Tree select</button>
+    <button className="filter-btn">Tree multi select</button>
   </div>
 );
 
@@ -361,13 +361,13 @@ export const CustomInputExample: FC = () => {
 
   return (
     <div className="component-example input-example">
-      <TreeSelect
+      <TreeMultiSelect
         className="custom-dropdown-input"
         data={getTreeNodeData()}
         withDropdownInput={true}
         components={dropdownComponents}
       />
-      <TreeSelect
+      <TreeMultiSelect
         className="custom-field-input"
         data={getTreeNodeData()}
         components={fieldComponents}
@@ -379,7 +379,7 @@ export const CustomInputExample: FC = () => {
 export const fieldClearExample = `import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faDeleteLeft} from '@fortawesome/free-solid-svg-icons';
-import {Components, FieldClearProps, FieldClearType, TreeSelect} from 'rts';
+import {Components, FieldClearProps, FieldClearType, TreeMultiSelect} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
 const CustomFieldClear: FC<FieldClearProps> = (props) => (
@@ -395,7 +395,7 @@ export const CustomFieldClearExample: FC = () => {
 
   return (
     <div className="component-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={getTreeNodeData(true)}
         components={components}
       />
@@ -406,7 +406,7 @@ export const CustomFieldClearExample: FC = () => {
 export const fieldToggleExample = `import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCaretDown, faCaretUp} from '@fortawesome/free-solid-svg-icons';
-import {Components, FieldToggleProps, FieldToggleType, TreeSelect} from 'rts';
+import {Components, FieldToggleProps, FieldToggleType, TreeMultiSelect} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
 const CustomFieldToggle: FC<FieldToggleProps> = (props) => (
@@ -422,7 +422,7 @@ export const CustomFieldToggleExample: FC = () => {
 
   return (
     <div className="component-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={getTreeNodeData(true)}
         components={components}
       />
@@ -432,7 +432,7 @@ export const CustomFieldToggleExample: FC = () => {
 
 export const selectAllContainerExample = `import React, {FC} from 'react';
 import Tooltip from '@atlaskit/tooltip';
-import {Components, SelectAllContainerProps, SelectAllContainerType, TreeSelect} from 'rts';
+import {Components, SelectAllContainerProps, SelectAllContainerType, TreeMultiSelect} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
 const CustomSelectAllContainer: FC<SelectAllContainerProps> = (props) => (
@@ -450,7 +450,7 @@ export const CustomSelectAllContainerExample: FC = () => {
 
   return (
     <div className="component-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={getTreeNodeData(true)}
         withSelectAll
         components={components}
@@ -462,7 +462,7 @@ export const CustomSelectAllContainerExample: FC = () => {
 export const selectAllCheckboxExample = `import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSquare, faSquareCheck, faSquareMinus} from '@fortawesome/free-regular-svg-icons';
-import {Components, SelectAllCheckboxProps, SelectAllCheckboxType, TreeSelect} from 'rts';
+import {Components, SelectAllCheckboxProps, SelectAllCheckboxType, TreeMultiSelect} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
 const CustomSelectAllCheckbox: FC<SelectAllCheckboxProps> = (props) => (
@@ -483,7 +483,7 @@ export const CustomSelectAllCheckboxExample: FC = () => {
 
   return (
     <div className="component-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={getTreeNodeData(true)}
         withSelectAll
         components={components}
@@ -495,7 +495,7 @@ export const CustomSelectAllCheckboxExample: FC = () => {
 export const selectAllLabelExample = `import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCheckDouble} from '@fortawesome/free-solid-svg-icons';
-import {Components, SelectAllLabelProps, SelectAllLabelType, TreeSelect} from 'rts';
+import {Components, SelectAllLabelProps, SelectAllLabelType, TreeMultiSelect} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
 const CustomSelectAllLabel: FC<SelectAllLabelProps> = (props) => (
@@ -511,7 +511,7 @@ export const CustomSelectAllLabelExample: FC = () => {
 
   return (
     <div className="component-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={getTreeNodeData(true)}
         withSelectAll
         components={components}
@@ -522,7 +522,7 @@ export const CustomSelectAllLabelExample: FC = () => {
 
 export const nodeContainerExample = `import React, {FC} from 'react';
 import Tooltip from '@atlaskit/tooltip';
-import {Components, NodeContainerProps, NodeContainerType, TreeSelect} from 'rts';
+import {Components, NodeContainerProps, NodeContainerType, TreeMultiSelect} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
 const CustomNodeContainer: FC<NodeContainerProps> = (props) => (
@@ -540,7 +540,7 @@ export const CustomNodeContainerExample: FC = () => {
 
   return (
     <div className="component-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={getTreeNodeData(true)}
         components={components}
       />
@@ -551,7 +551,7 @@ export const CustomNodeContainerExample: FC = () => {
 export const nodeToggleExample = `import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faMinus, faPlus} from '@fortawesome/free-solid-svg-icons';
-import {Components, NodeToggleProps, NodeToggleType, TreeSelect} from 'rts';
+import {Components, NodeToggleProps, NodeToggleType, TreeMultiSelect} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
 const CustomNodeToggle: FC<NodeToggleProps> = (props) => (
@@ -570,7 +570,7 @@ export const CustomNodeToggleExample: FC = () => {
 
   return (
     <div className="component-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={getTreeNodeData(true)}
         components={components}
       />
@@ -581,7 +581,7 @@ export const CustomNodeToggleExample: FC = () => {
 export const nodeCheckboxExample = `import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSquare, faSquareCheck, faSquareMinus} from '@fortawesome/free-regular-svg-icons';
-import {Components, NodeCheckboxProps, NodeCheckboxType, TreeSelect} from 'rts';
+import {Components, NodeCheckboxProps, NodeCheckboxType, TreeMultiSelect} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
 const CustomNodeCheckbox: FC<NodeCheckboxProps> = (props) => (
@@ -602,7 +602,7 @@ export const CustomNodeCheckboxExample: FC = () => {
 
   return (
     <div className="component-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={getTreeNodeData(true)}
         components={components}
       />
@@ -613,7 +613,7 @@ export const CustomNodeCheckboxExample: FC = () => {
 export const nodeLabelExample = `import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faHandSpock} from '@fortawesome/free-regular-svg-icons';
-import {Components, NodeLabelProps, NodeLabelType, TreeSelect} from 'rts';
+import {Components, NodeLabelProps, NodeLabelType, TreeMultiSelect} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
 const CustomNodeLabel: FC<NodeLabelProps> = (props) => (
@@ -630,7 +630,7 @@ export const CustomNodeLabelExample: FC = () => {
 
   return (
     <div className="component-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={getTreeNodeData(true)}
         components={components}
       />
@@ -641,7 +641,7 @@ export const CustomNodeLabelExample: FC = () => {
 export const noMatchesExample = `import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faFaceSadTear} from '@fortawesome/free-regular-svg-icons';
-import {Components, NoMatchesProps, NoMatchesType, TreeSelect} from 'rts';
+import {Components, NoMatchesProps, NoMatchesType, TreeMultiSelect} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
 const CustomNoMatches: FC<NoMatchesProps> = (props) => (
@@ -657,7 +657,7 @@ export const CustomNoMatchesExample: FC = () => {
 
   return (
     <div className="component-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={getTreeNodeData(true)}
         components={components}
       />

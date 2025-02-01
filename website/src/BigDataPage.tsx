@@ -1,5 +1,5 @@
 import React, {FC, memo, useState} from 'react';
-import {TreeSelect} from '../../src';
+import {TreeMultiSelect} from '../../src';
 import {bigTreeNodeData30, bigTreeNodeData50, RandomTreeNode} from './utils';
 import {Select} from './Select';
 
@@ -14,9 +14,9 @@ export const BigDataPage: FC = memo(() => {
   return (
     <div className="page">
       <div className="page-content big-data-page">
-        <h2>{'RTS tree select big data'}</h2>
+        <h2>{'React Tree Multi Select big data'}</h2>
         <div className="paragraph">
-          {'RTS uses '}
+          {'React Tree Multi Select uses '}
           <a href="https://github.com/petyosi/react-virtuoso" target="_blank">Virtuoso</a>
           {' library to render big amount of nodes.'}
         </div>
@@ -27,10 +27,10 @@ export const BigDataPage: FC = memo(() => {
             {name: `${bigTreeNodeData50.amount}`, value: '50'}
           ]}
           onChange={handleOptionChange}/>
-        <div className="tree-select-wrapper">
-          <TreeSelect
+        <div className="tree-multi-select-wrapper">
+          <TreeMultiSelect
             data={data}
-            id="rts-big-data"
+            id="rtms-big-data"
             className="bd-custom-class"
             withSelectAll
           />

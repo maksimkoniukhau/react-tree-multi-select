@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
-import {ChipClearProps, ChipClearType, Components, TreeSelect} from '../../../../src';
+import {ChipClearProps, ChipClearType, Components, TreeMultiSelect} from '../../../../src';
 import {getTreeNodeData} from '../../utils';
 
 const CustomChipClear: FC<ChipClearProps> = (props) => (
@@ -17,7 +17,7 @@ export const CustomChipClearExample: FC = () => {
 
   return (
     <div className="component-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={getTreeNodeData(true)}
         components={components}
       />

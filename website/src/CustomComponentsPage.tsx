@@ -38,9 +38,9 @@ export const CustomComponentsPage: FC = memo(() => {
   return (
     <div className="page">
       <div className="page-content">
-        <h2>{'RTS tree select custom components'}</h2>
+        <h2>{'React Tree Multi Select custom components'}</h2>
         <div className="paragraph">
-          {'RTS allows you to customize tree select by providing your own custom components as a property.\n'}
+          {'React Tree Multi Select allows you to customize component by providing your own custom components as a property.\n'}
           {'Below you can find some examples of usage custom components.\n'}
         </div>
         <div className="paragraph">

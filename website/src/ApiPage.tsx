@@ -1,16 +1,16 @@
 import React, {FC} from 'react';
 import {CodeBlock} from './CodeBlock';
-import {rtsTypes} from './code-data';
+import {rtmsTypes} from './code-data';
 
 export const ApiPage: FC = () => {
 
   return (
     <div className="page">
       <div className="page-content">
-        <h2>{'RTS tree select API'}</h2>
-        <h3 className="title">{'Tree select types:'}</h3>
-        <CodeBlock code={rtsTypes}/>
-        <h3 className="title">{'Tree select props:'}</h3>
+        <h2>{'React Tree Multi Select API'}</h2>
+        <h3 className="title">{'TreeMultiSelect types:'}</h3>
+        <CodeBlock code={rtmsTypes}/>
+        <h3 className="title">{'TreeMultiSelect props:'}</h3>
         <table className="props-table">
           <thead>
           <tr>
@@ -42,13 +42,13 @@ export const ApiPage: FC = () => {
             <td>{'id'}</td>
             <td>{'string'}</td>
             <td>{`''`}</td>
-            <td>{'id applied to the root tree select div'}</td>
+            <td>{'id applied to the root tree multi select div'}</td>
           </tr>
           <tr>
             <td>{'className'}</td>
             <td>{'string'}</td>
             <td>{`''`}</td>
-            <td>{'className applied to the root tree select div'}</td>
+            <td>{'className applied to the root tree multi select div'}</td>
           </tr>
           <tr>
             <td>{'inputPlaceholder'}</td>
@@ -84,7 +84,7 @@ export const ApiPage: FC = () => {
             <td>{'components'}</td>
             <td>{'Components'}</td>
             <td>{'-'}</td>
-            <td>{'custom components applied to the tree select (see examples for more details)'}</td>
+            <td>{'custom components applied to the tree multi select (see examples for more details)'}</td>
           </tr>
           <tr>
             <td>{'onNodeChange'}</td>

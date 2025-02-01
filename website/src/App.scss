@@ -136,7 +136,7 @@
             }
           }
 
-          .rts-tree-select.focused {
+          .rtms-tree-multi-select.focused {
             .filter-btn {
               background-color: #82eefe;
             }
@@ -154,7 +154,7 @@
             display: flex;
             gap: 15px;
 
-            .rts-dropdown {
+            .rtms-dropdown {
               width: 250px;
             }
           }
@@ -165,7 +165,7 @@
             gap: 15px;
 
             .custom-dropdown-input {
-              .rts-dropdown {
+              .rtms-dropdown {
                 width: 250px;
               }
             }

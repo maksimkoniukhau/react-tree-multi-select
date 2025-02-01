@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCaretDown, faCaretUp} from '@fortawesome/free-solid-svg-icons';
-import {Components, FieldToggleProps, FieldToggleType, TreeSelect} from '../../../../src';
+import {Components, FieldToggleProps, FieldToggleType, TreeMultiSelect} from '../../../../src';
 import {getTreeNodeData} from '../../utils';
 
 const CustomFieldToggle: FC<FieldToggleProps> = (props) => (
@@ -17,7 +17,7 @@ export const CustomFieldToggleExample: FC = () => {
 
   return (
     <div className="component-example">
-      <TreeSelect
+      <TreeMultiSelect
         data={getTreeNodeData(true)}
         components={components}
       />

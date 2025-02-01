@@ -1,7 +1,7 @@
 import React, {FC, HTMLProps} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
-import {Components, FieldProps, FieldType, InputProps, InputType, TreeSelect} from '../../../../src';
+import {Components, FieldProps, FieldType, InputProps, InputType, TreeMultiSelect} from '../../../../src';
 import {getTreeNodeData} from '../../utils';
 
 const CustomField: FC<FieldProps> = (props) => (
@@ -32,13 +32,13 @@ export const CustomInputExample: FC = () => {
 
   return (
     <div className="component-example input-example">
-      <TreeSelect
+      <TreeMultiSelect
         className="custom-dropdown-input"
         data={getTreeNodeData()}
         withDropdownInput={true}
         components={dropdownComponents}
       />
-      <TreeSelect
+      <TreeMultiSelect
         className="custom-field-input"
         data={getTreeNodeData()}
         components={fieldComponents}
