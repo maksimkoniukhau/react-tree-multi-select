@@ -663,7 +663,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const debouncedHandleListItemRender = debounce(handleListItemRender, 150);
 
   const typeClassName = useMemo(() => typeToClassName(type), [type]);
-  const containerClasses = `rtms-tree-select ${typeClassName}` + (className ? ` ${className}` : '');
+  const containerClasses = `rtms-tree-multi-select ${typeClassName}` + (className ? ` ${className}` : '');
 
   useOnClickOutside(treeMultiSelectRef, handleOutsideEvent);
 

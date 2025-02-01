@@ -1,5 +1,5 @@
 export const getRootContainer = (container: HTMLElement): HTMLElement => {
-  return container.querySelector('.rtms-tree-select') as HTMLElement;
+  return container.querySelector('.rtms-tree-multi-select') as HTMLElement;
 };
 
 export const getField = (container: HTMLElement): HTMLElement => {
