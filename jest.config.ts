@@ -7,7 +7,9 @@ const config: JestConfigWithTsJest = {
     "^.+.tsx?$": ["ts-jest", {tsconfig: './tsconfig.jest.json'}],
   },
   setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
-  testMatch: ['<rootDir>/src/__tests__/**/*'],
+  testMatch: [
+    "**/src/__tests__/**/?(*.)test.ts?(x)"
+  ],
   moduleNameMapper: {
     '\\.scss$': 'identity-obj-proxy',
   },
