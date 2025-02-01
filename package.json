@@ -1,7 +1,7 @@
 {
-  "name": "rts",
+  "name": "react-tree-multi-select",
   "version": "1.0.0",
-  "description": "React tree select component",
+  "description": "React tree multi select component",
   "author": "Maksim Koniukau",
   "repository": {
     "type": "git",
@@ -9,8 +9,11 @@
   },
   "keywords": [
     "react",
+    "react-select",
+    "react-tree-multi-select",
     "react-tree-select",
     "tree-select",
+    "multi-select",
     "select",
     "dropdown",
     "typescript"

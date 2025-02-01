@@ -2,7 +2,7 @@ import React, {RefObject} from 'react';
 import {Type} from '../types';
 
 export const typeToClassName = (type: Type): string => {
-  return `rts-${type.toLowerCase().replaceAll('_', '-')}-type`;
+  return `rtms-${type.toLowerCase().replaceAll('_', '-')}-type`;
 };
 
 export const preventDefaultOnMouseEvent = (e: React.MouseEvent): void => {

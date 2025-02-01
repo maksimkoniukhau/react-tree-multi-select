@@ -1,17 +1,17 @@
 /* ==========================================================================
-TreeSelect styles
+TreeMultiSelect styles
 ========================================================================== */
 
-.rts-tree-select {
+.rtms-tree-select {
   @import 'css-variables';
 
-  &.rts-multi-select-type, &.rts-select-type {
-    --rts-list-item-selected-background-color: #e7f3fc;
+  &.rtms-multi-select-type, &.rtms-select-type {
+    --rtms-list-item-selected-background-color: #e7f3fc;
   }
 
   &:focus-within {
-    .rts-field {
-      &:has(> .rts-field-content, > .rts-actions) {
+    .rtms-field {
+      &:has(> .rtms-field-content, > .rtms-actions) {
         border-color: #92bcff;
         box-shadow: 0 0 3px 0 #016aff;
       }
@@ -22,7 +22,7 @@ TreeSelect styles
 
   @for $i from 0 through 100 {
     .pl-#{$i} {
-      padding-left: calc((var(--rts-checkbox-width) + var(--rts-list-items-gap)) * $i + var(--rts-row-base-padding));
+      padding-left: calc((var(--rtms-checkbox-width) + var(--rtms-list-items-gap)) * $i + var(--rtms-row-base-padding));
     }
   }
 
@@ -32,7 +32,7 @@ TreeSelect styles
   @import 'field';
   @import 'dropdown';
 
-  .rts-label {
+  .rtms-label {
     line-height: 1;
     font-size: 16px;
   }

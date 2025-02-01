@@ -1,4 +1,4 @@
-.rts-chip {
+.rtms-chip {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,7 +14,7 @@
   }
 
   &.focused {
-    .rts-chip-clear {
+    .rtms-chip-clear {
       color: #ff3b3b;
 
       path {
@@ -24,17 +24,17 @@
   }
 
   &.disabled {
-    color: var(--rts-disabled-color);
+    color: var(--rtms-disabled-color);
   }
 
-  .rts-chip-clear {
+  .rtms-chip-clear {
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
 
     path {
-      fill: var(--rts-icon-base-color);
+      fill: var(--rtms-icon-base-color);
     }
 
     &:hover {
@@ -45,9 +45,9 @@
       }
     }
 
-    .rts-chip-clear-icon {
-      width: var(--rts-chip-clear-icon-width);
-      height: var(--rts-chip-clear-icon-height);
+    .rtms-chip-clear-icon {
+      width: var(--rtms-chip-clear-icon-width);
+      height: var(--rtms-chip-clear-icon-height);
     }
   }
 }

@@ -50,8 +50,8 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
 
   if (Boolean(input) && index === 0) {
     return (
-      <div className="rts-header-item">
-        <div className="rts-input-container">
+      <div className="rtms-header-item">
+        <div className="rtms-input-container">
           {input}
         </div>
       </div>
@@ -63,10 +63,10 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     const partial = selectAllCheckedState === CheckedState.PARTIAL;
 
     const selectedClass = selected ? ' selected' : partial ? ' partial' : '';
-    const checkboxClasses = `rts-select-all-checkbox${selectedClass}`;
+    const checkboxClasses = `rtms-select-all-checkbox${selectedClass}`;
 
     const focusedClass = focusedElement === SELECT_ALL ? ' focused' : '';
-    const containerClasses = `rts-header-item${selectedClass}${focusedClass}`;
+    const containerClasses = `rtms-header-item${selectedClass}${focusedClass}`;
 
     return (
       <components.SelectAllContainer.component
@@ -84,7 +84,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
           customProps={components.SelectAllCheckbox.props}
         />
         <components.SelectAllLabel.component
-          componentAttributes={{className: "rts-label"}}
+          componentAttributes={{className: "rtms-label"}}
           componentProps={{label: SELECT_ALL}}
           customProps={components.SelectAllLabel.props}
         />
@@ -95,7 +95,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
   if (displayedNodes.length === 0) {
     return (
       <components.NoMatches.component
-        componentAttributes={{className: "rts-no-matches"}}
+        componentAttributes={{className: "rtms-no-matches"}}
         componentProps={{label: noMatchesText}}
         customProps={components.NoMatches.props}
       />
@@ -116,7 +116,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
   const getCheckboxClasses = () => {
     const disabledClass = node.disabled ? ' disabled' : '';
     const checkedClass = node.selected ? ' selected' : node.partiallySelected ? ' partial' : '';
-    return `rts-node-checkbox${disabledClass}${checkedClass}`;
+    return `rtms-node-checkbox${disabledClass}${checkedClass}`;
   };
   const getNodeRowClasses = (): string => {
     const disabledClass = node.disabled ? ' disabled' : '';
@@ -125,7 +125,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     const focusedClass = focused ? ' focused' : '';
     const matchedClass = node.matched ? ' matched' : '';
     const plClass = ` pl-${node.deep + (indentation ? 1 : 0)}`;
-    return `rts-list-item${disabledClass}${selectedClass}${expandedClass}${focusedClass}${matchedClass}${plClass}`;
+    return `rtms-list-item${disabledClass}${selectedClass}${expandedClass}${focusedClass}${matchedClass}${plClass}`;
   };
 
   return (
@@ -145,7 +145,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
       {type !== Type.MULTI_SELECT && type !== Type.SELECT && node.hasChildren() && (
         <components.NodeToggle.component
           componentAttributes={{
-            className: `rts-node-toggle${expanded ? ' expanded' : ''}`,
+            className: `rtms-node-toggle${expanded ? ' expanded' : ''}`,
             onClick: onClickExpandNode(node)
           }}
           componentProps={{expanded}}
@@ -160,7 +160,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
         />
       )}
       <components.NodeLabel.component
-        componentAttributes={{className: "rts-label"}}
+        componentAttributes={{className: "rtms-label"}}
         componentProps={{label: node.name}}
         customProps={components.NodeLabel.props}
       />

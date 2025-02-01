@@ -3,22 +3,22 @@ import '@testing-library/jest-dom';
 import React from 'react';
 import {render, screen} from '@testing-library/react';
 import userEvent, {UserEvent} from '@testing-library/user-event';
-import {TreeSelect} from '../index';
+import {TreeMultiSelect} from '../index';
 import {getBaseTreeNodeData} from './testutils/dataUtils';
 import {getDropdown, getField, getRootContainer} from './testutils/selectorUtils';
 
 const treeNodeData = getBaseTreeNodeData();
 
-describe('TreeSelect component base', () => {
+describe('TreeMultiSelect component base', () => {
   it('renders component', () => {
-    render(<TreeSelect data={treeNodeData}/>);
+    render(<TreeMultiSelect data={treeNodeData}/>);
 
     const chip = screen.getByText(/Angular/i);
     expect(chip).toBeInTheDocument();
   });
 });
 
-describe('TreeSelect component focus/blur', () => {
+describe('TreeMultiSelect component focus/blur', () => {
   const focusBlurMatcher = (
     container: HTMLElement,
     focused: boolean,
@@ -49,7 +49,7 @@ describe('TreeSelect component focus/blur', () => {
     const handleBlur = jest.fn();
 
     const {container} = render(
-      <TreeSelect data={treeNodeData} onFocus={handleFocus} onBlur={handleBlur} withDropdownInput={withDropdownInput}/>
+      <TreeMultiSelect data={treeNodeData} onFocus={handleFocus} onBlur={handleBlur} withDropdownInput={withDropdownInput}/>
     );
 
     expect(getRootContainer(container)).toBeInTheDocument();
@@ -88,7 +88,7 @@ describe('TreeSelect component focus/blur', () => {
     const handleBlur = jest.fn();
 
     const {container} = render(
-      <TreeSelect data={treeNodeData} onFocus={handleFocus} onBlur={handleBlur} withDropdownInput={withDropdownInput}/>
+      <TreeMultiSelect data={treeNodeData} onFocus={handleFocus} onBlur={handleBlur} withDropdownInput={withDropdownInput}/>
     );
 
     expect(getRootContainer(container)).toBeInTheDocument();

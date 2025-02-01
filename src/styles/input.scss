@@ -1,4 +1,4 @@
-.rts-input-container {
+.rtms-input-container {
   display: flex;
   flex: 1;
   align-items: center;
@@ -7,7 +7,7 @@
   border-radius: 4px;
 }
 
-.rts-input {
+.rtms-input {
   flex: 1;
   min-height: 24px;
   margin: 0;
@@ -16,7 +16,7 @@
   outline: none;
 }
 
-.rts-input-hidden {
+.rtms-input-hidden {
   width: 0;
   height: 0;
   outline: none;

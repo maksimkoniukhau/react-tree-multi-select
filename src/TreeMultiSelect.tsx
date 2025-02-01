@@ -1,4 +1,4 @@
-import './styles/tree-select.scss';
+import './styles/tree-multi-select.scss';
 import React, {FC, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
 import {CLEAR_ALL, INPUT, INPUT_PLACEHOLDER, NO_MATCHES, PATH_DELIMITER, SELECT_ALL} from './constants';
 import {debounce, getFieldFocusableElement, preventDefaultOnMouseEvent, typeToClassName} from './utils/commonUtils';
@@ -33,7 +33,7 @@ import {
 import {Dropdown} from './Dropdown';
 import {Node} from './Node';
 
-export interface TreeSelectProps {
+export interface TreeMultiSelectProps {
   data: TreeNode[];
   type?: Type;
   id?: string;
@@ -52,7 +52,7 @@ export interface TreeSelectProps {
   onBlur?: (event: React.FocusEvent) => void;
 }
 
-export const TreeSelect: FC<TreeSelectProps> = (props) => {
+export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const {
     data = [],
     type = Type.TREE_SELECT,
@@ -72,7 +72,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
     onBlur,
   } = props;
 
-  const treeSelectRef = useRef<HTMLDivElement>(null);
+  const treeMultiSelectRef = useRef<HTMLDivElement>(null);
   const fieldRef = useRef<HTMLDivElement>(null);
   const dropdownInputRef = useRef<HTMLInputElement>(null);
 
@@ -627,7 +627,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
   const handleComponentFocus = (event: React.FocusEvent): void => {
     if (!isComponentFocused.current) {
       isComponentFocused.current = true;
-      treeSelectRef?.current?.classList?.add('focused');
+      treeMultiSelectRef?.current?.classList?.add('focused');
       onFocus?.(event);
     }
   };
@@ -639,7 +639,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
     }
     isComponentFocused.current = false;
     dropdownUnmountedOnClickOutside.current = false;
-    treeSelectRef?.current?.classList?.remove('focused');
+    treeMultiSelectRef?.current?.classList?.remove('focused');
     onBlur?.(event);
   };
 
@@ -663,13 +663,13 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
   const debouncedHandleListItemRender = debounce(handleListItemRender, 150);
 
   const typeClassName = useMemo(() => typeToClassName(type), [type]);
-  const containerClasses = `rts-tree-select ${typeClassName}` + (className ? ` ${className}` : '');
+  const containerClasses = `rtms-tree-select ${typeClassName}` + (className ? ` ${className}` : '');
 
-  useOnClickOutside(treeSelectRef, handleOutsideEvent);
+  useOnClickOutside(treeMultiSelectRef, handleOutsideEvent);
 
   return (
     <div
-      ref={treeSelectRef}
+      ref={treeMultiSelectRef}
       id={id}
       className={containerClasses}
       onFocus={handleComponentFocus}
@@ -679,7 +679,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
       <components.Field.component
         componentAttributes={{
           ref: fieldRef,
-          className: "rts-field",
+          className: "rtms-field",
           onClick: handleClickField,
           onMouseDown: preventDefaultOnMouseEvent
         }}
@@ -687,7 +687,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
         customProps={components.Field.props}
       >
         <div
-          className="rts-field-content"
+          className="rtms-field-content"
           // needed for staying focus on input
           onMouseDown={preventDefaultOnMouseEvent}
         >
@@ -696,7 +696,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
               <components.ChipContainer.component
                 key={node.path}
                 componentAttributes={{
-                  className: `rts-chip${node.disabled ? ' disabled' : ''}${state.focusedFieldElement === node.path ? ' focused' : ''}`,
+                  className: `rtms-chip${node.disabled ? ' disabled' : ''}${state.focusedFieldElement === node.path ? ' focused' : ''}`,
                   onClick: handleClickChip(node),
                   // needed for staying focus on input
                   onMouseDown: preventDefaultOnMouseEvent
@@ -709,24 +709,24 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
                 customProps={components.ChipContainer.props}
               >
                 <components.ChipLabel.component
-                  componentAttributes={{className: 'rts-label'}}
+                  componentAttributes={{className: 'rtms-label'}}
                   componentProps={{label: node.name}}
                   customProps={components.ChipLabel.props}
                 />
                 {!node.disabled &&
                     <components.ChipClear.component
-                        componentAttributes={{className: 'rts-chip-clear', onClick: handleDeleteNode(node)}}
+                        componentAttributes={{className: 'rtms-chip-clear', onClick: handleDeleteNode(node)}}
                         componentProps={{}}
                         customProps={components.ChipClear.props}
                     />}
               </components.ChipContainer.component>
             ))}
           {withDropdownInput ? (
-            <input className="rts-input-hidden"/>
+            <input className="rtms-input-hidden"/>
           ) : (
             <components.Input.component
               componentAttributes={{
-                className: "rts-input",
+                className: "rtms-input",
                 placeholder: inputPlaceholder,
                 value: state.searchValue,
                 onChange: handleChangeInput
@@ -736,11 +736,11 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
             />
           )}
         </div>
-        <div className="rts-actions">
+        <div className="rtms-actions">
           {withClearAll && isAnyExcludingDisabledSelected(state.nodes) && (
             <components.FieldClear.component
               componentAttributes={{
-                className: `rts-field-clear${state.focusedFieldElement === CLEAR_ALL ? ' focused' : ''}`,
+                className: `rtms-field-clear${state.focusedFieldElement === CLEAR_ALL ? ' focused' : ''}`,
                 onClick: handleDeleteAll,
                 // needed for staying focus on input
                 onMouseDown: preventDefaultOnMouseEvent
@@ -751,7 +751,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
           )}
           <components.FieldToggle.component
             componentAttributes={{
-              className: `rts-field-toggle${state.showDropdown ? ' expanded' : ''}`,
+              className: `rtms-field-toggle${state.showDropdown ? ' expanded' : ''}`,
               // needed for staying focus on input
               onMouseDown: preventDefaultOnMouseEvent
             }}
@@ -779,7 +779,7 @@ export const TreeSelect: FC<TreeSelectProps> = (props) => {
             <components.Input.component
               componentAttributes={{
                 ref: dropdownInputRef,
-                className: "rts-input",
+                className: "rtms-input",
                 placeholder: inputPlaceholder,
                 value: state.searchValue,
                 onChange: handleChangeInput

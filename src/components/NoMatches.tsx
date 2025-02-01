@@ -9,7 +9,7 @@ export const NoMatches: FC<NoMatchesProps> = (props) => {
 
   return (
     <div {...props.componentAttributes}>
-      <span className="rts-label">
+      <span className="rtms-label">
          {props.componentProps.label}
       </span>
     </div>

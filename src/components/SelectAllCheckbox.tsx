@@ -11,7 +11,7 @@ export const SelectAllCheckbox: FC<SelectAllCheckboxProps> = memo((props) => {
   const {checked, partial} = props.componentProps;
 
   const checkedClass = checked ? ' selected' : partial ? ' partial' : '';
-  const checkboxClasses = `rts-checkbox${checkedClass}`;
+  const checkboxClasses = `rtms-checkbox${checkedClass}`;
 
   return (
     <div {...props.componentAttributes}>

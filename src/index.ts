@@ -1,5 +1,5 @@
 export * from './types';
-export {TreeSelect} from './TreeSelect';
+export {TreeMultiSelect} from './TreeMultiSelect';
 export type {FieldOwnProps} from './components/Field';
 export type {ChipContainerOwnProps} from './components/ChipContainer';
 export type {ChipLabelOwnProps} from './components/ChipLabel';

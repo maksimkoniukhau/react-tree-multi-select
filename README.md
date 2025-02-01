@@ -1,3 +1,3 @@
-# rts
+# rtms
 
-## React tree select
+## React tree multi select

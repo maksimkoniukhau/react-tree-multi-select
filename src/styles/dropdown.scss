@@ -1,4 +1,4 @@
-.rts-dropdown {
+.rtms-dropdown {
   position: absolute;
   width: 100%;
   z-index: 1;
@@ -8,7 +8,7 @@
   border-radius: 4px;
   box-sizing: border-box;
 
-  .rts-list-item, .rts-header-item {
+  .rtms-list-item, .rtms-header-item {
     display: flex;
     align-items: center;
     padding-top: 2px;
@@ -16,67 +16,67 @@
     outline: none;
     color: #212529;
     cursor: pointer;
-    gap: var(--rts-list-items-gap);
+    gap: var(--rtms-list-items-gap);
   }
 
-  .rts-list-item {
+  .rtms-list-item {
     background-color: #ffffff;
-    padding-right: var(--rts-row-base-padding);
+    padding-right: var(--rtms-row-base-padding);
 
     &.selected {
-      background-color: var(--rts-list-item-selected-background-color);
+      background-color: var(--rtms-list-item-selected-background-color);
     }
 
     &.focused, &:hover {
       background-color: #ebebeb;
     }
 
-    &.matched .rts-label {
+    &.matched .rtms-label {
       background-color: #ffffb0b0;
     }
 
-    &.disabled .rts-label {
-      color: var(--rts-disabled-color);
+    &.disabled .rtms-label {
+      color: var(--rtms-disabled-color);
     }
 
-    .rts-node-toggle {
+    .rtms-node-toggle {
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
 
-      .rts-node-toggle-icon {
-        width: var(--rts-checkbox-width);
-        height: var(--rts-checkbox-height);
+      .rtms-node-toggle-icon {
+        width: var(--rtms-checkbox-width);
+        height: var(--rtms-checkbox-height);
 
         path {
-          fill: var(--rts-icon-base-color);
+          fill: var(--rtms-icon-base-color);
         }
       }
     }
 
-    .rts-node-checkbox {
+    .rtms-node-checkbox {
       display: flex;
       align-items: center;
     }
   }
 
-  .rts-header-item {
+  .rtms-header-item {
     background-color: #ffffff;
-    padding-left: var(--rts-row-base-padding);
-    padding-right: var(--rts-row-base-padding);
+    padding-left: var(--rtms-row-base-padding);
+    padding-right: var(--rtms-row-base-padding);
 
-    &.focused:not(:has(.rts-input-container)), &:hover:not(:has(.rts-input-container)) {
+    &.focused:not(:has(.rtms-input-container)), &:hover:not(:has(.rtms-input-container)) {
       background-color: #ebebeb;
     }
 
-    .rts-select-all-checkbox {
+    .rtms-select-all-checkbox {
       display: flex;
       align-items: center;
     }
   }
 
-  .rts-no-matches {
+  .rtms-no-matches {
     display: flex;
     align-items: center;
     padding: 10px;

@@ -38,7 +38,7 @@ const config: Configuration = {
     filename: 'index.umd.js',
     path: resolve(__dirname, 'dist'),
     libraryTarget: "umd",
-    library: 'rts',
+    library: 'rtms',
     umdNamedDefine: true,
     clean: true,
   },

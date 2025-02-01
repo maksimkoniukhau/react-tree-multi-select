@@ -13,7 +13,7 @@ export const NodeCheckbox: FC<NodeCheckboxProps> = memo((props) => {
 
   const disabledClass = disabled ? ' disabled' : '';
   const checkedClass = checked ? ' selected' : partial ? ' partial' : '';
-  const checkboxClasses = `rts-checkbox${disabledClass}${checkedClass}`;
+  const checkboxClasses = `rtms-checkbox${disabledClass}${checkedClass}`;
 
   return (
     <div {...props.componentAttributes}>

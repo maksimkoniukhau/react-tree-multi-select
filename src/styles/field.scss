@@ -1,5 +1,5 @@
-.rts-field {
-  &:has(> .rts-field-content, > .rts-actions) {
+.rtms-field {
+  &:has(> .rtms-field-content, > .rtms-actions) {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -15,19 +15,19 @@
     box-sizing: border-box;
   }
 
-  .rts-field-content {
+  .rtms-field-content {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     flex: 1;
   }
 
-  .rts-actions {
+  .rtms-actions {
     display: flex;
     align-items: center;
     justify-content: center;
 
-    .rts-field-clear, .rts-field-toggle {
+    .rtms-field-clear, .rtms-field-toggle {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -35,7 +35,7 @@
       padding: 4px;
     }
 
-    .rts-field-clear {
+    .rtms-field-clear {
       &.focused, &:hover {
         path {
           fill: #ff3b3b;
@@ -43,12 +43,12 @@
       }
     }
 
-    .rts-field-clear-icon, .rts-field-toggle-icon {
-      width: var(--rts-field-icon-width);
-      height: var(--rts-field-icon-height);
+    .rtms-field-clear-icon, .rtms-field-toggle-icon {
+      width: var(--rtms-field-icon-width);
+      height: var(--rtms-field-icon-height);
 
       path {
-        fill: var(--rts-icon-base-color);
+        fill: var(--rtms-icon-base-color);
       }
     }
   }

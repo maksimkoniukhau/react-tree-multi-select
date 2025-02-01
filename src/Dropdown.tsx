@@ -135,14 +135,14 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
 
   return (
     <div
-      className="rts-dropdown"
+      className="rtms-dropdown"
       // needed for staying focus on input
       onMouseDown={preventDefaultOnMouseEvent}
     >
       <Virtuoso
         ref={virtuosoRef}
         style={{height: `${height}px`, width: DEFAULT_OPTIONS_CONTAINER_WIDTH, borderRadius: '4px'}}
-        className="rts-dropdown-virtuoso"
+        className="rtms-dropdown-virtuoso"
         totalListHeightChanged={handleTotalListHeightChanged}
         totalCount={itemCount}
         topItemCount={(showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0)}
