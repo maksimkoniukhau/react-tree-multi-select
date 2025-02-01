@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/react-tree-multi-select/static/css/main.1e83a203.css",
+    "main.js": "/react-tree-multi-select/static/js/main.6b66f761.js",
+    "static/js/453.39685dfa.chunk.js": "/react-tree-multi-select/static/js/453.39685dfa.chunk.js",
+    "index.html": "/react-tree-multi-select/index.html",
+    "main.1e83a203.css.map": "/react-tree-multi-select/static/css/main.1e83a203.css.map",
+    "main.6b66f761.js.map": "/react-tree-multi-select/static/js/main.6b66f761.js.map",
+    "453.39685dfa.chunk.js.map": "/react-tree-multi-select/static/js/453.39685dfa.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1e83a203.css",
+    "static/js/main.6b66f761.js"
+  ]
+}
