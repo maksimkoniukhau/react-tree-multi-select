@@ -3,6 +3,8 @@ import {
   chipClearExample,
   chipContainerExample,
   chipLabelExample,
+  customComponentCommonPattern,
+  customComponentMergeClassname,
   fieldClearExample,
   fieldExample,
   fieldToggleExample,
@@ -40,11 +42,21 @@ export const CustomComponentsPage: FC = memo(() => {
       <div className="page-content">
         <h2>{'React Tree Multi Select custom components'}</h2>
         <div className="paragraph">
-          {'React Tree Multi Select allows you to customize component by providing your own custom components as a property.\n'}
-          {'Below you can find some examples of usage custom components.\n'}
+          {'react-tree-multi-select allows you to customize component by providing your own custom components as a property.\n'}
+          {'The common pattern of custom component implementing looks like this:'}
+        </div>
+        <CodeBlock code={customComponentCommonPattern}/>
+        <div className="paragraph">
+          <span className="important">{'Important'}</span>
+          {': you must pass componentAttributes to the root element in order for component to work properly.\n'}
+          {'The only classname can be overriden. Or you can merge component classname with your own like in the example below:'}
+        </div>
+        <CodeBlock code={customComponentMergeClassname}/>
+        <div className="paragraph">
+          {'Below you can find some examples of usage custom components.'}
         </div>
         <div className="paragraph">
-          <h3 className="title">{'Field\n'}</h3>
+          <h3 className="title">{'Field'}</h3>
           {`Let's say you have filters on a page that, when clicked, open a dropdown with a range of filter options.\n`}
           {'It can be achieved by providing custom Field component like in the example below.\n'}
           <span className="important">{'Important'}</span>
@@ -55,112 +67,112 @@ export const CustomComponentsPage: FC = memo(() => {
           <CustomFieldExample/>
         </div>
         <div className="paragraph">
-          <h3 className="title">{'ChipContainer\n'}</h3>
-          {`Custom ChipContainer component example.\n`}
+          <h3 className="title">{'ChipContainer'}</h3>
+          {`Custom ChipContainer component example.`}
         </div>
         <div className="example-container">
           <CodeBlock code={chipContainerExample}/>
           <CustomChipContainerExample/>
         </div>
         <div className="paragraph">
-          <h3 className="title">{'ChipLabel\n'}</h3>
-          {`Custom ChipLabel component example.\n`}
+          <h3 className="title">{'ChipLabel'}</h3>
+          {`Custom ChipLabel component example.`}
         </div>
         <div className="example-container">
           <CodeBlock code={chipLabelExample}/>
           <CustomChipLabelExample/>
         </div>
         <div className="paragraph">
-          <h3 className="title">{'ChipClear\n'}</h3>
-          {`Custom ChipClear component example.\n`}
+          <h3 className="title">{'ChipClear'}</h3>
+          {`Custom ChipClear component example.`}
         </div>
         <div className="example-container">
           <CodeBlock code={chipClearExample}/>
           <CustomChipClearExample/>
         </div>
         <div className="paragraph">
-          <h3 className="title">{'Input\n'}</h3>
-          {`Custom Input component example.\n`}
+          <h3 className="title">{'Input'}</h3>
+          {`Custom Input component example.`}
         </div>
         <div className="example-container">
           <CodeBlock code={inputExample}/>
           <CustomInputExample/>
         </div>
         <div className="paragraph">
-          <h3 className="title">{'FieldClear\n'}</h3>
-          {`Custom FieldClear component example.\n`}
+          <h3 className="title">{'FieldClear'}</h3>
+          {`Custom FieldClear component example.`}
         </div>
         <div className="example-container">
           <CodeBlock code={fieldClearExample}/>
           <CustomFieldClearExample/>
         </div>
         <div className="paragraph">
-          <h3 className="title">{'FieldToggle\n'}</h3>
-          {`Custom FieldToggle component example.\n`}
+          <h3 className="title">{'FieldToggle'}</h3>
+          {`Custom FieldToggle component example.`}
         </div>
         <div className="example-container">
           <CodeBlock code={fieldToggleExample}/>
           <CustomFieldToggleExample/>
         </div>
         <div className="paragraph">
-          <h3 className="title">{'SelectAllContainer\n'}</h3>
-          {`Custom SelectAllContainer component example.\n`}
+          <h3 className="title">{'SelectAllContainer'}</h3>
+          {`Custom SelectAllContainer component example.`}
         </div>
         <div className="example-container">
           <CodeBlock code={selectAllContainerExample}/>
           <CustomSelectAllContainerExample/>
         </div>
         <div className="paragraph">
-          <h3 className="title">{'SelectAllCheckbox\n'}</h3>
-          {`Custom SelectAllCheckbox component example.\n`}
+          <h3 className="title">{'SelectAllCheckbox'}</h3>
+          {`Custom SelectAllCheckbox component example.`}
         </div>
         <div className="example-container">
           <CodeBlock code={selectAllCheckboxExample}/>
           <CustomSelectAllCheckboxExample/>
         </div>
         <div className="paragraph">
-          <h3 className="title">{'SelectAllLabel\n'}</h3>
-          {`Custom SelectAllLabel component example.\n`}
+          <h3 className="title">{'SelectAllLabel'}</h3>
+          {`Custom SelectAllLabel component example.`}
         </div>
         <div className="example-container">
           <CodeBlock code={selectAllLabelExample}/>
           <CustomSelectAllLabelExample/>
         </div>
         <div className="paragraph">
-          <h3 className="title">{'NodeContainer\n'}</h3>
-          {`Custom NodeContainer component example.\n`}
+          <h3 className="title">{'NodeContainer'}</h3>
+          {`Custom NodeContainer component example.`}
         </div>
         <div className="example-container">
           <CodeBlock code={nodeContainerExample}/>
           <CustomNodeContainerExample/>
         </div>
         <div className="paragraph">
-          <h3 className="title">{'NodeToggle\n'}</h3>
-          {`Custom NodeToggle component example.\n`}
+          <h3 className="title">{'NodeToggle'}</h3>
+          {`Custom NodeToggle component example.`}
         </div>
         <div className="example-container">
           <CodeBlock code={nodeToggleExample}/>
           <CustomNodeToggleExample/>
         </div>
         <div className="paragraph">
-          <h3 className="title">{'NodeCheckbox\n'}</h3>
-          {`Custom NodeCheckbox component example.\n`}
+          <h3 className="title">{'NodeCheckbox'}</h3>
+          {`Custom NodeCheckbox component example.`}
         </div>
         <div className="example-container">
           <CodeBlock code={nodeCheckboxExample}/>
           <CustomNodeCheckboxExample/>
         </div>
         <div className="paragraph">
-          <h3 className="title">{'NodeLabel\n'}</h3>
-          {`Custom NodeLabel component example.\n`}
+          <h3 className="title">{'NodeLabel'}</h3>
+          {`Custom NodeLabel component example.`}
         </div>
         <div className="example-container">
           <CodeBlock code={nodeLabelExample}/>
           <CustomNodeLabelExample/>
         </div>
         <div className="paragraph">
-          <h3 className="title">{'NoMatches\n'}</h3>
-          {`Custom NoMatches component example.\n`}
+          <h3 className="title">{'NoMatches'}</h3>
+          {`Custom NoMatches component example.`}
         </div>
         <div className="example-container">
           <CodeBlock code={noMatchesExample}/>

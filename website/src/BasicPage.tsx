@@ -58,23 +58,23 @@ export const BasicPage: FC = memo(() => {
   };
 
   const handleNodeChange = (node: TreeNode, selectedNodes: TreeNode[]): void => {
-    console.log('node', node);
-    console.log('selectedNodes', selectedNodes);
+    console.log('handleNodeChange node:', node);
+    console.log('handleNodeChange selectedNodes:', selectedNodes);
   };
 
   const handleNodeToggle = (node: TreeNode, expandedNodes: TreeNode[]): void => {
-    console.log('node', node);
-    console.log('expandedNodes', expandedNodes);
+    console.log('handleNodeToggle node:', node);
+    console.log('handleNodeToggle expandedNodes:', expandedNodes);
   };
 
   const handleClearAll = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState | undefined): void => {
-    console.log('handleClearAll selectedNodes', selectedNodes);
-    console.log('handleClearAll selectAllCheckedState', selectAllCheckedState);
+    console.log('handleClearAll selectedNodes:', selectedNodes);
+    console.log('handleClearAll selectAllCheckedState:', selectAllCheckedState);
   };
 
   const handleSelectAllChange = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState): void => {
-    console.log('handleSelectAllChange selectedNodes', selectedNodes);
-    console.log('handleSelectAllChange selectAllCheckedState', selectAllCheckedState);
+    console.log('handleSelectAllChange selectedNodes:', selectedNodes);
+    console.log('handleSelectAllChange selectAllCheckedState:', selectAllCheckedState);
   };
 
   const handleFocus = (event: React.FocusEvent): void => {

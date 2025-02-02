@@ -38,24 +38,24 @@ export const ReactTreeMultiSelectApp: FC = () => {
     }
   ];
   
-  const handleNodeChange = (node: TreeNode, selectedNodes: TreeNode[]) => {
-    console.log('node', node);
-    console.log('selectedNodes', selectedNodes);
+  const handleNodeChange = (node: TreeNode, selectedNodes: TreeNode[]): void => {
+    console.log('handleNodeChange node:', node);
+    console.log('handleNodeChange selectedNodes:', selectedNodes);
   };
 
-  const handleNodeToggle = (node: TreeNode, expandedNodes: TreeNode[]) => {
-    console.log('node', node);
-    console.log('expandedNodes', expandedNodes);
+  const handleNodeToggle = (node: TreeNode, expandedNodes: TreeNode[]): void => {
+    console.log('handleNodeToggle node:', node);
+    console.log('handleNodeToggle expandedNodes:', expandedNodes);
   };
 
-  const handleClearAll = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => {
-    console.log('handleClearAll selectedNodes', selectedNodes);
-    console.log('handleClearAll selectAllCheckedState', selectAllCheckedState);
+  const handleClearAll = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState | undefined): void => {
+    console.log('handleClearAll selectedNodes:', selectedNodes);
+    console.log('handleClearAll selectAllCheckedState:', selectAllCheckedState);
   };
 
-  const handleSelectAllChange = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => {
-    console.log('handleSelectAllChange selectedNodes', selectedNodes);
-     console.log('handleSelectAllChange selectAllCheckedState', selectAllCheckedState);
+  const handleSelectAllChange = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState): void => {
+    console.log('handleSelectAllChange selectedNodes:', selectedNodes);
+    console.log('handleSelectAllChange selectAllCheckedState:', selectAllCheckedState);
   };
 
   return (
@@ -64,7 +64,6 @@ export const ReactTreeMultiSelectApp: FC = () => {
       className="custom-class"
       data={data}
       withSelectAll
-      withClearAll
       onNodeChange={handleNodeChange}
       onNodeToggle={handleNodeToggle}
       onClearAll={handleClearAll}
@@ -173,6 +172,18 @@ interface Components<
   NodeLabel?: NodeLabelType<NodeLabelCustomProps>;
   NoMatches?: NoMatchesType<NoMatchesCustomProps>;
 }`;
+
+export const customComponentCommonPattern = `const CustomChipLabel: FC<ChipLabelProps> = (props) => (
+  <div {...props.componentAttributes}>
+     {/*your custom code here*/}
+  </div>
+);`;
+
+export const customComponentMergeClassname = `const CustomChipLabel: FC<ChipLabelProps> = (props) => (
+  <div {...props.componentAttributes} className={\`\${props.componentAttributes.className} custom-classname\`}>
+     {/*your custom code here*/}
+  </div>
+);`;
 
 export const fieldExample = `import React, {FC} from 'react';
 import {FieldProps, TreeMultiSelect, Type} from 'react-tree-multi-select';
