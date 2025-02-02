@@ -1,5 +1,5 @@
 import React, {FC, memo, useState} from 'react';
-import {TreeMultiSelect} from '../../src';
+import {TreeMultiSelect} from './treeMultiSelectImport';
 import {bigTreeNodeData30, bigTreeNodeData50, RandomTreeNode} from './utils';
 import {Select} from './Select';
 

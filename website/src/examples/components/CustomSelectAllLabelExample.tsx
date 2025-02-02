@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCheckDouble} from '@fortawesome/free-solid-svg-icons';
-import {Components, SelectAllLabelProps, SelectAllLabelType, TreeMultiSelect} from '../../../../src';
+import {Components, SelectAllLabelProps, SelectAllLabelType, TreeMultiSelect} from '../../treeMultiSelectImport';
 import {getTreeNodeData} from '../../utils';
 
 const CustomSelectAllLabel: FC<SelectAllLabelProps> = (props) => (

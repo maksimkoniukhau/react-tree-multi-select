@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faHandSpock} from '@fortawesome/free-regular-svg-icons';
-import {Components, NodeLabelProps, NodeLabelType, TreeMultiSelect} from '../../../../src';
+import {Components, NodeLabelProps, NodeLabelType, TreeMultiSelect} from '../../treeMultiSelectImport';
 import {getTreeNodeData} from '../../utils';
 
 const CustomNodeLabel: FC<NodeLabelProps> = (props) => (

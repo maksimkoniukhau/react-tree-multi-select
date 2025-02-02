@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {FieldProps, TreeMultiSelect, Type} from '../../../../src';
+import {FieldProps, TreeMultiSelect, Type} from '../../treeMultiSelectImport';
 
 interface CustomFieldProps {
   label: string;

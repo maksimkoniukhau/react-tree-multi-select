@@ -1,4 +1,4 @@
-import {TreeNode} from '../../src';
+import {TreeNode} from './treeMultiSelectImport';
 
 export interface OptionTreeNode extends TreeNode {
   option: Option;

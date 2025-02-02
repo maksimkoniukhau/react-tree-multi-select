@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSquare, faSquareCheck, faSquareMinus} from '@fortawesome/free-regular-svg-icons';
-import {Components, SelectAllCheckboxProps, SelectAllCheckboxType, TreeMultiSelect} from '../../../../src';
+import {Components, SelectAllCheckboxProps, SelectAllCheckboxType, TreeMultiSelect} from '../../treeMultiSelectImport';
 import {getTreeNodeData} from '../../utils';
 
 const CustomSelectAllCheckbox: FC<SelectAllCheckboxProps> = (props) => (

@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCode} from '@fortawesome/free-solid-svg-icons';
-import {ChipLabelProps, ChipLabelType, Components, TreeMultiSelect} from '../../../../src';
+import {ChipLabelProps, ChipLabelType, Components, TreeMultiSelect} from '../../treeMultiSelectImport';
 import {getTreeNodeData} from '../../utils';
 
 const CustomChipLabel: FC<ChipLabelProps> = (props) => (

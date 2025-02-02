@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
-import {ChipClearProps, ChipClearType, Components, TreeMultiSelect} from '../../../../src';
+import {ChipClearProps, ChipClearType, Components, TreeMultiSelect} from '../../treeMultiSelectImport';
 import {getTreeNodeData} from '../../utils';
 
 const CustomChipClear: FC<ChipClearProps> = (props) => (

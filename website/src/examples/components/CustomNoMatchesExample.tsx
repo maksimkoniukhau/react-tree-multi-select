@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faFaceSadTear} from '@fortawesome/free-regular-svg-icons';
-import {Components, NoMatchesProps, NoMatchesType, TreeMultiSelect} from '../../../../src';
+import {Components, NoMatchesProps, NoMatchesType, TreeMultiSelect} from '../../treeMultiSelectImport';
 import {getTreeNodeData} from '../../utils';
 
 const CustomNoMatches: FC<NoMatchesProps> = (props) => (

@@ -1,11 +1,13 @@
 import React, {FC, memo, useMemo, useState} from 'react';
-import {CheckedState, TreeMultiSelect, TreeNode, Type} from '../../src';
+import {CheckedState, TreeMultiSelect, TreeNode, Type} from './treeMultiSelectImport';
 import {getTreeNodeData} from './utils';
 import {Select} from './Select';
 import {Checkbox} from './Checkbox';
 import {Input} from './Input';
-import {INPUT_PLACEHOLDER, NO_MATCHES} from '../../src/constants';
 import {OptionTreeNode} from './data';
+
+const INPUT_PLACEHOLDER = 'search...';
+const NO_MATCHES = 'No matches';
 
 export const BasicPage: FC = memo(() => {
 
