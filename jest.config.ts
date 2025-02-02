@@ -6,7 +6,7 @@ const config: JestConfigWithTsJest = {
   transform: {
     "^.+.tsx?$": ["ts-jest", {tsconfig: './tsconfig.jest.json'}],
   },
-  setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
+  setupFilesAfterEnv: ['<rootDir>/setupTests.tsx'],
   testMatch: [
     "**/src/__tests__/**/?(*.)test.ts?(x)"
   ],

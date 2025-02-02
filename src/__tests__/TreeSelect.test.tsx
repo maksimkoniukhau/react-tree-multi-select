@@ -5,7 +5,14 @@ import {render, screen} from '@testing-library/react';
 import userEvent, {UserEvent} from '@testing-library/user-event';
 import {TreeMultiSelect} from '../index';
 import {getBaseTreeNodeData} from './testutils/dataUtils';
-import {getDropdown, getField, getRootContainer} from './testutils/selectorUtils';
+import {
+  getDropdown,
+  getDropdownInput,
+  getField,
+  getFieldInput,
+  getHiddenInput,
+  getRootContainer
+} from './testutils/selectorUtils';
 
 const treeNodeData = getBaseTreeNodeData();
 
@@ -42,6 +49,22 @@ describe('TreeMultiSelect component focus/blur', () => {
     expect(handleBlur).toHaveBeenCalledTimes(blurTimes);
   };
 
+  const inputMatcher = (container: HTMLElement, withDropdownInput: boolean, opened: boolean): void => {
+    if (withDropdownInput) {
+      expect(getFieldInput(container)).not.toBeInTheDocument();
+      expect(getHiddenInput(container)).toBeInTheDocument();
+      if (opened) {
+        expect(getDropdownInput(container)).toBeInTheDocument();
+      }
+    } else {
+      expect(getFieldInput(container)).toBeInTheDocument();
+      expect(getHiddenInput(container)).not.toBeInTheDocument();
+      if (opened) {
+        expect(getDropdownInput(container)).not.toBeInTheDocument();
+      }
+    }
+  };
+
   const user: UserEvent = userEvent.setup();
 
   it.each([[false], [true]])(`focus/blur component when withDropdownInput={%s} (click)`, async (withDropdownInput) => {
@@ -49,13 +72,20 @@ describe('TreeMultiSelect component focus/blur', () => {
     const handleBlur = jest.fn();
 
     const {container} = render(
-      <TreeMultiSelect data={treeNodeData} onFocus={handleFocus} onBlur={handleBlur} withDropdownInput={withDropdownInput}/>
+      <TreeMultiSelect
+        data={treeNodeData}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        withDropdownInput={withDropdownInput}
+      />
     );
 
     expect(getRootContainer(container)).toBeInTheDocument();
+    inputMatcher(container, withDropdownInput, false);
     focusBlurMatcher(container, false, false, handleFocus, 0, handleBlur, 0);
 
     await user.click(getField(container));
+    inputMatcher(container, withDropdownInput, true);
     focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
 
     await user.click(getField(container));
@@ -88,16 +118,23 @@ describe('TreeMultiSelect component focus/blur', () => {
     const handleBlur = jest.fn();
 
     const {container} = render(
-      <TreeMultiSelect data={treeNodeData} onFocus={handleFocus} onBlur={handleBlur} withDropdownInput={withDropdownInput}/>
+      <TreeMultiSelect
+        data={treeNodeData}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        withDropdownInput={withDropdownInput}
+      />
     );
 
     expect(getRootContainer(container)).toBeInTheDocument();
     focusBlurMatcher(container, false, false, handleFocus, 0, handleBlur, 0);
 
     await user.keyboard('{tab}');
+    inputMatcher(container, withDropdownInput, false);
     focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
 
     await user.keyboard('{enter}');
+    inputMatcher(container, withDropdownInput, true);
     focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
 
     await user.keyboard('{arrowup}');
