@@ -16,6 +16,7 @@ import {
   ActionType,
   ChangeInputPayload,
   ClickChipPayload,
+  ClickFieldPayload,
   ExpandPayload,
   FocusElementPayload,
   FocusFieldElementPayload,
@@ -227,7 +228,13 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     focusFieldElement();
     // defaultPrevented is on click field clear icon or chip (or in custom field)
     if (!e.defaultPrevented) {
-      dispatchToggleDropdown(!state.showDropdown);
+      dispatch({
+        type: ActionType.CLICK_FIELD,
+        payload: {
+          showDropdown: !state.showDropdown,
+          focusedFieldElement: INPUT
+        } as ClickFieldPayload
+      });
     }
   }, [state.showDropdown, fieldRef]);
 
@@ -335,14 +342,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     // defaultPrevented is on click chip clear icon
     if (!e.defaultPrevented) {
       e.preventDefault();
-      const focusedElementFound = state.displayedNodes.find(displayedNode => displayedNode.path === node.path)
-        && !state.showDropdown;
       dispatch({
         type: ActionType.CLICK_CHIP,
         payload: {
           showDropdown: !state.showDropdown,
-          focusedFieldElement: state.showDropdown || !focusedElementFound ? node.path : '',
-          focusedElement: focusedElementFound ? node.path : ''
+          focusedFieldElement: node.path,
         } as ClickChipPayload
       });
     }
