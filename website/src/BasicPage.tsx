@@ -142,26 +142,11 @@ export const BasicPage: FC = memo(() => {
         <div className="tree-multi-select-wrapper">
           <TreeMultiSelect
             data={[
-              {
-                label: 'label1',
-                name: 'name1'
-              },
-              {
-                label: 'label2',
-                name: 'name2'
-              },
-              {
-                label: 'label3',
-                name: 'name3'
-              },
-              {
-                label: 'label4',
-                name: 'name4'
-              },
-              {
-                label: 'label5',
-                name: 'name5'
-              }
+              {label: 'label1'},
+              {label: 'label2'},
+              {label: 'label3'},
+              {label: 'label4'},
+              {label: 'label5'}
             ]}
             id="rtms-multi-select"
             withClearAll

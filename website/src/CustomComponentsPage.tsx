@@ -42,14 +42,14 @@ export const CustomComponentsPage: FC = memo(() => {
       <div className="page-content">
         <h2>{'React Tree Multi Select custom components'}</h2>
         <div className="paragraph">
-          {'react-tree-multi-select allows you to customize component by providing your own custom components as a property.\n'}
+          <b>{'react-tree-multi-select'}</b>{' allows you to customize component by providing your own custom components as a property.\n'}
           {'The common pattern of custom component implementing looks like this:'}
         </div>
         <CodeBlock code={customComponentCommonPattern}/>
         <div className="paragraph">
           <span className="important">{'Important'}</span>
           {': you must pass componentAttributes to the root element in order for component to work properly.\n'}
-          {'The only classname can be overriden. Or you can merge component classname with your own like in the example below:'}
+          {'The only classname can be overridden. Or you can merge component classname with your own like in the example below:'}
         </div>
         <CodeBlock code={customComponentMergeClassname}/>
         <div className="paragraph">

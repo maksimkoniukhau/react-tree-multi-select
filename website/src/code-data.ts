@@ -6,35 +6,28 @@ export const ReactTreeMultiSelectApp: FC = () => {
   const data: TreeNode[] = [
     {
       label: 'label1',
-      name: 'name1',
       children: [
         {
-          label: 'child11-label',
-          name: 'child11-name'
+          label: 'child11-label'
         },
         {
-          label: 'child12-label',
-          name: 'child12-name'
+          label: 'child12-label'
         }
       ]
     },
     {
       label: 'label2',
-      name: 'name2',
       children: [
         {
-          label: 'child21-label',
-          name: 'child21-name'
+          label: 'child21-label'
         },
         {
-          label: 'child22-label',
-          name: 'child22-name'
+          label: 'child22-label'
         }
       ]
     },
     {
-      label: 'label3',
-      name: 'name3'
+      label: 'label3'
     }
   ];
   
