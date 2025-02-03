@@ -2,7 +2,7 @@ import * as sass from 'sass';
 import {resolve} from 'path';
 import {Configuration} from 'webpack';
 
-const config: Configuration = {
+const commonConfig: Configuration = {
   entry: './src/index.ts',
   module: {
     rules: [
@@ -34,17 +34,33 @@ const config: Configuration = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
+  externals: {
+    react: 'react',
+  },
+};
+
+const umdConfig: Configuration = {
+  ...commonConfig,
   output: {
     filename: 'index.umd.js',
     path: resolve(__dirname, 'dist'),
     libraryTarget: "umd",
     library: 'rtms',
     umdNamedDefine: true,
-    clean: true,
-  },
-  externals: {
-    react: 'react',
   },
 };
 
-export default config;
+const moduleConfig: Configuration = {
+  ...commonConfig,
+  experiments: {
+    outputModule: true
+  },
+  output: {
+    filename: 'index.mjs',
+    path: resolve(__dirname, 'dist'),
+    libraryTarget: 'module',
+    clean: true,
+  },
+};
+
+module.exports = [umdConfig, moduleConfig];
