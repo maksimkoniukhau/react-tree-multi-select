@@ -1,6 +1,7 @@
 import * as sass from 'sass';
 import {resolve} from 'path';
 import {Configuration} from 'webpack';
+import TerserPlugin from 'terser-webpack-plugin';
 
 const commonConfig: Configuration = {
   entry: './src/index.ts',
@@ -37,6 +38,19 @@ const commonConfig: Configuration = {
   externals: {
     react: 'react',
   },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          format: {
+            comments: false,
+          },
+        },
+        extractComments: false,
+      }),
+    ],
+  }
 };
 
 const umdConfig: Configuration = {
