@@ -1,3 +1,5 @@
+[![NPM Version](https://img.shields.io/npm/v/react-tree-multi-select)](https://npmjs.com/package/react-tree-multi-select)
+
 # React Tree Multi Select
 
 **react-tree-multi-select** is a fast, highly customizable and feature-rich component that combines **tree select**, **multi-select** and simple **select** functionality into a single versatile solution.
