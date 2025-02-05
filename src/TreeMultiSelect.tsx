@@ -254,7 +254,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       type: ActionType.UNSELECT_ALL,
       payload: {
         selectedNodes,
-        selectAllCheckedState
+        selectAllCheckedState,
+        focusedFieldElement: INPUT,
+        focusedElement: ''
       } as UnselectAllPayload
     });
 
@@ -352,9 +354,13 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   }, [state.displayedNodes, state.showDropdown]);
 
-  const handleDeleteNode = useCallback((node: Node) => (e: React.MouseEvent | React.KeyboardEvent): void => {
-    e.preventDefault();
+  const handleDeleteNode = (node: Node) => (event: React.MouseEvent | React.KeyboardEvent): void => {
+    event.preventDefault();
     if (!node.disabled) {
+      const prevFocusedFieldElement = getPrevFocusedFieldElement();
+      const newFocusedFieldElement = (prevFocusedFieldElement === state.focusedFieldElement) || (event.type === 'click')
+        ? INPUT
+        : prevFocusedFieldElement;
       node.handleUnselect(type);
       const selectedNodes = state.nodes.filter(nod => nod.selected);
 
@@ -362,13 +368,15 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         type: ActionType.UNSELECT,
         payload: {
           selectedNodes,
-          selectAllCheckedState: getSelectAllCheckedState(selectedNodes, state.nodes)
+          selectAllCheckedState: getSelectAllCheckedState(selectedNodes, state.nodes),
+          focusedFieldElement: newFocusedFieldElement,
+          focusedElement: ''
         } as UnselectPayload
       });
 
       callNodeChangeHandler(node, selectedNodes);
     }
-  }, [state.nodes, type]);
+  };
 
   const handleToggleNode = useCallback((node: Node) => (e: React.MouseEvent | React.KeyboardEvent): void => {
     // defaultPrevented is on click expand node icon

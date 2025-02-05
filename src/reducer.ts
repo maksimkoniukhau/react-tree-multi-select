@@ -50,11 +50,15 @@ export interface ToggleAllPayload {
 export interface UnselectPayload {
   selectedNodes: Node[];
   selectAllCheckedState: CheckedState;
+  focusedFieldElement: string;
+  focusedElement: string;
 }
 
 export interface UnselectAllPayload {
   selectedNodes: Node[];
   selectAllCheckedState: CheckedState;
+  focusedFieldElement: string;
+  focusedElement: string;
 }
 
 export interface ExpandPayload {
@@ -209,18 +213,14 @@ export const reducer = (state = initialState, action: Action): State => {
       const payload = action.payload as UnselectPayload;
       return {
         ...state,
-        ...payload,
-        focusedFieldElement: INPUT,
-        focusedElement: ''
+        ...payload
       };
     }
     case ActionType.UNSELECT_ALL: {
       const payload = action.payload as UnselectAllPayload;
       return {
         ...state,
-        ...payload,
-        focusedFieldElement: INPUT,
-        focusedElement: ''
+        ...payload
       };
     }
     case ActionType.EXPAND: {
