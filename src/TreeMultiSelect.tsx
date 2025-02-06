@@ -18,8 +18,7 @@ import {
   ClickChipPayload,
   ClickFieldPayload,
   ExpandPayload,
-  FocusElementPayload,
-  FocusFieldElementPayload,
+  FocusPayload,
   initialState,
   InitPayload,
   reducer,
@@ -89,26 +88,29 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const dispatchToggleDropdown = (showDropdown: boolean): void => {
     dispatch({
       type: ActionType.TOGGLE_DROPDOWN,
-      payload: {showDropdown} as ToggleDropdownPayload
+      payload: {
+        showDropdown,
+        focusedElement: !showDropdown ? '' : state.focusedElement
+      } as ToggleDropdownPayload
+    });
+  };
+
+  const dispatchFocus = (focusedFieldElement: string, focusedElement: string): void => {
+    dispatch({
+      type: ActionType.FOCUS,
+      payload: {
+        focusedFieldElement,
+        focusedElement,
+      } as FocusPayload
     });
   };
 
   const dispatchFocusElement = (focusedElement: string): void => {
-    dispatch({
-      type: ActionType.FOCUS_ELEMENT,
-      payload: {
-        focusedElement
-      } as FocusElementPayload
-    });
+    dispatchFocus(focusedElement ? '' : state.focusedFieldElement, focusedElement);
   };
 
   const dispatchFocusFieldElement = (focusedFieldElement: string): void => {
-    dispatch({
-      type: ActionType.FOCUS_FIELD_ELEMENT,
-      payload: {
-        focusedFieldElement
-      } as FocusFieldElementPayload
-    });
+    dispatchFocus(focusedFieldElement, focusedFieldElement ? '' : state.focusedElement);
   };
 
   const getSelectAllCheckedState = (selectedNodes: Node[], allNodes: Node[]): CheckedState => {
@@ -279,7 +281,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       payload: {
         searchValue: value,
         displayedNodes,
-        showSelectAll: type !== Type.SELECT && withSelectAll && !Boolean(value)
+        showSelectAll: type !== Type.SELECT && withSelectAll && !Boolean(value),
+        focusedFieldElement: INPUT,
+        focusedElement: ''
       } as ChangeInputPayload
     });
   }, [state.nodes, withSelectAll]);
@@ -314,6 +318,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       payload: {
         selectedNodes,
         selectAllCheckedState,
+        focusedFieldElement: '',
         focusedElement: SELECT_ALL
       } as ToggleAllPayload
     });
@@ -402,6 +407,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         payload: {
           selectedNodes,
           selectAllCheckedState: getSelectAllCheckedState(selectedNodes, state.nodes),
+          focusedFieldElement: '',
           focusedElement: node.path
         } as TogglePayload
       });
@@ -420,6 +426,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       type: ActionType.EXPAND,
       payload: {
         displayedNodes,
+        focusedFieldElement: '',
         focusedElement: node.path
       } as ExpandPayload
     });

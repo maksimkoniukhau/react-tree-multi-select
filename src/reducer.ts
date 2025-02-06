@@ -1,4 +1,3 @@
-import {INPUT} from './constants';
 import {CheckedState} from './types';
 import {Node} from './Node';
 
@@ -12,6 +11,7 @@ export interface InitPayload {
 
 export interface ToggleDropdownPayload {
   showDropdown: boolean;
+  focusedElement: string;
 }
 
 export interface ClickFieldPayload {
@@ -28,6 +28,8 @@ export interface ChangeInputPayload {
   searchValue: string;
   displayedNodes: Node[];
   showSelectAll: boolean;
+  focusedFieldElement: string;
+  focusedElement: string;
 }
 
 export interface ClickChipPayload {
@@ -39,12 +41,14 @@ export interface ClickChipPayload {
 export interface TogglePayload {
   selectedNodes: Node[];
   selectAllCheckedState: CheckedState;
+  focusedFieldElement: string;
   focusedElement: string;
 }
 
 export interface ToggleAllPayload {
   selectedNodes: Node[];
   selectAllCheckedState: CheckedState;
+  focusedFieldElement: string;
   focusedElement: string;
 }
 
@@ -64,15 +68,13 @@ export interface UnselectAllPayload {
 
 export interface ExpandPayload {
   displayedNodes: Node[];
-  focusedElement: string;
-}
-
-export interface FocusElementPayload {
-  focusedElement: string;
-}
-
-export interface FocusFieldElementPayload {
   focusedFieldElement: string;
+  focusedElement: string;
+}
+
+export interface FocusPayload {
+  focusedFieldElement: string;
+  focusedElement: string;
 }
 
 export interface ResetPayload {
@@ -94,8 +96,7 @@ export enum ActionType {
   UNSELECT,
   UNSELECT_ALL,
   EXPAND,
-  FOCUS_ELEMENT,
-  FOCUS_FIELD_ELEMENT,
+  FOCUS,
   RESET
 }
 
@@ -110,8 +111,7 @@ export type Payload = InitPayload
   | UnselectPayload
   | UnselectAllPayload
   | ExpandPayload
-  | FocusElementPayload
-  | FocusFieldElementPayload
+  | FocusPayload
   | ResetPayload;
 
 export interface Action {
@@ -156,100 +156,20 @@ export const reducer = (state = initialState, action: Action): State => {
         ...payload
       };
     }
-    case ActionType.TOGGLE_DROPDOWN: {
-      const payload = action.payload as ToggleDropdownPayload;
+    case ActionType.TOGGLE_DROPDOWN:
+    case ActionType.CLICK_FIELD:
+    case ActionType.SHOW_SELECT_ALL:
+    case ActionType.CHANGE_INPUT:
+    case ActionType.CLICK_CHIP:
+    case ActionType.TOGGLE:
+    case ActionType.TOGGLE_ALL:
+    case ActionType.UNSELECT:
+    case ActionType.UNSELECT_ALL:
+    case ActionType.EXPAND:
+    case ActionType.FOCUS: {
       return {
         ...state,
-        ...payload,
-        focusedElement: !payload.showDropdown ? '' : state.focusedElement
-      };
-    }
-    case ActionType.CLICK_FIELD: {
-      const payload = action.payload as ClickFieldPayload;
-      return {
-        ...state,
-        ...payload
-      };
-    }
-    case ActionType.SHOW_SELECT_ALL: {
-      const payload = action.payload as ShowSelectAllPayload;
-      return {
-        ...state,
-        ...payload
-      };
-    }
-    case ActionType.CHANGE_INPUT: {
-      const payload = action.payload as ChangeInputPayload;
-      return {
-        ...state,
-        ...payload,
-        focusedFieldElement: INPUT,
-        focusedElement: ''
-      };
-    }
-    case ActionType.CLICK_CHIP: {
-      const payload = action.payload as ClickChipPayload;
-      return {
-        ...state,
-        ...payload
-      };
-    }
-    case ActionType.TOGGLE: {
-      const payload = action.payload as TogglePayload;
-      return {
-        ...state,
-        ...payload,
-        focusedFieldElement: ''
-      };
-    }
-    case ActionType.TOGGLE_ALL: {
-      const payload = action.payload as ToggleAllPayload;
-      return {
-        ...state,
-        ...payload,
-        focusedFieldElement: ''
-      };
-    }
-    case ActionType.UNSELECT: {
-      const payload = action.payload as UnselectPayload;
-      return {
-        ...state,
-        ...payload
-      };
-    }
-    case ActionType.UNSELECT_ALL: {
-      const payload = action.payload as UnselectAllPayload;
-      return {
-        ...state,
-        ...payload
-      };
-    }
-    case ActionType.EXPAND: {
-      const payload = action.payload as ExpandPayload;
-      return {
-        ...state,
-        ...payload,
-        focusedFieldElement: ''
-      };
-    }
-    case ActionType.FOCUS_ELEMENT: {
-      const payload = action.payload as FocusElementPayload;
-      return {
-        ...state,
-        ...payload,
-        focusedFieldElement: payload.focusedElement
-          ? ''
-          : state.focusedFieldElement
-      };
-    }
-    case ActionType.FOCUS_FIELD_ELEMENT: {
-      const payload = action.payload as FocusFieldElementPayload;
-      return {
-        ...state,
-        ...payload,
-        focusedElement: payload.focusedFieldElement
-          ? ''
-          : state.focusedElement
+        ...action.payload
       };
     }
     case ActionType.RESET: {
