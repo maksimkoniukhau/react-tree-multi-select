@@ -232,7 +232,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         type: ActionType.CLICK_FIELD,
         payload: {
           showDropdown: !state.showDropdown,
-          focusedFieldElement: INPUT
+          focusedFieldElement: INPUT,
+          focusedElement: ''
         } as ClickFieldPayload
       });
     }
@@ -349,6 +350,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         payload: {
           showDropdown: !state.showDropdown,
           focusedFieldElement: node.path,
+          focusedElement: ''
         } as ClickChipPayload
       });
     }

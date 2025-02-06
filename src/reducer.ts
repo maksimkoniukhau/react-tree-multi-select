@@ -17,6 +17,7 @@ export interface ToggleDropdownPayload {
 export interface ClickFieldPayload {
   showDropdown: boolean;
   focusedFieldElement: string;
+  focusedElement: string;
 }
 
 export interface ShowSelectAllPayload {
