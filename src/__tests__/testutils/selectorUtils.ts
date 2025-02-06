@@ -21,3 +21,11 @@ export const getHiddenInput = (container: HTMLElement): HTMLElement => {
 export const getDropdown = (container: HTMLElement): HTMLElement => {
   return container.querySelector('.rtms-dropdown') as HTMLElement;
 };
+
+export const getListItems = (container: HTMLElement): HTMLElement[] => {
+  return Array.from(getDropdown(container).querySelectorAll('.rtms-list-item')) as HTMLElement[];
+};
+
+export const getListItem = (container: HTMLElement, index: number): HTMLElement => {
+  return getListItems(container)[index];
+};

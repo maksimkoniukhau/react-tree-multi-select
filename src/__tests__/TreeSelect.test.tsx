@@ -11,12 +11,13 @@ import {
   getField,
   getFieldInput,
   getHiddenInput,
+  getListItem,
   getRootContainer
 } from './testutils/selectorUtils';
 
 const treeNodeData = getBaseTreeNodeData();
 
-describe('TreeMultiSelect component base', () => {
+describe('TreeMultiSelect component: base', () => {
   it('renders component', () => {
     render(<TreeMultiSelect data={treeNodeData}/>);
 
@@ -25,7 +26,7 @@ describe('TreeMultiSelect component base', () => {
   });
 });
 
-describe('TreeMultiSelect component focus/blur', () => {
+describe('TreeMultiSelect component: focus/blur component and open/close dropdown', () => {
   const focusBlurMatcher = (
     container: HTMLElement,
     focused: boolean,
@@ -67,104 +68,270 @@ describe('TreeMultiSelect component focus/blur', () => {
 
   const user: UserEvent = userEvent.setup();
 
-  it.each([[false], [true]])(`focus/blur component when withDropdownInput={%s} (click)`, async (withDropdownInput) => {
-    const handleFocus = jest.fn();
-    const handleBlur = jest.fn();
+  it.each([[false], [true]])(`focus/blur and open/close when withDropdownInput={%s} (click)`,
+    async (withDropdownInput) => {
+      const handleFocus = jest.fn();
+      const handleBlur = jest.fn();
 
-    const {container} = render(
-      <TreeMultiSelect
-        data={treeNodeData}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        withDropdownInput={withDropdownInput}
-      />
-    );
+      const {container} = render(
+        <TreeMultiSelect
+          data={treeNodeData}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          withDropdownInput={withDropdownInput}
+        />
+      );
 
-    expect(getRootContainer(container)).toBeInTheDocument();
-    inputMatcher(container, withDropdownInput, false);
-    focusBlurMatcher(container, false, false, handleFocus, 0, handleBlur, 0);
+      expect(getRootContainer(container)).toBeInTheDocument();
+      inputMatcher(container, withDropdownInput, false);
+      focusBlurMatcher(container, false, false, handleFocus, 0, handleBlur, 0);
 
-    await user.click(getField(container));
-    inputMatcher(container, withDropdownInput, true);
-    focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+      await user.click(getField(container));
+      inputMatcher(container, withDropdownInput, true);
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
 
-    await user.click(getField(container));
-    focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
 
-    await user.click(getField(container));
-    focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
 
-    await user.click(getField(container));
-    focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
 
-    await user.click(document.body);
-    focusBlurMatcher(container, false, false, handleFocus, 1, handleBlur, 1);
+      await user.click(document.body);
+      focusBlurMatcher(container, false, false, handleFocus, 1, handleBlur, 1);
 
-    await user.click(getField(container));
-    focusBlurMatcher(container, true, true, handleFocus, 2, handleBlur, 1);
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, true, handleFocus, 2, handleBlur, 1);
 
-    await user.click(getField(container));
-    focusBlurMatcher(container, true, false, handleFocus, 2, handleBlur, 1);
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, false, handleFocus, 2, handleBlur, 1);
 
-    await user.click(getField(container));
-    focusBlurMatcher(container, true, true, handleFocus, 2, handleBlur, 1);
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, true, handleFocus, 2, handleBlur, 1);
 
-    await user.click(document.body);
-    focusBlurMatcher(container, false, false, handleFocus, 2, handleBlur, 2);
-  });
+      await user.click(document.body);
+      focusBlurMatcher(container, false, false, handleFocus, 2, handleBlur, 2);
+    });
 
-  it.each([[false], [true]])(`focus/blur component when withDropdownInput={%s} (click)`, async (withDropdownInput) => {
-    const handleFocus = jest.fn();
-    const handleBlur = jest.fn();
+  it.each([[false], [true]])(`focus/blur and open/close when withDropdownInput={%s} (keydown)`,
+    async (withDropdownInput) => {
+      const handleFocus = jest.fn();
+      const handleBlur = jest.fn();
 
-    const {container} = render(
-      <TreeMultiSelect
-        data={treeNodeData}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        withDropdownInput={withDropdownInput}
-      />
-    );
+      const {container} = render(
+        <TreeMultiSelect
+          data={treeNodeData}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          withDropdownInput={withDropdownInput}
+        />
+      );
 
-    expect(getRootContainer(container)).toBeInTheDocument();
-    focusBlurMatcher(container, false, false, handleFocus, 0, handleBlur, 0);
+      expect(getRootContainer(container)).toBeInTheDocument();
+      focusBlurMatcher(container, false, false, handleFocus, 0, handleBlur, 0);
 
-    await user.keyboard('{tab}');
-    inputMatcher(container, withDropdownInput, false);
-    focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+      await user.keyboard('{tab}');
+      inputMatcher(container, withDropdownInput, false);
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
 
-    await user.keyboard('{enter}');
-    inputMatcher(container, withDropdownInput, true);
-    focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+      await user.keyboard('{enter}');
+      inputMatcher(container, withDropdownInput, true);
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
 
-    await user.keyboard('{arrowup}');
-    focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+      await user.keyboard('{arrowup}');
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
 
-    await user.keyboard('{arrowdown}');
-    focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+      await user.keyboard('{arrowdown}');
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
 
-    await user.keyboard('{tab}');
-    focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+      await user.keyboard('{tab}');
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
 
-    await user.keyboard('{arrowup}');
-    focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+      await user.keyboard('{arrowup}');
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
 
-    await user.keyboard('{escape}');
-    focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+      await user.keyboard('{escape}');
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
 
-    await user.keyboard('{tab}');
-    focusBlurMatcher(container, false, false, handleFocus, 1, handleBlur, 1);
+      await user.keyboard('{tab}');
+      focusBlurMatcher(container, false, false, handleFocus, 1, handleBlur, 1);
 
-    await user.keyboard('{shift}{tab}');
-    focusBlurMatcher(container, true, false, handleFocus, 2, handleBlur, 1);
+      await user.keyboard('{shift}{tab}');
+      focusBlurMatcher(container, true, false, handleFocus, 2, handleBlur, 1);
 
-    await user.keyboard('{arrowdown}');
-    focusBlurMatcher(container, true, true, handleFocus, 2, handleBlur, 1);
+      await user.keyboard('{arrowdown}');
+      focusBlurMatcher(container, true, true, handleFocus, 2, handleBlur, 1);
 
-    await user.keyboard('{escape}');
-    focusBlurMatcher(container, true, false, handleFocus, 2, handleBlur, 1);
+      await user.keyboard('{escape}');
+      focusBlurMatcher(container, true, false, handleFocus, 2, handleBlur, 1);
 
-    await user.keyboard('{shift}{tab}');
-    focusBlurMatcher(container, false, false, handleFocus, 2, handleBlur, 2);
-  });
+      await user.keyboard('{shift}{tab}');
+      focusBlurMatcher(container, false, false, handleFocus, 2, handleBlur, 2);
+    });
+
+  it.each([[false], [true]])(`focus/blur and open/close when withDropdownInput={%s} (click/keydown)`,
+    async (withDropdownInput) => {
+      const handleFocus = jest.fn();
+      const handleBlur = jest.fn();
+
+      const {container} = render(
+        <TreeMultiSelect
+          data={treeNodeData}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          withDropdownInput={withDropdownInput}
+        />
+      );
+
+      expect(getRootContainer(container)).toBeInTheDocument();
+      focusBlurMatcher(container, false, false, handleFocus, 0, handleBlur, 0);
+
+      await user.keyboard('{tab}');
+      inputMatcher(container, withDropdownInput, false);
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{enter}');
+      inputMatcher(container, withDropdownInput, true);
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{enter}');
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{arrowup}');
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{arrowup}');
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{arrowdown}');
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{arrowdown}');
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{escape}');
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{escape}');
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{tab}');
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{tab}');
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{enter}');
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{enter}');
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{arrowup}');
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{arrowup}');
+      focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{tab}');
+      focusBlurMatcher(container, false, false, handleFocus, 1, handleBlur, 1);
+
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, true, handleFocus, 2, handleBlur, 1);
+
+      await user.click(getListItem(container, 0));
+      focusBlurMatcher(container, true, true, handleFocus, 2, handleBlur, 1);
+
+      await user.keyboard('{shift}{tab}');
+      focusBlurMatcher(container, true, false, handleFocus, 2, handleBlur, 1);
+
+      await user.keyboard('{shift}{tab}');
+      focusBlurMatcher(container, false, false, handleFocus, 2, handleBlur, 2);
+
+      await user.keyboard('{tab}');
+      focusBlurMatcher(container, true, false, handleFocus, 3, handleBlur, 2);
+
+      await user.click(getField(container));
+      focusBlurMatcher(container, true, true, handleFocus, 3, handleBlur, 2);
+
+      await user.click(getListItem(container, 0));
+      focusBlurMatcher(container, true, true, handleFocus, 3, handleBlur, 2);
+
+      await user.click(document.body);
+      focusBlurMatcher(container, false, false, handleFocus, 3, handleBlur, 3);
+    });
 });
