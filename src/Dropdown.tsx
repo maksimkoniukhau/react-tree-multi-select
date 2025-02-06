@@ -100,7 +100,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
         ? 0
         : displayedNodes.indexOf(nodeMap?.get(focusedElement)) + (showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0);
       if (elementIndex >= 0) {
-        virtuosoRef.current.scrollIntoView({
+        virtuosoRef.current.scrollIntoView?.({
           index: elementIndex,
           calculateViewLocation
         });
