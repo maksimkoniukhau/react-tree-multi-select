@@ -40,6 +40,7 @@ export interface TreeMultiSelectProps {
   className?: string;
   inputPlaceholder?: string;
   noMatchesText?: string;
+  isSearchable?: boolean;
   withClearAll?: boolean;
   withSelectAll?: boolean;
   withDropdownInput?: boolean;
@@ -60,6 +61,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     className = '',
     inputPlaceholder = INPUT_PLACEHOLDER,
     noMatchesText = NO_MATCHES,
+    isSearchable = true,
     withClearAll = true,
     withSelectAll = false,
     withDropdownInput = false,
@@ -545,7 +547,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   };
 
   const manageComponentFocusOnKeyDown = (): void => {
-    if (withDropdownInput && state.showDropdown) {
+    if (withDropdownInput && isSearchable && state.showDropdown) {
       focusFieldElement();
     }
   };
@@ -665,7 +667,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   };
 
   const handleDropdownUnmount = (): void => {
-    if (withDropdownInput) {
+    if (withDropdownInput && isSearchable) {
       const fieldFocusableElement = getFieldFocusableElement(fieldRef);
       if (document.activeElement !== fieldFocusableElement) {
         dropdownUnmountedOnClickOutside.current = true;
@@ -675,11 +677,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   };
 
   const handleListItemRender = useCallback(() => {
-    if (withDropdownInput && dropdownInputRef?.current && document.activeElement !== dropdownInputRef?.current) {
+    if (withDropdownInput && isSearchable && dropdownInputRef?.current && document.activeElement !== dropdownInputRef?.current) {
       isDropdownInputFocused.current = true;
       dropdownInputRef?.current?.focus();
     }
-  }, [withDropdownInput, dropdownInputRef]);
+  }, [withDropdownInput, isSearchable, dropdownInputRef]);
 
   const debouncedHandleListItemRender = debounce(handleListItemRender, 150);
 
@@ -742,8 +744,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
                     />}
               </components.ChipContainer.component>
             ))}
-          {withDropdownInput ? (
-            <input className="rtms-input-hidden"/>
+          {withDropdownInput || !isSearchable ? (
+            <input className="rtms-input-hidden" readOnly/>
           ) : (
             <components.Input.component
               componentAttributes={{
@@ -796,7 +798,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           onChangeSelectAll={handleChangeSelectAll}
           onToggleNode={handleToggleNode}
           onClickExpandNode={handleClickExpandNode}
-          input={withDropdownInput ? (
+          input={withDropdownInput && isSearchable ? (
             <components.Input.component
               componentAttributes={{
                 ref: dropdownInputRef,
