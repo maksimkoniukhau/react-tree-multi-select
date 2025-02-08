@@ -26,6 +26,50 @@ describe('TreeMultiSelect component: base', () => {
   });
 });
 
+describe('TreeMultiSelect component: isSearchable prop', () => {
+  const isSearchableMatcher = (
+    container: HTMLElement, isSearchable: boolean, withDropdownInput: boolean, opened: boolean
+  ): void => {
+    if (isSearchable) {
+      if (withDropdownInput) {
+        expect(getFieldInput(container)).not.toBeInTheDocument();
+        expect(getHiddenInput(container)).toBeInTheDocument();
+        if (opened) {
+          expect(getDropdownInput(container)).toBeInTheDocument();
+        }
+      } else {
+        expect(getFieldInput(container)).toBeInTheDocument();
+        expect(getHiddenInput(container)).not.toBeInTheDocument();
+        if (opened) {
+          expect(getDropdownInput(container)).not.toBeInTheDocument();
+        }
+      }
+    } else {
+      expect(getFieldInput(container)).not.toBeInTheDocument();
+      expect(getHiddenInput(container)).toBeInTheDocument();
+      if (opened) {
+        expect(getDropdownInput(container)).not.toBeInTheDocument();
+      }
+    }
+  };
+
+  const user: UserEvent = userEvent.setup();
+
+  it.each([[true, false], [true, true], [false, false], [false, true]])
+  ('renders component when isSearchable={%s} and withDropdownInput={%s}',
+    async (isSearchable, withDropdownInput) => {
+      const {container} = render(
+        <TreeMultiSelect data={treeNodeData} isSearchable={isSearchable} withDropdownInput={withDropdownInput}/>
+      );
+
+      isSearchableMatcher(container, isSearchable, withDropdownInput, false);
+
+      await user.click(getField(container));
+
+      isSearchableMatcher(container, isSearchable, withDropdownInput, true);
+    });
+});
+
 describe('TreeMultiSelect component: focus/blur component and open/close dropdown', () => {
   const focusBlurMatcher = (
     container: HTMLElement,
