@@ -1,7 +1,6 @@
-import React, {FC, JSX, memo, ReactNode, useEffect, useRef, useState} from 'react';
+import React, {FC, JSX, memo, ReactNode, RefObject, useEffect, useRef, useState} from 'react';
 import {CalculateViewLocation, StateSnapshot, Virtuoso, VirtuosoHandle} from 'react-virtuoso'
 import {DEFAULT_OPTIONS_CONTAINER_HEIGHT, DEFAULT_OPTIONS_CONTAINER_WIDTH, SELECT_ALL} from './constants';
-import {preventDefaultOnMouseEvent} from './utils/commonUtils';
 import {CheckedState, Type} from './types';
 import {InnerComponents} from './innerTypes';
 import {Node} from './Node';
@@ -22,6 +21,7 @@ export interface DropdownProps {
   onToggleNode: (node: Node) => (e: React.MouseEvent) => void;
   onClickExpandNode: (node: Node) => (e: React.MouseEvent) => void;
   input: ReactNode;
+  inputRef: RefObject<HTMLInputElement>
   onUnmount: () => void;
   components: InnerComponents;
   onListItemRender: () => void;
@@ -45,6 +45,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     onToggleNode,
     onClickExpandNode,
     input,
+    inputRef,
     onUnmount,
     components,
     onListItemRender
@@ -133,12 +134,15 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     />
   };
 
-  return (
-    <div
-      className="rtms-dropdown"
+  const handleMouseDown = (event: React.MouseEvent) => {
+    if (event.target !== inputRef?.current) {
       // needed for staying focus on input
-      onMouseDown={preventDefaultOnMouseEvent}
-    >
+      event.preventDefault();
+    }
+  };
+
+  return (
+    <div className="rtms-dropdown" onMouseDown={handleMouseDown}>
       <Virtuoso
         ref={virtuosoRef}
         style={{height: `${height}px`, width: DEFAULT_OPTIONS_CONTAINER_WIDTH, borderRadius: '4px'}}

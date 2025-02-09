@@ -6,10 +6,13 @@ import userEvent, {UserEvent} from '@testing-library/user-event';
 import {TreeMultiSelect} from '../index';
 import {getBaseTreeNodeData} from './testutils/dataUtils';
 import {
+  getChipContainer,
+  getChipLabel,
   getDropdown,
   getDropdownInput,
   getField,
   getFieldInput,
+  getFieldToggle,
   getHiddenInput,
   getListItem,
   getRootContainer
@@ -134,25 +137,25 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
       inputMatcher(container, withDropdownInput, true);
       focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
 
-      await user.click(getField(container));
+      await user.click(getChipContainer(container, 0));
       focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
 
-      await user.click(getField(container));
+      await user.click(getFieldToggle(container));
       focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
 
-      await user.click(getField(container));
+      await user.click(getChipLabel(container, 0));
       focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
 
       await user.click(document.body);
       focusBlurMatcher(container, false, false, handleFocus, 1, handleBlur, 1);
 
-      await user.click(getField(container));
+      await user.click(getChipLabel(container, 0));
       focusBlurMatcher(container, true, true, handleFocus, 2, handleBlur, 1);
 
       await user.click(getField(container));
       focusBlurMatcher(container, true, false, handleFocus, 2, handleBlur, 1);
 
-      await user.click(getField(container));
+      await user.click(getChipContainer(container, 0));
       focusBlurMatcher(container, true, true, handleFocus, 2, handleBlur, 1);
 
       await user.click(document.body);
@@ -252,7 +255,7 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
       await user.click(getListItem(container, 0));
       focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
 
-      await user.click(getField(container));
+      await user.click(getFieldToggle(container));
       focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
 
       await user.keyboard('{arrowup}');
@@ -261,7 +264,7 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
       await user.click(getListItem(container, 0));
       focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
 
-      await user.click(getField(container));
+      await user.click(getChipContainer(container, 0));
       focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
 
       await user.keyboard('{arrowup}');
@@ -279,7 +282,7 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
       await user.click(getListItem(container, 0));
       focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
 
-      await user.click(getField(container));
+      await user.click(getChipLabel(container, 0));
       focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
 
       await user.keyboard('{arrowdown}');
@@ -291,7 +294,7 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
       await user.click(getField(container));
       focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
 
-      await user.click(getField(container));
+      await user.click(getFieldToggle(container));
       focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
 
       await user.click(getListItem(container, 0));
@@ -309,7 +312,7 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
       await user.keyboard('{escape}');
       focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
 
-      await user.click(getField(container));
+      await user.click(getChipLabel(container, 0));
       focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
 
       await user.click(getListItem(container, 0));
@@ -327,7 +330,7 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
       await user.keyboard('{tab}');
       focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
 
-      await user.click(getField(container));
+      await user.click(getFieldToggle(container));
       focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
 
       await user.keyboard('{enter}');
@@ -345,7 +348,7 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
       await user.keyboard('{arrowup}');
       focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
 
-      await user.click(getField(container));
+      await user.click(getChipContainer(container, 0));
       focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
 
       await user.keyboard('{arrowup}');

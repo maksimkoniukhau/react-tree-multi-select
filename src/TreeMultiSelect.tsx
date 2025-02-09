@@ -76,6 +76,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
   const treeMultiSelectRef = useRef<HTMLDivElement>(null);
   const fieldRef = useRef<HTMLDivElement>(null);
+  const fieldInputRef = useRef<HTMLInputElement>(null);
   const dropdownInputRef = useRef<HTMLInputElement>(null);
 
   const isComponentFocused = useRef<boolean>(false);
@@ -666,6 +667,13 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     onBlur?.(event);
   };
 
+  const handleFieldMouseDown = (event: React.MouseEvent) => {
+    if (event.target !== fieldInputRef?.current) {
+      // needed for staying focus on input
+      event.preventDefault();
+    }
+  };
+
   const handleDropdownUnmount = (): void => {
     if (withDropdownInput && isSearchable) {
       const fieldFocusableElement = getFieldFocusableElement(fieldRef);
@@ -704,16 +712,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           ref: fieldRef,
           className: "rtms-field",
           onClick: handleClickField,
-          onMouseDown: preventDefaultOnMouseEvent
+          onMouseDown: handleFieldMouseDown
         }}
         componentProps={{type, showDropdown: state.showDropdown, withClearAll}}
         customProps={components.Field.props}
       >
-        <div
-          className="rtms-field-content"
-          // needed for staying focus on input
-          onMouseDown={preventDefaultOnMouseEvent}
-        >
+        <div className="rtms-field-content">
           {filterChips(state.selectedNodes, type)
             .map(node => (
               <components.ChipContainer.component
@@ -749,6 +753,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           ) : (
             <components.Input.component
               componentAttributes={{
+                ref: fieldInputRef,
                 className: "rtms-input",
                 placeholder: inputPlaceholder,
                 value: state.searchValue,
@@ -811,6 +816,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
               customProps={components.Input.props}
             />
           ) : null}
+          inputRef={dropdownInputRef}
           onUnmount={handleDropdownUnmount}
           components={components}
           onListItemRender={debouncedHandleListItemRender}
