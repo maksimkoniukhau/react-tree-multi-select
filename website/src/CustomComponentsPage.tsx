@@ -43,7 +43,7 @@ export const CustomComponentsPage: FC = memo(() => {
         <h2>{'React Tree Multi Select custom components'}</h2>
         <div className="paragraph">
           <b>{'react-tree-multi-select'}</b>{' allows you to customize component by providing your own custom components as a property.\n'}
-          {'The common pattern of custom component implementing looks like this:'}
+          {'The common pattern of custom component implementation looks like this:'}
         </div>
         <CodeBlock code={customComponentCommonPattern}/>
         <div className="paragraph">

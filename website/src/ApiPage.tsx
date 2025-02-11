@@ -63,6 +63,12 @@ export const ApiPage: FC = () => {
             <td>{'custom text displayed when no items found during the search'}</td>
           </tr>
           <tr>
+            <td>{'isSearchable'}</td>
+            <td>{'boolean'}</td>
+            <td>{'true'}</td>
+            <td>{`if 'true', search input in field (or in dropdown if withDropdownInput=true) is rendered`}</td>
+          </tr>
+          <tr>
             <td>{'withClearAll'}</td>
             <td>{'boolean'}</td>
             <td>{'true'}</td>
