@@ -15,9 +15,9 @@ export interface ListItemProps {
   selectAllCheckedState: CheckedState;
   focusedElement: string;
   noMatchesText: string;
-  onChangeSelectAll: (e: React.MouseEvent) => void;
-  onToggleNode: (node: Node) => (e: React.MouseEvent) => void;
-  onClickExpandNode: (node: Node) => (e: React.MouseEvent) => void;
+  onSelectAllChange: (e: React.MouseEvent) => void;
+  onNodeChange: (node: Node) => (e: React.MouseEvent) => void;
+  onNodeToggle: (node: Node) => (e: React.MouseEvent) => void;
   input: ReactNode;
   components: InnerComponents;
   onRender: () => void;
@@ -36,9 +36,9 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     selectAllCheckedState = CheckedState.UNSELECTED,
     focusedElement = '',
     noMatchesText,
-    onChangeSelectAll,
-    onToggleNode,
-    onClickExpandNode,
+    onSelectAllChange,
+    onNodeChange,
+    onNodeToggle,
     input,
     components,
     onRender
@@ -70,7 +70,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
 
     return (
       <components.SelectAllContainer.component
-        componentAttributes={{className: containerClasses, onClick: onChangeSelectAll}}
+        componentAttributes={{className: containerClasses, onClick: onSelectAllChange}}
         componentProps={{
           label: SELECT_ALL,
           checkedState: selectAllCheckedState,
@@ -130,7 +130,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
 
   return (
     <components.NodeContainer.component
-      componentAttributes={{className: getNodeRowClasses(), onClick: onToggleNode(node)}}
+      componentAttributes={{className: getNodeRowClasses(), onClick: onNodeChange(node)}}
       componentProps={{
         label: node.name,
         disabled: node.disabled,
@@ -146,7 +146,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
         <components.NodeToggle.component
           componentAttributes={{
             className: `rtms-node-toggle${expanded ? ' expanded' : ''}`,
-            onClick: onClickExpandNode(node)
+            onClick: onNodeToggle(node)
           }}
           componentProps={{expanded}}
           customProps={components.NodeToggle.props}

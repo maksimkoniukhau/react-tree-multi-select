@@ -215,7 +215,7 @@ export class Node {
     }
   };
 
-  public handleToggle = (type: Type): void => {
+  public handleChange = (type: Type): void => {
     if (!this.disabled) {
       if (this.shouldBeUnselected(type)) {
         this.handleUnselect(type);

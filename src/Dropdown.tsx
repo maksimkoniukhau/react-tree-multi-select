@@ -17,9 +17,9 @@ export interface DropdownProps {
   selectAllCheckedState: CheckedState;
   focusedElement: string;
   noMatchesText: string;
-  onChangeSelectAll: (e: React.MouseEvent) => void;
-  onToggleNode: (node: Node) => (e: React.MouseEvent) => void;
-  onClickExpandNode: (node: Node) => (e: React.MouseEvent) => void;
+  onSelectAllChange: (e: React.MouseEvent) => void;
+  onNodeChange: (node: Node) => (e: React.MouseEvent) => void;
+  onNodeToggle: (node: Node) => (e: React.MouseEvent) => void;
   input: ReactNode;
   inputRef: RefObject<HTMLInputElement>
   onUnmount: () => void;
@@ -41,9 +41,9 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     selectAllCheckedState = CheckedState.UNSELECTED,
     focusedElement = '',
     noMatchesText,
-    onChangeSelectAll,
-    onToggleNode,
-    onClickExpandNode,
+    onSelectAllChange,
+    onNodeChange,
+    onNodeToggle,
     input,
     inputRef,
     onUnmount,
@@ -125,9 +125,9 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
       selectAllCheckedState={selectAllCheckedState}
       focusedElement={focusedElement}
       noMatchesText={noMatchesText}
-      onChangeSelectAll={onChangeSelectAll}
-      onToggleNode={onToggleNode}
-      onClickExpandNode={onClickExpandNode}
+      onSelectAllChange={onSelectAllChange}
+      onNodeChange={onNodeChange}
+      onNodeToggle={onNodeToggle}
       input={input}
       components={components}
       onRender={onListItemRender}

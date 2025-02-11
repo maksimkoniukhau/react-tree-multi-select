@@ -14,7 +14,7 @@ export interface ToggleDropdownPayload {
   focusedElement: string;
 }
 
-export interface ClickFieldPayload {
+export interface FieldClickPayload {
   showDropdown: boolean;
   focusedFieldElement: string;
   focusedElement: string;
@@ -24,7 +24,7 @@ export interface ShowSelectAllPayload {
   showSelectAll: boolean;
 }
 
-export interface ChangeInputPayload {
+export interface InputChangePayload {
   searchValue: string;
   displayedNodes: Node[];
   showSelectAll: boolean;
@@ -32,41 +32,41 @@ export interface ChangeInputPayload {
   focusedElement: string;
 }
 
-export interface ClickChipPayload {
+export interface ChipClickPayload {
   showDropdown: boolean;
   focusedFieldElement: string;
   focusedElement: string;
 }
 
-export interface TogglePayload {
+export interface NodeChangePayload {
   selectedNodes: Node[];
   selectAllCheckedState: CheckedState;
   focusedFieldElement: string;
   focusedElement: string;
 }
 
-export interface ToggleAllPayload {
+export interface SelectAllChangePayload {
   selectedNodes: Node[];
   selectAllCheckedState: CheckedState;
   focusedFieldElement: string;
   focusedElement: string;
 }
 
-export interface UnselectPayload {
+export interface ChipDeletePayload {
   selectedNodes: Node[];
   selectAllCheckedState: CheckedState;
   focusedFieldElement: string;
   focusedElement: string;
 }
 
-export interface UnselectAllPayload {
+export interface ClearAllPayload {
   selectedNodes: Node[];
   selectAllCheckedState: CheckedState;
   focusedFieldElement: string;
   focusedElement: string;
 }
 
-export interface ExpandPayload {
+export interface NodeTogglePayload {
   displayedNodes: Node[];
   focusedFieldElement: string;
   focusedElement: string;
@@ -87,30 +87,30 @@ export interface ResetPayload {
 export enum ActionType {
   INIT,
   TOGGLE_DROPDOWN,
-  CLICK_FIELD,
+  FIELD_CLICK,
   SHOW_SELECT_ALL,
-  CHANGE_INPUT,
-  CLICK_CHIP,
-  TOGGLE,
-  TOGGLE_ALL,
-  UNSELECT,
-  UNSELECT_ALL,
-  EXPAND,
+  INPUT_CHANGE,
+  CHIP_CLICK,
+  NODE_CHANGE,
+  SELECT_ALL_CHANGE,
+  CHIP_DELETE,
+  CLEAR_ALL,
+  NODE_TOGGLE,
   FOCUS,
   RESET
 }
 
 export type Payload = InitPayload
   | ToggleDropdownPayload
-  | ClickFieldPayload
+  | FieldClickPayload
   | ShowSelectAllPayload
-  | ChangeInputPayload
-  | ClickChipPayload
-  | TogglePayload
-  | ToggleAllPayload
-  | UnselectPayload
-  | UnselectAllPayload
-  | ExpandPayload
+  | InputChangePayload
+  | ChipClickPayload
+  | NodeChangePayload
+  | SelectAllChangePayload
+  | ChipDeletePayload
+  | ClearAllPayload
+  | NodeTogglePayload
   | FocusPayload
   | ResetPayload;
 
@@ -157,15 +157,15 @@ export const reducer = (state = initialState, action: Action): State => {
       };
     }
     case ActionType.TOGGLE_DROPDOWN:
-    case ActionType.CLICK_FIELD:
+    case ActionType.FIELD_CLICK:
     case ActionType.SHOW_SELECT_ALL:
-    case ActionType.CHANGE_INPUT:
-    case ActionType.CLICK_CHIP:
-    case ActionType.TOGGLE:
-    case ActionType.TOGGLE_ALL:
-    case ActionType.UNSELECT:
-    case ActionType.UNSELECT_ALL:
-    case ActionType.EXPAND:
+    case ActionType.INPUT_CHANGE:
+    case ActionType.CHIP_CLICK:
+    case ActionType.NODE_CHANGE:
+    case ActionType.SELECT_ALL_CHANGE:
+    case ActionType.CHIP_DELETE:
+    case ActionType.CLEAR_ALL:
+    case ActionType.NODE_TOGGLE:
     case ActionType.FOCUS: {
       return {
         ...state,
