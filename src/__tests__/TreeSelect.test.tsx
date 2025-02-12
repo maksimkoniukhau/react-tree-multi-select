@@ -73,6 +73,86 @@ describe('TreeMultiSelect component: isSearchable prop', () => {
     });
 });
 
+describe('TreeMultiSelect component: closeDropdownOnNodeChange prop', () => {
+  const closeDropdownOnNodeChangeMatcher = (
+    container: HTMLElement,
+    withDropdownInput: boolean,
+    focused: boolean,
+    opened: boolean,
+    handleFocus: (event: React.FocusEvent) => void,
+    focusTimes: number,
+    handleBlur: (event: React.FocusEvent) => void,
+    blurTimes: number
+  ): void => {
+    if (withDropdownInput) {
+      expect(getFieldInput(container)).not.toBeInTheDocument();
+      expect(getHiddenInput(container)).toBeInTheDocument();
+      if (opened) {
+        expect(getDropdownInput(container)).toBeInTheDocument();
+      } else {
+        expect(getDropdown(container)).not.toBeInTheDocument();
+      }
+    } else {
+      expect(getFieldInput(container)).toBeInTheDocument();
+      expect(getHiddenInput(container)).not.toBeInTheDocument();
+      if (opened) {
+        expect(getDropdown(container)).toBeInTheDocument();
+      } else {
+        expect(getDropdown(container)).not.toBeInTheDocument();
+      }
+    }
+    if (focused) {
+      expect(getRootContainer(container)).toHaveClass('focused');
+    } else {
+      expect(getRootContainer(container)).not.toHaveClass('focused');
+    }
+    expect(handleFocus).toHaveBeenCalledTimes(focusTimes);
+    expect(handleBlur).toHaveBeenCalledTimes(blurTimes);
+  };
+
+  const user: UserEvent = userEvent.setup();
+
+  it.each([[false, false], [true, false], [false, true], [true, true]])
+  ('renders component when closeDropdownOnNodeChange={%s} and withDropdownInput={%s}',
+    async (closeDropdownOnNodeChange, withDropdownInput) => {
+      const handleFocus = jest.fn();
+      const handleBlur = jest.fn();
+
+      const {container} = render(
+        <TreeMultiSelect
+          data={treeNodeData}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          closeDropdownOnNodeChange={closeDropdownOnNodeChange}
+          withDropdownInput={withDropdownInput}
+        />
+      );
+
+      closeDropdownOnNodeChangeMatcher(container, withDropdownInput, false, false, handleFocus, 0, handleBlur, 0);
+
+      await user.click(getField(container));
+      closeDropdownOnNodeChangeMatcher(container, withDropdownInput, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      closeDropdownOnNodeChangeMatcher(container, withDropdownInput, true, !closeDropdownOnNodeChange, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{enter}');
+      closeDropdownOnNodeChangeMatcher(container, withDropdownInput, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{arrowdown}');
+      closeDropdownOnNodeChangeMatcher(container, withDropdownInput, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{enter}');
+      closeDropdownOnNodeChangeMatcher(container, withDropdownInput, true, !closeDropdownOnNodeChange, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      closeDropdownOnNodeChangeMatcher(container, withDropdownInput, true, closeDropdownOnNodeChange, handleFocus, 1, handleBlur, 0);
+
+      await user.click(document.body);
+      closeDropdownOnNodeChangeMatcher(container, withDropdownInput, false, false, handleFocus, 1, handleBlur, 1);
+    });
+});
+
 describe('TreeMultiSelect component: focus/blur component and open/close dropdown', () => {
   const focusBlurMatcher = (
     container: HTMLElement,
