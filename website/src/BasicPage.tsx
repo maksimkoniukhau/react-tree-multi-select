@@ -18,6 +18,7 @@ export const BasicPage: FC = memo(() => {
   const [withClearAll, setWithClearAll] = useState<boolean>(true);
   const [withSelectAll, setWithSelectAll] = useState<boolean>(false);
   const [withDropdownInput, setWithDropdownInput] = useState<boolean>(false);
+  const [closeDropdownOnNodeChange, setCloseDropdownOnNodeChange] = useState<boolean>(false);
   const [selectedNodes, setSelectedNodes] = useState<boolean>(true);
   const [expandedNodes, setExpandedNodes] = useState<boolean>(true);
   const [disabledNodes, setDisabledNodes] = useState<boolean>(true);
@@ -48,6 +49,9 @@ export const BasicPage: FC = memo(() => {
         break;
       case 'withDropdownInput' :
         setWithDropdownInput(value as boolean);
+        break;
+      case 'closeDropdownOnNodeChange' :
+        setCloseDropdownOnNodeChange(value as boolean);
         break;
       case 'selectedNodes' :
         setSelectedNodes(value as boolean);
@@ -116,6 +120,7 @@ export const BasicPage: FC = memo(() => {
           <Checkbox label="withClearAll" initChecked={true} onChange={handleOptionChange('withClearAll')}/>
           <Checkbox label="withSelectAll" initChecked={false} onChange={handleOptionChange('withSelectAll')}/>
           <Checkbox label="withDropdownInput" initChecked={false} onChange={handleOptionChange('withDropdownInput')}/>
+          <Checkbox label="closeDropdownOnNodeChange" initChecked={false} onChange={handleOptionChange('closeDropdownOnNodeChange')}/>
           <div className="delimiter"/>
           <div>{'Data initial props:'}</div>
           <Checkbox label="selectedNodes" initChecked={true} onChange={handleOptionChange('selectedNodes')}/>
@@ -134,6 +139,7 @@ export const BasicPage: FC = memo(() => {
             withClearAll={withClearAll}
             withSelectAll={withSelectAll}
             withDropdownInput={withDropdownInput}
+            closeDropdownOnNodeChange={closeDropdownOnNodeChange}
             onNodeChange={handleNodeChange}
             onNodeToggle={handleNodeToggle}
             onClearAll={handleClearAll}
