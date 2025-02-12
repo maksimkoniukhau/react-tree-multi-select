@@ -44,6 +44,7 @@ export interface TreeMultiSelectProps {
   withClearAll?: boolean;
   withSelectAll?: boolean;
   withDropdownInput?: boolean;
+  closeDropdownOnNodeChange?: boolean;
   components?: Components;
   onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
   onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
@@ -65,6 +66,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     withClearAll = true,
     withSelectAll = false,
     withDropdownInput = false,
+    closeDropdownOnNodeChange = false,
     components: propsComponents = {},
     onNodeChange,
     onNodeToggle,
@@ -81,6 +83,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
   const isComponentFocused = useRef<boolean>(false);
   const isDropdownInputFocused = useRef<boolean>(false);
+  const isOutsideClicked = useRef<boolean>(false);
+  const dropdownUnmountedOnClickOutside = useRef<boolean>(false);
 
   const nodeMapRef = useRef<Map<string, Node>>(new Map());
 
@@ -209,6 +213,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [withSelectAll]);
 
   const handleOutsideEvent = (event: MouseEvent | TouchEvent | FocusEvent) => {
+    if (isComponentFocused.current) {
+      isOutsideClicked.current = true;
+    }
     if (state.showDropdown || state.searchValue || state.focusedFieldElement || state.focusedElement) {
       dispatch({
         type: ActionType.RESET,
@@ -406,14 +413,15 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         payload: {
           selectedNodes,
           selectAllCheckedState: getSelectAllCheckedState(selectedNodes, state.nodes),
-          focusedFieldElement: '',
-          focusedElement: node.path
+          focusedFieldElement: closeDropdownOnNodeChange ? INPUT : '',
+          focusedElement: closeDropdownOnNodeChange ? '' : node.path,
+          showDropdown: closeDropdownOnNodeChange ? false : state.showDropdown
         } as NodeChangePayload
       });
 
       callNodeChangeHandler(node, selectedNodes);
     }
-  }, [state.nodes, state.selectedNodes, type]);
+  }, [state.nodes, state.selectedNodes, state.showDropdown, type]);
 
   const handleNodeToggle = (node: Node, expand: boolean): void => {
     node.handleExpand(Boolean(state.searchValue), expand);
@@ -543,12 +551,6 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     return index !== 0 ? selectedNodes[index - 1].path : state.focusedFieldElement;
   };
 
-  const manageComponentFocusOnKeyDown = (): void => {
-    if (withDropdownInput && isSearchable && state.showDropdown) {
-      focusFieldElement();
-    }
-  };
-
   const handleComponentKeyDown = (e: React.KeyboardEvent): void => {
     switch (e.key) {
       case 'ArrowLeft':
@@ -575,7 +577,6 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         if (state.showDropdown && state.focusedElement) {
           dispatchFocusElement(getPrevFocusedElement());
         } else {
-          manageComponentFocusOnKeyDown();
           dispatchToggleDropdown(!state.showDropdown);
         }
         e.preventDefault();
@@ -595,7 +596,6 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           if (chipNode) {
             handleChipClick(chipNode)(e);
           } else {
-            manageComponentFocusOnKeyDown();
             dispatchToggleDropdown(!state.showDropdown);
           }
         } else if (state.showDropdown) {
@@ -625,14 +625,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         break;
       case 'Escape':
         if (state.showDropdown) {
-          manageComponentFocusOnKeyDown();
           dispatchToggleDropdown(false);
           e.preventDefault();
         }
         break;
       case 'Tab':
         if (state.showDropdown) {
-          manageComponentFocusOnKeyDown();
           dispatchToggleDropdown(false);
           e.preventDefault();
         }
@@ -641,8 +639,6 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         break;
     }
   };
-
-  const dropdownUnmountedOnClickOutside = useRef<boolean>(false);
 
   const handleComponentFocus = (event: React.FocusEvent): void => {
     if (!isComponentFocused.current) {
@@ -658,6 +654,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       return;
     }
     isComponentFocused.current = false;
+    isOutsideClicked.current = false;
     dropdownUnmountedOnClickOutside.current = false;
     treeMultiSelectRef?.current?.classList?.remove('focused');
     onBlur?.(event);
@@ -674,7 +671,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     if (withDropdownInput && isSearchable) {
       const fieldFocusableElement = getFieldFocusableElement(fieldRef);
       if (document.activeElement !== fieldFocusableElement) {
-        dropdownUnmountedOnClickOutside.current = true;
+        if (isOutsideClicked.current) {
+          dropdownUnmountedOnClickOutside.current = true;
+        }
         fieldFocusableElement?.focus();
       }
     }

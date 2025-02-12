@@ -43,6 +43,7 @@ export interface NodeChangePayload {
   selectAllCheckedState: CheckedState;
   focusedFieldElement: string;
   focusedElement: string;
+  showDropdown: boolean;
 }
 
 export interface SelectAllChangePayload {
