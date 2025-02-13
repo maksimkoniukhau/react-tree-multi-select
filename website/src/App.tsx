@@ -32,7 +32,9 @@ function App() {
 
   return (
     <div className="app">
-      <h1 className="header">{'REACT TREE MULTI SELECT'}</h1>
+      <div className="header">
+        <h1 className="header-title">{'REACT TREE MULTI SELECT'}</h1>
+      </div>
       <div className="content">
         <div className="menu-container">
           <Menu onMenuItemClick={handleMenuItemClick}/>

@@ -30,7 +30,7 @@ export const ApiPage: FC = () => {
           <tr>
             <td>{'type'}</td>
             <td>{'Type'}</td>
-            <td>{'Type.TREE_SELECT'}</td>
+            <td>{'TREE_SELECT'}</td>
             <td>{'TREE_SELECT - component behaves as a normal tree structure\n' +
               'TREE_SELECT_FLAT - component behaves as a flat tree structure ' +
               '(selecting a node have no affect on its descendants or ancestors)\n' +
@@ -85,6 +85,12 @@ export const ApiPage: FC = () => {
             <td>{'boolean'}</td>
             <td>{'false'}</td>
             <td>{`if 'true', input is displayed in dropdown (hidden input rendered in field for focus to work)`}</td>
+          </tr>
+          <tr>
+            <td>{'closeDropdownOnNodeChange'}</td>
+            <td>{'boolean'}</td>
+            <td>{'false'}</td>
+            <td>{`if 'true', close dropdown after node change (select/unselect in dropdown)`}</td>
           </tr>
           <tr>
             <td>{'components'}</td>
