@@ -344,7 +344,7 @@ const CustomField: FC<FieldProps> = (props) => (
 );
 
 const CustomFieldInput: FC<InputProps> = (props) => (
-  <textarea {...props.componentAttributes as HTMLProps<HTMLTextAreaElement>}/>
+  <textarea {...props.componentAttributes as unknown as HTMLProps<HTMLTextAreaElement>}/>
 );
 
 const CustomDropdownInput: FC<InputProps> = (props) => (
