@@ -1,6 +1,7 @@
-import React, {JSX, useCallback, useState} from 'react';
+import React from 'react';
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import './App.scss';
-import {Menu, MENU_ITEM} from './Menu';
+import {Menu} from './Menu';
 import {GettingStartedPage} from './GettingStartedPage';
 import {ApiPage} from './ApiPage';
 import {BasicPage} from './BasicPage';
@@ -9,41 +10,28 @@ import {CustomComponentsPage} from './CustomComponentsPage';
 
 function App() {
 
-  const [page, setPage] = useState<MENU_ITEM>(MENU_ITEM.GETTING_STARTED);
-
-  const handleMenuItemClick = useCallback((menuitem: MENU_ITEM): void => {
-    setPage(menuitem);
-  }, []);
-
-  const getPage = useCallback((): JSX.Element => {
-    switch (page) {
-      case MENU_ITEM.API:
-        return (<ApiPage/>);
-      case MENU_ITEM.BASIC:
-        return (<BasicPage/>);
-      case MENU_ITEM.BIG_DATA:
-        return (<BigDataPage/>);
-      case MENU_ITEM.CUSTOM_COMPONENTS:
-        return (<CustomComponentsPage/>)
-      default:
-        return (<GettingStartedPage/>);
-    }
-  }, [page]);
-
   return (
-    <div className="app">
-      <div className="header">
-        <h1 className="header-title">{'REACT TREE MULTI SELECT'}</h1>
-      </div>
-      <div className="content">
-        <div className="menu-container">
-          <Menu onMenuItemClick={handleMenuItemClick}/>
+    <BrowserRouter>
+      <div className="app">
+        <div className="header">
+          <h1 className="header-title">{'REACT TREE MULTI SELECT'}</h1>
         </div>
-        <div className="page-container">
-          {getPage()}
+        <div className="content">
+          <div className="menu-container">
+            <Menu/>
+          </div>
+          <div className="page-container">
+            <Routes>
+              <Route path="/" element={<GettingStartedPage/>}/>
+              <Route path="/api" element={<ApiPage/>}/>
+              <Route path="/basic" element={<BasicPage/>}/>
+              <Route path="/big-data" element={<BigDataPage/>}/>
+              <Route path="/custom-components" element={<CustomComponentsPage/>}/>
+            </Routes>
+          </div>
         </div>
       </div>
-    </div>
+    </BrowserRouter>
   );
 }
 

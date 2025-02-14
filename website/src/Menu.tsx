@@ -1,4 +1,5 @@
-import React, {FC, memo, useState} from 'react';
+import React, {FC, memo} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
 
 export enum MENU_ITEM {
   GETTING_STARTED = 'Getting Started',
@@ -8,37 +9,36 @@ export enum MENU_ITEM {
   CUSTOM_COMPONENTS = 'Custom Components'
 }
 
-const menuItems = [
-  MENU_ITEM.GETTING_STARTED,
-  MENU_ITEM.API,
-  MENU_ITEM.BASIC,
-  MENU_ITEM.BIG_DATA,
-  MENU_ITEM.CUSTOM_COMPONENTS
-];
+const pathPageMap = new Map<string, MENU_ITEM>([
+  ['/', MENU_ITEM.GETTING_STARTED],
+  ['/api', MENU_ITEM.API],
+  ['/basic', MENU_ITEM.BASIC],
+  ['/big-data', MENU_ITEM.BIG_DATA],
+  ['/custom-components', MENU_ITEM.CUSTOM_COMPONENTS]
+]);
 
 export interface MenuProps {
-  onMenuItemClick: (menuitem: MENU_ITEM) => void;
 }
 
-export const Menu: FC<MenuProps> = memo(({onMenuItemClick}) => {
+export const Menu: FC<MenuProps> = memo(() => {
 
-  const [menuItem, setMenuItem] = useState<MENU_ITEM>(MENU_ITEM.GETTING_STARTED);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleMenuItemClick = (clickedItem: MENU_ITEM) => (e: React.MouseEvent): void => {
-    setMenuItem(clickedItem);
-    onMenuItemClick(clickedItem);
+  const handleMenuItemClick = (entry: [string, MENU_ITEM]) => (e: React.MouseEvent): void => {
+    navigate(entry[0]);
   };
 
   return (
     <ul className="menu">
-      {menuItems
-        .map((item: MENU_ITEM, idx: number) => (
+      {Array.from(pathPageMap.entries())
+        .map((entry: [string, MENU_ITEM], idx: number) => (
           <li
             key={idx}
-            className={`menu-item ${menuItem === item ? ' selected' : ''}`}
-            onClick={handleMenuItemClick(item)}
+            className={`menu-item ${location.pathname === entry[0] ? ' selected' : ''}`}
+            onClick={handleMenuItemClick(entry)}
           >
-            <span>{item}</span>
+            <span>{entry[1]}</span>
           </li>
         ))}
     </ul>
