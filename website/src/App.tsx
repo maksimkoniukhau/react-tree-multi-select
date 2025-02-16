@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import './App.scss';
 import {useNavigation} from './hooks/useNavigation';
 import {Menu} from './Menu';
@@ -14,7 +14,7 @@ function App() {
   useNavigation();
 
   return (
-    <BrowserRouter basename="/react-tree-multi-select">
+    <Router basename="/react-tree-multi-select">
       <div className="app">
         <div className="header">
           <h1 className="header-title">{'REACT TREE MULTI SELECT'}</h1>
@@ -34,7 +34,7 @@ function App() {
           </div>
         </div>
       </div>
-    </BrowserRouter>
+    </Router>
   );
 }
 

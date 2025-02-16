@@ -5,7 +5,10 @@ export const useNavigation = (): void => {
 
   useEffect(() => {
     const handleScroll = (): void => {
-      const sections = Array.from(document.querySelectorAll('.section-heading')) as HTMLElement[]
+      const sections = Array.from(document.querySelectorAll('.section-heading')) as HTMLElement[];
+      if (!sections.length) {
+        return;
+      }
       const links = document.querySelectorAll('.nav-link');
 
       let currentSectionId = '';
