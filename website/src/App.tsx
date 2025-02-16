@@ -1,6 +1,7 @@
 import React from 'react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import './App.scss';
+import {useNavigation} from './hooks/useNavigation';
 import {Menu} from './Menu';
 import {GettingStartedPage} from './pages/GettingStartedPage';
 import {ApiPage} from './pages/ApiPage';
@@ -9,6 +10,8 @@ import {BigDataPage} from './pages/BigDataPage';
 import {CustomComponentsPage} from './pages/CustomComponentsPage';
 
 function App() {
+
+  useNavigation();
 
   return (
     <BrowserRouter>

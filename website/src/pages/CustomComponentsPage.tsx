@@ -18,7 +18,9 @@ import {
   selectAllContainerExample,
   selectAllLabelExample
 } from '../code-data';
-import {CodeBlock} from '../CodeBlock';
+import {CodeBlock} from '../components/CodeBlock';
+import {PageNavigation} from '../components/PageNavigation';
+import {Section} from '../components/Section';
 import {CustomFieldExample} from '../examples/components/CustomFieldExample';
 import {CustomChipContainerExample} from '../examples/components/CustomChipContainerExample';
 import {CustomChipLabelExample} from '../examples/components/CustomChipLabelExample';
@@ -34,13 +36,8 @@ import {CustomNodeToggleExample} from '../examples/components/CustomNodeToggleEx
 import {CustomNodeCheckboxExample} from '../examples/components/CustomNodeCheckboxExample';
 import {CustomNodeLabelExample} from '../examples/components/CustomNodeLabelExample';
 import {CustomNoMatchesExample} from '../examples/components/CustomNoMatchesExample';
-import {PageNavigation} from '../PageNavigation';
-import {Section} from '../components/Section';
-import {useNavigation} from '../hooks/useNavigation';
 
 export const CustomComponentsPage: FC = memo(() => {
-
-  useNavigation();
 
   return (
     <div className="page">

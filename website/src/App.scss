@@ -22,7 +22,7 @@
 
     .menu-container {
       flex: 1;
-      min-width: 200px;
+      min-width: 250px;
 
       .menu {
         position: fixed;
@@ -190,12 +190,14 @@
 
     .page-navigation {
       flex: 1;
+      display: flex;
+      justify-content: center;
 
       .navigation {
         position: fixed;
         list-style: none;
         margin: 0;
-        padding: 25px 0 0 55px;
+        padding: 25px 0 0 0;
         font-size: 14px;
 
         li {
