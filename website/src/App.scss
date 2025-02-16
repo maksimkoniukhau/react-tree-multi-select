@@ -54,6 +54,10 @@
     .page-container {
       flex: 1 1 100%;
 
+      .section-heading {
+        scroll-margin-top: 70px;
+      }
+
       .page {
         display: flex;
 
@@ -189,6 +193,29 @@
 
       .navigation {
         position: fixed;
+        list-style: none;
+        margin: 0;
+        padding: 25px 0 0 55px;
+        font-size: 14px;
+
+        li {
+          padding: 5px;
+          cursor: pointer;
+
+          &:hover {
+            color: #12bef3;
+          }
+
+          .nav-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+
+            &.active {
+              color: #12bef3;
+            }
+          }
+        }
       }
     }
   }

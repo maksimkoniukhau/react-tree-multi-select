@@ -2,11 +2,11 @@ import React from 'react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import './App.scss';
 import {Menu} from './Menu';
-import {GettingStartedPage} from './GettingStartedPage';
-import {ApiPage} from './ApiPage';
-import {BasicPage} from './BasicPage';
-import {BigDataPage} from './BigDataPage';
-import {CustomComponentsPage} from './CustomComponentsPage';
+import {GettingStartedPage} from './pages/GettingStartedPage';
+import {ApiPage} from './pages/ApiPage';
+import {BasicPage} from './pages/BasicPage';
+import {BigDataPage} from './pages/BigDataPage';
+import {CustomComponentsPage} from './pages/CustomComponentsPage';
 
 function App() {
 

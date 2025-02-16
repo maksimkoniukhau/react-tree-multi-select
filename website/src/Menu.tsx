@@ -27,6 +27,7 @@ export const Menu: FC<MenuProps> = memo(() => {
 
   const handleMenuItemClick = (entry: [string, MENU_ITEM]) => (e: React.MouseEvent): void => {
     navigate(entry[0]);
+    window.scrollTo(0, 0);
   };
 
   return (

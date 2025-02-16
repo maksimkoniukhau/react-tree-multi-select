@@ -1,10 +1,10 @@
 import React, {FC, memo, useMemo, useState} from 'react';
-import {CheckedState, TreeMultiSelect, TreeNode, Type} from './treeMultiSelectImport';
-import {getTreeNodeData} from './utils';
-import {Select} from './Select';
-import {Checkbox} from './Checkbox';
-import {Input} from './Input';
-import {OptionTreeNode} from './data';
+import {CheckedState, TreeMultiSelect, TreeNode, Type} from '../treeMultiSelectImport';
+import {getTreeNodeData} from '../utils';
+import {Select} from '../components/Select';
+import {Checkbox} from '../components/Checkbox';
+import {Input} from '../components/Input';
+import {OptionTreeNode} from '../data';
 
 const INPUT_PLACEHOLDER = 'search...';
 const NO_MATCHES = 'No matches';
@@ -120,7 +120,8 @@ export const BasicPage: FC = memo(() => {
           <Checkbox label="withClearAll" initChecked={true} onChange={handleOptionChange('withClearAll')}/>
           <Checkbox label="withSelectAll" initChecked={false} onChange={handleOptionChange('withSelectAll')}/>
           <Checkbox label="withDropdownInput" initChecked={false} onChange={handleOptionChange('withDropdownInput')}/>
-          <Checkbox label="closeDropdownOnNodeChange" initChecked={false} onChange={handleOptionChange('closeDropdownOnNodeChange')}/>
+          <Checkbox label="closeDropdownOnNodeChange" initChecked={false}
+                    onChange={handleOptionChange('closeDropdownOnNodeChange')}/>
           <div className="delimiter"/>
           <div>{'Data initial props:'}</div>
           <Checkbox label="selectedNodes" initChecked={true} onChange={handleOptionChange('selectedNodes')}/>

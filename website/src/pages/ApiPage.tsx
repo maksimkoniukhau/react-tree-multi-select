@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
-import {CodeBlock} from './CodeBlock';
-import {rtmsTypes} from './code-data';
+import {CodeBlock} from '../CodeBlock';
+import {rtmsTypes} from '../code-data';
 
 export const ApiPage: FC = () => {
 

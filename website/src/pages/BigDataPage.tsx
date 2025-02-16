@@ -1,7 +1,7 @@
 import React, {FC, memo, useState} from 'react';
-import {TreeMultiSelect} from './treeMultiSelectImport';
-import {bigTreeNodeData30, bigTreeNodeData50, RandomTreeNode} from './utils';
-import {Select} from './Select';
+import {TreeMultiSelect} from '../treeMultiSelectImport';
+import {bigTreeNodeData30, bigTreeNodeData50, RandomTreeNode} from '../utils';
+import {Select} from '../components/Select';
 
 export const BigDataPage: FC = memo(() => {
 

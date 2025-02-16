@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
-import {basicUsageCode} from './code-data';
-import {CodeBlock} from './CodeBlock';
+import {basicUsageCode} from '../code-data';
+import {CodeBlock} from '../CodeBlock';
 
 export const GettingStartedPage: FC = () => {
 
