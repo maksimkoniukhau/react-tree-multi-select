@@ -14,7 +14,7 @@ function App() {
   useNavigation();
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/react-tree-multi-select">
       <div className="app">
         <div className="header">
           <h1 className="header-title">{'REACT TREE MULTI SELECT'}</h1>
@@ -25,11 +25,11 @@ function App() {
           </div>
           <div className="page-container">
             <Routes>
-              <Route path="/react-tree-multi-select/" element={<GettingStartedPage/>}/>
-              <Route path="/react-tree-multi-select/api" element={<ApiPage/>}/>
-              <Route path="/react-tree-multi-select/basic" element={<BasicPage/>}/>
-              <Route path="/react-tree-multi-select/big-data" element={<BigDataPage/>}/>
-              <Route path="/react-tree-multi-select/custom-components" element={<CustomComponentsPage/>}/>
+              <Route path="/" element={<GettingStartedPage/>}/>
+              <Route path="/api" element={<ApiPage/>}/>
+              <Route path="/basic" element={<BasicPage/>}/>
+              <Route path="/big-data" element={<BigDataPage/>}/>
+              <Route path="/custom-components" element={<CustomComponentsPage/>}/>
             </Routes>
           </div>
         </div>
