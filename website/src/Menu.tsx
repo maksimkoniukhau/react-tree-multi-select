@@ -10,11 +10,11 @@ export enum MENU_ITEM {
 }
 
 const pathPageMap = new Map<string, MENU_ITEM>([
-  ['/', MENU_ITEM.GETTING_STARTED],
-  ['/api', MENU_ITEM.API],
-  ['/basic', MENU_ITEM.BASIC],
-  ['/big-data', MENU_ITEM.BIG_DATA],
-  ['/custom-components', MENU_ITEM.CUSTOM_COMPONENTS]
+  ['/react-tree-multi-select/', MENU_ITEM.GETTING_STARTED],
+  ['/react-tree-multi-select/api', MENU_ITEM.API],
+  ['/react-tree-multi-select/basic', MENU_ITEM.BASIC],
+  ['/react-tree-multi-select/big-data', MENU_ITEM.BIG_DATA],
+  ['/react-tree-multi-select/custom-components', MENU_ITEM.CUSTOM_COMPONENTS]
 ]);
 
 export interface MenuProps {
