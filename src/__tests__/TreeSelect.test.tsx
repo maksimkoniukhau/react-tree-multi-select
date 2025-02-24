@@ -133,6 +133,9 @@ describe('TreeMultiSelect component: closeDropdownOnNodeChange prop', () => {
       await user.click(getField(container));
       closeDropdownOnNodeChangeMatcher(container, withDropdownInput, true, true, handleFocus, 1, handleBlur, 0);
 
+      await user.click(getListItem(container, 1));
+      closeDropdownOnNodeChangeMatcher(container, withDropdownInput, true, true, handleFocus, 1, handleBlur, 0);
+
       await user.click(getListItem(container, 0));
       closeDropdownOnNodeChangeMatcher(container, withDropdownInput, true, !closeDropdownOnNodeChange, handleFocus, 1, handleBlur, 0);
 

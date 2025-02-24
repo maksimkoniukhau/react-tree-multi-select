@@ -394,32 +394,32 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const handleNodeChange = useCallback((node: Node) => (e: React.MouseEvent | React.KeyboardEvent): void => {
     // defaultPrevented is on click expand node icon
     if (!e.defaultPrevented) {
-      if (type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT || type === Type.MULTI_SELECT) {
-        node.handleChange(type);
-      }
-      if (type === Type.SELECT) {
-        if (!node.disabled) {
+      if (!node.disabled) {
+        if (type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT || type === Type.MULTI_SELECT) {
+          node.handleChange(type);
+        }
+        if (type === Type.SELECT) {
           state.selectedNodes.forEach(node => node.handleUnselect(type));
           node.handleSelect(type);
         }
+
+        const selectedNodes = state.nodes.filter(nod => nod.selected);
+
+        dispatch({
+          type: ActionType.NODE_CHANGE,
+          payload: {
+            selectedNodes,
+            selectAllCheckedState: getSelectAllCheckedState(selectedNodes, state.nodes),
+            focusedFieldElement: closeDropdownOnNodeChange ? INPUT : '',
+            focusedElement: closeDropdownOnNodeChange ? '' : node.path,
+            showDropdown: closeDropdownOnNodeChange ? false : state.showDropdown
+          } as NodeChangePayload
+        });
+
+        callNodeChangeHandler(node, selectedNodes);
+      } else {
+        dispatchFocusElement(node.path);
       }
-
-      const selectedNodes = node.disabled
-        ? state.selectedNodes
-        : state.nodes.filter(nod => nod.selected);
-
-      dispatch({
-        type: ActionType.NODE_CHANGE,
-        payload: {
-          selectedNodes,
-          selectAllCheckedState: getSelectAllCheckedState(selectedNodes, state.nodes),
-          focusedFieldElement: closeDropdownOnNodeChange ? INPUT : '',
-          focusedElement: closeDropdownOnNodeChange ? '' : node.path,
-          showDropdown: closeDropdownOnNodeChange ? false : state.showDropdown
-        } as NodeChangePayload
-      });
-
-      callNodeChangeHandler(node, selectedNodes);
     }
   }, [state.nodes, state.selectedNodes, state.showDropdown, type]);
 
