@@ -145,7 +145,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     <div className="rtms-dropdown" onMouseDown={handleMouseDown}>
       <Virtuoso
         ref={virtuosoRef}
-        style={{height: `${height}px`, width: DEFAULT_OPTIONS_CONTAINER_WIDTH, borderRadius: '4px'}}
+        style={{height: `${height}px`, width: DEFAULT_OPTIONS_CONTAINER_WIDTH}}
         className="rtms-dropdown-virtuoso"
         totalListHeightChanged={handleTotalListHeightChanged}
         totalCount={itemCount}
