@@ -1,6 +1,14 @@
 import './styles/tree-multi-select.scss';
 import React, {FC, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
-import {CLEAR_ALL, INPUT, INPUT_PLACEHOLDER, NO_MATCHES, PATH_DELIMITER, SELECT_ALL} from './constants';
+import {
+  CLEAR_ALL,
+  DEFAULT_OPTIONS_CONTAINER_HEIGHT,
+  INPUT,
+  INPUT_PLACEHOLDER,
+  NO_MATCHES,
+  PATH_DELIMITER,
+  SELECT_ALL
+} from './constants';
 import {debounce, getFieldFocusableElement, preventDefaultOnMouseEvent, typeToClassName} from './utils/commonUtils';
 import {
   areAllExcludingDisabledSelected,
@@ -45,6 +53,7 @@ export interface TreeMultiSelectProps {
   withSelectAll?: boolean;
   withDropdownInput?: boolean;
   closeDropdownOnNodeChange?: boolean;
+  dropdownHeight?: number;
   components?: Components;
   onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
   onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
@@ -67,6 +76,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     withSelectAll = false,
     withDropdownInput = false,
     closeDropdownOnNodeChange = false,
+    dropdownHeight = DEFAULT_OPTIONS_CONTAINER_HEIGHT,
     components: propsComponents = {},
     onNodeChange,
     onNodeToggle,
@@ -795,6 +805,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           selectAllCheckedState={state.selectAllCheckedState}
           focusedElement={state.focusedElement}
           noMatchesText={noMatchesText}
+          dropdownHeight={dropdownHeight}
           onSelectAllChange={handleSelectAllChange}
           onNodeChange={handleNodeChange}
           onNodeToggle={handleNodeToggleOnClick}

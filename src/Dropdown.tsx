@@ -1,6 +1,6 @@
 import React, {FC, JSX, memo, ReactNode, RefObject, useEffect, useRef, useState} from 'react';
 import {CalculateViewLocation, StateSnapshot, Virtuoso, VirtuosoHandle} from 'react-virtuoso'
-import {DEFAULT_OPTIONS_CONTAINER_HEIGHT, DEFAULT_OPTIONS_CONTAINER_WIDTH, SELECT_ALL} from './constants';
+import {DEFAULT_OPTIONS_CONTAINER_WIDTH, SELECT_ALL} from './constants';
 import {CheckedState, Type} from './types';
 import {InnerComponents} from './innerTypes';
 import {Node} from './Node';
@@ -17,6 +17,7 @@ export interface DropdownProps {
   selectAllCheckedState: CheckedState;
   focusedElement: string;
   noMatchesText: string;
+  dropdownHeight: number;
   onSelectAllChange: (e: React.MouseEvent) => void;
   onNodeChange: (node: Node) => (e: React.MouseEvent) => void;
   onNodeToggle: (node: Node) => (e: React.MouseEvent) => void;
@@ -41,6 +42,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     selectAllCheckedState = CheckedState.UNSELECTED,
     focusedElement = '',
     noMatchesText,
+    dropdownHeight,
     onSelectAllChange,
     onNodeChange,
     onNodeToggle,
@@ -53,7 +55,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
 
   const virtuosoRef = useRef<VirtuosoHandle>(null);
 
-  const [height, setHeight] = useState<number>(DEFAULT_OPTIONS_CONTAINER_HEIGHT);
+  const [height, setHeight] = useState<number>(dropdownHeight);
 
   const itemCount = (displayedNodes.length || 1) + (showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0);
 
@@ -110,7 +112,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
   }, [focusedElement, showSelectAll, input]);
 
   const handleTotalListHeightChanged = (height: number): void => {
-    setHeight(Math.min(DEFAULT_OPTIONS_CONTAINER_HEIGHT, height));
+    setHeight(Math.min(dropdownHeight, height));
   };
 
   const itemContent = (index: number): JSX.Element => {
