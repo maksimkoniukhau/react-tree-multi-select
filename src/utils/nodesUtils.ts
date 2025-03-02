@@ -1,4 +1,4 @@
-import {Type} from '../types';
+import {CheckedState, Type} from '../types';
 import {Node} from '../Node';
 
 const fillArrayFromTreeArray = (treeArray: Node[], nodeArray: Node[]): void => {
@@ -36,4 +36,12 @@ export const filterChips = (nodes: Node[], type: Type): Node[] => {
   return type === Type.TREE_SELECT
     ? nodes.filter(node => node.selected && !node.parent?.selected)
     : nodes.filter(node => node.selected);
+};
+
+export const getSelectAllCheckedState = (selectedNodes: Node[], allNodes: Node[]): CheckedState => {
+  return selectedNodes.length === allNodes.length
+    ? CheckedState.SELECTED
+    : selectedNodes.length === 0
+      ? CheckedState.UNSELECTED
+      : CheckedState.PARTIAL;
 };

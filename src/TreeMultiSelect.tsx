@@ -9,11 +9,12 @@ import {
   PATH_DELIMITER,
   SELECT_ALL
 } from './constants';
-import {debounce, getFieldFocusableElement, preventDefaultOnMouseEvent, typeToClassName} from './utils/commonUtils';
+import {debounce, getFieldFocusableElement, typeToClassName} from './utils/commonUtils';
 import {
   areAllExcludingDisabledSelected,
   convertTreeArrayToFlatArray,
   filterChips,
+  getSelectAllCheckedState,
   isAnyExcludingDisabledSelected,
   isAnyHasChildren
 } from './utils/nodesUtils';
@@ -40,6 +41,13 @@ import {
 } from './reducer';
 import {Dropdown} from './Dropdown';
 import {Node} from './Node';
+import {ChipLabelWrapper} from './components/ChipLabel';
+import {ChipClearWrapper} from './components/ChipClear';
+import {FieldToggleWrapper} from './components/FieldToggle';
+import {FieldClearWrapper} from './components/FieldClear';
+import {FieldWrapper} from './components/Field';
+import {ChipContainerWrapper} from './components/ChipContainer';
+import {InputWrapper} from './components/Input';
 
 export interface TreeMultiSelectProps {
   data: TreeNode[];
@@ -77,7 +85,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     withDropdownInput = false,
     closeDropdownOnNodeChange = false,
     dropdownHeight = DEFAULT_OPTIONS_CONTAINER_HEIGHT,
-    components: propsComponents = {},
+    components: propsComponents,
     onNodeChange,
     onNodeToggle,
     onClearAll,
@@ -128,14 +136,6 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
   const dispatchFocusFieldElement = (focusedFieldElement: string): void => {
     dispatchFocus(focusedFieldElement, focusedFieldElement ? '' : state.focusedElement);
-  };
-
-  const getSelectAllCheckedState = (selectedNodes: Node[], allNodes: Node[]): CheckedState => {
-    return selectedNodes.length === allNodes.length
-      ? CheckedState.SELECTED
-      : selectedNodes.length === 0
-        ? CheckedState.UNSELECTED
-        : CheckedState.PARTIAL;
   };
 
   const mapTreeNodeToNode = (treeNode: TreeNode, path: string, parent: Node | null): Node => {
@@ -246,10 +246,10 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     getFieldFocusableElement(fieldRef)?.focus();
   };
 
-  const handleFieldClick = useCallback((e: React.MouseEvent): void => {
+  const handleFieldClick = useCallback((event: React.MouseEvent): void => {
     focusFieldElement();
     // defaultPrevented is on click field clear icon or chip (or in custom field)
-    if (!e.defaultPrevented) {
+    if (!event.defaultPrevented) {
       dispatch({
         type: ActionType.FIELD_CLICK,
         payload: {
@@ -261,15 +261,15 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   }, [state.showDropdown, fieldRef]);
 
-  const callClearAllHandler = (selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
+  const callClearAllHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onClearAll) {
       const selectedTreeNodes = selectedNodes.map(node => node.toTreeNode());
       onClearAll(selectedTreeNodes, type !== Type.SELECT ? selectAllCheckedState : undefined);
     }
-  };
+  }, [onClearAll, type]);
 
-  const handleDeleteAll = useCallback((e: React.MouseEvent | React.KeyboardEvent): void => {
-    e.preventDefault();
+  const handleDeleteAll = useCallback((event: React.MouseEvent | React.KeyboardEvent): void => {
+    event.preventDefault();
     state.nodes.forEach(node => node.handleUnselect(type));
     const selectedNodes = state.nodes.filter(node => node.selected);
     const selectAllCheckedState = getSelectAllCheckedState(selectedNodes, state.nodes);
@@ -284,7 +284,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     });
 
     callClearAllHandler(selectAllCheckedState, selectedNodes);
-  }, [state.nodes, type]);
+  }, [state.nodes, type, callClearAllHandler]);
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
     const value = e.currentTarget.value;
@@ -306,7 +306,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         focusedElement: ''
       } as InputChangePayload
     });
-  }, [state.nodes, withSelectAll]);
+  }, [state.nodes, type, withSelectAll]);
 
   const callSelectAllChangeHandler = (selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onSelectAllChange) {
@@ -670,12 +670,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     onBlur?.(event);
   };
 
-  const handleFieldMouseDown = (event: React.MouseEvent) => {
+  const handleFieldMouseDown = useCallback((event: React.MouseEvent) => {
     if (event.target !== fieldInputRef?.current) {
       // needed for staying focus on input
       event.preventDefault();
     }
-  };
+  }, [fieldInputRef]);
 
   const handleDropdownUnmount = (): void => {
     if (withDropdownInput && isSearchable) {
@@ -712,122 +712,89 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       onBlur={handleComponentBlur}
       onKeyDown={handleComponentKeyDown}
     >
-      <components.Field.component
-        componentAttributes={{
-          ref: fieldRef,
-          className: "rtms-field",
-          onClick: handleFieldClick,
-          onMouseDown: handleFieldMouseDown
-        }}
-        componentProps={{type, showDropdown: state.showDropdown, withClearAll}}
-        customProps={components.Field.props}
+      <FieldWrapper
+        field={components.Field}
+        fieldRef={fieldRef}
+        type={type}
+        showDropdown={state.showDropdown}
+        withClearAll={withClearAll}
+        onMouseDown={handleFieldMouseDown}
+        onClick={handleFieldClick}
       >
         <div className="rtms-field-content">
           {filterChips(state.selectedNodes, type)
             .map(node => (
-              <components.ChipContainer.component
+              <ChipContainerWrapper
                 key={node.path}
-                componentAttributes={{
-                  className: `rtms-chip${node.disabled ? ' disabled' : ''}${state.focusedFieldElement === node.path ? ' focused' : ''}`,
-                  onClick: handleChipClick(node),
-                  // needed for staying focus on input
-                  onMouseDown: preventDefaultOnMouseEvent
-                }}
-                componentProps={{
-                  label: node.name,
-                  focused: state.focusedFieldElement === node.path,
-                  disabled: node.disabled,
-                }}
-                customProps={components.ChipContainer.props}
+                chipContainer={components.ChipContainer}
+                label={node.name}
+                focused={state.focusedFieldElement === node.path}
+                disabled={node.disabled}
+                onClick={handleChipClick(node)}
               >
-                <components.ChipLabel.component
-                  componentAttributes={{className: 'rtms-label'}}
-                  componentProps={{label: node.name}}
-                  customProps={components.ChipLabel.props}
-                />
+                <ChipLabelWrapper chipLabel={components.ChipLabel} label={node.name}/>
                 {!node.disabled &&
-                    <components.ChipClear.component
-                        componentAttributes={{className: 'rtms-chip-clear', onClick: handleNodeDelete(node)}}
-                        componentProps={{}}
-                        customProps={components.ChipClear.props}
-                    />}
-              </components.ChipContainer.component>
+                    <ChipClearWrapper chipClear={components.ChipClear} onClick={handleNodeDelete(node)}/>
+                }
+              </ChipContainerWrapper>
             ))}
           {withDropdownInput || !isSearchable ? (
             <input className="rtms-input-hidden" readOnly/>
           ) : (
-            <components.Input.component
-              componentAttributes={{
-                ref: fieldInputRef,
-                className: "rtms-input",
-                placeholder: inputPlaceholder,
-                value: state.searchValue,
-                onChange: handleInputChange
-              }}
-              componentProps={{placeholder: inputPlaceholder, value: state.searchValue}}
-              customProps={components.Input.props}
+            <InputWrapper
+              input={components.Input}
+              inputRef={fieldInputRef}
+              placeholder={inputPlaceholder}
+              value={state.searchValue}
+              onChange={handleInputChange}
             />
           )}
         </div>
         <div className="rtms-actions">
           {withClearAll && isAnyExcludingDisabledSelected(state.nodes) && (
-            <components.FieldClear.component
-              componentAttributes={{
-                className: `rtms-field-clear${state.focusedFieldElement === CLEAR_ALL ? ' focused' : ''}`,
-                onClick: handleDeleteAll,
-                // needed for staying focus on input
-                onMouseDown: preventDefaultOnMouseEvent
-              }}
-              componentProps={{focused: state.focusedFieldElement === CLEAR_ALL}}
-              customProps={components.FieldClear.props}
+            <FieldClearWrapper
+              fieldClear={components.FieldClear}
+              focused={state.focusedFieldElement === CLEAR_ALL}
+              onClick={handleDeleteAll}
             />
           )}
-          <components.FieldToggle.component
-            componentAttributes={{
-              className: `rtms-field-toggle${state.showDropdown ? ' expanded' : ''}`,
-              // needed for staying focus on input
-              onMouseDown: preventDefaultOnMouseEvent
-            }}
-            componentProps={{expanded: state.showDropdown}}
-            customProps={components.FieldToggle.props}
-          />
+          <FieldToggleWrapper fieldToggle={components.FieldToggle} expanded={state.showDropdown}/>
         </div>
-      </components.Field.component>
-      {state.showDropdown ? (
-        <Dropdown
-          type={type}
-          nodeMap={nodeMapRef.current}
-          nodesAmount={state.nodes.length}
-          displayedNodes={state.displayedNodes}
-          isAnyHasChildren={isAnyHasChildren(state.nodes)}
-          searchValue={state.searchValue}
-          showSelectAll={state.showSelectAll}
-          selectAllCheckedState={state.selectAllCheckedState}
-          focusedElement={state.focusedElement}
-          noMatchesText={noMatchesText}
-          dropdownHeight={dropdownHeight}
-          onSelectAllChange={handleSelectAllChange}
-          onNodeChange={handleNodeChange}
-          onNodeToggle={handleNodeToggleOnClick}
-          input={withDropdownInput && isSearchable ? (
-            <components.Input.component
-              componentAttributes={{
-                ref: dropdownInputRef,
-                className: "rtms-input",
-                placeholder: inputPlaceholder,
-                value: state.searchValue,
-                onChange: handleInputChange
-              }}
-              componentProps={{placeholder: inputPlaceholder, value: state.searchValue}}
-              customProps={components.Input.props}
-            />
-          ) : null}
-          inputRef={dropdownInputRef}
-          onUnmount={handleDropdownUnmount}
-          components={components}
-          onListItemRender={debouncedHandleListItemRender}
-        />
-      ) : null}
+      </FieldWrapper>
+      {
+        state.showDropdown ? (
+          <Dropdown
+            type={type}
+            nodeMap={nodeMapRef.current}
+            nodesAmount={state.nodes.length}
+            displayedNodes={state.displayedNodes}
+            isAnyHasChildren={isAnyHasChildren(state.nodes)}
+            searchValue={state.searchValue}
+            showSelectAll={state.showSelectAll}
+            selectAllCheckedState={state.selectAllCheckedState}
+            focusedElement={state.focusedElement}
+            noMatchesText={noMatchesText}
+            dropdownHeight={dropdownHeight}
+            onSelectAllChange={handleSelectAllChange}
+            onNodeChange={handleNodeChange}
+            onNodeToggle={handleNodeToggleOnClick}
+            input={withDropdownInput && isSearchable ? (
+              <InputWrapper
+                input={components.Input}
+                inputRef={dropdownInputRef}
+                placeholder={inputPlaceholder}
+                value={state.searchValue}
+                onChange={handleInputChange}
+              />
+            ) : null}
+            inputRef={dropdownInputRef}
+            onUnmount={handleDropdownUnmount}
+            components={components}
+            onListItemRender={debouncedHandleListItemRender}
+          />
+        ) : null
+      }
     </div>
-  );
+  )
+    ;
 };
