@@ -3,6 +3,8 @@ import {SELECT_ALL} from './constants';
 import {CheckedState, Type} from './types';
 import {InnerComponents} from './innerTypes';
 import {Node} from './Node';
+import {NoMatchesWrapper} from './components/NoMatches';
+import {SelectAllWrapper} from './components/SelectAllWrapper';
 
 export interface ListItemProps {
   type: Type;
@@ -59,46 +61,20 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
   }
 
   if ((showSelectAll && Boolean(input) && index === 1) || (showSelectAll && index === 0)) {
-    const selected = selectAllCheckedState === CheckedState.SELECTED;
-    const partial = selectAllCheckedState === CheckedState.PARTIAL;
-
-    const selectedClass = selected ? ' selected' : partial ? ' partial' : '';
-    const checkboxClasses = `rtms-select-all-checkbox${selectedClass}`;
-
-    const focusedClass = focusedElement === SELECT_ALL ? ' focused' : '';
-    const containerClasses = `rtms-header-item${selectedClass}${focusedClass}`;
-
     return (
-      <components.SelectAllContainer.component
-        componentAttributes={{className: containerClasses, onClick: onSelectAllChange}}
-        componentProps={{
-          label: SELECT_ALL,
-          checkedState: selectAllCheckedState,
-          focused: focusedElement === SELECT_ALL,
-        }}
-        customProps={components.SelectAllContainer.props}
-      >
-        <components.SelectAllCheckbox.component
-          componentAttributes={{className: checkboxClasses}}
-          componentProps={{checked: selected, partial}}
-          customProps={components.SelectAllCheckbox.props}
-        />
-        <components.SelectAllLabel.component
-          componentAttributes={{className: "rtms-label"}}
-          componentProps={{label: SELECT_ALL}}
-          customProps={components.SelectAllLabel.props}
-        />
-      </components.SelectAllContainer.component>
+      <SelectAllWrapper
+        components={components}
+        label={SELECT_ALL}
+        checkedState={selectAllCheckedState}
+        focused={focusedElement === SELECT_ALL}
+        onClick={onSelectAllChange}
+      />
     );
   }
 
   if (displayedNodes.length === 0) {
     return (
-      <components.NoMatches.component
-        componentAttributes={{className: "rtms-no-matches"}}
-        componentProps={{label: noMatchesText}}
-        customProps={components.NoMatches.props}
-      />
+      <NoMatchesWrapper noMatches={components.NoMatches} label={noMatchesText}/>
     );
   }
 
