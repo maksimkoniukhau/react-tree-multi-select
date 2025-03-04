@@ -41,13 +41,11 @@ import {
 } from './reducer';
 import {Dropdown} from './Dropdown';
 import {Node} from './Node';
-import {ChipLabelWrapper} from './components/ChipLabel';
-import {ChipClearWrapper} from './components/ChipClear';
 import {FieldToggleWrapper} from './components/FieldToggle';
 import {FieldClearWrapper} from './components/FieldClear';
 import {FieldWrapper} from './components/Field';
-import {ChipContainerWrapper} from './components/ChipContainer';
 import {InputWrapper} from './components/Input';
+import {ChipWrapper} from './components/ChipWrapper';
 
 export interface TreeMultiSelectProps {
   data: TreeNode[];
@@ -354,13 +352,13 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   };
 
-  const callNodeChangeHandler = (changedNode: Node, selectedNodes: Node[]): void => {
+  const callNodeChangeHandler = useCallback((changedNode: Node, selectedNodes: Node[]): void => {
     if (onNodeChange && !changedNode.disabled) {
       const changedTreeNode = changedNode.toTreeNode();
       const selectedTreeNodes = selectedNodes.map(node => node.toTreeNode());
       onNodeChange(changedTreeNode, selectedTreeNodes);
     }
-  };
+  }, [onNodeChange]);
 
   const handleChipClick = useCallback((node: Node) => (event: React.MouseEvent | React.KeyboardEvent): void => {
     // defaultPrevented is on click chip clear icon
@@ -375,12 +373,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         } as ChipClickPayload
       });
     }
-  }, [state.displayedNodes, state.showDropdown]);
+  }, [state.showDropdown]);
 
-  const handleNodeDelete = (node: Node) => (event: React.MouseEvent | React.KeyboardEvent): void => {
+  const handleNodeDelete = useCallback((node: Node) => (event: React.MouseEvent | React.KeyboardEvent): void => {
     event.preventDefault();
     if (!node.disabled) {
-      const prevFocusedFieldElement = getPrevFocusedFieldElement();
+      const prevFocusedFieldElement = getPrevFocusedFieldElement(state.selectedNodes, state.focusedFieldElement);
       const newFocusedFieldElement = (prevFocusedFieldElement === state.focusedFieldElement) || (event.type === 'click')
         ? INPUT
         : prevFocusedFieldElement;
@@ -399,7 +397,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
       callNodeChangeHandler(node, selectedNodes);
     }
-  };
+  }, [state.nodes, state.selectedNodes, state.focusedFieldElement, type, callNodeChangeHandler]);
 
   const handleNodeChange = useCallback((node: Node) => (event: React.MouseEvent | React.KeyboardEvent): void => {
     // defaultPrevented is on click expand node icon
@@ -519,46 +517,46 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     return focusedEl;
   };
 
-  const getNextFocusedFieldElement = (): string => {
-    if (!state.selectedNodes.length) {
+  const getNextFocusedFieldElement = (selectedNodes: Node[], focusedFieldElement: string): string => {
+    if (!selectedNodes.length) {
       return '';
     }
 
-    if (state.focusedFieldElement === INPUT) {
+    if (focusedFieldElement === INPUT) {
       return withClearAll ? CLEAR_ALL : INPUT;
     }
 
-    if (state.focusedFieldElement === CLEAR_ALL) {
+    if (focusedFieldElement === CLEAR_ALL) {
       return CLEAR_ALL;
     }
 
-    const selectedNodes = filterChips(state.selectedNodes, type);
+    const chipNodes = filterChips(selectedNodes, type);
 
-    const current = selectedNodes.find(node => node.path === state.focusedFieldElement);
-    const index = current ? selectedNodes.indexOf(current) : selectedNodes.length - 1;
+    const current = chipNodes.find(node => node.path === focusedFieldElement);
+    const index = current ? chipNodes.indexOf(current) : chipNodes.length - 1;
 
-    return index === selectedNodes.length - 1 ? INPUT : selectedNodes[index + 1].path;
+    return index === chipNodes.length - 1 ? INPUT : chipNodes[index + 1].path;
   };
 
-  const getPrevFocusedFieldElement = (): string => {
-    if (!state.selectedNodes.length) {
+  const getPrevFocusedFieldElement = (selectedNodes: Node[], focusedFieldElement: string): string => {
+    if (!selectedNodes.length) {
       return '';
     }
 
-    if (state.focusedFieldElement === CLEAR_ALL) {
+    if (focusedFieldElement === CLEAR_ALL) {
       return INPUT;
     }
 
-    const selectedNodes = filterChips(state.selectedNodes, type);
+    const chipNodes = filterChips(selectedNodes, type);
 
-    if (state.focusedFieldElement === INPUT) {
-      return selectedNodes[selectedNodes.length - 1].path;
+    if (focusedFieldElement === INPUT) {
+      return chipNodes[chipNodes.length - 1].path;
     }
 
-    const current = selectedNodes.find(node => node.path === state.focusedFieldElement);
-    const index = current ? selectedNodes.indexOf(current) : selectedNodes.length;
+    const current = chipNodes.find(node => node.path === focusedFieldElement);
+    const index = current ? chipNodes.indexOf(current) : chipNodes.length;
 
-    return index !== 0 ? selectedNodes[index - 1].path : state.focusedFieldElement;
+    return index !== 0 ? chipNodes[index - 1].path : focusedFieldElement;
   };
 
   const handleComponentKeyDown = (event: React.KeyboardEvent): void => {
@@ -567,7 +565,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         if (!state.focusedFieldElement && state.focusedElement) {
           handleNodeToggleOnKeyDown(false);
         } else if (!state.searchValue) {
-          dispatchFocusFieldElement(getPrevFocusedFieldElement());
+          dispatchFocusFieldElement(getPrevFocusedFieldElement(state.selectedNodes, state.focusedFieldElement));
         }
         if (state.focusedElement) {
           event.preventDefault();
@@ -577,7 +575,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         if (!state.focusedFieldElement && state.focusedElement) {
           handleNodeToggleOnKeyDown(true);
         } else if (!state.searchValue) {
-          dispatchFocusFieldElement(getNextFocusedFieldElement());
+          dispatchFocusFieldElement(getNextFocusedFieldElement(state.selectedNodes, state.focusedFieldElement));
         }
         if (state.focusedElement) {
           event.preventDefault();
@@ -724,19 +722,14 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         <div className="rtms-field-content">
           {filterChips(state.selectedNodes, type)
             .map(node => (
-              <ChipContainerWrapper
+              <ChipWrapper
                 key={node.path}
-                chipContainer={components.ChipContainer}
-                label={node.name}
+                components={components}
+                node={node}
                 focused={state.focusedFieldElement === node.path}
-                disabled={node.disabled}
-                onClick={handleChipClick(node)}
-              >
-                <ChipLabelWrapper chipLabel={components.ChipLabel} label={node.name}/>
-                {!node.disabled &&
-                    <ChipClearWrapper chipClear={components.ChipClear} onClick={handleNodeDelete(node)}/>
-                }
-              </ChipContainerWrapper>
+                onChipClick={handleChipClick}
+                onChipDelete={handleNodeDelete}
+              />
             ))}
           {withDropdownInput || !isSearchable ? (
             <input className="rtms-input-hidden" readOnly/>

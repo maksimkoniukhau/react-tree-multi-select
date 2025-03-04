@@ -124,11 +124,9 @@ export interface State {
   nodes: Node[];
   displayedNodes: Node[];
   selectedNodes: Node[];
-
   searchValue: string;
   showDropdown: boolean;
   showSelectAll: boolean;
-
   focusedFieldElement: string;
   focusedElement: string;
   selectAllCheckedState: CheckedState;
@@ -138,11 +136,9 @@ export const initialState: State = {
   nodes: [],
   displayedNodes: [],
   selectedNodes: [],
-
   searchValue: '',
   showDropdown: false,
   showSelectAll: false,
-
   focusedFieldElement: '',
   focusedElement: '',
   selectAllCheckedState: CheckedState.UNSELECTED
