@@ -1,12 +1,12 @@
 import React, {FC, memo} from 'react';
-import {NodeToggleProps} from '../types';
+import {NodeToggleProps, NodeToggleType} from '../types';
+import {Node} from '../Node';
 
 export interface NodeToggleOwnProps {
   expanded: boolean;
 }
 
 export const NodeToggle: FC<NodeToggleProps> = memo((props) => {
-
   return (
     <div {...props.componentAttributes}>
       {/*Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.*/}
@@ -20,5 +20,25 @@ export const NodeToggle: FC<NodeToggleProps> = memo((props) => {
         )}
       </svg>
     </div>
+  );
+});
+
+interface NodeToggleWrapperProps {
+  nodeToggle: NodeToggleType<any>;
+  node: Node;
+  expanded: boolean;
+  onNodeToggle: (node: Node) => (event: React.MouseEvent) => void;
+}
+
+export const NodeToggleWrapper: FC<NodeToggleWrapperProps> = memo(({nodeToggle, node, expanded, onNodeToggle}) => {
+  return (
+    <nodeToggle.component
+      componentAttributes={{
+        className: `rtms-node-toggle${expanded ? ' expanded' : ''}`,
+        onClick: onNodeToggle(node)
+      }}
+      componentProps={{expanded}}
+      customProps={nodeToggle.props}
+    />
   );
 });

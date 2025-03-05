@@ -344,13 +344,13 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     callSelectAllChangeHandler(selectAllCheckedState, selectedNodes);
   }, [state.selectAllCheckedState, state.nodes, type, callSelectAllChangeHandler]);
 
-  const callNodeToggleHandler = (toggledNode: Node, expandedNodes: Node[]): void => {
+  const callNodeToggleHandler = useCallback((toggledNode: Node, expandedNodes: Node[]): void => {
     if (onNodeToggle) {
       const toggledTreeNode = toggledNode.toTreeNode();
       const expandedTreeNodes = expandedNodes.map(node => node.toTreeNode());
       onNodeToggle(toggledTreeNode, expandedTreeNodes);
     }
-  };
+  }, [onNodeToggle]);
 
   const callNodeChangeHandler = useCallback((changedNode: Node, selectedNodes: Node[]): void => {
     if (onNodeChange && !changedNode.disabled) {
@@ -429,9 +429,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         dispatchFocusElement(node.path);
       }
     }
-  }, [state.nodes, state.selectedNodes, state.showDropdown, type]);
+  }, [state.nodes, state.selectedNodes, state.showDropdown, type, callNodeChangeHandler]);
 
-  const handleNodeToggle = (node: Node, expand: boolean): void => {
+  const handleNodeToggle = useCallback((node: Node, expand: boolean): void => {
     node.handleExpand(Boolean(state.searchValue), expand);
 
     const displayedNodes = state.nodes
@@ -447,7 +447,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     });
 
     callNodeToggleHandler(node, state.nodes.filter(nod => nod.expanded));
-  };
+  }, [state.nodes, state.searchValue, callNodeToggleHandler]);
 
   const handleNodeToggleOnClick = useCallback((node: Node) => (event: React.MouseEvent): void => {
     event.preventDefault();
@@ -455,7 +455,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       ? !node.searchExpanded
       : !node.expanded;
     handleNodeToggle(node, expand);
-  }, [state]);
+  }, [state.searchValue, handleNodeToggle]);
 
   const handleNodeToggleOnKeyDown = (expand: boolean): void => {
     if (state.showDropdown && state.focusedElement && state.focusedElement !== SELECT_ALL) {
