@@ -72,8 +72,6 @@ export const ReactTreeMultiSelectApp: FC = () => {
 
   return (
     <TreeMultiSelect
-      id="my-id"
-      className="custom-class"
       data={data}
       withSelectAll
       onNodeChange={handleNodeChange}
