@@ -383,7 +383,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         ? INPUT
         : prevFocusedFieldElement;
       node.handleUnselect(type);
-      const selectedNodes = state.nodes.filter(nod => nod.selected);
+      const selectedNodes = state.nodes.filter(node => node.selected);
 
       dispatch({
         type: ActionType.CHIP_DELETE,
@@ -411,7 +411,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           node.handleSelect(type);
         }
 
-        const selectedNodes = state.nodes.filter(nod => nod.selected);
+        const selectedNodes = state.nodes.filter(node => node.selected);
 
         dispatch({
           type: ActionType.NODE_CHANGE,
@@ -435,7 +435,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     node.handleExpand(Boolean(state.searchValue), expand);
 
     const displayedNodes = state.nodes
-      .filter(nod => nod.isDisplayed(Boolean(state.searchValue)));
+      .filter(node => node.isDisplayed(Boolean(state.searchValue)));
 
     dispatch({
       type: ActionType.NODE_TOGGLE,
@@ -446,7 +446,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       } as NodeTogglePayload
     });
 
-    callNodeToggleHandler(node, state.nodes.filter(nod => nod.expanded));
+    callNodeToggleHandler(node, state.nodes.filter(node => node.expanded));
   }, [state.nodes, state.searchValue, callNodeToggleHandler]);
 
   const handleNodeToggleOnClick = useCallback((node: Node) => (event: React.MouseEvent): void => {
@@ -610,7 +610,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           if (state.focusedElement === SELECT_ALL) {
             handleSelectAllChange(event);
           } else {
-            const focusedNode = nodeMapRef.current?.get(state.focusedElement);
+            const focusedNode = nodeMapRef.current.get(state.focusedElement);
             if (focusedNode) {
               handleNodeChange(focusedNode)(event);
             }
@@ -623,7 +623,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           if (state.focusedFieldElement === CLEAR_ALL) {
             handleDeleteAll(event);
           } else {
-            const focusedNode = nodeMapRef.current?.get(state.focusedFieldElement);
+            const focusedNode = nodeMapRef.current.get(state.focusedFieldElement);
             if (focusedNode) {
               handleNodeDelete(focusedNode)(event);
             }
