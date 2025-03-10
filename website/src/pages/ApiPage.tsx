@@ -98,6 +98,12 @@ export const ApiPage: FC = () => {
               <td>{`if 'true', close dropdown after node change (select/unselect in dropdown)`}</td>
             </tr>
             <tr>
+              <td>{'dropdownHeight'}</td>
+              <td>{'number'}</td>
+              <td>{'300'}</td>
+              <td>{`dropdown height in pixels (it can be reduced if the content height is less than the value in the property)`}</td>
+            </tr>
+            <tr>
               <td>{'components'}</td>
               <td>{'Components'}</td>
               <td>{'-'}</td>

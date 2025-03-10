@@ -8,6 +8,7 @@ import {OptionTreeNode} from '../data';
 
 const INPUT_PLACEHOLDER = 'search...';
 const NO_MATCHES = 'No matches';
+const DEFAULT_OPTIONS_CONTAINER_HEIGHT = 300;
 
 export const BasicPage: FC = memo(() => {
 
@@ -19,6 +20,7 @@ export const BasicPage: FC = memo(() => {
   const [withSelectAll, setWithSelectAll] = useState<boolean>(false);
   const [withDropdownInput, setWithDropdownInput] = useState<boolean>(false);
   const [closeDropdownOnNodeChange, setCloseDropdownOnNodeChange] = useState<boolean>(false);
+  const [dropdownHeight, setDropdownHeight] = useState<number>(DEFAULT_OPTIONS_CONTAINER_HEIGHT);
   const [selectedNodes, setSelectedNodes] = useState<boolean>(true);
   const [expandedNodes, setExpandedNodes] = useState<boolean>(true);
   const [disabledNodes, setDisabledNodes] = useState<boolean>(true);
@@ -27,7 +29,7 @@ export const BasicPage: FC = memo(() => {
     return getTreeNodeData(selectedNodes, expandedNodes, disabledNodes);
   }, [selectedNodes, expandedNodes, disabledNodes]);
 
-  const handleOptionChange = (name: string) => (value: string | boolean): void => {
+  const handleOptionChange = (name: string) => (value: string | number | boolean): void => {
     switch (name) {
       case 'type' :
         setType((Type as any)[value as string]);
@@ -52,6 +54,9 @@ export const BasicPage: FC = memo(() => {
         break;
       case 'closeDropdownOnNodeChange' :
         setCloseDropdownOnNodeChange(value as boolean);
+        break;
+      case 'dropdownHeight' :
+        setDropdownHeight(value as number);
         break;
       case 'selectedNodes' :
         setSelectedNodes(value as boolean);
@@ -122,6 +127,8 @@ export const BasicPage: FC = memo(() => {
           <Checkbox label="withDropdownInput" initChecked={false} onChange={handleOptionChange('withDropdownInput')}/>
           <Checkbox label="closeDropdownOnNodeChange" initChecked={false}
                     onChange={handleOptionChange('closeDropdownOnNodeChange')}/>
+          <Input label="dropdownHeight:" initValue={DEFAULT_OPTIONS_CONTAINER_HEIGHT}
+                 onChange={handleOptionChange('dropdownHeight')} type="number"/>
           <div className="delimiter"/>
           <div>{'Data initial props:'}</div>
           <Checkbox label="selectedNodes" initChecked={true} onChange={handleOptionChange('selectedNodes')}/>
@@ -141,6 +148,7 @@ export const BasicPage: FC = memo(() => {
             withSelectAll={withSelectAll}
             withDropdownInput={withDropdownInput}
             closeDropdownOnNodeChange={closeDropdownOnNodeChange}
+            dropdownHeight={dropdownHeight}
             onNodeChange={handleNodeChange}
             onNodeToggle={handleNodeToggle}
             onClearAll={handleClearAll}
