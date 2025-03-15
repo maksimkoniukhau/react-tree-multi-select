@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "https://maksimkoniukhau.github.io/react-tree-multi-select",
   "dependencies": {
-    "@atlaskit/tooltip": "^19.0.3",
+    "@atlaskit/tooltip": "^20.0.2",
     "@babel/core": "^7.16.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
