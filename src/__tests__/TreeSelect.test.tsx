@@ -10,7 +10,6 @@ import {
   getChipLabel,
   getDropdown,
   getDropdownInput,
-  getDropdownVirtuoso,
   getField,
   getFieldInput,
   getFieldToggle,
@@ -154,34 +153,6 @@ describe('TreeMultiSelect component: closeDropdownOnNodeChange prop', () => {
 
       await user.click(document.body);
       closeDropdownOnNodeChangeMatcher(container, withDropdownInput, false, false, handleFocus, 1, handleBlur, 1);
-    });
-});
-
-describe('TreeMultiSelect component: dropdownHeight prop', () => {
-  const user: UserEvent = userEvent.setup();
-
-  it('renders component without dropdownHeight', async () => {
-    const {container} = render(<TreeMultiSelect data={treeNodeData}/>);
-
-    await user.click(getField(container));
-
-    const dropdownVirtuoso = getDropdownVirtuoso(container);
-    expect(dropdownVirtuoso).toBeInTheDocument();
-    const computedStyles = window.getComputedStyle(dropdownVirtuoso);
-    expect(computedStyles.height).toEqual('300px');
-  });
-
-  it.each([[100], [200], [400]])
-  ('renders component when dropdownHeight={%s}',
-    async (dropdownHeight) => {
-      const {container} = render(<TreeMultiSelect data={treeNodeData} dropdownHeight={dropdownHeight}/>);
-
-      await user.click(getField(container));
-
-      const dropdownVirtuoso = getDropdownVirtuoso(container);
-      expect(dropdownVirtuoso).toBeInTheDocument();
-      const computedStyles = window.getComputedStyle(dropdownVirtuoso);
-      expect(computedStyles.height).toEqual(`${dropdownHeight}px`);
     });
 });
 

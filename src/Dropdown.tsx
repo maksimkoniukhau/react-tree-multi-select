@@ -1,5 +1,5 @@
 import React, {FC, JSX, memo, ReactNode, RefObject, useEffect, useRef, useState} from 'react';
-import {CalculateViewLocation, StateSnapshot, Virtuoso, VirtuosoHandle} from 'react-virtuoso'
+import {CalculateViewLocation, StateSnapshot, Virtuoso, VirtuosoHandle} from 'react-virtuoso';
 import {DEFAULT_OPTIONS_CONTAINER_WIDTH, SELECT_ALL} from './constants';
 import {CheckedState, Type} from './types';
 import {InnerComponents} from './innerTypes';
@@ -55,7 +55,8 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
 
   const virtuosoRef = useRef<VirtuosoHandle>(null);
 
-  const [height, setHeight] = useState<number>(dropdownHeight);
+  const [height, setHeight] = useState<number>(1);
+  const [increaseViewportBy, setIncreaseViewportBy] = useState<number>(dropdownHeight - 1);
 
   const itemCount = (displayedNodes.length || 1) + (showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0);
 
@@ -113,6 +114,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
 
   const handleTotalListHeightChanged = (height: number): void => {
     setHeight(Math.min(dropdownHeight, height));
+    setIncreaseViewportBy(0);
   };
 
   const itemContent = (index: number): JSX.Element => {
@@ -153,6 +155,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
         totalCount={itemCount}
         topItemCount={(showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0)}
         itemContent={itemContent}
+        increaseViewportBy={increaseViewportBy}
       />
     </div>
   );
