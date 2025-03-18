@@ -167,7 +167,7 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
     blurTimes: number
   ): void => {
     if (focused) {
-      expect(getRootContainer(container)).toHaveClass('focusede');
+      expect(getRootContainer(container)).toHaveClass('focused');
     } else {
       expect(getRootContainer(container)).not.toHaveClass('focused');
     }
