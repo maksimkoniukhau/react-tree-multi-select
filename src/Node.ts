@@ -6,7 +6,7 @@ export class Node {
   private _name: string;
   private _parent: Node | null;
   private _children: Node[];
-  private _deep: number;
+  private _depth: number;
   private _disabled: boolean;
   private _selected: boolean;
   private _partiallySelected: boolean;
@@ -20,12 +20,12 @@ export class Node {
 
   private _initTreeNode: TreeNode;
 
-  constructor(path: string, name: string, parent: Node | null, deep: number, expanded: boolean, initTreeNode: TreeNode) {
+  constructor(path: string, name: string, parent: Node | null, depth: number, expanded: boolean, initTreeNode: TreeNode) {
     this._path = path || '';
     this._name = name || '';
     this._parent = parent || null;
     this._children = [];
-    this._deep = deep || 0;
+    this._depth = depth || 0;
     this._disabled = false;
     this._selected = false;
     this._partiallySelected = false;
@@ -68,12 +68,12 @@ export class Node {
     this._children = value || [];
   }
 
-  get deep(): number {
-    return this._deep;
+  get depth(): number {
+    return this._depth;
   }
 
-  set deep(value: number) {
-    this._deep = value || 0;
+  set depth(value: number) {
+    this._depth = value || 0;
   }
 
   get disabled(): boolean {
