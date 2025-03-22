@@ -3,6 +3,7 @@ import {
   chipClearExample,
   chipContainerExample,
   chipLabelExample,
+  customComponentBuiltin,
   customComponentCommonPattern,
   customComponentMergeClassname,
   fieldClearExample,
@@ -45,16 +46,21 @@ export const CustomComponentsPage: FC = memo(() => {
         <Section id="overview">
           <h2>{'React Tree Multi Select custom components'}</h2>
           <div className="paragraph">
-            <b>{'react-tree-multi-select'}</b>{' allows you to customize component by providing your own custom components as a property.\n'}
-            {'The common pattern of custom component implementation looks like this:'}
+            <b>{'react-tree-multi-select'}</b>{' allows you to customize its built-in components by providing your own custom components as a property.'}
+            {' This feature enables you to tailor the appearance and behavior of various components.\n'}
+            {'The general pattern for implementing a custom component involves creating a component and passing the componentAttributes prop to the root element. Here\'s a simple implementation:'}
           </div>
           <CodeBlock code={customComponentCommonPattern}/>
           <div className="paragraph">
             <span className="important">{'Important'}</span>
-            {': you must pass componentAttributes to the root element in order for component to work properly.\n'}
+            {': you must pass componentAttributes prop to the root element in order for component to work properly.\n'}
             {'The only classname can be overridden. Or you can merge component classname with your own like in the example below:'}
           </div>
           <CodeBlock code={customComponentMergeClassname}/>
+          <div className="paragraph">
+            {'You can also import and reuse built-in components from the library for additional flexibility. For instance, here’s an example of implementing a custom ChipContainer while incorporating built-in functionality:'}
+          </div>
+          <CodeBlock code={customComponentBuiltin}/>
           <div className="paragraph">
             {'Below you can find some examples of usage custom components.'}
           </div>

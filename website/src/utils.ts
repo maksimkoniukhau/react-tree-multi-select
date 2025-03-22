@@ -45,7 +45,7 @@ const randomString = (length: number): string => {
   return result;
 };
 
-const generateData = (amount: number, deep: string): RandomTreeNode[] => {
+const generateData = (amount: number, depth: string): RandomTreeNode[] => {
   let nextAmount = amount > 10 ? 50 : amount;
   switch (nextAmount) {
     case 50:
@@ -68,7 +68,7 @@ const generateData = (amount: number, deep: string): RandomTreeNode[] => {
   }
   const res: RandomTreeNode[] = [];
   for (let i = 0; i < amount; i++) {
-    const id = amount > 10 ? `${i}` : `${deep}.${i}`;
+    const id = amount > 10 ? `${i}` : `${depth}.${i}`;
     res.push({
       id,
       description: randomString(7),

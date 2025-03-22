@@ -176,6 +176,12 @@ export const customComponentMergeClassname = `const CustomChipLabel: FC<ChipLabe
   </div>
 );`;
 
+export const customComponentBuiltin = `const CustomChipContainer: FC<ChipContainerProps> = (props) => (
+  <Tooltip content={\`Tooltip for the \${props.componentProps.label}\`}>
+    <components.ChipContainer {...props}/>
+  </Tooltip>
+);`;
+
 export const fieldExample = `import React, {FC} from 'react';
 import {FieldProps, TreeMultiSelect, Type} from 'react-tree-multi-select';
 
@@ -249,19 +255,23 @@ export const CustomFieldExample: FC = () => {
 
 export const chipContainerExample = `import React, {FC} from 'react';
 import Tooltip from '@atlaskit/tooltip';
-import {ChipContainerProps, ChipContainerType, Components, TreeMultiSelect} from 'react-tree-multi-select';
+import {
+  ChipContainerProps,
+  ChipContainerType,
+  Components,
+  components,
+  TreeMultiSelect
+} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
 const CustomChipContainer: FC<ChipContainerProps> = (props) => (
   <Tooltip content={\`Tooltip for the \${props.componentProps.label}\`}>
-    <div {...props.componentAttributes}>
-      {props.children}
-    </div>
+    <components.ChipContainer {...props}/>
   </Tooltip>
 );
 
 const ChipContainer: ChipContainerType = {component: CustomChipContainer};
-const components: Components = {ChipContainer};
+const customComponents: Components = {ChipContainer};
 
 export const CustomChipContainerExample: FC = () => {
 
@@ -269,7 +279,7 @@ export const CustomChipContainerExample: FC = () => {
     <div className="component-example">
       <TreeMultiSelect
         data={getTreeNodeData(true)}
-        components={components}
+        components={customComponents}
       />
     </div>
   );
@@ -524,19 +534,23 @@ export const CustomSelectAllLabelExample: FC = () => {
 
 export const nodeContainerExample = `import React, {FC} from 'react';
 import Tooltip from '@atlaskit/tooltip';
-import {Components, NodeContainerProps, NodeContainerType, TreeMultiSelect} from 'react-tree-multi-select';
+import {
+  Components,
+  components,
+  NodeContainerProps,
+  NodeContainerType,
+  TreeMultiSelect
+} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
 const CustomNodeContainer: FC<NodeContainerProps> = (props) => (
   <Tooltip content={\`Tooltip for the \${props.componentProps.label}\`}>
-    <div {...props.componentAttributes}>
-      {props.children}
-    </div>
+    <components.NodeContainer {...props}/>
   </Tooltip>
 );
 
 const NodeContainer: NodeContainerType = {component: CustomNodeContainer};
-const components: Components = {NodeContainer};
+const customComponents: Components = {NodeContainer};
 
 export const CustomNodeContainerExample: FC = () => {
 
@@ -544,7 +558,7 @@ export const CustomNodeContainerExample: FC = () => {
     <div className="component-example">
       <TreeMultiSelect
         data={getTreeNodeData(true)}
-        components={components}
+        components={customComponents}
       />
     </div>
   );

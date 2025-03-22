@@ -1,18 +1,22 @@
 import React, {FC} from 'react';
 import Tooltip from '@atlaskit/tooltip';
-import {ChipContainerProps, ChipContainerType, Components, TreeMultiSelect} from '../../treeMultiSelectImport';
+import {
+  ChipContainerProps,
+  ChipContainerType,
+  Components,
+  components,
+  TreeMultiSelect
+} from '../../treeMultiSelectImport';
 import {getTreeNodeData} from '../../utils';
 
 const CustomChipContainer: FC<ChipContainerProps> = (props) => (
   <Tooltip content={`Tooltip for the ${props.componentProps.label}`}>
-    <div {...props.componentAttributes}>
-      {props.children}
-    </div>
+    <components.ChipContainer {...props}/>
   </Tooltip>
 );
 
 const ChipContainer: ChipContainerType = {component: CustomChipContainer};
-const components: Components = {ChipContainer};
+const customComponents: Components = {ChipContainer};
 
 export const CustomChipContainerExample: FC = () => {
 
@@ -20,7 +24,7 @@ export const CustomChipContainerExample: FC = () => {
     <div className="component-example">
       <TreeMultiSelect
         data={getTreeNodeData(true)}
-        components={components}
+        components={customComponents}
       />
     </div>
   );
