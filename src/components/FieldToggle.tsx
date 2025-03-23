@@ -4,6 +4,7 @@ import {preventDefaultOnMouseEvent} from '../utils/commonUtils';
 
 export interface FieldToggleOwnProps {
   expanded: boolean;
+  componentDisabled: boolean;
 }
 
 export const FieldToggle: FC<FieldToggleProps> = memo((props) => {
@@ -26,17 +27,18 @@ export const FieldToggle: FC<FieldToggleProps> = memo((props) => {
 interface FieldToggleWrapperProps {
   fieldToggle: FieldToggleType<any>;
   expanded: boolean;
+  componentDisabled: boolean;
 }
 
-export const FieldToggleWrapper: FC<FieldToggleWrapperProps> = memo(({fieldToggle, expanded}) => {
+export const FieldToggleWrapper: FC<FieldToggleWrapperProps> = memo(({fieldToggle, expanded, componentDisabled}) => {
   return (
     <fieldToggle.component
       componentAttributes={{
-        className: `rtms-field-toggle${expanded ? ' expanded' : ''}`,
+        className: `rtms-field-toggle${expanded ? ' expanded' : ''}${componentDisabled ? ' disabled' : ''}`,
         // needed for staying focus on input
         onMouseDown: preventDefaultOnMouseEvent
       }}
-      componentProps={{expanded}}
+      componentProps={{expanded, componentDisabled}}
       customProps={fieldToggle.props}
     />
   );

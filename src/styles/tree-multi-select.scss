@@ -5,6 +5,10 @@ TreeMultiSelect styles
 .rtms-tree-multi-select {
   @import 'css-variables';
 
+  &.disabled {
+    pointer-events: none;
+  }
+
   &.rtms-multi-select-type, &.rtms-select-type {
     --rtms-list-item-selected-background-color: #e7f3fc;
   }

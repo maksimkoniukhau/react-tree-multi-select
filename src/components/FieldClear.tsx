@@ -4,6 +4,7 @@ import {preventDefaultOnMouseEvent} from '../utils/commonUtils';
 
 export interface FieldClearOwnProps {
   focused: boolean;
+  componentDisabled: boolean;
 }
 
 export const FieldClear: FC<FieldClearProps> = memo((props) => {
@@ -22,18 +23,21 @@ interface FieldClearWrapperProps {
   fieldClear: FieldClearType<any>;
   focused: boolean;
   onClick: (event: React.MouseEvent) => void;
+  componentDisabled: boolean;
 }
 
-export const FieldClearWrapper: FC<FieldClearWrapperProps> = memo(({fieldClear, focused, onClick}) => {
+export const FieldClearWrapper: FC<FieldClearWrapperProps> = memo((props) => {
+  const {fieldClear, focused, onClick, componentDisabled} = props;
+
   return (
     <fieldClear.component
       componentAttributes={{
-        className: `rtms-field-clear${focused ? ' focused' : ''}`,
+        className: `rtms-field-clear${focused ? ' focused' : ''}${componentDisabled ? ' disabled' : ''}`,
         onClick,
         // needed for staying focus on input
         onMouseDown: preventDefaultOnMouseEvent
       }}
-      componentProps={{focused}}
+      componentProps={{focused, componentDisabled}}
       customProps={fieldClear.props}
     />
   );

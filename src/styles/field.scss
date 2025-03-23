@@ -14,6 +14,10 @@
     border: 1px solid #ced4da;
     border-radius: 4px;
     box-sizing: border-box;
+
+    &.disabled {
+      background-color: var(--rtms-disabled-background-color);
+    }
   }
 
   .rtms-field-content {
@@ -34,6 +38,12 @@
       justify-content: center;
       cursor: pointer;
       padding: 4px;
+
+      &.disabled {
+        path {
+          fill: var(--rtms-disabled-color);
+        }
+      }
     }
 
     .rtms-field-clear {

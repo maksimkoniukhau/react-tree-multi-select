@@ -54,6 +54,7 @@ export interface TreeMultiSelectProps {
   className?: string;
   inputPlaceholder?: string;
   noMatchesText?: string;
+  isDisabled?: boolean;
   isSearchable?: boolean;
   withClearAll?: boolean;
   withSelectAll?: boolean;
@@ -77,6 +78,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     className = '',
     inputPlaceholder = INPUT_PLACEHOLDER,
     noMatchesText = NO_MATCHES,
+    isDisabled = false,
     isSearchable = true,
     withClearAll = true,
     withSelectAll = false,
@@ -221,6 +223,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [withSelectAll]);
 
   const handleOutsideEvent = (event: MouseEvent | TouchEvent | FocusEvent) => {
+    if (isDisabled) {
+      return;
+    }
     if (isComponentFocused.current) {
       isOutsideClicked.current = true;
     }
@@ -245,6 +250,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   };
 
   const handleFieldClick = useCallback((event: React.MouseEvent): void => {
+    if (isDisabled) {
+      return;
+    }
     focusFieldElement();
     // defaultPrevented is on click field clear icon or chip (or in custom field)
     if (!event.defaultPrevented) {
@@ -257,7 +265,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         } as FieldClickPayload
       });
     }
-  }, [state.showDropdown, fieldRef]);
+  }, [state.showDropdown, fieldRef, isDisabled]);
 
   const callClearAllHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onClearAll) {
@@ -267,6 +275,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [onClearAll, type]);
 
   const handleDeleteAll = useCallback((event: React.MouseEvent | React.KeyboardEvent): void => {
+    if (isDisabled) {
+      return;
+    }
     event.preventDefault();
     state.nodes.forEach(node => node.handleUnselect(type));
     const selectedNodes = state.nodes.filter(node => node.selected);
@@ -282,9 +293,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     });
 
     callClearAllHandler(selectAllCheckedState, selectedNodes);
-  }, [state.nodes, type, callClearAllHandler]);
+  }, [state.nodes, type, callClearAllHandler, isDisabled]);
 
   const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>): void => {
+    if (isDisabled) {
+      return;
+    }
     const value = event.currentTarget.value;
 
     state.nodes.forEach(node => {
@@ -304,7 +318,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         focusedElement: ''
       } as InputChangePayload
     });
-  }, [state.nodes, type, withSelectAll]);
+  }, [state.nodes, type, withSelectAll, isDisabled]);
 
   const callSelectAllChangeHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onSelectAllChange) {
@@ -314,6 +328,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [onSelectAllChange]);
 
   const handleSelectAllChange = useCallback((event: React.MouseEvent | React.KeyboardEvent): void => {
+    if (isDisabled) {
+      return;
+    }
     const shouldBeUnselected = state.selectAllCheckedState === CheckedState.SELECTED
       || (state.selectAllCheckedState === CheckedState.PARTIAL
         && areAllExcludingDisabledSelected(state.nodes));
@@ -342,7 +359,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     });
 
     callSelectAllChangeHandler(selectAllCheckedState, selectedNodes);
-  }, [state.selectAllCheckedState, state.nodes, type, callSelectAllChangeHandler]);
+  }, [state.selectAllCheckedState, state.nodes, type, callSelectAllChangeHandler, isDisabled]);
 
   const callNodeToggleHandler = useCallback((toggledNode: Node, expandedNodes: Node[]): void => {
     if (onNodeToggle) {
@@ -361,6 +378,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [onNodeChange]);
 
   const handleChipClick = useCallback((node: Node) => (event: React.MouseEvent | React.KeyboardEvent): void => {
+    if (isDisabled) {
+      return;
+    }
     // defaultPrevented is on click chip clear icon
     if (!event.defaultPrevented) {
       event.preventDefault();
@@ -373,9 +393,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         } as ChipClickPayload
       });
     }
-  }, [state.showDropdown]);
+  }, [state.showDropdown, isDisabled]);
 
   const handleNodeDelete = useCallback((node: Node) => (event: React.MouseEvent | React.KeyboardEvent): void => {
+    if (isDisabled) {
+      return;
+    }
     event.preventDefault();
     if (!node.disabled) {
       const prevFocusedFieldElement = getPrevFocusedFieldElement(state.selectedNodes, state.focusedFieldElement);
@@ -397,9 +420,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
       callNodeChangeHandler(node, selectedNodes);
     }
-  }, [state.nodes, state.selectedNodes, state.focusedFieldElement, type, callNodeChangeHandler]);
+  }, [state.nodes, state.selectedNodes, state.focusedFieldElement, type, callNodeChangeHandler, isDisabled]);
 
   const handleNodeChange = useCallback((node: Node) => (event: React.MouseEvent | React.KeyboardEvent): void => {
+    if (isDisabled) {
+      return;
+    }
     // defaultPrevented is on click expand node icon
     if (!event.defaultPrevented) {
       if (!node.disabled) {
@@ -429,7 +455,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         dispatchFocusElement(node.path);
       }
     }
-  }, [state.nodes, state.selectedNodes, state.showDropdown, type, callNodeChangeHandler]);
+  }, [state.nodes, state.selectedNodes, state.showDropdown, type, callNodeChangeHandler, isDisabled]);
 
   const handleNodeToggle = useCallback((node: Node, expand: boolean): void => {
     node.handleExpand(Boolean(state.searchValue), expand);
@@ -450,14 +476,20 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [state.nodes, state.searchValue, callNodeToggleHandler]);
 
   const handleNodeToggleOnClick = useCallback((node: Node) => (event: React.MouseEvent): void => {
+    if (isDisabled) {
+      return;
+    }
     event.preventDefault();
     const expand = state.searchValue
       ? !node.searchExpanded
       : !node.expanded;
     handleNodeToggle(node, expand);
-  }, [state.searchValue, handleNodeToggle]);
+  }, [state.searchValue, handleNodeToggle, isDisabled]);
 
   const handleNodeToggleOnKeyDown = (expand: boolean): void => {
+    if (isDisabled) {
+      return;
+    }
     if (state.showDropdown && state.focusedElement && state.focusedElement !== SELECT_ALL) {
       const node = nodeMapRef.current.get(state.focusedElement);
       if (node?.hasChildren()
@@ -560,6 +592,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   };
 
   const handleComponentKeyDown = (event: React.KeyboardEvent): void => {
+    if (isDisabled) {
+      return;
+    }
     switch (event.key) {
       case 'ArrowLeft':
         if (!state.focusedFieldElement && state.focusedElement) {
@@ -649,6 +684,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   };
 
   const handleComponentFocus = (event: React.FocusEvent): void => {
+    if (isDisabled) {
+      return;
+    }
     if (!isComponentFocused.current) {
       isComponentFocused.current = true;
       treeMultiSelectRef?.current?.classList?.add('focused');
@@ -657,6 +695,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   };
 
   const handleComponentBlur = (event: React.FocusEvent): void => {
+    if (isDisabled) {
+      return;
+    }
     if (isDropdownInputFocused.current && !dropdownUnmountedOnClickOutside.current) {
       isDropdownInputFocused.current = false;
       return;
@@ -667,6 +708,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     treeMultiSelectRef?.current?.classList?.remove('focused');
     onBlur?.(event);
   };
+
+  const handleComponentMouseDown = useCallback((event: React.MouseEvent) => {
+    if (isDisabled) {
+      event.preventDefault();
+    }
+  }, [isDisabled]);
 
   const handleFieldMouseDown = useCallback((event: React.MouseEvent) => {
     if (event.target !== fieldInputRef?.current) {
@@ -697,7 +744,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const debouncedHandleListItemRender = debounce(handleListItemRender, 150);
 
   const typeClassName = useMemo(() => typeToClassName(type), [type]);
-  const containerClasses = `rtms-tree-multi-select ${typeClassName}` + (className ? ` ${className}` : '');
+  const rootClasses = `rtms-tree-multi-select ${typeClassName} ${isDisabled ? ' disabled' : ''}`
+    + (className ? ` ${className}` : '');
 
   useOnClickOutside(treeMultiSelectRef, handleOutsideEvent);
 
@@ -705,10 +753,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     <div
       ref={treeMultiSelectRef}
       id={id}
-      className={containerClasses}
+      className={rootClasses}
       onFocus={handleComponentFocus}
       onBlur={handleComponentBlur}
       onKeyDown={handleComponentKeyDown}
+      onMouseDown={handleComponentMouseDown}
     >
       <FieldWrapper
         field={components.Field}
@@ -718,6 +767,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         withClearAll={withClearAll}
         onMouseDown={handleFieldMouseDown}
         onClick={handleFieldClick}
+        componentDisabled={isDisabled}
       >
         <div className="rtms-field-content">
           {filterChips(state.selectedNodes, type)
@@ -729,6 +779,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
                 focused={state.focusedFieldElement === node.path}
                 onChipClick={handleChipClick}
                 onChipDelete={handleNodeDelete}
+                componentDisabled={isDisabled}
               />
             ))}
           {withDropdownInput || !isSearchable ? (
@@ -740,6 +791,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
               placeholder={inputPlaceholder}
               value={state.searchValue}
               onChange={handleInputChange}
+              componentDisabled={isDisabled}
             />
           )}
         </div>
@@ -749,9 +801,14 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
               fieldClear={components.FieldClear}
               focused={state.focusedFieldElement === CLEAR_ALL}
               onClick={handleDeleteAll}
+              componentDisabled={isDisabled}
             />
           )}
-          <FieldToggleWrapper fieldToggle={components.FieldToggle} expanded={state.showDropdown}/>
+          <FieldToggleWrapper
+            fieldToggle={components.FieldToggle}
+            expanded={state.showDropdown}
+            componentDisabled={isDisabled}
+          />
         </div>
       </FieldWrapper>
       {
@@ -778,6 +835,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
                 placeholder={inputPlaceholder}
                 value={state.searchValue}
                 onChange={handleInputChange}
+                componentDisabled={isDisabled}
               />
             ) : null}
             inputRef={dropdownInputRef}

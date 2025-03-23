@@ -4,6 +4,7 @@ import {InputProps, InputType} from '../types';
 export interface InputOwnProps {
   placeholder: string;
   value: string;
+  disabled: boolean;
 }
 
 export const Input: FC<InputProps> = memo((props) => {
@@ -18,10 +19,11 @@ interface InputWrapperProps {
   placeholder: string;
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  componentDisabled: boolean;
 }
 
 export const InputWrapper: FC<InputWrapperProps> = memo((props) => {
-  const {input, inputRef, placeholder, value, onChange} = props;
+  const {input, inputRef, placeholder, value, onChange, componentDisabled} = props;
 
   return (
     <input.component
@@ -30,9 +32,10 @@ export const InputWrapper: FC<InputWrapperProps> = memo((props) => {
         className: "rtms-input",
         placeholder,
         value,
-        onChange
+        onChange,
+        disabled: componentDisabled,
       }}
-      componentProps={{placeholder, value}}
+      componentProps={{placeholder, value, disabled: componentDisabled}}
       customProps={input.props}
     />
   );

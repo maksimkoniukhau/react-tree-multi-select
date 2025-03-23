@@ -5,6 +5,7 @@ export interface FieldOwnProps {
   type: Type;
   showDropdown: boolean;
   withClearAll: boolean;
+  componentDisabled: boolean;
 }
 
 export const Field: FC<FieldProps> = memo((props) => {
@@ -23,21 +24,22 @@ interface FieldWrapperProps {
   withClearAll: boolean;
   onMouseDown: (event: React.MouseEvent) => void;
   onClick: (event: React.MouseEvent) => void;
+  componentDisabled: boolean;
   children: ReactNode;
 }
 
 export const FieldWrapper: FC<FieldWrapperProps> = memo((props) => {
-  const {field, fieldRef, type, showDropdown, withClearAll, onMouseDown, onClick, children} = props;
+  const {field, fieldRef, type, showDropdown, withClearAll, onMouseDown, onClick, componentDisabled, children} = props;
 
   return (
     <field.component
       componentAttributes={{
         ref: fieldRef,
-        className: "rtms-field",
+        className: `rtms-field${componentDisabled ? ' disabled' : ''}`,
         onClick,
         onMouseDown
       }}
-      componentProps={{type, showDropdown, withClearAll}}
+      componentProps={{type, showDropdown, withClearAll, componentDisabled}}
       customProps={field.props}
     >
       {children}
