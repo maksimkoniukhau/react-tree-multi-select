@@ -6,6 +6,7 @@ import {
   customComponentBuiltin,
   customComponentCommonPattern,
   customComponentMergeClassname,
+  customProps,
   fieldClearExample,
   fieldExample,
   fieldToggleExample,
@@ -54,13 +55,21 @@ export const CustomComponentsPage: FC = memo(() => {
           <div className="paragraph">
             <span className="important">{'Important'}</span>
             {': you must pass componentAttributes prop to the root element in order for component to work properly.\n'}
-            {'The only classname can be overridden. Or you can merge component classname with your own like in the example below:'}
+            {'If you would like to add custom CSS class to component, you can merge component classname with your own like in the example below:'}
           </div>
           <CodeBlock code={customComponentMergeClassname}/>
           <div className="paragraph">
-            {'You can also import and reuse built-in components from the library for additional flexibility. For instance, here’s an example of implementing a custom ChipContainer while incorporating built-in functionality:'}
+            <div><b>{'Built-in components'}</b></div>
+            {'You can import and reuse built-in components from the library for additional flexibility. For an example, refer to the '}
+            <a className="link" href="#chip-container">CustomChipContainer</a>{'.'}
           </div>
           <CodeBlock code={customComponentBuiltin}/>
+          <div className="paragraph">
+            <div><b>{'Custom props'}</b></div>
+            {'You can pass your own properties to a component through the props object. For an example, refer to the '}
+            <a className="link" href="#chip-label">CustomChipLabel</a>{'.'}
+          </div>
+          <CodeBlock code={customProps}/>
           <div className="paragraph">
             {'Below you can find some examples of usage custom components.'}
           </div>

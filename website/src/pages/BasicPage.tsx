@@ -15,6 +15,7 @@ export const BasicPage: FC = memo(() => {
   const [type, setType] = useState<Type>(Type.TREE_SELECT);
   const [inputPlaceholder, setInputPlaceholder] = useState<string>(INPUT_PLACEHOLDER);
   const [noMatchesText, setNoMatchesText] = useState<string>(NO_MATCHES);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [isSearchable, setIsSearchable] = useState<boolean>(true);
   const [withClearAll, setWithClearAll] = useState<boolean>(true);
   const [withSelectAll, setWithSelectAll] = useState<boolean>(false);
@@ -39,6 +40,9 @@ export const BasicPage: FC = memo(() => {
         break;
       case 'noMatchesText' :
         setNoMatchesText(value as string);
+        break;
+      case 'isDisabled' :
+        setIsDisabled(value as boolean);
         break;
       case 'isSearchable' :
         setIsSearchable(value as boolean);
@@ -121,6 +125,7 @@ export const BasicPage: FC = memo(() => {
           <Input label="inputPlaceholder:" initValue={INPUT_PLACEHOLDER}
                  onChange={handleOptionChange('inputPlaceholder')}/>
           <Input label="noMatchesText:" initValue={NO_MATCHES} onChange={handleOptionChange('noMatchesText')}/>
+          <Checkbox label="isDisabled" initChecked={false} onChange={handleOptionChange('isDisabled')}/>
           <Checkbox label="isSearchable" initChecked={true} onChange={handleOptionChange('isSearchable')}/>
           <Checkbox label="withClearAll" initChecked={true} onChange={handleOptionChange('withClearAll')}/>
           <Checkbox label="withSelectAll" initChecked={false} onChange={handleOptionChange('withSelectAll')}/>
@@ -143,6 +148,7 @@ export const BasicPage: FC = memo(() => {
             className="basic-rtms-custom-class"
             inputPlaceholder={inputPlaceholder}
             noMatchesText={noMatchesText}
+            isDisabled={isDisabled}
             isSearchable={isSearchable}
             withClearAll={withClearAll}
             withSelectAll={withSelectAll}

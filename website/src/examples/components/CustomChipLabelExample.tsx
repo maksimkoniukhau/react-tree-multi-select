@@ -1,17 +1,16 @@
 import React, {FC} from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCode} from '@fortawesome/free-solid-svg-icons';
-import {ChipLabelProps, ChipLabelType, Components, TreeMultiSelect} from '../../treeMultiSelectImport';
+import {ChipLabelProps, TreeMultiSelect} from '../../treeMultiSelectImport';
 import {getTreeNodeData} from '../../utils';
 
-const CustomChipLabel: FC<ChipLabelProps> = (props) => (
+interface CustomChipLabelProps {
+  suffix: string;
+}
+
+const CustomChipLabel: FC<ChipLabelProps<CustomChipLabelProps>> = (props) => (
   <div {...props.componentAttributes}>
-    <FontAwesomeIcon icon={faCode}/>{' '}{props.componentProps.label}{' '}<FontAwesomeIcon icon={faCode}/>
+    {props.componentProps.label}{'-'}{props.customProps.suffix}
   </div>
 );
-
-const ChipLabel: ChipLabelType = {component: CustomChipLabel};
-const components: Components = {ChipLabel};
 
 export const CustomChipLabelExample: FC = () => {
 
@@ -19,7 +18,7 @@ export const CustomChipLabelExample: FC = () => {
     <div className="component-example">
       <TreeMultiSelect
         data={getTreeNodeData(true)}
-        components={components}
+        components={{ChipLabel: {component: CustomChipLabel, props: {suffix: 'Yo'}}}}
       />
     </div>
   );

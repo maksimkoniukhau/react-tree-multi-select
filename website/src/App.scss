@@ -1,6 +1,11 @@
 .app {
   padding-bottom: 10px;
 
+  .link {
+    text-decoration: none;
+    color: #12bef3;
+  }
+
   .header {
     position: fixed;
     z-index: 1;
