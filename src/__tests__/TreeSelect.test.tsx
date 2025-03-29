@@ -3,14 +3,17 @@ import '@testing-library/jest-dom';
 import React from 'react';
 import {render, screen} from '@testing-library/react';
 import userEvent, {UserEvent} from '@testing-library/user-event';
-import {TreeMultiSelect} from '../index';
+import {CheckedState, TreeMultiSelect, TreeNode} from '../index';
 import {getBaseTreeNodeData} from './testutils/dataUtils';
 import {
+  getChipClear,
   getChipContainer,
+  getChipContainers,
   getChipLabel,
   getDropdown,
   getDropdownInput,
   getField,
+  getFieldClear,
   getFieldInput,
   getFieldToggle,
   getHiddenInput,
@@ -27,6 +30,89 @@ describe('TreeMultiSelect component: base', () => {
     const chip = screen.getByText(/Angular/i);
     expect(chip).toBeInTheDocument();
   });
+});
+
+describe('TreeMultiSelect component: isDisabled prop', () => {
+  const isDisabledMatcher = (
+    container: HTMLElement,
+    withDropdownInput: boolean,
+    handleFocus: (event: React.FocusEvent) => void,
+    handleBlur: (event: React.FocusEvent) => void,
+    handleNodeChange: (node: TreeNode, selectedNodes: TreeNode[]) => void,
+    handleClearAll: (selectedNodes: TreeNode[], selectAllCheckedState?: CheckedState) => void
+  ): void => {
+    expect(getRootContainer(container)).not.toHaveClass('focused');
+    expect(handleFocus).not.toHaveBeenCalled();
+    expect(handleBlur).not.toHaveBeenCalled();
+    expect(handleNodeChange).not.toHaveBeenCalled();
+    expect(handleClearAll).not.toHaveBeenCalled();
+    if (withDropdownInput) {
+      expect(getFieldInput(container)).not.toBeInTheDocument();
+      expect(getHiddenInput(container)).toBeInTheDocument();
+    } else {
+      expect(getFieldInput(container)).toBeInTheDocument();
+      expect(getHiddenInput(container)).not.toBeInTheDocument();
+    }
+    expect(getDropdown(container)).not.toBeInTheDocument();
+    expect(getChipContainers(container).length).toBe(8);
+  };
+
+  const user: UserEvent = userEvent.setup();
+
+  it.each([[true], [false]])
+  ('renders component when isDisabled=true and withDropdownInput={%s}',
+    async (withDropdownInput) => {
+      const handleFocus = jest.fn();
+      const handleBlur = jest.fn();
+      const handleNodeChange = jest.fn();
+      const handleClearAll = jest.fn();
+      const {container} = render(
+        <TreeMultiSelect
+          data={treeNodeData}
+          isDisabled={true}
+          withDropdownInput={withDropdownInput}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onNodeChange={handleNodeChange}
+          onClearAll={handleClearAll}
+        />
+      );
+
+      isDisabledMatcher(container, withDropdownInput, handleFocus, handleBlur, handleNodeChange, handleClearAll);
+
+      await user.click(getField(container));
+      isDisabledMatcher(container, withDropdownInput, handleFocus, handleBlur, handleNodeChange, handleClearAll);
+
+      await user.click(getFieldClear(container));
+      isDisabledMatcher(container, withDropdownInput, handleFocus, handleBlur, handleNodeChange, handleClearAll);
+
+      await user.click(document.body);
+      isDisabledMatcher(container, withDropdownInput, handleFocus, handleBlur, handleNodeChange, handleClearAll);
+
+      await user.click(getFieldToggle(container));
+      isDisabledMatcher(container, withDropdownInput, handleFocus, handleBlur, handleNodeChange, handleClearAll);
+
+      await user.keyboard('{tab}');
+      isDisabledMatcher(container, withDropdownInput, handleFocus, handleBlur, handleNodeChange, handleClearAll);
+
+      await user.keyboard('{shift}{tab}');
+      isDisabledMatcher(container, withDropdownInput, handleFocus, handleBlur, handleNodeChange, handleClearAll);
+
+      await user.click(document.body);
+      isDisabledMatcher(container, withDropdownInput, handleFocus, handleBlur, handleNodeChange, handleClearAll);
+
+      await user.keyboard('{tab}');
+      isDisabledMatcher(container, withDropdownInput, handleFocus, handleBlur, handleNodeChange, handleClearAll);
+
+      await user.click(getChipContainer(container, 1));
+      isDisabledMatcher(container, withDropdownInput, handleFocus, handleBlur, handleNodeChange, handleClearAll);
+
+      await user.click(getChipLabel(container, 1));
+      isDisabledMatcher(container, withDropdownInput, handleFocus, handleBlur, handleNodeChange, handleClearAll);
+
+      await user.click(getChipClear(container, 1));
+      isDisabledMatcher(container, withDropdownInput, handleFocus, handleBlur, handleNodeChange, handleClearAll);
+    });
 });
 
 describe('TreeMultiSelect component: isSearchable prop', () => {
