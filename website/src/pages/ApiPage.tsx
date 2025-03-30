@@ -68,6 +68,12 @@ export const ApiPage: FC = () => {
               <td>{'custom text displayed when no items found during the search'}</td>
             </tr>
             <tr>
+              <td>{'isDisabled'}</td>
+              <td>{'boolean'}</td>
+              <td>{'false'}</td>
+              <td>{`if 'true', the component is disabled`}</td>
+            </tr>
+            <tr>
               <td>{'isSearchable'}</td>
               <td>{'boolean'}</td>
               <td>{'true'}</td>

@@ -40,6 +40,7 @@
           padding: 5px 0;
           border-radius: 10px;
           cursor: pointer;
+          opacity: 0.75;
 
           &:hover {
             background-color: #efefef;
@@ -205,9 +206,10 @@
         padding: 25px 0 0 0;
         font-size: 14px;
 
-        li {
+        .navigation-item {
           padding: 5px;
           cursor: pointer;
+          opacity: 0.75;
 
           &:hover {
             color: #12bef3;
