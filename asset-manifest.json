@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/react-tree-multi-select/static/css/main.3b203d7b.css",
-    "main.js": "/react-tree-multi-select/static/js/main.f42f9508.js",
+    "main.css": "/react-tree-multi-select/static/css/main.49693c3e.css",
+    "main.js": "/react-tree-multi-select/static/js/main.ab6d2382.js",
     "static/js/453.c96a041a.chunk.js": "/react-tree-multi-select/static/js/453.c96a041a.chunk.js",
     "index.html": "/react-tree-multi-select/index.html",
-    "main.3b203d7b.css.map": "/react-tree-multi-select/static/css/main.3b203d7b.css.map",
-    "main.f42f9508.js.map": "/react-tree-multi-select/static/js/main.f42f9508.js.map",
+    "main.49693c3e.css.map": "/react-tree-multi-select/static/css/main.49693c3e.css.map",
+    "main.ab6d2382.js.map": "/react-tree-multi-select/static/js/main.ab6d2382.js.map",
     "453.c96a041a.chunk.js.map": "/react-tree-multi-select/static/js/453.c96a041a.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.3b203d7b.css",
-    "static/js/main.f42f9508.js"
+    "static/css/main.49693c3e.css",
+    "static/js/main.ab6d2382.js"
   ]
 }
