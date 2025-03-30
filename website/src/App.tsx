@@ -7,7 +7,7 @@ import {GettingStartedPage} from './pages/GettingStartedPage';
 import {ApiPage} from './pages/ApiPage';
 import {BasicPage} from './pages/BasicPage';
 import {BigDataPage} from './pages/BigDataPage';
-import {CustomComponentsPage} from './pages/CustomComponentsPage';
+import {ComponentsPage} from './pages/ComponentsPage';
 
 function App() {
 
@@ -29,7 +29,7 @@ function App() {
               <Route path="/api" element={<ApiPage/>}/>
               <Route path="/basic" element={<BasicPage/>}/>
               <Route path="/big-data" element={<BigDataPage/>}/>
-              <Route path="/custom-components" element={<CustomComponentsPage/>}/>
+              <Route path="/components" element={<ComponentsPage/>}/>
             </Routes>
           </div>
         </div>

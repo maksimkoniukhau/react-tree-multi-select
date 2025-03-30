@@ -39,13 +39,13 @@ import {CustomNodeCheckboxExample} from '../examples/components/CustomNodeCheckb
 import {CustomNodeLabelExample} from '../examples/components/CustomNodeLabelExample';
 import {CustomNoMatchesExample} from '../examples/components/CustomNoMatchesExample';
 
-export const CustomComponentsPage: FC = memo(() => {
+export const ComponentsPage: FC = memo(() => {
 
   return (
     <div className="page">
       <div className="page-content">
         <Section id="overview">
-          <h2>{'React Tree Multi Select custom components'}</h2>
+          <h2>{'React Tree Multi Select components'}</h2>
           <div className="paragraph">
             <b>{'react-tree-multi-select'}</b>{' allows you to customize its built-in components by providing your own custom components as a property.'}
             {' This feature enables you to tailor the appearance and behavior of various components.\n'}
@@ -66,7 +66,8 @@ export const CustomComponentsPage: FC = memo(() => {
           <CodeBlock code={customComponentBuiltin}/>
           <div className="paragraph">
             <div><b>{'Custom props'}</b></div>
-            {'You can pass your own properties to a component through the props object. For an example, refer to the '}
+            {'You can pass your own properties to a component through the props object. When creating a custom component, ' +
+              'you can access these properties and use them in your implementation. For an example, refer to the '}
             <a className="link" href="#chip-label">CustomChipLabel</a>{'.'}
           </div>
           <CodeBlock code={customProps}/>

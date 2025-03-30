@@ -6,7 +6,7 @@ export enum MENU_ITEM {
   API = 'API',
   BASIC = 'Basic',
   BIG_DATA = 'Big Data',
-  CUSTOM_COMPONENTS = 'Custom Components'
+  COMPONENTS = 'Components'
 }
 
 const pathPageMap = new Map<string, MENU_ITEM>([
@@ -14,7 +14,7 @@ const pathPageMap = new Map<string, MENU_ITEM>([
   ['/api', MENU_ITEM.API],
   ['/basic', MENU_ITEM.BASIC],
   ['/big-data', MENU_ITEM.BIG_DATA],
-  ['/custom-components', MENU_ITEM.CUSTOM_COMPONENTS]
+  ['/components', MENU_ITEM.COMPONENTS]
 ]);
 
 export interface MenuProps {
