@@ -7,6 +7,7 @@ import {
   ChipLabelProps,
   ChipLabelType,
   Components,
+  components,
   FieldClearProps,
   FieldClearType,
   FieldProps,
@@ -36,7 +37,7 @@ import {
   Type
 } from 'react-tree-multi-select';
 
-export {CheckedState, TreeMultiSelect, Type};
+export {CheckedState, TreeMultiSelect, Type, components};
 export type {
   ChipClearProps,
   ChipClearType,
@@ -65,5 +66,9 @@ export type {
   NoMatchesProps,
   NoMatchesType,
   SelectAllCheckboxProps,
-  SelectAllCheckboxType, SelectAllContainerProps, SelectAllContainerType, SelectAllLabelProps, SelectAllLabelType
+  SelectAllCheckboxType,
+  SelectAllContainerProps,
+  SelectAllContainerType,
+  SelectAllLabelProps,
+  SelectAllLabelType
 };
