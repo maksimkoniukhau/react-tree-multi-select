@@ -18,7 +18,7 @@ export const Field: FC<FieldProps> = memo((props) => {
 
 interface FieldWrapperProps {
   field: FieldType<any>;
-  fieldRef: RefObject<HTMLDivElement | null>;
+  fieldRef: RefObject<HTMLDivElement>;
   type: Type;
   showDropdown: boolean;
   withClearAll: boolean;
