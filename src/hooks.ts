@@ -1,7 +1,7 @@
 import {RefObject, useEffect, useLayoutEffect, useState} from 'react';
 
 export const useResizeObserver = <T extends Element>(
-  target: RefObject<T> | T | null,
+  target: RefObject<T | null> | T | null,
   callback: (entries: ResizeObserverEntry[], observer: ResizeObserver) => void
 ): void => {
 
@@ -17,7 +17,7 @@ export const useResizeObserver = <T extends Element>(
   }, [target]);
 };
 
-export const useElementSize = <T extends HTMLElement>(target: RefObject<T> | T | null): [number, number] => {
+export const useElementSize = <T extends HTMLElement>(target: RefObject<T | null> | T | null): [number, number] => {
 
   const [size, setSize] = useState<[number, number]>(() => {
     const targetEl = target && 'current' in target ? target.current : target as HTMLElement;
@@ -42,7 +42,7 @@ export const useElementSize = <T extends HTMLElement>(target: RefObject<T> | T |
 };
 
 export const useOnClickOutside = <T extends HTMLElement>(
-  target: RefObject<T> | T | null,
+  target: RefObject<T | null> | T | null,
   handler: (event: MouseEvent | TouchEvent | FocusEvent) => void
 ): void => {
   useEffect(() => {

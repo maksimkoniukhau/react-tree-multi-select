@@ -22,7 +22,7 @@ export interface DropdownProps {
   onNodeChange: (node: Node) => (e: React.MouseEvent) => void;
   onNodeToggle: (node: Node) => (e: React.MouseEvent) => void;
   input: ReactNode;
-  inputRef: RefObject<HTMLInputElement>
+  inputRef: RefObject<HTMLInputElement | null>
   onUnmount: () => void;
   components: InnerComponents;
   onListItemRender: () => void;

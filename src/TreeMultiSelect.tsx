@@ -106,7 +106,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
   const nodeMapRef = useRef<Map<string, Node>>(new Map());
 
-  const [state, dispatch] = useReducer<typeof reducer>(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const components = useMemo(() => getComponents(propsComponents), [propsComponents]);
 
