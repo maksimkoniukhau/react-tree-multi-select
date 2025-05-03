@@ -8,6 +8,7 @@ export interface ChipContainerOwnProps {
   focused: boolean;
   disabled: boolean;
   componentDisabled: boolean;
+  withChipClear: boolean;
 }
 
 export const ChipContainer: FC<ChipContainerProps> = memo((props) => {
@@ -26,11 +27,12 @@ interface ChipContainerWrapperProps {
   disabled: boolean;
   onClick: (node: Node) => (event: React.MouseEvent) => void;
   componentDisabled: boolean;
+  withChipClear: boolean;
   children: ReactNode;
 }
 
 export const ChipContainerWrapper: FC<ChipContainerWrapperProps> = memo((props) => {
-  const {chipContainer, node, label, focused, disabled, onClick, componentDisabled, children} = props;
+  const {chipContainer, node, label, focused, disabled, onClick, componentDisabled, withChipClear, children} = props;
 
   return (
     <chipContainer.component
@@ -40,7 +42,7 @@ export const ChipContainerWrapper: FC<ChipContainerWrapperProps> = memo((props) 
         // needed for staying focus on input
         onMouseDown: preventDefaultOnMouseEvent
       }}
-      componentProps={{label, focused, disabled, componentDisabled}}
+      componentProps={{label, focused, disabled, componentDisabled, withChipClear}}
       customProps={chipContainer.props}
     >
       {children}

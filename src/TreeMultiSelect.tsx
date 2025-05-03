@@ -56,6 +56,7 @@ export interface TreeMultiSelectProps {
   noMatchesText?: string;
   isDisabled?: boolean;
   isSearchable?: boolean;
+  withChipClear?: boolean;
   withClearAll?: boolean;
   withSelectAll?: boolean;
   withDropdownInput?: boolean;
@@ -80,6 +81,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     noMatchesText = NO_MATCHES,
     isDisabled = false,
     isSearchable = true,
+    withChipClear = true,
     withClearAll = true,
     withSelectAll = false,
     withDropdownInput = false,
@@ -396,7 +398,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [state.showDropdown, isDisabled]);
 
   const handleNodeDelete = useCallback((node: Node) => (event: React.MouseEvent | React.KeyboardEvent): void => {
-    if (isDisabled) {
+    if (!withChipClear || isDisabled) {
       return;
     }
     event.preventDefault();
@@ -777,6 +779,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
                 components={components}
                 node={node}
                 focused={state.focusedFieldElement === node.path}
+                withChipClear={withChipClear}
                 onChipClick={handleChipClick}
                 onChipDelete={handleNodeDelete}
                 componentDisabled={isDisabled}

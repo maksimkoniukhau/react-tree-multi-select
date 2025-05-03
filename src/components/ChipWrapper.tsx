@@ -9,13 +9,14 @@ interface ChipWrapperProps {
   components: InnerComponents;
   node: Node;
   focused: boolean;
+  withChipClear: boolean;
   onChipClick: (node: Node) => (event: React.MouseEvent) => void;
   onChipDelete: (node: Node) => (event: React.MouseEvent) => void;
   componentDisabled: boolean;
 }
 
 export const ChipWrapper: FC<ChipWrapperProps> = memo((props) => {
-  const {components, node, focused, onChipClick, onChipDelete, componentDisabled} = props;
+  const {components, node, focused, withChipClear, onChipClick, onChipDelete, componentDisabled} = props;
 
   return (
     <ChipContainerWrapper
@@ -26,9 +27,10 @@ export const ChipWrapper: FC<ChipWrapperProps> = memo((props) => {
       disabled={node.disabled}
       onClick={onChipClick}
       componentDisabled={componentDisabled}
+      withChipClear={withChipClear}
     >
       <ChipLabelWrapper chipLabel={components.ChipLabel} label={node.name} componentDisabled={componentDisabled}/>
-      {!node.disabled && (
+      {withChipClear && !node.disabled && (
         <ChipClearWrapper
           chipClear={components.ChipClear}
           node={node}
