@@ -7,6 +7,7 @@ import {CheckedState, TreeMultiSelect, TreeNode} from '../index';
 import {getBaseTreeNodeData} from './testutils/dataUtils';
 import {
   getChipClear,
+  getChipClears,
   getChipContainer,
   getChipContainers,
   getChipLabel,
@@ -60,7 +61,7 @@ describe('TreeMultiSelect component: isDisabled prop', () => {
   const user: UserEvent = userEvent.setup();
 
   it.each([[true], [false]])
-  ('renders component when isDisabled=true and withDropdownInput={%s}',
+  ('tests component when isDisabled=true and withDropdownInput={%s}',
     async (withDropdownInput) => {
       const handleFocus = jest.fn();
       const handleBlur = jest.fn();
@@ -145,7 +146,7 @@ describe('TreeMultiSelect component: isSearchable prop', () => {
   const user: UserEvent = userEvent.setup();
 
   it.each([[true, false], [true, true], [false, false], [false, true]])
-  ('renders component when isSearchable={%s} and withDropdownInput={%s}',
+  ('tests component when isSearchable={%s} and withDropdownInput={%s}',
     async (isSearchable, withDropdownInput) => {
       const {container} = render(
         <TreeMultiSelect data={treeNodeData} isSearchable={isSearchable} withDropdownInput={withDropdownInput}/>
@@ -157,6 +158,93 @@ describe('TreeMultiSelect component: isSearchable prop', () => {
 
       isSearchableMatcher(container, isSearchable, withDropdownInput, true);
     });
+});
+
+describe('TreeMultiSelect component: withChipClear prop', () => {
+  const withChipClearMatcher = (
+    container: HTMLElement,
+    withChipClear: boolean,
+    chipClearAmount: number,
+    handleNodeChange: (node: TreeNode, selectedNodes: TreeNode[]) => void,
+    nodeChangeTimes: number
+  ): void => {
+    if (withChipClear) {
+      expect(getChipClears(container).length).toBe(chipClearAmount);
+      expect(handleNodeChange).toHaveBeenCalledTimes(nodeChangeTimes);
+    } else {
+      expect(getChipClears(container).length).toBe(chipClearAmount);
+      expect(handleNodeChange).not.toHaveBeenCalled();
+    }
+  };
+
+  const user: UserEvent = userEvent.setup();
+
+  it.each([[true], [false]])('tests component when withChipClear={%s} (click)', async (withChipClear) => {
+    const handleNodeChange = jest.fn();
+
+    const {container} = render(
+      <TreeMultiSelect data={treeNodeData} withChipClear={withChipClear} onNodeChange={handleNodeChange}/>
+    );
+
+    withChipClearMatcher(container, withChipClear, withChipClear ? 4 : 0, handleNodeChange, 0);
+
+    await user.click(getChipClear(container, 5));
+    withChipClearMatcher(container, withChipClear, withChipClear ? 3 : 0, handleNodeChange, withChipClear ? 1 : 0);
+
+    await user.click(getChipClear(container, 1));
+    withChipClearMatcher(container, withChipClear, withChipClear ? 2 : 0, handleNodeChange, withChipClear ? 2 : 0);
+
+    await user.click(getChipClear(container, 3));
+    withChipClearMatcher(container, withChipClear, withChipClear ? 1 : 0, handleNodeChange, withChipClear ? 3 : 0);
+
+    await user.click(getChipClear(container, 1));
+    withChipClearMatcher(container, withChipClear, withChipClear ? 1 : 0, handleNodeChange, withChipClear ? 3 : 0);
+
+    await user.click(getChipClear(container, 4));
+    withChipClearMatcher(container, withChipClear, withChipClear ? 1 : 0, handleNodeChange, withChipClear ? 3 : 0);
+
+    await user.click(getChipClear(container, 3));
+    withChipClearMatcher(container, withChipClear, 0, handleNodeChange, withChipClear ? 4 : 0);
+
+    await user.click(getChipClear(container, 2));
+    withChipClearMatcher(container, withChipClear, 0, handleNodeChange, withChipClear ? 4 : 0);
+  });
+
+  it.each([[true], [false]])('tests component when withChipClear={%s} (keydown)', async (withChipClear) => {
+    const handleNodeChange = jest.fn();
+
+    const {container} = render(
+      <TreeMultiSelect data={treeNodeData} withChipClear={withChipClear} onNodeChange={handleNodeChange}/>
+    );
+
+    withChipClearMatcher(container, withChipClear, withChipClear ? 4 : 0, handleNodeChange, 0);
+
+    await user.keyboard('{tab}');
+    await user.keyboard('{arrowleft}');
+    await user.keyboard('{arrowleft}');
+    await user.keyboard('{backspace}');
+    withChipClearMatcher(container, withChipClear, withChipClear ? 3 : 0, handleNodeChange, withChipClear ? 1 : 0);
+
+    await user.keyboard('{backspace}');
+    withChipClearMatcher(container, withChipClear, withChipClear ? 2 : 0, handleNodeChange, withChipClear ? 2 : 0);
+
+    await user.keyboard('{backspace}');
+    withChipClearMatcher(container, withChipClear, withChipClear ? 1 : 0, handleNodeChange, withChipClear ? 3 : 0);
+
+    await user.keyboard('{backspace}');
+    withChipClearMatcher(container, withChipClear, withChipClear ? 1 : 0, handleNodeChange, withChipClear ? 3 : 0);
+
+    await user.keyboard('{arrowleft}');
+    await user.keyboard('{backspace}');
+    withChipClearMatcher(container, withChipClear, withChipClear ? 1 : 0, handleNodeChange, withChipClear ? 3 : 0);
+
+    await user.keyboard('{arrowleft}');
+    await user.keyboard('{backspace}');
+    withChipClearMatcher(container, withChipClear, 0, handleNodeChange, withChipClear ? 4 : 0);
+
+    await user.keyboard('{backspace}');
+    withChipClearMatcher(container, withChipClear, 0, handleNodeChange, withChipClear ? 4 : 0);
+  });
 });
 
 describe('TreeMultiSelect component: closeDropdownOnNodeChange prop', () => {
@@ -199,7 +287,7 @@ describe('TreeMultiSelect component: closeDropdownOnNodeChange prop', () => {
   const user: UserEvent = userEvent.setup();
 
   it.each([[false, false], [true, false], [false, true], [true, true]])
-  ('renders component when closeDropdownOnNodeChange={%s} and withDropdownInput={%s}',
+  ('tests component when closeDropdownOnNodeChange={%s} and withDropdownInput={%s}',
     async (closeDropdownOnNodeChange, withDropdownInput) => {
       const handleFocus = jest.fn();
       const handleBlur = jest.fn();

@@ -18,6 +18,10 @@ export const getChipLabel = (container: HTMLElement, index: number): HTMLElement
   return getChipContainers(container)[index].querySelector('.rtms-label') as HTMLElement;
 };
 
+export const getChipClears = (container: HTMLElement): HTMLElement[] => {
+  return Array.from(getField(container).querySelectorAll('.rtms-chip-clear')) as HTMLElement[];
+};
+
 export const getChipClear = (container: HTMLElement, index: number): HTMLElement => {
   return getChipContainers(container)[index].querySelector('.rtms-chip-clear') as HTMLElement;
 };
