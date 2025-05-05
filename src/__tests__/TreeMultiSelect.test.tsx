@@ -4,7 +4,7 @@ import React from 'react';
 import {render, screen} from '@testing-library/react';
 import userEvent, {UserEvent} from '@testing-library/user-event';
 import {CheckedState, TreeMultiSelect, TreeNode} from '../index';
-import {getBaseTreeNodeData} from './testutils/dataUtils';
+import {getBaseTreeNodeData, getTreeNodeData} from './testutils/dataUtils';
 import {
   getChipClear,
   getChipClears,
@@ -17,8 +17,11 @@ import {
   getFieldClear,
   getFieldInput,
   getFieldToggle,
+  getHeaderItem,
+  getHeaderItems,
   getHiddenInput,
   getListItem,
+  getListItems,
   getRootContainer
 } from './testutils/selectorUtils';
 
@@ -164,15 +167,15 @@ describe('TreeMultiSelect component: withChipClear prop', () => {
   const withChipClearMatcher = (
     container: HTMLElement,
     withChipClear: boolean,
-    chipClearAmount: number,
+    chipClearsAmount: number,
     handleNodeChange: (node: TreeNode, selectedNodes: TreeNode[]) => void,
     nodeChangeTimes: number
   ): void => {
     if (withChipClear) {
-      expect(getChipClears(container).length).toBe(chipClearAmount);
+      expect(getChipClears(container).length).toBe(chipClearsAmount);
       expect(handleNodeChange).toHaveBeenCalledTimes(nodeChangeTimes);
     } else {
-      expect(getChipClears(container).length).toBe(chipClearAmount);
+      expect(getChipClears(container).length).toBe(chipClearsAmount);
       expect(handleNodeChange).not.toHaveBeenCalled();
     }
   };
@@ -244,6 +247,130 @@ describe('TreeMultiSelect component: withChipClear prop', () => {
 
     await user.keyboard('{backspace}');
     withChipClearMatcher(container, withChipClear, 0, handleNodeChange, withChipClear ? 4 : 0);
+  });
+});
+
+describe('TreeMultiSelect component: withSelectAll prop', () => {
+  const withSelectAllMatcher = (
+    container: HTMLElement,
+    selectAllState: CheckedState,
+    chipsAmount: number,
+    selectedNodesAmount: number,
+    handleSelectAllChange: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => void,
+    selectAllChangeTimes: number
+  ): void => {
+    const selectAll = getHeaderItem(container, 0);
+    expect(selectAll).toBeInTheDocument();
+    if (selectAllState === CheckedState.UNSELECTED) {
+      expect(selectAll.classList.contains('selected')).toBeFalsy();
+      expect(selectAll.classList.contains('partial')).toBeFalsy();
+    } else {
+      expect(selectAll.classList.contains(selectAllState.toLowerCase())).toBeTruthy();
+    }
+    expect(getChipContainers(container).length).toBe(chipsAmount);
+    const selectedNodes = getListItems(container).filter(el => el.classList.contains('selected'));
+    expect(selectedNodes.length).toBe(selectedNodesAmount);
+    expect(handleSelectAllChange).toHaveBeenCalledTimes(selectAllChangeTimes);
+  };
+
+  const user: UserEvent = userEvent.setup();
+
+  it('tests component when withSelectAll=false', async () => {
+    const handleSelectAllChange = jest.fn();
+
+    const {container} = render(
+      <TreeMultiSelect data={getTreeNodeData([], [], [])} onSelectAllChange={handleSelectAllChange}/>
+    );
+
+    await user.click(getField(container));
+    expect(getHeaderItems(container).length).toBe(0);
+  });
+
+  it('tests component when withSelectAll=true', async () => {
+    const handleSelectAllChange = jest.fn();
+
+    const {container} = render(
+      <TreeMultiSelect
+        data={getTreeNodeData([], [], [])}
+        withSelectAll
+        onSelectAllChange={handleSelectAllChange}
+      />
+    );
+
+    await user.click(getField(container));
+    withSelectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange, 0);
+
+    await user.click(getHeaderItem(container, 0));
+    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 8, handleSelectAllChange, 1);
+
+    await user.click(getHeaderItem(container, 0));
+    withSelectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange, 2);
+
+    await user.keyboard('{enter}');
+    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 8, handleSelectAllChange, 3);
+
+    await user.keyboard('{arrowdown}');
+    await user.keyboard('{enter}');
+    withSelectAllMatcher(container, CheckedState.PARTIAL, 7, 7, handleSelectAllChange, 3);
+
+    await user.keyboard('{arrowdown}');
+    await user.keyboard('{enter}');
+    withSelectAllMatcher(container, CheckedState.PARTIAL, 6, 6, handleSelectAllChange, 3);
+
+    await user.keyboard('{arrowup}');
+    await user.keyboard('{arrowup}');
+    await user.keyboard('{enter}');
+    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 8, handleSelectAllChange, 4);
+
+    await user.keyboard('{arrowdown}');
+    await user.keyboard('{arrowright}');
+    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 11, handleSelectAllChange, 4);
+
+    await user.keyboard('{arrowdown}');
+    await user.keyboard('{arrowright}');
+    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 13, handleSelectAllChange, 4);
+
+    await user.keyboard('{arrowdown}');
+    await user.keyboard('{enter}');
+    withSelectAllMatcher(container, CheckedState.PARTIAL, 10, 10, handleSelectAllChange, 4);
+
+    await user.keyboard('{arrowup}');
+    await user.keyboard('{enter}');
+    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 13, handleSelectAllChange, 4);
+
+    await user.click(getListItem(container, 5));
+    withSelectAllMatcher(container, CheckedState.PARTIAL, 9, 11, handleSelectAllChange, 4);
+
+    await user.click(getListItem(container, 10));
+    withSelectAllMatcher(container, CheckedState.PARTIAL, 8, 10, handleSelectAllChange, 4);
+
+    await user.click(getHeaderItem(container, 0));
+    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 13, handleSelectAllChange, 5);
+
+    await user.click(getHeaderItem(container, 0));
+    withSelectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange, 6);
+
+    await user.click(getListItem(container, 4));
+    withSelectAllMatcher(container, CheckedState.PARTIAL, 1, 1, handleSelectAllChange, 6);
+
+    await user.click(getListItem(container, 0));
+    await user.click(getListItem(container, 6));
+    await user.click(getListItem(container, 7));
+    await user.click(getListItem(container, 8));
+    await user.click(getListItem(container, 9));
+    await user.click(getListItem(container, 10));
+    await user.click(getListItem(container, 11));
+    withSelectAllMatcher(container, CheckedState.PARTIAL, 7, 12, handleSelectAllChange, 6);
+
+    await user.click(getListItem(container, 12));
+    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 13, handleSelectAllChange, 6);
+
+    await user.click(getField(container));
+    expect(getDropdown(container)).not.toBeInTheDocument();
+    expect(getChipContainers(container).length).toBe(8);
+
+    await user.click(getField(container));
+    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 13, handleSelectAllChange, 6);
   });
 });
 

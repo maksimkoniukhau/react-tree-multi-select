@@ -334,8 +334,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       return;
     }
     const shouldBeUnselected = state.selectAllCheckedState === CheckedState.SELECTED
-      || (state.selectAllCheckedState === CheckedState.PARTIAL
-        && areAllExcludingDisabledSelected(state.nodes));
+      || (state.selectAllCheckedState === CheckedState.PARTIAL && areAllExcludingDisabledSelected(state.nodes));
     state.nodes.forEach(node => {
       if (!node.disabled) {
         node.selected = !shouldBeUnselected;

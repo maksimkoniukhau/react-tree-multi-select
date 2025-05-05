@@ -55,6 +55,14 @@ export const getDropdownInput = (container: HTMLElement): HTMLElement => {
   return getDropdown(container).querySelector('.rtms-input') as HTMLElement;
 };
 
+export const getHeaderItems = (container: HTMLElement): HTMLElement[] => {
+  return Array.from(getDropdown(container).querySelectorAll('.rtms-header-item')) as HTMLElement[];
+};
+
+export const getHeaderItem = (container: HTMLElement, index: number): HTMLElement => {
+  return getHeaderItems(container)[index];
+};
+
 export const getListItems = (container: HTMLElement): HTMLElement[] => {
   return Array.from(getDropdown(container).querySelectorAll('.rtms-list-item')) as HTMLElement[];
 };
