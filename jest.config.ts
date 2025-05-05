@@ -13,6 +13,9 @@ const config: JestConfigWithTsJest = {
   moduleNameMapper: {
     '\\.scss$': 'identity-obj-proxy',
   },
+  coveragePathIgnorePatterns: [
+    "/src/__tests__/"
+  ],
 };
 
 export default config;
