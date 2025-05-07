@@ -1,5 +1,6 @@
 [![NPM Version](https://img.shields.io/npm/v/react-tree-multi-select)](https://npmjs.com/package/react-tree-multi-select)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/maksimkoniukhau/react-tree-multi-select/install-build-test.yml?logo=github&label=test)](https://github.com/maksimkoniukhau/react-tree-multi-select/actions?query=workflow%3Ainstall-build-test+)
+[![codecov](https://codecov.io/gh/maksimkoniukhau/react-tree-multi-select/graph/badge.svg?token=5J7J6RSZWG)](https://codecov.io/gh/maksimkoniukhau/react-tree-multi-select)
 
 # React Tree Multi Select
 
