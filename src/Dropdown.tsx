@@ -34,13 +34,13 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
   const {
     type,
     nodeMap = new Map(),
-    nodesAmount = 0,
-    displayedNodes = [],
-    isAnyHasChildren = false,
-    searchValue = '',
-    showSelectAll = false,
-    selectAllCheckedState = CheckedState.UNSELECTED,
-    focusedElement = '',
+    nodesAmount,
+    displayedNodes,
+    isAnyHasChildren,
+    searchValue,
+    showSelectAll,
+    selectAllCheckedState,
+    focusedElement,
     noMatchesText,
     dropdownHeight,
     onSelectAllChange,
@@ -102,7 +102,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     if (focusedElement && virtuosoRef.current && displayedNodes.length) {
       const elementIndex = focusedElement === SELECT_ALL
         ? 0
-        : displayedNodes.indexOf(nodeMap?.get(focusedElement)) + (showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0);
+        : displayedNodes.indexOf(nodeMap.get(focusedElement)) + (showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0);
       if (elementIndex >= 0) {
         virtuosoRef.current.scrollIntoView?.({
           index: elementIndex,
