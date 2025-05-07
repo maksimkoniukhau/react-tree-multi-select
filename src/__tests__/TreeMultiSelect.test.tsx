@@ -24,6 +24,7 @@ import {
   getListItems,
   getRootContainer
 } from './testutils/selectorUtils';
+import {NO_MATCHES} from '../constants';
 
 const treeNodeData = getBaseTreeNodeData();
 
@@ -34,6 +35,65 @@ describe('TreeMultiSelect component: base', () => {
     const chip = screen.getByText(/Angular/i);
     expect(chip).toBeInTheDocument();
   });
+});
+
+describe('TreeMultiSelect component: noMatchesText prop', () => {
+  const noMatchesTextMatcher = (
+    container: HTMLElement,
+    noMatchesText: string,
+    isPresent: boolean,
+  ): void => {
+    if (isPresent) {
+      expect(getDropdown(container)).toBeInTheDocument();
+      expect(getListItems(container).length).not.toBeGreaterThan(0);
+      expect(screen.queryByText(noMatchesText)).toBeInTheDocument();
+    } else {
+      expect(getDropdown(container)).toBeInTheDocument();
+      expect(getListItems(container).length).toBeGreaterThan(0);
+      expect(screen.queryByText(noMatchesText)).not.toBeInTheDocument();
+    }
+  };
+
+  it('tests component with default noMatchesText', async () => {
+    const {container} = render(
+      <TreeMultiSelect data={treeNodeData}/>
+    );
+
+    const user: UserEvent = userEvent.setup();
+
+    await user.click(getField(container));
+    noMatchesTextMatcher(container, NO_MATCHES, false);
+
+    await user.keyboard('qwerty');
+    noMatchesTextMatcher(container, NO_MATCHES, true);
+
+    await user.keyboard('{Control>}a{Backspace}');
+    noMatchesTextMatcher(container, NO_MATCHES, false);
+
+    await user.keyboard('java');
+    noMatchesTextMatcher(container, NO_MATCHES, false);
+  });
+
+  it.each([['no options'], ['no results']])('tests component when noMatchesText={%s}',
+    async (noMatchesText) => {
+      const {container} = render(
+        <TreeMultiSelect data={treeNodeData} noMatchesText={noMatchesText}/>
+      );
+
+      const user: UserEvent = userEvent.setup();
+
+      await user.click(getField(container));
+      noMatchesTextMatcher(container, noMatchesText, false);
+
+      await user.keyboard('qwerty');
+      noMatchesTextMatcher(container, noMatchesText, true);
+
+      await user.keyboard('{Control>}a{Backspace}');
+      noMatchesTextMatcher(container, noMatchesText, false);
+
+      await user.keyboard('java');
+      noMatchesTextMatcher(container, noMatchesText, false);
+    });
 });
 
 describe('TreeMultiSelect component: isDisabled prop', () => {
