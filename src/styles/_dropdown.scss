@@ -1,0 +1,101 @@
+@mixin dropdown-styles {
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .rtms-dropdown {
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+    margin-top: 7px;
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+    animation: fadeIn 0.1s forwards;
+
+    .rtms-dropdown-virtuoso {
+      border-radius: 4px;
+    }
+
+    .rtms-list-item, .rtms-header-item {
+      display: flex;
+      align-items: center;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      outline: none;
+      color: #212529;
+      cursor: pointer;
+      gap: var(--rtms-list-items-gap);
+    }
+
+    .rtms-list-item {
+      background-color: #ffffff;
+      padding-right: var(--rtms-row-base-padding);
+
+      &.selected {
+        background-color: var(--rtms-list-item-selected-background-color);
+      }
+
+      &.focused, &:hover {
+        background-color: #ebebeb;
+      }
+
+      &.matched .rtms-label {
+        background-color: #ffffb0b0;
+      }
+
+      &.disabled .rtms-label {
+        color: var(--rtms-disabled-color);
+      }
+
+      .rtms-node-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        .rtms-node-toggle-icon {
+          width: var(--rtms-checkbox-width);
+          height: var(--rtms-checkbox-height);
+
+          path {
+            fill: var(--rtms-icon-base-color);
+          }
+        }
+      }
+
+      .rtms-node-checkbox {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .rtms-header-item {
+      background-color: #ffffff;
+      padding-left: var(--rtms-row-base-padding);
+      padding-right: var(--rtms-row-base-padding);
+
+      &.focused:not(:has(.rtms-input-container)), &:hover:not(:has(.rtms-input-container)) {
+        background-color: #ebebeb;
+      }
+
+      .rtms-select-all-checkbox {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .rtms-no-matches {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      outline: none;
+    }
+  }
+}

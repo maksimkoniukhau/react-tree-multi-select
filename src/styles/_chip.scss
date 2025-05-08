@@ -1,0 +1,55 @@
+@mixin chip-styles {
+  .rtms-chip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    margin: 2px;
+    padding: 4px 6px;
+    background-color: #ebebeb;
+    border-radius: 16px;
+    cursor: default;
+
+    &.focused, &:hover {
+      box-shadow: 0 0 5px 1px #a1a1a1;
+    }
+
+    &.focused {
+      .rtms-chip-clear {
+        color: #ff3b3b;
+
+        path {
+          fill: #ff3b3b;
+        }
+      }
+    }
+
+    &.disabled {
+      color: var(--rtms-disabled-color);
+    }
+
+    .rtms-chip-clear {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+
+      path {
+        fill: var(--rtms-icon-base-color);
+      }
+
+      &:hover {
+        color: #ff3b3b;
+
+        path {
+          fill: #ff3b3b;
+        }
+      }
+
+      .rtms-chip-clear-icon {
+        width: var(--rtms-chip-clear-icon-width);
+        height: var(--rtms-chip-clear-icon-height);
+      }
+    }
+  }
+}

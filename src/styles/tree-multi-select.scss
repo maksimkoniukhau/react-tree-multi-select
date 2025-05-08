@@ -2,8 +2,15 @@
 TreeMultiSelect styles
 ========================================================================== */
 
+@use 'css-variables' as css-variables;
+@use 'chip' as chip;
+@use 'input' as input;
+@use 'checkbox' as checkbox;
+@use 'field' as field;
+@use 'dropdown' as dropdown;
+
 .rtms-tree-multi-select {
-  @import 'css-variables';
+  @include css-variables.variables;
 
   &.disabled {
     pointer-events: none;
@@ -30,11 +37,11 @@ TreeMultiSelect styles
     }
   }
 
-  @import 'chip';
-  @import 'input';
-  @import 'checkbox';
-  @import 'field';
-  @import 'dropdown';
+  @include chip.chip-styles;
+  @include input.input-styles;
+  @include checkbox.checkbox-styles;
+  @include field.field-styles;
+  @include dropdown.dropdown-styles;
 
   .rtms-label {
     line-height: 1;
