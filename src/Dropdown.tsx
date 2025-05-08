@@ -55,10 +55,10 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
 
   const virtuosoRef = useRef<VirtuosoHandle>(null);
 
-  const [height, setHeight] = useState<number>(1);
-  const [increaseViewportBy, setIncreaseViewportBy] = useState<number>(dropdownHeight - 1);
+  const [height, setHeight] = useState<number>(dropdownHeight);
 
-  const itemCount = (displayedNodes.length || 1) + (showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0);
+  const topItemCount = (showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0);
+  const itemCount = (displayedNodes.length || 1) + topItemCount;
 
   const calculateViewLocation: CalculateViewLocation = (params) => {
     const {
@@ -114,7 +114,6 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
 
   const handleTotalListHeightChanged = (height: number): void => {
     setHeight(Math.min(dropdownHeight, height));
-    setIncreaseViewportBy(0);
   };
 
   const itemContent = (index: number): JSX.Element => {
@@ -153,9 +152,8 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
         className="rtms-dropdown-virtuoso"
         totalListHeightChanged={handleTotalListHeightChanged}
         totalCount={itemCount}
-        topItemCount={(showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0)}
+        topItemCount={topItemCount}
         itemContent={itemContent}
-        increaseViewportBy={increaseViewportBy}
       />
     </div>
   );
