@@ -47,13 +47,13 @@ export const ApiPage: FC = () => {
               <td>{'id'}</td>
               <td>{'string'}</td>
               <td>{`''`}</td>
-              <td>{'id applied to the root tree multi select div'}</td>
+              <td>{'id is applied to the root tree multi select div'}</td>
             </tr>
             <tr>
               <td>{'className'}</td>
               <td>{'string'}</td>
               <td>{`''`}</td>
-              <td>{'className applied to the root tree multi select div'}</td>
+              <td>{'className is applied to the root tree multi select div'}</td>
             </tr>
             <tr>
               <td>{'inputPlaceholder'}</td>
@@ -65,7 +65,7 @@ export const ApiPage: FC = () => {
               <td>{'noMatchesText'}</td>
               <td>{'string'}</td>
               <td>{`'No matches'`}</td>
-              <td>{'custom text displayed when no items found during the search'}</td>
+              <td>{'custom text that displayed when no items found during the search'}</td>
             </tr>
             <tr>
               <td>{'isDisabled'}</td>
@@ -80,22 +80,28 @@ export const ApiPage: FC = () => {
               <td>{`if 'true', search input in field (or in dropdown if withDropdownInput=true) is rendered`}</td>
             </tr>
             <tr>
+              <td>{'withChipClear'}</td>
+              <td>{'boolean'}</td>
+              <td>{'true'}</td>
+              <td>{`if 'true', ChipClear component is rendered`}</td>
+            </tr>
+            <tr>
               <td>{'withClearAll'}</td>
               <td>{'boolean'}</td>
               <td>{'true'}</td>
-              <td>{`if 'true', clear all nodes icon displayed in the input field`}</td>
+              <td>{`if 'true', clear all nodes icon is displayed in the input field`}</td>
             </tr>
             <tr>
               <td>{'withSelectAll'}</td>
               <td>{'boolean'}</td>
               <td>{'false'}</td>
-              <td>{`if 'true', select all nodes component displayed in the dropdown header`}</td>
+              <td>{`if 'true', select all nodes component is displayed in the dropdown header`}</td>
             </tr>
             <tr>
               <td>{'withDropdownInput'}</td>
               <td>{'boolean'}</td>
               <td>{'false'}</td>
-              <td>{`if 'true', input is displayed in dropdown (hidden input rendered in field for focus to work)`}</td>
+              <td>{`if 'true', input is displayed in dropdown (hidden input is rendered in field for focus to work)`}</td>
             </tr>
             <tr>
               <td>{'closeDropdownOnNodeChange'}</td>
@@ -107,13 +113,13 @@ export const ApiPage: FC = () => {
               <td>{'dropdownHeight'}</td>
               <td>{'number'}</td>
               <td>{'300'}</td>
-              <td>{`dropdown height in pixels (it can be reduced if the content height is less than the value in the property)`}</td>
+              <td>{`dropdown height in pixels (it is automatically reduced if the content height is less than the value in the property)`}</td>
             </tr>
             <tr>
               <td>{'components'}</td>
               <td>{'Components'}</td>
               <td>{'-'}</td>
-              <td>{'custom components applied to the tree multi select (see examples for more details)'}</td>
+              <td>{'custom components are applied to the tree multi select (see examples for more details)'}</td>
             </tr>
             <tr>
               <td>{'onNodeChange'}</td>
@@ -137,7 +143,7 @@ export const ApiPage: FC = () => {
               <td>{'onSelectAllChange'}</td>
               <td>{'(selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => void'}</td>
               <td>{'-'}</td>
-              <td>{'function called on selectAll select/unselect'}</td>
+              <td>{'function called on selectAll component select/unselect'}</td>
             </tr>
             <tr>
               <td>{'onFocus'}</td>
@@ -149,7 +155,7 @@ export const ApiPage: FC = () => {
               <td>{'onBlur'}</td>
               <td>{'(event: React.FocusEvent) => void'}</td>
               <td>{'-'}</td>
-              <td>{'function called when component lose focus'}</td>
+              <td>{'function called when component loses focus'}</td>
             </tr>
             </tbody>
           </table>

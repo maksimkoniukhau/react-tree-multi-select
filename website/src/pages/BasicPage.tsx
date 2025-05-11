@@ -17,6 +17,7 @@ export const BasicPage: FC = memo(() => {
   const [noMatchesText, setNoMatchesText] = useState<string>(NO_MATCHES);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [isSearchable, setIsSearchable] = useState<boolean>(true);
+  const [withChipClear, setWithChipClear] = useState<boolean>(true);
   const [withClearAll, setWithClearAll] = useState<boolean>(true);
   const [withSelectAll, setWithSelectAll] = useState<boolean>(false);
   const [withDropdownInput, setWithDropdownInput] = useState<boolean>(false);
@@ -46,6 +47,9 @@ export const BasicPage: FC = memo(() => {
         break;
       case 'isSearchable' :
         setIsSearchable(value as boolean);
+        break;
+      case 'withChipClear' :
+        setWithChipClear(value as boolean);
         break;
       case 'withClearAll' :
         setWithClearAll(value as boolean);
@@ -127,6 +131,7 @@ export const BasicPage: FC = memo(() => {
           <Input label="noMatchesText:" initValue={NO_MATCHES} onChange={handleOptionChange('noMatchesText')}/>
           <Checkbox label="isDisabled" initChecked={false} onChange={handleOptionChange('isDisabled')}/>
           <Checkbox label="isSearchable" initChecked={true} onChange={handleOptionChange('isSearchable')}/>
+          <Checkbox label="withChipClear" initChecked={true} onChange={handleOptionChange('withChipClear')}/>
           <Checkbox label="withClearAll" initChecked={true} onChange={handleOptionChange('withClearAll')}/>
           <Checkbox label="withSelectAll" initChecked={false} onChange={handleOptionChange('withSelectAll')}/>
           <Checkbox label="withDropdownInput" initChecked={false} onChange={handleOptionChange('withDropdownInput')}/>
@@ -150,6 +155,7 @@ export const BasicPage: FC = memo(() => {
             noMatchesText={noMatchesText}
             isDisabled={isDisabled}
             isSearchable={isSearchable}
+            withChipClear={withChipClear}
             withClearAll={withClearAll}
             withSelectAll={withSelectAll}
             withDropdownInput={withDropdownInput}
