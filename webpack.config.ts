@@ -5,6 +5,7 @@ import TerserPlugin from 'terser-webpack-plugin';
 
 const commonConfig: Configuration = {
   entry: './src/index.ts',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -58,11 +59,11 @@ const commonConfig: Configuration = {
 const umdConfig: Configuration = {
   ...commonConfig,
   output: {
-    filename: 'index.umd.js',
+    filename: 'index.cjs',
     path: resolve(__dirname, 'dist'),
-    libraryTarget: "umd",
-    library: 'rtms',
-    umdNamedDefine: true,
+    library: {
+      type: 'commonjs2',
+    },
   },
 };
 
@@ -74,7 +75,9 @@ const moduleConfig: Configuration = {
   output: {
     filename: 'index.mjs',
     path: resolve(__dirname, 'dist'),
-    libraryTarget: 'module',
+    library: {
+      type: 'module',
+    },
     clean: true,
   },
 };

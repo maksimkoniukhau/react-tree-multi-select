@@ -19,7 +19,7 @@
     "typescript"
   ],
   "license": "MIT",
-  "main": "dist/index.umd.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
