@@ -182,13 +182,31 @@ export const customComponentBuiltin = `const CustomChipContainer: FC<ChipContain
   </Tooltip>
 );`;
 
-export const customProps = `<TreeMultiSelect
-  data={getTreeNodeData(true)}
-  components={{ChipLabel: {component: CustomChipLabel, props: {suffix: 'Yo'}}}}
-/>`;
+export const customProps = `export const CustomExample: FC = () => {
+    
+  const data = useMemo(() => getTreeNodeData(true), []);
 
-export const fieldExample = `import React, {FC} from 'react';
-import {FieldProps, TreeMultiSelect, Type} from 'react-tree-multi-select';
+  const components: Components = useMemo(() => (
+    {
+      ChipLabel: {
+        component: CustomChipLabel,
+        props: {suffix: 'Yo'}
+      }
+    }
+  ), []);
+
+  return (
+    <div className="component-example">
+      <TreeMultiSelect
+        data={data}
+        components={components}
+      />
+    </div>
+  );
+};`;
+
+export const fieldExample = `import React, {FC, useMemo} from 'react';
+import {Components, FieldProps, TreeMultiSelect, Type} from 'react-tree-multi-select';
 
 interface CustomFieldProps {
   label: string;
@@ -201,6 +219,17 @@ const CustomField: FC<FieldProps<CustomFieldProps>> = (props) => (
 );
 
 export const CustomFieldExample: FC = () => {
+
+  const createComponents = (label: string): Components => ({
+    Field: {
+      component: CustomField,
+      props: {label},
+    },
+  });
+
+  const companyComponents = useMemo(() => createComponents('Filter by company'), []);
+  const brandComponents = useMemo(() => createComponents('Filter by brand'), []);
+  const priceComponents = useMemo(() => createComponents('Filter by price'), []);
 
   return (
     <div className="component-example field-example">
@@ -223,9 +252,7 @@ export const CustomFieldExample: FC = () => {
           }
         ]}
         withDropdownInput={true}
-        components={{
-          Field: {component: CustomField, props: {label: 'Filter by company'}}
-        }}
+        components={companyComponents}
       />
       <TreeMultiSelect
         type={Type.MULTI_SELECT}
@@ -237,9 +264,7 @@ export const CustomFieldExample: FC = () => {
           {label: 'Brand5', selected: true}
         ]}
         withSelectAll={true}
-        components={{
-          Field: {component: CustomField, props: {label: 'Filter by brand'}}
-        }}
+        components={brandComponents}
       />
       <TreeMultiSelect
         type={Type.SELECT}
@@ -250,9 +275,7 @@ export const CustomFieldExample: FC = () => {
           {label: '400'},
           {label: '500'}
         ]}
-        components={{
-          Field: {component: CustomField, props: {label: 'Filter by price'}}
-        }}
+        components={priceComponents}
       />
     </div>
   );
@@ -290,8 +313,8 @@ export const CustomChipContainerExample: FC = () => {
   );
 };`;
 
-export const chipLabelExample = `import React, {FC} from 'react';
-import {ChipLabelProps, TreeMultiSelect} from 'react-tree-multi-select';
+export const chipLabelExample = `import React, {FC, useMemo} from 'react';
+import {ChipLabelProps, Components, TreeMultiSelect} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
 interface CustomChipLabelProps {
@@ -306,11 +329,22 @@ const CustomChipLabel: FC<ChipLabelProps<CustomChipLabelProps>> = (props) => (
 
 export const CustomChipLabelExample: FC = () => {
 
+  const data = useMemo(() => getTreeNodeData(true), []);
+
+  const components: Components = useMemo(() => (
+    {
+      ChipLabel: {
+        component: CustomChipLabel,
+        props: {suffix: 'Yo'}
+      }
+    }
+  ), []);
+
   return (
     <div className="component-example">
       <TreeMultiSelect
-        data={getTreeNodeData(true)}
-        components={{ChipLabel: {component: CustomChipLabel, props: {suffix: 'Yo'}}}}
+        data={data}
+        components={components}
       />
     </div>
   );

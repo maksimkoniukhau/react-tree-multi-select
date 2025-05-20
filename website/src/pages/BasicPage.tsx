@@ -111,7 +111,7 @@ export const BasicPage: FC = memo(() => {
   return (
     <div className="page">
       <div className="page-content">
-        <h2>{'React Tree Multi Select basic features'}</h2>
+        <h2>{'Basic Features'}</h2>
         <div className="paragraph">
           {'Toggle different options in order to see how the component behaves and looks depends on properties passed to it.'}
         </div>

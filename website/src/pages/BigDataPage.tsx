@@ -14,7 +14,7 @@ export const BigDataPage: FC = memo(() => {
   return (
     <div className="page">
       <div className="page-content big-data-page">
-        <h2>{'React Tree Multi Select big data'}</h2>
+        <h2>{'Big Data'}</h2>
         <div className="paragraph">
           <b>{'react-tree-multi-select'}</b>{' uses '}
           <a className="link" href="https://github.com/petyosi/react-virtuoso" target="_blank" rel="noreferrer">

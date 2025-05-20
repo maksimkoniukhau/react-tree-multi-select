@@ -1,5 +1,5 @@
-import React, {FC} from 'react';
-import {FieldProps, TreeMultiSelect, Type} from '../../treeMultiSelectImport';
+import React, {FC, useMemo} from 'react';
+import {Components, FieldProps, TreeMultiSelect, Type} from '../../treeMultiSelectImport';
 
 interface CustomFieldProps {
   label: string;
@@ -12,6 +12,17 @@ const CustomField: FC<FieldProps<CustomFieldProps>> = (props) => (
 );
 
 export const CustomFieldExample: FC = () => {
+
+  const createComponents = (label: string): Components => ({
+    Field: {
+      component: CustomField,
+      props: {label},
+    },
+  });
+
+  const companyComponents = useMemo(() => createComponents('Filter by company'), []);
+  const brandComponents = useMemo(() => createComponents('Filter by brand'), []);
+  const priceComponents = useMemo(() => createComponents('Filter by price'), []);
 
   return (
     <div className="component-example field-example">
@@ -34,9 +45,7 @@ export const CustomFieldExample: FC = () => {
           }
         ]}
         withDropdownInput={true}
-        components={{
-          Field: {component: CustomField, props: {label: 'Filter by company'}}
-        }}
+        components={companyComponents}
       />
       <TreeMultiSelect
         type={Type.MULTI_SELECT}
@@ -48,9 +57,7 @@ export const CustomFieldExample: FC = () => {
           {label: 'Brand5', selected: true}
         ]}
         withSelectAll={true}
-        components={{
-          Field: {component: CustomField, props: {label: 'Filter by brand'}}
-        }}
+        components={brandComponents}
       />
       <TreeMultiSelect
         type={Type.SELECT}
@@ -61,9 +68,7 @@ export const CustomFieldExample: FC = () => {
           {label: '400'},
           {label: '500'}
         ]}
-        components={{
-          Field: {component: CustomField, props: {label: 'Filter by price'}}
-        }}
+        components={priceComponents}
       />
     </div>
   );

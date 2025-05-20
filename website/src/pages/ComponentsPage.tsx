@@ -45,16 +45,20 @@ export const ComponentsPage: FC = memo(() => {
     <div className="page">
       <div className="page-content">
         <Section id="overview">
-          <h2>{'React Tree Multi Select components'}</h2>
+          <h2>{'Components'}</h2>
           <div className="paragraph">
             <b>{'react-tree-multi-select'}</b>{' allows you to customize its built-in components by providing your own custom components as a property.'}
             {' This feature enables you to tailor the appearance and behavior of various components.\n'}
             {'The general pattern for implementing a custom component involves creating a component and passing the componentAttributes prop to the root element. Here\'s a simple implementation:'}
           </div>
           <CodeBlock code={customComponentCommonPattern}/>
+          <div className="paragraph important">
+            <b>{'Important'}</b>
+            <span>
+              {': you must pass componentAttributes prop to the root element in order for component to work properly.'}
+            </span>
+          </div>
           <div className="paragraph">
-            <span className="important">{'Important'}</span>
-            {': you must pass componentAttributes prop to the root element in order for component to work properly.\n'}
             {'If you would like to add custom CSS class to component, you can merge component classname with your own like in the example below:'}
           </div>
           <CodeBlock code={customComponentMergeClassname}/>
@@ -66,22 +70,38 @@ export const ComponentsPage: FC = memo(() => {
           <CodeBlock code={customComponentBuiltin}/>
           <div className="paragraph">
             <div><b>{'Custom props'}</b></div>
-            {'You can pass your own properties to a component through the props object. When creating a custom component, ' +
-              'you can access these properties and use them in your implementation. For an example, refer to the '}
-            <a className="link" href="#chip-label">CustomChipLabel</a>{'.'}
+            <div className="paragraph">
+              {'You can pass your own properties to the component through the props object. When creating a custom component, ' +
+                'you can access these properties and use them in your implementation.'}
+            </div>
+            <div className="paragraph important">
+              <b>{'Important'}</b>
+              <span>
+              {': To improve performance, make sure to memoize '}
+                <i>components</i>
+                {' prop (and other props like objects, arrays, or callbacks). ' +
+                  'This helps prevent unnecessary re-renders by ensuring prop references remain stable between renders.'}
+            </span>
+            </div>
           </div>
           <CodeBlock code={customProps}/>
           <div className="paragraph">
-            {'Below you can find some examples of usage custom components.'}
+            {'For an example, refer to the '}<a className="link" href="#chip-label">CustomChipLabel</a>{'.'}
           </div>
         </Section>
         <Section id="field">
           <div className="paragraph">
             <h3 className="title">{'Field'}</h3>
-            {`Let's say you have filters on a page that, when clicked, open a dropdown with a range of filter options.\n`}
-            {'It can be achieved by providing custom Field component like in the example below.\n'}
-            <span className="important">{'Important'}</span>
-            {': your custom Field component should have one focusable child (or to be focusable itself) for keyboard navigation to work in dropdown.'}
+            <div className="paragraph">
+              {`Let's say you have filters on a page that, when clicked, open a dropdown with a range of filter options.\n`}
+              {'It can be achieved by providing custom Field component like in the example below.\n'}
+            </div>
+            <div className="paragraph important">
+              <b>{'Important'}</b>
+              <span>
+              {': your custom Field component must either be focusable itself or contain exactly one focusable child to ensure proper keyboard navigation.'}
+            </span>
+            </div>
           </div>
           <div className="example-container">
             <CodeBlock code={fieldExample}/>

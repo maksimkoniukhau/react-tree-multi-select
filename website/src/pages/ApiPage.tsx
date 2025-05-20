@@ -10,7 +10,7 @@ export const ApiPage: FC = () => {
     <div className="page">
       <div className="page-content">
         <Section id="types">
-          <h2>{'React Tree Multi Select API'}</h2>
+          <h2>{'API'}</h2>
           <h3 className="title">{'TreeMultiSelect types:'}</h3>
           <CodeBlock code={rtmsTypes}/>
         </Section>

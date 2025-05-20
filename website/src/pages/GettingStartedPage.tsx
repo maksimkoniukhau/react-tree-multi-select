@@ -9,7 +9,7 @@ export const GettingStartedPage: FC = () => {
   return (
     <div className="page">
       <div className="page-content">
-        <h2>{'Getting Started with React Tree Multi Select'}</h2>
+        <h2>{'Getting Started'}</h2>
         <Section id="installation">
           <h3 className="title">{'Installation:'}</h3>
           <div className="paragraph">
