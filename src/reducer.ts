@@ -1,11 +1,13 @@
 import {CheckedState} from './types';
 import {Node} from './Node';
 
-export interface InitPayload {
+export interface DataChangePayload {
   nodes: Node[];
   displayedNodes: Node[];
   selectedNodes: Node[];
   showSelectAll: boolean;
+  focusedFieldElement: string;
+  focusedElement: string;
   selectAllCheckedState: CheckedState;
 }
 
@@ -86,7 +88,7 @@ export interface ResetPayload {
 }
 
 export enum ActionType {
-  INIT,
+  DATA_CHANGE,
   TOGGLE_DROPDOWN,
   FIELD_CLICK,
   SHOW_SELECT_ALL,
@@ -101,7 +103,7 @@ export enum ActionType {
   RESET
 }
 
-export type Payload = InitPayload
+export type Payload = DataChangePayload
   | ToggleDropdownPayload
   | FieldClickPayload
   | ShowSelectAllPayload
@@ -146,13 +148,7 @@ export const initialState: State = {
 
 export const reducer = (state = initialState, action: Action): State => {
   switch (action.type) {
-    case ActionType.INIT: {
-      const payload = action.payload as InitPayload;
-      return {
-        ...initialState,
-        ...payload
-      };
-    }
+    case ActionType.DATA_CHANGE:
     case ActionType.TOGGLE_DROPDOWN:
     case ActionType.FIELD_CLICK:
     case ActionType.SHOW_SELECT_ALL:

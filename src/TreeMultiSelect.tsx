@@ -26,10 +26,10 @@ import {
   ChipClickPayload,
   ChipDeletePayload,
   ClearAllPayload,
+  DataChangePayload,
   FieldClickPayload,
   FocusPayload,
   initialState,
-  InitPayload,
   InputChangePayload,
   NodeChangePayload,
   NodeTogglePayload,
@@ -101,6 +101,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const fieldInputRef = useRef<HTMLInputElement>(null);
   const dropdownInputRef = useRef<HTMLInputElement>(null);
 
+  const isComponentMounted = useRef<boolean>(false);
   const isComponentFocused = useRef<boolean>(false);
   const isDropdownInputFocused = useRef<boolean>(false);
   const isOutsideClicked = useRef<boolean>(false);
@@ -158,7 +159,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       initTreeNode
     );
 
-    node.children = children.map((child, idx) => mapTreeNodeToNode(child, idx.toString(), node));
+    node.children = children.map((child, index) => mapTreeNodeToNode(child, index.toString(), node));
 
     nodeMapRef.current.set(nodePath, node);
 
@@ -166,6 +167,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   };
 
   useEffect(() => {
+    nodeMapRef.current = new Map<string, Node>();
     const nodeTree: Node[] = [];
     data.forEach((treeNode, index) => {
       nodeTree.push(mapTreeNodeToNode(treeNode, index.toString(), null));
@@ -197,19 +199,49 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       if (node.initTreeNode.disabled) {
         node.handleDisable(type);
       }
+      node.handleSearch(state.searchValue);
     });
-    const displayedNodes = nodes.filter(node => node.isDisplayed(false));
+
+    const displayedNodes = nodes.filter(node => node.isDisplayed(Boolean(state.searchValue)));
     const selectedNodes = nodes.filter(node => node.selected);
 
+    const showSelectAll = type !== Type.SELECT
+      && (!isComponentMounted.current ? withSelectAll : state.showSelectAll);
+
+    let focusedFieldElement = '';
+    if (state.focusedFieldElement) {
+      if (state.focusedFieldElement === INPUT || state.focusedFieldElement === CLEAR_ALL) {
+        focusedFieldElement = state.focusedFieldElement;
+      } else {
+        const chipNodes = filterChips(selectedNodes, type);
+        const current = chipNodes.find(node => node.path === focusedFieldElement);
+        focusedFieldElement = current ? state.focusedFieldElement : '';
+      }
+    }
+
+    let focusedElement = '';
+    if (state.focusedElement) {
+      if (state.focusedElement === SELECT_ALL) {
+        focusedElement = state.focusedElement;
+      } else {
+        const current = displayedNodes.find(node => node.path === state.focusedElement);
+        focusedElement = current ? state.focusedElement : '';
+      }
+    }
+
+    isComponentMounted.current = true;
+
     dispatch({
-      type: ActionType.INIT,
+      type: ActionType.DATA_CHANGE,
       payload: {
         nodes,
         displayedNodes,
         selectedNodes,
-        showSelectAll: type !== Type.SELECT && withSelectAll,
+        showSelectAll,
+        focusedFieldElement,
+        focusedElement,
         selectAllCheckedState: getSelectAllCheckedState(selectedNodes, nodes)
-      } as InitPayload
+      } as DataChangePayload
     });
   }, [data, type]);
 
