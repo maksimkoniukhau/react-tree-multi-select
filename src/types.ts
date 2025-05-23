@@ -13,6 +13,7 @@ import {NodeContainerOwnProps} from './components/NodeContainer';
 import {NodeToggleOwnProps} from './components/NodeToggle';
 import {NodeCheckboxOwnProps} from './components/NodeCheckbox';
 import {NodeLabelOwnProps} from './components/NodeLabel';
+import {FooterOwnProps} from './components/Footer';
 import {NoMatchesOwnProps} from './components/NoMatches';
 
 export enum Type {
@@ -64,6 +65,7 @@ export type NodeContainerProps<CustomProps = {}> = ComponentProps<CustomProps, N
 export type NodeToggleProps<CustomProps = {}> = ComponentProps<CustomProps, NodeToggleOwnProps, HTMLDivElement>;
 export type NodeCheckboxProps<CustomProps = {}> = ComponentProps<CustomProps, NodeCheckboxOwnProps, HTMLDivElement>;
 export type NodeLabelProps<CustomProps = {}> = ComponentProps<CustomProps, NodeLabelOwnProps, HTMLDivElement>;
+export type FooterProps<CustomProps = {}> = ComponentProps<CustomProps, FooterOwnProps, HTMLDivElement>;
 export type NoMatchesProps<CustomProps = {}> = ComponentProps<CustomProps, NoMatchesOwnProps, HTMLDivElement>;
 
 export type FieldType<CustomProps = {}> = Component<CustomProps, FieldProps<CustomProps>>;
@@ -80,6 +82,7 @@ export type NodeContainerType<CustomProps = {}> = Component<CustomProps, NodeCon
 export type NodeToggleType<CustomProps = {}> = Component<CustomProps, NodeToggleProps<CustomProps>>;
 export type NodeCheckboxType<CustomProps = {}> = Component<CustomProps, NodeCheckboxProps<CustomProps>>;
 export type NodeLabelType<CustomProps = {}> = Component<CustomProps, NodeLabelProps<CustomProps>>;
+export type FooterType<CustomProps = {}> = Component<CustomProps, FooterProps<CustomProps>>;
 export type NoMatchesType<CustomProps = {}> = Component<CustomProps, NoMatchesProps<CustomProps>>;
 
 export interface Components<
@@ -97,6 +100,7 @@ export interface Components<
   NodeToggleCustomProps = any,
   NodeCheckboxCustomProps = any,
   NodeLabelCustomProps = any,
+  FooterCustomProps = any,
   NoMatchesCustomProps = any
 > {
   Field?: FieldType<FieldCustomProps>;
@@ -113,5 +117,6 @@ export interface Components<
   NodeToggle?: NodeToggleType<NodeToggleCustomProps>;
   NodeCheckbox?: NodeCheckboxType<NodeCheckboxCustomProps>;
   NodeLabel?: NodeLabelType<NodeLabelCustomProps>;
+  Footer?: FooterType<FooterCustomProps>;
   NoMatches?: NoMatchesType<NoMatchesCustomProps>;
 }

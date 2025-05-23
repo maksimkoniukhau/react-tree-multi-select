@@ -3,6 +3,7 @@ export const INPUT = 'Input';
 export const INPUT_PLACEHOLDER = 'search...';
 export const SELECT_ALL = 'Select all';
 export const CLEAR_ALL = 'Clear all';
+export const FOOTER = 'Footer';
 export const NO_MATCHES = 'No matches';
 
 export const DEFAULT_OPTIONS_CONTAINER_WIDTH = '100%';

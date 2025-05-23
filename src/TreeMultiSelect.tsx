@@ -106,7 +106,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const isOutsideClicked = useRef<boolean>(false);
   const dropdownUnmountedOnClickOutside = useRef<boolean>(false);
 
-  const nodeMapRef = useRef<Map<string, Node>>(new Map());
+  const nodeMapRef = useRef<Map<string, Node>>(new Map<string, Node>());
 
   const [state, dispatch] = useReducer(reducer, initialState);
 

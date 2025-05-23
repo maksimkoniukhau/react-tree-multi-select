@@ -19,6 +19,7 @@ export type InnerComponents<
   NodeToggleCustomProps = any,
   NodeCheckboxCustomProps = any,
   NodeLabelCustomProps = any,
+  FooterCustomProps = any,
   NoMatchesCustomProps = any
 > = Required<Components<
   FieldCustomProps,
@@ -35,5 +36,6 @@ export type InnerComponents<
   NodeToggleCustomProps,
   NodeCheckboxCustomProps,
   NodeLabelCustomProps,
+  FooterCustomProps,
   NoMatchesCustomProps
 >>;
