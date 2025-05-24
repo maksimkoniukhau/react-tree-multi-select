@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import React from 'react';
 import {render, screen} from '@testing-library/react';
 import userEvent, {UserEvent} from '@testing-library/user-event';
-import {CheckedState, TreeMultiSelect, TreeNode} from '../index';
+import {CheckedState, TreeMultiSelect, TreeNode, Type} from '../index';
 import {getBaseTreeNodeData, getTreeNodeData} from './testutils/dataUtils';
 import {
   getChipClear,
@@ -336,7 +336,7 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
 
   const user: UserEvent = userEvent.setup();
 
-  it('tests component when withSelectAll=false', async () => {
+  it('tests component when withSelectAll=false as a default', async () => {
     const handleSelectAllChange = jest.fn();
 
     const {container} = render(
@@ -344,6 +344,33 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
     );
 
     await user.click(getField(container));
+    expect(getHeaderItems(container).length).toBe(0);
+  });
+
+  it('tests component when withSelectAll=true and component type=SELECT', async () => {
+    const handleSelectAllChange = jest.fn();
+    const treeNodeData = getTreeNodeData([], [], []);
+
+    const {container, rerender} = render(
+      <TreeMultiSelect
+        data={treeNodeData}
+        withSelectAll
+        onSelectAllChange={handleSelectAllChange}
+      />
+    );
+
+    await user.click(getField(container));
+    expect(getHeaderItem(container, 0)).toBeInTheDocument();
+
+    rerender(
+      <TreeMultiSelect
+        data={treeNodeData}
+        type={Type.SELECT}
+        withSelectAll
+        onSelectAllChange={handleSelectAllChange}
+      />
+    );
+
     expect(getHeaderItems(container).length).toBe(0);
   });
 
