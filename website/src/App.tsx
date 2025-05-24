@@ -33,6 +33,9 @@ function App() {
             </Routes>
           </div>
         </div>
+        <div className="footer">
+          {'Copyright © Maksim Koniukhau, 2025. MIT Licensed.'}
+        </div>
       </div>
     </Router>
   );
