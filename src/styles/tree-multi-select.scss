@@ -33,7 +33,7 @@ TreeMultiSelect styles
 
   @for $i from 0 through 100 {
     .pl-#{$i} {
-      padding-left: calc((var(--rtms-checkbox-width) + var(--rtms-list-items-gap)) * $i + var(--rtms-row-base-padding));
+      padding-left: calc((var(--rtms-checkbox-width) + var(--rtms-list-item-gap)) * $i + var(--rtms-list-item-lr-padding));
     }
   }
 
@@ -42,9 +42,4 @@ TreeMultiSelect styles
   @include checkbox.checkbox-styles;
   @include field.field-styles;
   @include dropdown.dropdown-styles;
-
-  .rtms-label {
-    line-height: 1;
-    font-size: 16px;
-  }
 }

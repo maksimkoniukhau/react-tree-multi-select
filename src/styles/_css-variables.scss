@@ -1,4 +1,12 @@
 @mixin variables {
+  --rtms-line-height: 1;
+  --rtms-font-size: 16px;
+
+  --rtms-field-line-height: 1;
+  --rtms-field-font-size: 16px;
+  --rtms-dropdown-line-height: 1;
+  --rtms-dropdown-font-size: 16px;
+
   --rtms-disabled-color: #acacac;
   --rtms-disabled-background-color: #f5f5f5;
   --rtms-list-item-selected-background-color: transparent;
@@ -15,6 +23,7 @@
   --rtms-checkbox-width: 16px;
   --rtms-checkbox-height: 16px;
 
-  --rtms-list-items-gap: 3px;
-  --rtms-row-base-padding: 5px;
+  --rtms-list-item-gap: 3px;
+  --rtms-list-item-tb-padding: 2px;
+  --rtms-list-item-lr-padding: 5px;
 }

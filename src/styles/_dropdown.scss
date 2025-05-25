@@ -12,6 +12,8 @@
     position: absolute;
     width: 100%;
     z-index: 1;
+    line-height: var(--rtms-dropdown-line-height);
+    font-size: var(--rtms-dropdown-font-size);
     margin-top: 7px;
     background-color: #ffffff;
     border: 1px solid #ced4da;
@@ -26,17 +28,17 @@
     .rtms-list-item, .rtms-header-item {
       display: flex;
       align-items: center;
-      padding-top: 2px;
-      padding-bottom: 2px;
+      padding-top: var(--rtms-list-item-tb-padding);
+      padding-bottom: var(--rtms-list-item-tb-padding);
       outline: none;
       color: #212529;
       cursor: pointer;
-      gap: var(--rtms-list-items-gap);
+      gap: var(--rtms-list-item-gap);
     }
 
     .rtms-list-item {
       background-color: #ffffff;
-      padding-right: var(--rtms-row-base-padding);
+      padding-right: var(--rtms-list-item-lr-padding);
 
       &.selected {
         background-color: var(--rtms-list-item-selected-background-color);
@@ -78,8 +80,8 @@
 
     .rtms-header-item {
       background-color: #ffffff;
-      padding-left: var(--rtms-row-base-padding);
-      padding-right: var(--rtms-row-base-padding);
+      padding-left: var(--rtms-list-item-lr-padding);
+      padding-right: var(--rtms-list-item-lr-padding);
 
       &.focused:not(:has(.rtms-input-container)), &:hover:not(:has(.rtms-input-container)) {
         background-color: #ebebeb;
@@ -95,7 +97,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 10px;
+      padding: var(--rtms-list-item-tb-padding) var(--rtms-list-item-lr-padding);
       outline: none;
     }
   }
