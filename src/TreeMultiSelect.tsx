@@ -206,7 +206,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     const displayedNodes = nodes.filter(node => node.isDisplayed(Boolean(state.searchValue)));
     const selectedNodes = nodes.filter(node => node.selected);
 
-    const showSelectAll = type !== Type.SELECT
+    const showSelectAll = type !== Type.SELECT && displayedNodes.length
       && (!isComponentMounted.current ? withSelectAll : state.showSelectAll);
 
     let focusedFieldElement = '';
