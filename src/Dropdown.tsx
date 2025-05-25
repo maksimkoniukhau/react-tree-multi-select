@@ -1,8 +1,9 @@
-import React, {FC, JSX, memo, ReactNode, RefObject, useCallback, useEffect, useRef, useState} from 'react';
+import React, {FC, JSX, memo, ReactNode, RefObject, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {CalculateViewLocation, StateSnapshot, Virtuoso, VirtuosoHandle} from 'react-virtuoso';
 import {DEFAULT_OPTIONS_CONTAINER_WIDTH, FOOTER, SELECT_ALL} from './constants';
 import {CheckedState, Type} from './types';
 import {InnerComponents} from './innerTypes';
+import {hasCustomFooter} from './utils/componentsUtils';
 import {Node} from './Node';
 import {ListItem} from './ListItem';
 
@@ -21,8 +22,9 @@ export interface DropdownProps {
   onSelectAllChange: (e: React.MouseEvent) => void;
   onNodeChange: (node: Node) => (e: React.MouseEvent) => void;
   onNodeToggle: (node: Node) => (e: React.MouseEvent) => void;
+  onFooterClick: (e: React.MouseEvent) => void;
   input: ReactNode;
-  inputRef: RefObject<HTMLInputElement | null>
+  inputRef: RefObject<HTMLInputElement | null>;
   onUnmount: () => void;
   components: InnerComponents;
   onListItemRender: () => void;
@@ -46,6 +48,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     onSelectAllChange,
     onNodeChange,
     onNodeToggle,
+    onFooterClick,
     input,
     inputRef,
     onUnmount,
@@ -148,12 +151,16 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
   const Footer: FC = useCallback(() => {
     return (
       <components.Footer.component
-        componentAttributes={{}}
+        componentAttributes={{className: `rtms-footer${footerFocused ? ' focused' : ''}`, onClick: onFooterClick}}
         componentProps={{focused: footerFocused}}
         customProps={components.Footer.props}
       />
     );
-  }, [components.Footer, footerFocused]);
+  }, [components.Footer, footerFocused, onFooterClick]);
+
+  const virtuosoComponents = useMemo(() => (
+      hasCustomFooter(components.Footer.component) ? {Footer} : {}),
+    [components.Footer.component, Footer]);
 
   return (
     <div className="rtms-dropdown" onMouseDown={handleMouseDown}>
@@ -165,7 +172,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
         totalCount={itemCount}
         topItemCount={topItemCount}
         itemContent={itemContent}
-        components={{Footer}}
+        components={virtuosoComponents}
       />
     </div>
   );

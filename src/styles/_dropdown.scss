@@ -93,6 +93,15 @@
       }
     }
 
+    .rtms-footer {
+      padding: var(--rtms-list-item-tb-padding) var(--rtms-list-item-lr-padding);
+      outline: none;
+
+      &.focused, &:hover {
+        background-color: #ebebeb;
+      }
+    }
+
     .rtms-no-matches {
       display: flex;
       align-items: center;

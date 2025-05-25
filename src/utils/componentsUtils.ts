@@ -1,4 +1,5 @@
-import {Components} from '../types';
+import {ComponentType} from 'react';
+import {Components, FooterProps} from '../types';
 import {InnerComponents} from '../innerTypes';
 import {Field} from '../components/Field';
 import {ChipContainer} from '../components/ChipContainer';
@@ -68,6 +69,14 @@ const components: InnerComponents = {
   }
 };
 
-export const getComponents = (propsComponents?: Components): InnerComponents => {
-  return {...components, ...propsComponents};
+export const getComponents = (propsComponents: Components = {}): InnerComponents => {
+  return {
+    ...components,
+    ...propsComponents,
+    Footer: propsComponents.Footer ?? {component: Footer}
+  };
+};
+
+export const hasCustomFooter = (footerComponent: ComponentType<FooterProps>): boolean => {
+  return footerComponent !== Footer;
 };

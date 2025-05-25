@@ -3,6 +3,7 @@ import React, {FC, useCallback, useEffect, useMemo, useReducer, useRef} from 're
 import {
   CLEAR_ALL,
   DEFAULT_OPTIONS_CONTAINER_HEIGHT,
+  FOOTER,
   INPUT,
   INPUT_PLACEHOLDER,
   NO_MATCHES,
@@ -18,7 +19,7 @@ import {
   isAnyExcludingDisabledSelected,
   isAnyHasChildren
 } from './utils/nodesUtils';
-import {getComponents} from './utils/componentsUtils';
+import {getComponents, hasCustomFooter} from './utils/componentsUtils';
 import {CheckedState, Components, TreeNode, Type} from './types';
 import {useOnClickOutside} from './hooks';
 import {
@@ -221,7 +222,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
     let focusedElement = '';
     if (state.focusedElement) {
-      if (state.focusedElement === SELECT_ALL) {
+      if ((state.focusedElement === SELECT_ALL && showSelectAll)
+        || (state.focusedElement === FOOTER && hasCustomFooter(components.Footer.component))) {
         focusedElement = state.focusedElement;
       } else {
         const current = displayedNodes.find(node => node.path === state.focusedElement);
@@ -533,53 +535,72 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   };
 
-  const getFirstFocusedElement = (): string => {
-    let focusedEl = '';
-    if (state.showSelectAll) {
-      focusedEl = SELECT_ALL;
-    } else if (state.displayedNodes.length) {
-      focusedEl = state.displayedNodes[0].path;
+  const handleFooterClick = useCallback((event: React.MouseEvent): void => {
+    if (isDisabled) {
+      return;
     }
-    return focusedEl;
+    event.preventDefault();
+    dispatchFocusElement(FOOTER);
+  }, [state.focusedFieldElement]);
+
+  const getFirstFocusedElement = (): string => {
+    if (state.showSelectAll) {
+      return SELECT_ALL;
+    }
+    if (state.displayedNodes.length) {
+      return state.displayedNodes[0].path;
+    }
+    if (hasCustomFooter(components.Footer.component)) {
+      return FOOTER;
+    }
+    return '';
   };
 
   const getNextFocusedElement = (): string => {
-    if (!state.focusedElement) {
+    let focusedElement = state.focusedElement;
+    if (!focusedElement || focusedElement === FOOTER) {
       return getFirstFocusedElement();
     }
-
-    let focusedEl = state.focusedElement;
     if (state.displayedNodes.length) {
-      const current = state.displayedNodes.find(node => node.path === state.focusedElement);
+      const current = state.displayedNodes.find(node => node.path === focusedElement);
       const index = current ? state.displayedNodes.indexOf(current) : -1;
-      focusedEl = index === state.displayedNodes.length - 1
-        ? getFirstFocusedElement()
-        : state.displayedNodes[index + 1].path;
+      if (index === state.displayedNodes.length - 1) {
+        focusedElement = hasCustomFooter(components.Footer.component) ? FOOTER : getFirstFocusedElement();
+      } else {
+        focusedElement = state.displayedNodes[index + 1].path;
+      }
     }
-
-    return focusedEl;
+    return focusedElement;
   };
 
   const getPrevFocusedElement = (): string => {
     if (!state.focusedElement) {
       return '';
     }
-
-    let focusedEl = state.focusedElement;
+    let focusedElement = state.focusedElement;
     if (state.displayedNodes.length) {
-      const current = state.displayedNodes.find(node => node.path === state.focusedElement);
+      if (focusedElement === SELECT_ALL) {
+        return hasCustomFooter(components.Footer.component)
+          ? FOOTER
+          : state.displayedNodes[state.displayedNodes.length - 1].path;
+      }
+      if (focusedElement === FOOTER) {
+        return state.displayedNodes[state.displayedNodes.length - 1].path;
+      }
+      const current = state.displayedNodes.find(node => node.path === focusedElement);
       const index = current ? state.displayedNodes.indexOf(current) : state.displayedNodes.length;
       if (index === 0 && state.showSelectAll) {
-        focusedEl = SELECT_ALL;
-      } else {
-        const prev = index === 0
-          ? state.displayedNodes[state.displayedNodes.length - 1]
-          : state.displayedNodes[index - 1];
-        focusedEl = prev.path;
+        return SELECT_ALL;
       }
+      if (index === 0 && hasCustomFooter(components.Footer.component)) {
+        return FOOTER;
+      }
+      const prev = index === 0
+        ? state.displayedNodes[state.displayedNodes.length - 1]
+        : state.displayedNodes[index - 1];
+      focusedElement = prev.path;
     }
-
-    return focusedEl;
+    return focusedElement;
   };
 
   const getNextFocusedFieldElement = (selectedNodes: Node[], focusedFieldElement: string): string => {
@@ -862,6 +883,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
             onSelectAllChange={handleSelectAllChange}
             onNodeChange={handleNodeChange}
             onNodeToggle={handleNodeToggleOnClick}
+            onFooterClick={handleFooterClick}
             input={withDropdownInput && isSearchable ? (
               <InputWrapper
                 input={components.Input}
