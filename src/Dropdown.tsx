@@ -104,9 +104,14 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
 
   useEffect(() => {
     if (focusedElement && virtuosoRef.current && displayedNodes.length) {
-      const elementIndex = focusedElement === SELECT_ALL
-        ? 0
-        : displayedNodes.indexOf(nodeMap.get(focusedElement)) + (showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0);
+      let elementIndex: number;
+      if (focusedElement === SELECT_ALL) {
+        elementIndex = 0;
+      } else if (focusedElement === FOOTER) {
+        elementIndex = displayedNodes.length - 1 + (showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0);
+      } else {
+        elementIndex = displayedNodes.indexOf(nodeMap.get(focusedElement)) + (showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0);
+      }
       if (elementIndex >= 0) {
         virtuosoRef.current.scrollIntoView?.({
           index: elementIndex,
