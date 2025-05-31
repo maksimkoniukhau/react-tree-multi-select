@@ -151,19 +151,36 @@ export const reducer = (state = initialState, action: Action): State => {
     case ActionType.DATA_CHANGE:
     case ActionType.TOGGLE_DROPDOWN:
     case ActionType.FIELD_CLICK:
-    case ActionType.SHOW_SELECT_ALL:
     case ActionType.INPUT_CHANGE:
     case ActionType.CHIP_CLICK:
     case ActionType.NODE_CHANGE:
     case ActionType.SELECT_ALL_CHANGE:
     case ActionType.CHIP_DELETE:
     case ActionType.CLEAR_ALL:
-    case ActionType.NODE_TOGGLE:
-    case ActionType.FOCUS: {
+    case ActionType.NODE_TOGGLE: {
       return {
         ...state,
         ...action.payload
       };
+    }
+    case ActionType.SHOW_SELECT_ALL: {
+      const {showSelectAll} = action.payload as ShowSelectAllPayload;
+      return showSelectAll === state.showSelectAll
+        ? state
+        : {
+          ...state,
+          showSelectAll
+        };
+    }
+    case ActionType.FOCUS: {
+      const {focusedFieldElement, focusedElement} = action.payload as FocusPayload;
+      return focusedFieldElement === state.focusedFieldElement && focusedElement === state.focusedElement
+        ? state
+        : {
+          ...state,
+          focusedFieldElement,
+          focusedElement
+        };
     }
     case ActionType.RESET: {
       const payload = action.payload as ResetPayload;
