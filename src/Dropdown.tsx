@@ -3,7 +3,6 @@ import {CalculateViewLocation, StateSnapshot, Virtuoso, VirtuosoHandle} from 're
 import {DEFAULT_OPTIONS_CONTAINER_WIDTH, FOOTER, SELECT_ALL} from './constants';
 import {CheckedState, Type} from './types';
 import {InnerComponents} from './innerTypes';
-import {hasCustomFooter} from './utils/componentsUtils';
 import {Node} from './Node';
 import {ListItem} from './ListItem';
 
@@ -19,6 +18,7 @@ export interface DropdownProps {
   focusedElement: string;
   noMatchesText: string;
   dropdownHeight: number;
+  showFooter: boolean;
   onSelectAllChange: (e: React.MouseEvent) => void;
   onNodeChange: (node: Node) => (e: React.MouseEvent) => void;
   onNodeToggle: (node: Node) => (e: React.MouseEvent) => void;
@@ -45,6 +45,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     focusedElement,
     noMatchesText,
     dropdownHeight,
+    showFooter,
     onSelectAllChange,
     onNodeChange,
     onNodeToggle,
@@ -164,8 +165,8 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
   }, [components.Footer, footerFocused, onFooterClick]);
 
   const virtuosoComponents = useMemo(() => (
-      hasCustomFooter(components.Footer.component) ? {Footer} : {}),
-    [components.Footer.component, Footer]);
+    showFooter ? {Footer} : {}
+  ), [showFooter, Footer]);
 
   return (
     <div className="rtms-dropdown" onMouseDown={handleMouseDown}>

@@ -1,5 +1,5 @@
 import './styles/tree-multi-select.scss';
-import React, {FC, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
+import React, {FC, useCallback, useEffect, useMemo, useReducer, useRef, useState} from 'react';
 import {
   CLEAR_ALL,
   DEFAULT_OPTIONS_CONTAINER_HEIGHT,
@@ -20,7 +20,7 @@ import {
   isAnyHasChildren
 } from './utils/nodesUtils';
 import {getComponents, hasCustomFooter} from './utils/componentsUtils';
-import {CheckedState, Components, TreeNode, Type} from './types';
+import {CheckedState, Components, FooterConfig, TreeNode, Type} from './types';
 import {useOnClickOutside} from './hooks';
 import {
   ActionType,
@@ -63,6 +63,7 @@ export interface TreeMultiSelectProps {
   withDropdownInput?: boolean;
   closeDropdownOnNodeChange?: boolean;
   dropdownHeight?: number;
+  footerConfig?: FooterConfig;
   components?: Components;
   onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
   onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
@@ -88,6 +89,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     withDropdownInput = false,
     closeDropdownOnNodeChange = false,
     dropdownHeight = DEFAULT_OPTIONS_CONTAINER_HEIGHT,
+    footerConfig,
     components: propsComponents,
     onNodeChange,
     onNodeToggle,
@@ -111,6 +113,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const nodeMapRef = useRef<Map<string, Node>>(new Map<string, Node>());
 
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [showFooterWhenSearching, setShowFooterWhenSearching] = useState<boolean>(false);
+  const [showFooterWhenNoItems, setShowFooterWhenNoItems] = useState<boolean>(false);
+  const [showFooter, setShowFooter] = useState<boolean>(false);
 
   const showClearAll = withClearAll && isAnyExcludingDisabledSelected(state.nodes);
 
@@ -259,6 +264,26 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       });
     }
   }, [withSelectAll]);
+
+  useEffect(() => {
+    const showWhenSearching = footerConfig?.showWhenSearching !== undefined
+      ? footerConfig.showWhenSearching
+      : false;
+    const showWhenNoItems = footerConfig?.showWhenNoItems !== undefined
+      ? footerConfig.showWhenNoItems
+      : false;
+    setShowFooterWhenSearching(showWhenSearching);
+    setShowFooterWhenNoItems(showWhenNoItems);
+  }, [footerConfig]);
+
+  useEffect(() => {
+    let showFooter = false;
+    if (hasCustomFooter(components.Footer.component)) {
+      showFooter = (state.displayedNodes.length > 0 || showFooterWhenNoItems)
+        && (!state.searchValue || showFooterWhenSearching);
+    }
+    setShowFooter(showFooter);
+  }, [components.Footer.component, showFooterWhenSearching, showFooterWhenNoItems, state.searchValue, state.displayedNodes]);
 
   const handleOutsideEvent = (event: MouseEvent | TouchEvent | FocusEvent) => {
     if (isDisabled) {
@@ -851,6 +876,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
             focusedElement={state.focusedElement}
             noMatchesText={noMatchesText}
             dropdownHeight={dropdownHeight}
+            showFooter={showFooter}
             onSelectAllChange={handleSelectAllChange}
             onNodeChange={handleNodeChange}
             onNodeToggle={handleNodeToggleOnClick}

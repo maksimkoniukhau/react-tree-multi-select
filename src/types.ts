@@ -39,6 +39,19 @@ export enum CheckedState {
   UNSELECTED = 'UNSELECTED'
 }
 
+/**
+ * Controls when the Footer component is rendered in the dropdown.
+ *
+ * @property showWhenSearching - Renders the Footer when the component is in search mode
+ *                                (when the input contains value).
+ * @property showWhenNoItems - renders the Footer when no items are available in the dropdown
+ *                              (takes precedence over `showWhenSearching` if both apply).
+ */
+export type FooterConfig = {
+  showWhenSearching?: boolean;
+  showWhenNoItems?: boolean;
+}
+
 export interface ComponentProps<CustomProps = {}, OwnProps = {}, ComponentType = {}> {
   componentAttributes: HTMLProps<ComponentType>;
   componentProps: OwnProps;
