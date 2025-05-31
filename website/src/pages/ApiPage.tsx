@@ -116,9 +116,17 @@ export const ApiPage: FC = () => {
               <td>{`dropdown height in pixels (it is automatically reduced if the content height is less than the value in the property)`}</td>
             </tr>
             <tr>
+              <td>{'footerConfig'}</td>
+              <td>{'FooterConfig'}</td>
+              <td>{`{showWhenSearching: false, showWhenNoItems: false}`}</td>
+              <td>{`Controls when the Footer component is rendered. 
+              showWhenNoItems takes precedence over showWhenSearching. 
+              For example, if showWhenSearching is true and showWhenNoItems is false, and there are no matching items during the search, the Footer will not be rendered.`}</td>
+            </tr>
+            <tr>
               <td>{'components'}</td>
               <td>{'Components'}</td>
-              <td>{'-'}</td>
+              <td>{'{}'}</td>
               <td>{'custom components are applied to the tree multi select (see examples for more details)'}</td>
             </tr>
             <tr>

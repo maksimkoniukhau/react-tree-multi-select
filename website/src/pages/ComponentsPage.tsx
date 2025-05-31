@@ -10,6 +10,7 @@ import {
   fieldClearExample,
   fieldExample,
   fieldToggleExample,
+  footerExample,
   inputExample,
   nodeCheckboxExample,
   nodeContainerExample,
@@ -37,6 +38,7 @@ import {CustomNodeContainerExample} from '../examples/components/CustomNodeConta
 import {CustomNodeToggleExample} from '../examples/components/CustomNodeToggleExample';
 import {CustomNodeCheckboxExample} from '../examples/components/CustomNodeCheckboxExample';
 import {CustomNodeLabelExample} from '../examples/components/CustomNodeLabelExample';
+import {CustomFooterExample} from '../examples/components/CustomFooterExample';
 import {CustomNoMatchesExample} from '../examples/components/CustomNoMatchesExample';
 
 export const ComponentsPage: FC = memo(() => {
@@ -64,15 +66,16 @@ export const ComponentsPage: FC = memo(() => {
           <CodeBlock code={customComponentMergeClassname}/>
           <div className="paragraph">
             <div><b>{'Built-in components'}</b></div>
-            {'You can import and reuse built-in components from the library for additional flexibility. For an example, refer to the '}
+            {'You can import and reuse built-in components from the library for additional flexibility (except of Footer, since it has empty implementation by default). ' +
+              'For an example, refer to the '}
             <a className="link" href="#chip-container">CustomChipContainer</a>{'.'}
           </div>
           <CodeBlock code={customComponentBuiltin}/>
           <div className="paragraph">
             <div><b>{'Custom props'}</b></div>
             <div className="paragraph">
-              {'You can pass your own properties to the component through the props object. When creating a custom component, ' +
-                'you can access these properties and use them in your implementation.'}
+              {`You can pass your own properties to the component through the props object. When creating a custom component, 
+              you can access these properties and use them in your implementation.`}
             </div>
             <div className="paragraph important">
               <b>{'Important'}</b>
@@ -238,6 +241,25 @@ export const ComponentsPage: FC = memo(() => {
             <CustomNodeLabelExample/>
           </div>
         </Section>
+        <Section id="footer">
+          <div className="paragraph">
+            <h3 className="title">{'Footer'}</h3>
+            <div className="paragraph">
+              {`An optional custom component rendered at the bottom of the dropdown, scrolling together with the items. 
+            The default implementation is null, so the Footer is not rendered unless explicitly provided.`}
+            </div>
+            <div className="paragraph note">
+              <b>{'Note'}</b>
+              <span>
+              {': By default, the Footer is not shown during search (when the input has a value) or when there are no items in the dropdown. This behavior can be customized using the footerConfig prop.'}
+            </span>
+            </div>
+          </div>
+          <div className="example-container">
+            <CodeBlock code={footerExample}/>
+            <CustomFooterExample/>
+          </div>
+        </Section>
         <Section id="no-matches">
           <div className="paragraph">
             <h3 className="title">{'NoMatches'}</h3>
@@ -266,6 +288,7 @@ export const ComponentsPage: FC = memo(() => {
           {link: '#node-toggle', label: 'NodeToggle'},
           {link: '#node-checkbox', label: 'NodeCheckbox'},
           {link: '#node-label', label: 'NodeLabel'},
+          {link: '#footer', label: 'Footer'},
           {link: '#no-matches', label: 'NoMatches'}
         ]}
       />

@@ -33,13 +33,17 @@ export const getTreeNodeData = (selected?: boolean, expanded?: boolean, disabled
   return mapOptionsToTreeNodes(options, selected, expanded, disabled);
 };
 
-const randomString = (length: number): string => {
+export const randomNumber = (min: number, max: number): number => {
+  return Math.ceil(Math.random() * (max - min) + min);
+};
+
+export const randomString = (length: number): string => {
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 ';
   const charactersLength = characters.length;
   let counter = 0;
   while (counter < length) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    result += characters.charAt(randomNumber(0, charactersLength));
     counter += 1;
   }
   return result;

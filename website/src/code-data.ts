@@ -86,6 +86,11 @@ enum CheckedState {
   UNSELECTED = 'UNSELECTED'
 }
 
+type FooterConfig = {
+  showWhenSearching?: boolean;
+  showWhenNoItems?: boolean;
+}
+
 interface ComponentProps<CustomProps = {}, OwnProps = {}, ComponentType = {}> {
   componentAttributes: HTMLProps<ComponentType>;
   componentProps: OwnProps;
@@ -112,6 +117,7 @@ type NodeContainerProps<CustomProps = {}> = ComponentProps<CustomProps, NodeCont
 type NodeToggleProps<CustomProps = {}> = ComponentProps<CustomProps, NodeToggleOwnProps, HTMLDivElement>;
 type NodeCheckboxProps<CustomProps = {}> = ComponentProps<CustomProps, NodeCheckboxOwnProps, HTMLDivElement>;
 type NodeLabelProps<CustomProps = {}> = ComponentProps<CustomProps, NodeLabelOwnProps, HTMLDivElement>;
+type FooterProps<CustomProps = {}> = ComponentProps<CustomProps, FooterOwnProps, HTMLDivElement>;
 type NoMatchesProps<CustomProps = {}> = ComponentProps<CustomProps, NoMatchesOwnProps, HTMLDivElement>;
 
 type FieldType<CustomProps = {}> = Component<CustomProps, FieldProps<CustomProps>>;
@@ -128,6 +134,7 @@ type NodeContainerType<CustomProps = {}> = Component<CustomProps, NodeContainerP
 type NodeToggleType<CustomProps = {}> = Component<CustomProps, NodeToggleProps<CustomProps>>;
 type NodeCheckboxType<CustomProps = {}> = Component<CustomProps, NodeCheckboxProps<CustomProps>>;
 type NodeLabelType<CustomProps = {}> = Component<CustomProps, NodeLabelProps<CustomProps>>;
+type FooterType<CustomProps = {}> = Component<CustomProps, FooterProps<CustomProps>>;
 type NoMatchesType<CustomProps = {}> = Component<CustomProps, NoMatchesProps<CustomProps>>;
 
 interface Components<
@@ -145,6 +152,7 @@ interface Components<
   NodeToggleCustomProps = any,
   NodeCheckboxCustomProps = any,
   NodeLabelCustomProps = any,
+  FooterCustomProps = any,
   NoMatchesCustomProps = any
 > {
   Field?: FieldType<FieldCustomProps>;
@@ -161,6 +169,7 @@ interface Components<
   NodeToggle?: NodeToggleType<NodeToggleCustomProps>;
   NodeCheckbox?: NodeCheckboxType<NodeCheckboxCustomProps>;
   NodeLabel?: NodeLabelType<NodeLabelCustomProps>;
+  Footer?: FooterType<FooterCustomProps>;
   NoMatches?: NoMatchesType<NoMatchesCustomProps>;
 }`;
 
@@ -686,6 +695,34 @@ export const CustomNodeLabelExample: FC = () => {
     <div className="component-example">
       <TreeMultiSelect
         data={getTreeNodeData(true)}
+        components={components}
+      />
+    </div>
+  );
+};`;
+
+export const footerExample = `import React, {FC} from 'react';
+import {Components, TreeMultiSelect} from 'react-tree-multi-select';
+import {getTreeNodeData} from '../../utils';
+import {FooterProps, FooterType} from '../../../../src';
+
+const CustomFooter: FC<FooterProps> = (props) => (
+  <div {...props.componentAttributes}>
+    <span style={{display: 'flex', justifyContent: 'center'}}>
+      Footer component
+    </span>
+  </div>
+);
+
+const Footer: FooterType = {component: CustomFooter};
+const components: Components = {Footer};
+
+export const CustomFooterExample: FC = () => {
+
+  return (
+    <div className="component-example">
+      <TreeMultiSelect
+        data={getTreeNodeData(true, true)}
         components={components}
       />
     </div>
