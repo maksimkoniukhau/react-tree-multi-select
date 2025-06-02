@@ -1,10 +1,10 @@
-import React, {FC, JSX, memo, ReactNode, RefObject, useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {CalculateViewLocation, StateSnapshot, Virtuoso, VirtuosoHandle} from 'react-virtuoso';
-import {DEFAULT_OPTIONS_CONTAINER_WIDTH, FOOTER, SELECT_ALL} from './constants';
+import React, {FC, JSX, memo, ReactNode, RefObject, useCallback, useEffect} from 'react';
+import {FOOTER} from './constants';
 import {CheckedState, Type} from './types';
 import {InnerComponents} from './innerTypes';
 import {Node} from './Node';
 import {ListItem} from './ListItem';
+import {VirtualizedList} from './VirtualizedList';
 
 export interface DropdownProps {
   type: Type;
@@ -57,76 +57,28 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     onListItemRender
   } = props;
 
-  const virtuosoRef = useRef<VirtuosoHandle>(null);
-
-  const [height, setHeight] = useState<number>(dropdownHeight);
-
   const topItemCount = (showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0);
-  const itemCount = (displayedNodes.length || 1) + topItemCount;
-  const footerFocused = focusedElement === FOOTER;
-
-  const calculateViewLocation: CalculateViewLocation = (params) => {
-    const {
-      itemTop,
-      itemBottom,
-      viewportTop,
-      viewportBottom,
-      locationParams: {behavior, align, ...rest},
-    } = params;
-
-    let topElmSize = 0;
-    if (showSelectAll || Boolean(input)) {
-      virtuosoRef.current?.getState((state: StateSnapshot) => {
-        topElmSize = topElmSize + (state?.ranges
-          ?.find(range => range.startIndex === 0)
-          ?.size || 0);
-        if (showSelectAll && Boolean(input)) {
-          topElmSize = topElmSize + (state?.ranges
-            ?.find(range => range.startIndex === 1)
-            ?.size || 0);
-        }
-      });
-    }
-
-    if (itemTop - topElmSize < viewportTop) {
-      return {...rest, behavior, align: align ?? 'start'};
-    }
-
-    if (itemBottom > viewportBottom) {
-      return {...rest, behavior, align: align ?? 'end'};
-    }
-
-    return null;
-  };
+  const itemCount = (displayedNodes.length || 1) + topItemCount + (showFooter ? 1 : 0);
+  const isFooterFocused = focusedElement === FOOTER;
 
   useEffect(() => {
     return () => onUnmount();
   }, []);
 
-  useEffect(() => {
-    if (focusedElement && virtuosoRef.current && displayedNodes.length) {
-      let elementIndex: number;
-      if (focusedElement === SELECT_ALL) {
-        elementIndex = 0;
-      } else if (focusedElement === FOOTER) {
-        elementIndex = displayedNodes.length - 1 + (showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0);
-      } else {
-        elementIndex = displayedNodes.indexOf(nodeMap.get(focusedElement)) + (showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0);
-      }
-      if (elementIndex >= 0) {
-        virtuosoRef.current.scrollIntoView?.({
-          index: elementIndex,
-          calculateViewLocation
-        });
-      }
-    }
-  }, [focusedElement, showSelectAll, input]);
-
-  const handleTotalListHeightChanged = useCallback((height: number): void => {
-    setHeight(Math.min(dropdownHeight, height));
-  }, [dropdownHeight]);
+  const Footer: FC = useCallback(() => {
+    return (
+      <components.Footer.component
+        componentAttributes={{className: `rtms-footer${isFooterFocused ? ' focused' : ''}`, onClick: onFooterClick}}
+        componentProps={{focused: isFooterFocused}}
+        customProps={components.Footer.props}
+      />
+    );
+  }, [components.Footer, isFooterFocused, onFooterClick]);
 
   const itemContent = (index: number): JSX.Element => {
+    if (showFooter && index === itemCount) {
+      return <Footer/>;
+    }
     return <ListItem
       type={type}
       index={index}
@@ -153,32 +105,13 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
       event.preventDefault();
     }
   };
-
-  const Footer: FC = useCallback(() => {
-    return (
-      <components.Footer.component
-        componentAttributes={{className: `rtms-footer${footerFocused ? ' focused' : ''}`, onClick: onFooterClick}}
-        componentProps={{focused: footerFocused}}
-        customProps={components.Footer.props}
-      />
-    );
-  }, [components.Footer, footerFocused, onFooterClick]);
-
-  const virtuosoComponents = useMemo(() => (
-    showFooter ? {Footer} : {}
-  ), [showFooter, Footer]);
-
   return (
     <div className="rtms-dropdown" onMouseDown={handleMouseDown}>
-      <Virtuoso
-        ref={virtuosoRef}
-        style={{height: `${height}px`, width: DEFAULT_OPTIONS_CONTAINER_WIDTH}}
-        className="rtms-dropdown-virtuoso"
-        totalListHeightChanged={handleTotalListHeightChanged}
+      <VirtualizedList
+        height={dropdownHeight}
         totalCount={itemCount}
         topItemCount={topItemCount}
-        itemContent={itemContent}
-        components={virtuosoComponents}
+        renderItem={itemContent}
       />
     </div>
   );
