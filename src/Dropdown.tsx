@@ -76,27 +76,28 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
   }, [components.Footer, isFooterFocused, onFooterClick]);
 
   const itemContent = (index: number): JSX.Element => {
-    if (showFooter && index === itemCount) {
-      return <Footer/>;
-    }
-    return <ListItem
-      type={type}
-      index={index}
-      nodesAmount={nodesAmount}
-      displayedNodes={displayedNodes}
-      isAnyHasChildren={isAnyHasChildren}
-      searchValue={searchValue}
-      showSelectAll={showSelectAll}
-      selectAllCheckedState={selectAllCheckedState}
-      focusedElement={focusedElement}
-      noMatchesText={noMatchesText}
-      onSelectAllChange={onSelectAllChange}
-      onNodeChange={onNodeChange}
-      onNodeToggle={onNodeToggle}
-      input={input}
-      components={components}
-      onRender={onListItemRender}
-    />
+    return showFooter && index === itemCount - 1 ? (
+      <Footer/>
+    ) : (
+      <ListItem
+        type={type}
+        index={index}
+        nodesAmount={nodesAmount}
+        displayedNodes={displayedNodes}
+        isAnyHasChildren={isAnyHasChildren}
+        searchValue={searchValue}
+        showSelectAll={showSelectAll}
+        selectAllCheckedState={selectAllCheckedState}
+        focusedElement={focusedElement}
+        noMatchesText={noMatchesText}
+        onSelectAllChange={onSelectAllChange}
+        onNodeChange={onNodeChange}
+        onNodeToggle={onNodeToggle}
+        input={input}
+        components={components}
+        onRender={onListItemRender}
+      />
+    );
   };
 
   const handleMouseDown = (event: React.MouseEvent): void => {
@@ -105,6 +106,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
       event.preventDefault();
     }
   };
+
   return (
     <div className="rtms-dropdown" onMouseDown={handleMouseDown}>
       <VirtualizedList
