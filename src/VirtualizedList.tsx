@@ -27,7 +27,6 @@ const Item: FC<ItemProps> = (props) => {
     }
   }, [index, updateHeight]);
 
-
   const commonStyle = {top, width: '100%'};
   const style: CSSProperties = isSticky
     ? {...commonStyle, position: 'sticky', zIndex: 1}
@@ -56,7 +55,6 @@ export const VirtualizedList: FC<VirtualizedListProps> = (props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const ref = useRef<HTMLDivElement>(null);
 
-  const [height, setHeight] = useState<number>(propHeight);
   const [scrollTop, setScrollTop] = useState<number>(0);
   const [itemHeights, setItemHeights] = useState<Map<number, number>>(new Map<number, number>());
 
@@ -66,9 +64,7 @@ export const VirtualizedList: FC<VirtualizedListProps> = (props) => {
     }, 0);
   }, [totalCount, itemHeights, estimatedItemHeight]);
 
-  useEffect(() => {
-    setHeight(Math.min(propHeight, totalHeight));
-  }, [totalHeight, propHeight]);
+  const height = Math.min(propHeight, totalHeight);
 
   const positions = useMemo((): ItemPosition[] => {
     const positions: ItemPosition[] = [];
@@ -108,7 +104,12 @@ export const VirtualizedList: FC<VirtualizedListProps> = (props) => {
         return prev;
       }
       const newMap = new Map<number, number>(prev);
-      newMap.set(index, height);
+      if (index === topItemCount) {
+        Array.from({length: totalCount - topItemCount}, (_, i) => i + topItemCount)
+          .forEach(index => newMap.set(index, height));
+      } else {
+        newMap.set(index, height);
+      }
       return newMap;
     });
   }, []);
@@ -117,10 +118,17 @@ export const VirtualizedList: FC<VirtualizedListProps> = (props) => {
     setScrollTop(event.currentTarget.scrollTop);
   };
 
+  const containerStyle: CSSProperties = {
+    height,
+    width: DEFAULT_OPTIONS_CONTAINER_WIDTH,
+    overflowY: totalHeight > height ? "scroll" : "hidden",
+    position: 'relative'
+  };
+
   return (
     <div
       ref={containerRef}
-      style={{height, width: DEFAULT_OPTIONS_CONTAINER_WIDTH, overflowY: 'auto', position: 'relative'}}
+      style={containerStyle}
       onScroll={handleScroll}
     >
       <div ref={ref} style={{height: totalHeight, position: 'relative'}}>
