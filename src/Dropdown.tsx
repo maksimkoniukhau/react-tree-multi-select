@@ -1,10 +1,10 @@
-import React, {FC, JSX, memo, ReactNode, RefObject, useCallback, useEffect} from 'react';
-import {FOOTER} from './constants';
+import React, {FC, JSX, memo, ReactNode, RefObject, useCallback, useEffect, useRef} from 'react';
+import {FOOTER, SELECT_ALL} from './constants';
 import {CheckedState, Type} from './types';
 import {InnerComponents} from './innerTypes';
 import {Node} from './Node';
 import {ListItem} from './ListItem';
-import {VirtualizedList} from './VirtualizedList';
+import {VirtualizedList, VirtualizedListHandle} from './VirtualizedList';
 
 export interface DropdownProps {
   type: Type;
@@ -30,9 +30,7 @@ export interface DropdownProps {
   onListItemRender: () => void;
 }
 
-
 export const Dropdown: FC<DropdownProps> = memo((props) => {
-
   const {
     type,
     nodeMap = new Map(),
@@ -57,13 +55,31 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     onListItemRender
   } = props;
 
-  const topItemCount = (showSelectAll ? 1 : 0) + (Boolean(input) ? 1 : 0);
+  const virtualizedListRef = useRef<VirtualizedListHandle>(null);
+
+  const topItemCount = (showSelectAll ? 1 : 0) + (input ? 1 : 0);
   const itemCount = (displayedNodes.length || 1) + topItemCount + (showFooter ? 1 : 0);
   const isFooterFocused = focusedElement === FOOTER;
 
   useEffect(() => {
     return () => onUnmount();
-  }, []);
+  }, [])
+
+  useEffect(() => {
+    if (focusedElement && virtualizedListRef.current && displayedNodes.length) {
+      let elementIndex: number;
+      if (focusedElement === SELECT_ALL) {
+        elementIndex = 0;
+      } else if (focusedElement === FOOTER) {
+        elementIndex = displayedNodes.length + (showSelectAll ? 1 : 0) + (input ? 1 : 0);
+      } else {
+        elementIndex = displayedNodes.indexOf(nodeMap.get(focusedElement)) + (showSelectAll ? 1 : 0) + (input ? 1 : 0);
+      }
+      if (elementIndex >= 0) {
+        virtualizedListRef.current.scrollIntoView(elementIndex);
+      }
+    }
+  }, [focusedElement, showSelectAll, input]);
 
   const Footer: FC = useCallback(() => {
     return (
@@ -110,6 +126,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
   return (
     <div className="rtms-dropdown" onMouseDown={handleMouseDown}>
       <VirtualizedList
+        ref={virtualizedListRef}
         height={dropdownHeight}
         totalCount={itemCount}
         topItemCount={topItemCount}

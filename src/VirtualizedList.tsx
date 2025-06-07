@@ -1,4 +1,16 @@
-import React, {CSSProperties, FC, ReactNode, UIEvent, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {
+  CSSProperties,
+  FC,
+  forwardRef,
+  ReactNode,
+  UIEvent,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import {DEFAULT_OPTIONS_CONTAINER_WIDTH} from './constants';
 
 interface ItemPosition {
@@ -39,7 +51,11 @@ const Item: FC<ItemProps> = (props) => {
   );
 };
 
-interface VirtualizedListProps {
+export interface VirtualizedListHandle {
+  scrollIntoView: (index: number) => void;
+}
+
+export interface VirtualizedListProps {
   height: number;
   totalCount: number;
   topItemCount: number;
@@ -48,12 +64,11 @@ interface VirtualizedListProps {
   overscan?: number;
 }
 
-export const VirtualizedList: FC<VirtualizedListProps> = (props) => {
-
-  const {height: propHeight, totalCount, topItemCount, renderItem, estimatedItemHeight = 20, overscan = 2} = props;
+export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedListProps>((props, ref) => {
+  const {height: propHeight, totalCount, topItemCount, renderItem, estimatedItemHeight = 30, overscan = 2} = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const ref = useRef<HTMLDivElement>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
 
   const [scrollTop, setScrollTop] = useState<number>(0);
   const [itemHeights, setItemHeights] = useState<Map<number, number>>(new Map<number, number>());
@@ -118,6 +133,34 @@ export const VirtualizedList: FC<VirtualizedListProps> = (props) => {
     setScrollTop(event.currentTarget.scrollTop);
   };
 
+  const scrollIntoView = useCallback((index: number) => {
+    if (!containerRef.current) {
+      return;
+    }
+
+    const clientHeight = containerRef.current.clientHeight;
+    const itemHeight = positions[index].height;
+    const itemTop = positions[index].top;
+    const itemBottom = itemTop + itemHeight;
+    const scrollBottom = scrollTop + clientHeight;
+    const topItemsHeight = Array.from({length: topItemCount}).reduce((sum: number, _, index: number): number => {
+      return sum + positions[index].height;
+    }, 0);
+
+    if (itemBottom >= scrollBottom || (scrollTop !== 0 && (itemTop - topItemsHeight < scrollTop))) {
+      let top: number;
+      if (itemBottom >= scrollBottom) {
+        top = itemBottom - clientHeight;
+      } else {
+        top = itemTop - topItemsHeight;
+      }
+      top = top < 0 ? 0 : top;
+      containerRef.current.scrollTo({top, behavior: 'instant'});
+    }
+  }, [topItemCount, containerRef.current, positions, scrollTop]);
+
+  useImperativeHandle(ref, () => ({scrollIntoView}));
+
   const containerStyle: CSSProperties = {
     height,
     width: DEFAULT_OPTIONS_CONTAINER_WIDTH,
@@ -131,7 +174,7 @@ export const VirtualizedList: FC<VirtualizedListProps> = (props) => {
       style={containerStyle}
       onScroll={handleScroll}
     >
-      <div ref={ref} style={{height: totalHeight, position: 'relative'}}>
+      <div ref={scrollerRef} style={{height: totalHeight, position: 'relative'}}>
         {Array.from({length: topItemCount}).map((_, index: number) => (
           <Item
             key={index}
@@ -159,4 +202,4 @@ export const VirtualizedList: FC<VirtualizedListProps> = (props) => {
       </div>
     </div>
   );
-};
+});
