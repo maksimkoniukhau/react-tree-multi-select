@@ -12,6 +12,7 @@ import React, {
   useState
 } from 'react';
 import {DEFAULT_OPTIONS_CONTAINER_WIDTH} from './constants';
+import {useResizeObserver} from './hooks/useResizeObserver';
 
 interface ItemPosition {
   top: number;
@@ -34,10 +35,15 @@ const Item: FC<ItemProps> = (props) => {
 
   useEffect(() => {
     if (ref.current) {
-      const measuredHeight = ref.current.offsetHeight;
-      updateHeight(index, measuredHeight);
+      updateHeight(index, ref.current.offsetHeight);
     }
   }, [index, updateHeight]);
+
+  const updateHeightCallback = useCallback((size: { width: number; height: number }): void => {
+    updateHeight(index, size.height);
+  }, [index, updateHeight]);
+
+  useResizeObserver(ref.current, updateHeightCallback);
 
   const commonStyle = {top, width: '100%'};
   const style: CSSProperties = isSticky
@@ -65,7 +71,7 @@ export interface VirtualizedListProps {
 }
 
 export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedListProps>((props, ref) => {
-  const {height: propHeight, totalCount, topItemCount, renderItem, estimatedItemHeight = 30, overscan = 2} = props;
+  const {height: propHeight, totalCount, topItemCount, renderItem, estimatedItemHeight = 20, overscan = 2} = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);

@@ -21,7 +21,7 @@ import {
 } from './utils/nodesUtils';
 import {getComponents, hasCustomFooter} from './utils/componentsUtils';
 import {CheckedState, Components, FooterConfig, TreeNode, Type} from './types';
-import {useOnClickOutside} from './hooks';
+import {useOnClickOutside} from './hooks/useOnClickOutside';
 import {
   ActionType,
   ChipClickPayload,
