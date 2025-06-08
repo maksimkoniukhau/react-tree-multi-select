@@ -41,6 +41,9 @@ const Item: FC<ItemProps> = (props) => {
   }, [index, updateHeight]);
 
   const updateHeightCallback = useCallback((size: { width: number; height: number }): void => {
+    if (size.height === 0 && size.width === 0) {
+      return;
+    }
     updateHeight(index, size.height);
   }, [index, updateHeight]);
 
