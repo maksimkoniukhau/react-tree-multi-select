@@ -13,8 +13,9 @@ import React, {
 } from 'react';
 import {DEFAULT_OPTIONS_CONTAINER_WIDTH} from './constants';
 import {useResizeObserver} from './hooks/useResizeObserver';
+import {binarySearchStartIndex} from './utils/virtualizedListUtils';
 
-interface ItemPosition {
+export interface ItemPosition {
   top: number;
   height: number;
 }
@@ -98,10 +99,7 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
   }, [totalCount, itemHeights, estimatedItemHeight]);
 
   const startIndex = useMemo((): number => {
-    let startIdx = positions.findIndex((pos: ItemPosition) => pos.top + pos.height >= scrollTop);
-    if (startIdx < 0) {
-      startIdx = 0;
-    }
+    let startIdx = binarySearchStartIndex(positions, scrollTop);
     if (topItemCount > 0) {
       startIdx += topItemCount;
     }
@@ -148,9 +146,12 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
     const itemTop = positions[index].top;
     const itemBottom = itemTop + itemHeight;
     const scrollBottom = scrollTop + clientHeight;
-    const topItemsHeight = Array.from({length: topItemCount}).reduce((sum: number, _, index: number): number => {
-      return sum + positions[index].height;
-    }, 0);
+    const topItemsHeight = topItemCount > 0
+      ? Array.from({length: topItemCount})
+        .reduce((sum: number, _, index: number): number => {
+          return sum + positions[index].height;
+        }, 0)
+      : 0;
 
     if (itemBottom >= scrollBottom || (scrollTop !== 0 && (itemTop - topItemsHeight < scrollTop))) {
       let top: number;
