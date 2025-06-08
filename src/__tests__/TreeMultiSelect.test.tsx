@@ -13,7 +13,7 @@ import {
   getChipLabel,
   getDropdown,
   getDropdownInput,
-  getDropdownVirtuoso,
+  getDropdownListOuter,
   getField,
   getFieldClear,
   getFieldInput,
@@ -553,9 +553,9 @@ describe('TreeMultiSelect component: dropdownHeight prop', () => {
 
     await user.click(getField(container));
 
-    const dropdownVirtuoso = getDropdownVirtuoso(container);
-    expect(dropdownVirtuoso).toBeInTheDocument();
-    const computedStyles = window.getComputedStyle(dropdownVirtuoso);
+    const dropdownListOuter = getDropdownListOuter(container);
+    expect(dropdownListOuter).toBeInTheDocument();
+    const computedStyles = window.getComputedStyle(dropdownListOuter);
     expect(computedStyles.height).toEqual('300px');
   });
 
@@ -566,9 +566,9 @@ describe('TreeMultiSelect component: dropdownHeight prop', () => {
 
       await user.click(getField(container));
 
-      const dropdownVirtuoso = getDropdownVirtuoso(container);
-      expect(dropdownVirtuoso).toBeInTheDocument();
-      const computedStyles = window.getComputedStyle(dropdownVirtuoso);
+      const dropdownListOuter = getDropdownListOuter(container);
+      expect(dropdownListOuter).toBeInTheDocument();
+      const computedStyles = window.getComputedStyle(dropdownListOuter);
       expect(computedStyles.height).toEqual(`${dropdownHeight}px`);
     });
 });

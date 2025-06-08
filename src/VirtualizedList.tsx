@@ -73,8 +73,7 @@ export interface VirtualizedListProps {
 export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedListProps>((props, ref) => {
   const {height: propHeight, totalCount, topItemCount, renderItem, estimatedItemHeight = 20, overscan = 2} = props;
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const scrollerRef = useRef<HTMLDivElement>(null);
+  const outerRef = useRef<HTMLDivElement>(null);
 
   const [scrollTop, setScrollTop] = useState<number>(0);
   const [itemHeights, setItemHeights] = useState<Map<number, number>>(new Map<number, number>());
@@ -104,7 +103,7 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
       startIdx = 0;
     }
     if (topItemCount > 0) {
-      startIdx = startIdx + topItemCount;
+      startIdx += topItemCount;
     }
     return startIdx
   }, [topItemCount, positions, scrollTop]);
@@ -140,11 +139,11 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
   };
 
   const scrollIntoView = useCallback((index: number) => {
-    if (!containerRef.current) {
+    if (!outerRef.current) {
       return;
     }
 
-    const clientHeight = containerRef.current.clientHeight;
+    const clientHeight = outerRef.current.clientHeight;
     const itemHeight = positions[index].height;
     const itemTop = positions[index].top;
     const itemBottom = itemTop + itemHeight;
@@ -161,13 +160,13 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
         top = itemTop - topItemsHeight;
       }
       top = top < 0 ? 0 : top;
-      containerRef.current.scrollTo({top, behavior: 'instant'});
+      outerRef.current.scrollTo({top, behavior: 'instant'});
     }
-  }, [topItemCount, containerRef.current, positions, scrollTop]);
+  }, [topItemCount, outerRef.current, positions, scrollTop]);
 
   useImperativeHandle(ref, () => ({scrollIntoView}));
 
-  const containerStyle: CSSProperties = {
+  const outerStyle: CSSProperties = {
     height,
     width: DEFAULT_OPTIONS_CONTAINER_WIDTH,
     overflowY: totalHeight > height ? "scroll" : "hidden",
@@ -176,11 +175,12 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
 
   return (
     <div
-      ref={containerRef}
-      style={containerStyle}
+      ref={outerRef}
+      style={outerStyle}
+      className="rtms-dropdown-list-outer"
       onScroll={handleScroll}
     >
-      <div ref={scrollerRef} style={{height: totalHeight, position: 'relative'}}>
+      <div style={{height: totalHeight, position: 'relative'}}>
         {Array.from({length: topItemCount}).map((_, index: number) => (
           <Item
             key={index}
