@@ -13,7 +13,12 @@ import React, {
 } from 'react';
 import {DEFAULT_OPTIONS_CONTAINER_WIDTH} from './constants';
 import {useResizeObserver} from './hooks/useResizeObserver';
-import {binarySearchStartIndex} from './utils/virtualizedListUtils';
+import {
+  binarySearchStartIndex,
+  calculateItemScrollMetrics,
+  computeScrollTopForItem,
+  isItemOutsideViewport
+} from './utils/virtualizedListUtils';
 
 export interface ItemPosition {
   top: number;
@@ -81,6 +86,7 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
 
   const [scrollTop, setScrollTop] = useState<number>(0);
   const [itemHeights, setItemHeights] = useState<Map<number, number>>(new Map<number, number>());
+  const [pendingScrollIndex, setPendingScrollIndex] = useState<number | null>(null);
 
   const totalHeight = useMemo((): number => {
     return Array.from({length: totalCount}).reduce((sum: number, _, index: number): number => {
@@ -143,32 +149,27 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
     if (!outerRef.current) {
       return;
     }
-
-    const clientHeight = outerRef.current.clientHeight;
-    const itemHeight = positions[index].height;
-    const itemTop = positions[index].top;
-    const itemBottom = itemTop + itemHeight;
-    const scrollBottom = scrollTop + clientHeight;
-    const topItemsHeight = topItemCount > 0
-      ? Array.from({length: topItemCount})
-        .reduce((sum: number, _, index: number): number => {
-          return sum + positions[index].height;
-        }, 0)
-      : 0;
-
-    if (itemBottom >= scrollBottom || (scrollTop !== 0 && (itemTop - topItemsHeight < scrollTop))) {
-      let top: number;
-      if (itemBottom >= scrollBottom) {
-        top = itemBottom - clientHeight;
-      } else {
-        top = itemTop - topItemsHeight;
-      }
-      top = top < 0 ? 0 : top;
-      outerRef.current.scrollTo({top, behavior: 'instant'});
+    const itemScrollMetrics = calculateItemScrollMetrics(index, outerRef.current, positions, scrollTop, topItemCount);
+    if (isItemOutsideViewport(itemScrollMetrics)) {
+      setPendingScrollIndex(index);
+      outerRef.current.scrollTo({top: computeScrollTopForItem(itemScrollMetrics), behavior: 'instant'});
+    } else {
+      setPendingScrollIndex(null);
     }
   }, [topItemCount, outerRef.current, positions, scrollTop]);
 
   useImperativeHandle(ref, () => ({scrollIntoView}));
+
+  useEffect(() => {
+    if (pendingScrollIndex !== null && outerRef.current) {
+      const itemScrollMetrics = calculateItemScrollMetrics(pendingScrollIndex, outerRef.current, positions, scrollTop, topItemCount);
+      if (isItemOutsideViewport(itemScrollMetrics)) {
+        outerRef.current.scrollTo({top: computeScrollTopForItem(itemScrollMetrics), behavior: 'instant'});
+      } else {
+        setPendingScrollIndex(null);
+      }
+    }
+  }, [itemHeights]);
 
   const outerStyle: CSSProperties = {
     height,
