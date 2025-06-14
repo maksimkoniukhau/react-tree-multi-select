@@ -9,7 +9,7 @@ export const binarySearchStartIndex = (positions: ItemPosition[], scrollTop: num
     const mid = Math.floor((low + high) / 2);
     const {top, height} = positions[mid];
 
-    if (top + height >= scrollTop) {
+    if (top + height > scrollTop) {
       result = mid;
       high = mid - 1;
     } else {

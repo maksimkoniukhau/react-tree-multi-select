@@ -107,23 +107,25 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
     return positions;
   }, [totalCount, itemHeights, estimatedItemHeight]);
 
+  const topItemsHeight = useMemo(() => {
+    return positions.slice(0, topItemCount)
+      .reduce((sum: number, position: ItemPosition): number => sum + position.height, 0);
+  }, [topItemCount, positions]);
+
   const startIndex = useMemo((): number => {
-    let startIdx = binarySearchStartIndex(positions, scrollTop);
-    if (topItemCount > 0) {
-      startIdx += topItemCount;
-    }
-    return startIdx
-  }, [topItemCount, positions, scrollTop]);
+    const adjustedScrollTop = Math.max(0, scrollTop + topItemsHeight);
+    return binarySearchStartIndex(positions, adjustedScrollTop);
+  }, [positions, topItemsHeight, scrollTop]);
 
   const endIndex = useMemo((): number => {
     let endIdx = startIndex;
     let visibleHeight = 0;
-    while (endIdx < positions.length && visibleHeight < height + overscan * estimatedItemHeight) {
+    while (endIdx < positions.length && visibleHeight < (height - topItemsHeight) + overscan * positions[topItemCount].height) {
       visibleHeight += positions[endIdx].height;
       endIdx++;
     }
     return endIdx;
-  }, [height, overscan, estimatedItemHeight, positions, startIndex]);
+  }, [height, overscan, positions, startIndex, topItemsHeight]);
 
   const updateHeight = useCallback((index: number, height: number): void => {
     setItemHeights((prev: Map<number, number>) => {
