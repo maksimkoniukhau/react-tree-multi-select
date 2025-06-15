@@ -112,20 +112,24 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
       .reduce((sum: number, position: ItemPosition): number => sum + position.height, 0);
   }, [topItemCount, positions]);
 
+  const scrollTopWithTopItemsHeight = scrollTop + topItemsHeight;
+
   const startIndex = useMemo((): number => {
-    const adjustedScrollTop = Math.max(0, scrollTop + topItemsHeight);
-    return binarySearchStartIndex(positions, adjustedScrollTop);
-  }, [positions, topItemsHeight, scrollTop]);
+    return binarySearchStartIndex(positions, scrollTopWithTopItemsHeight);
+  }, [positions, scrollTopWithTopItemsHeight]);
 
   const endIndex = useMemo((): number => {
     let endIdx = startIndex;
     let visibleHeight = 0;
-    while (endIdx < positions.length && visibleHeight < (height - topItemsHeight) + overscan * positions[topItemCount].height) {
-      visibleHeight += positions[endIdx].height;
+    while (endIdx < positions.length && visibleHeight < height - topItemsHeight) {
+      visibleHeight = positions[endIdx].top + positions[endIdx].height - scrollTopWithTopItemsHeight;
       endIdx++;
     }
     return endIdx;
-  }, [height, overscan, positions, startIndex, topItemsHeight]);
+  }, [height, positions, startIndex, topItemsHeight, scrollTopWithTopItemsHeight]);
+
+  const overscanStartIndex = Math.max(topItemCount, startIndex - overscan);
+  const overscanEndIndex = Math.min(totalCount, endIndex + overscan);
 
   const updateHeight = useCallback((index: number, height: number): void => {
     setItemHeights((prev: Map<number, number>) => {
@@ -199,8 +203,8 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
             {renderItem(index)}
           </Item>
         ))}
-        {positions.slice(startIndex, endIndex).map((pos: ItemPosition, idx: number) => {
-          const index = startIndex + idx;
+        {positions.slice(overscanStartIndex, overscanEndIndex).map((pos: ItemPosition, idx: number) => {
+          const index = overscanStartIndex + idx;
           return (
             <Item
               key={index}
