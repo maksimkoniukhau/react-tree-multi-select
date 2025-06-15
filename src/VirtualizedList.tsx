@@ -88,6 +88,11 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
   const [itemHeights, setItemHeights] = useState<Map<number, number>>(new Map<number, number>());
   const [pendingScrollIndex, setPendingScrollIndex] = useState<number | null>(null);
 
+  useEffect(() => {
+    setItemHeights(new Map<number, number>());
+    setPendingScrollIndex(null);
+  }, [totalCount, topItemCount]);
+
   const totalHeight = useMemo((): number => {
     return Array.from({length: totalCount}).reduce((sum: number, _, index: number): number => {
       return sum + (itemHeights.get(index) || estimatedItemHeight);
@@ -145,7 +150,7 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
       }
       return newMap;
     });
-  }, []);
+  }, [totalCount, topItemCount]);
 
   const handleScroll = (event: UIEvent<HTMLDivElement>): void => {
     setScrollTop(event.currentTarget.scrollTop);
