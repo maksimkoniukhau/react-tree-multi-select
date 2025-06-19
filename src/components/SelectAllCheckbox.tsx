@@ -7,12 +7,12 @@ export interface SelectAllCheckboxOwnProps {
 }
 
 export const SelectAllCheckbox: FC<SelectAllCheckboxProps> = memo((props) => {
-  const {checked, partial} = props.componentProps;
+  const {checked, partial} = props.ownProps;
 
   const checkboxClasses = `rtms-checkbox${checked ? ' selected' : partial ? ' partial' : ''}`;
 
   return (
-    <div {...props.componentAttributes}>
+    <div {...props.attributes}>
       <span className={checkboxClasses}/>
     </div>
   );
@@ -31,8 +31,8 @@ export const SelectAllCheckboxWrapper: FC<SelectAllCheckboxWrapperProps> = memo(
 
   return (
     <selectAllCheckbox.component
-      componentAttributes={{className}}
-      componentProps={{checked, partial}}
+      attributes={{className}}
+      ownProps={{checked, partial}}
       customProps={selectAllCheckbox.props}
     />
   );

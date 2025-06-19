@@ -7,9 +7,9 @@ export interface NoMatchesOwnProps {
 
 export const NoMatches: FC<NoMatchesProps> = (props) => {
   return (
-    <div {...props.componentAttributes}>
+    <div {...props.attributes}>
       <span className="rtms-label">
-         {props.componentProps.label}
+         {props.ownProps.label}
       </span>
     </div>
   );
@@ -23,8 +23,8 @@ interface NoMatchesWrapperProps {
 export const NoMatchesWrapper: FC<NoMatchesWrapperProps> = memo(({noMatches, label}) => {
   return (
     <noMatches.component
-      componentAttributes={{className: "rtms-no-matches"}}
-      componentProps={{label}}
+      attributes={{className: "rtms-no-matches"}}
+      ownProps={{label}}
       customProps={noMatches.props}
     />
   );

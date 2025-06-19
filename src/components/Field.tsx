@@ -10,7 +10,7 @@ export interface FieldOwnProps {
 
 export const Field: FC<FieldProps> = memo((props) => {
   return (
-    <div {...props.componentAttributes}>
+    <div {...props.attributes}>
       {props.children}
     </div>
   );
@@ -33,13 +33,13 @@ export const FieldWrapper: FC<FieldWrapperProps> = memo((props) => {
 
   return (
     <field.component
-      componentAttributes={{
+      attributes={{
         ref: fieldRef,
         className: `rtms-field${componentDisabled ? ' disabled' : ''}`,
         onClick,
         onMouseDown
       }}
-      componentProps={{type, showDropdown, withClearAll, componentDisabled}}
+      ownProps={{type, showDropdown, withClearAll, componentDisabled}}
       customProps={field.props}
     >
       {children}

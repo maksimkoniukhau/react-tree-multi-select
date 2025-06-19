@@ -53,8 +53,8 @@ export type FooterConfig = {
 }
 
 export interface ComponentProps<CustomProps = {}, OwnProps = {}, ComponentType = {}> {
-  componentAttributes: HTMLProps<ComponentType>;
-  componentProps: OwnProps;
+  attributes: HTMLProps<ComponentType>;
+  ownProps: OwnProps;
   customProps: CustomProps;
   children?: ReactNode;
 }

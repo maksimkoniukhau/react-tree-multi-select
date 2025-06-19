@@ -8,14 +8,14 @@ export interface NodeCheckboxOwnProps {
 }
 
 export const NodeCheckbox: FC<NodeCheckboxProps> = memo((props) => {
-  const {checked, partial, disabled} = props.componentProps;
+  const {checked, partial, disabled} = props.ownProps;
 
   const disabledClass = disabled ? ' disabled' : '';
   const checkedClass = checked ? ' selected' : partial ? ' partial' : '';
   const checkboxClasses = `rtms-checkbox${disabledClass}${checkedClass}`;
 
   return (
-    <div {...props.componentAttributes}>
+    <div {...props.attributes}>
       <span className={checkboxClasses}/>
     </div>
   );
@@ -37,8 +37,8 @@ export const NodeCheckboxWrapper: FC<NodeCheckboxWrapperProps> = memo((props) =>
 
   return (
     <nodeCheckbox.component
-      componentAttributes={{className}}
-      componentProps={{checked, partial, disabled}}
+      attributes={{className}}
+      ownProps={{checked, partial, disabled}}
       customProps={nodeCheckbox.props}
     />
   );

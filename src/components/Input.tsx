@@ -9,7 +9,7 @@ export interface InputOwnProps {
 
 export const Input: FC<InputProps> = memo((props) => {
   return (
-    <input {...props.componentAttributes}/>
+    <input {...props.attributes}/>
   );
 });
 
@@ -27,7 +27,7 @@ export const InputWrapper: FC<InputWrapperProps> = memo((props) => {
 
   return (
     <input.component
-      componentAttributes={{
+      attributes={{
         ref: inputRef,
         className: "rtms-input",
         placeholder,
@@ -35,7 +35,7 @@ export const InputWrapper: FC<InputWrapperProps> = memo((props) => {
         onChange,
         disabled: componentDisabled,
       }}
-      componentProps={{placeholder, value, disabled: componentDisabled}}
+      ownProps={{placeholder, value, disabled: componentDisabled}}
       customProps={input.props}
     />
   );

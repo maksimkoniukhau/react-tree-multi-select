@@ -9,7 +9,7 @@ export interface FieldClearOwnProps {
 
 export const FieldClear: FC<FieldClearProps> = memo((props) => {
   return (
-    <div {...props.componentAttributes}>
+    <div {...props.attributes}>
       {/*Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.*/}
       <svg className="rtms-field-clear-icon" viewBox="0 0 384 512">
         <path
@@ -31,13 +31,13 @@ export const FieldClearWrapper: FC<FieldClearWrapperProps> = memo((props) => {
 
   return (
     <fieldClear.component
-      componentAttributes={{
+      attributes={{
         className: `rtms-field-clear${focused ? ' focused' : ''}${componentDisabled ? ' disabled' : ''}`,
         onClick,
         // needed for staying focus on input
         onMouseDown: preventDefaultOnMouseEvent
       }}
-      componentProps={{focused, componentDisabled}}
+      ownProps={{focused, componentDisabled}}
       customProps={fieldClear.props}
     />
   );

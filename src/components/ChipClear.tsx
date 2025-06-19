@@ -8,7 +8,7 @@ export interface ChipClearOwnProps {
 
 export const ChipClear: FC<ChipClearProps> = memo((props) => {
   return (
-    <div {...props.componentAttributes}>
+    <div {...props.attributes}>
       {/*Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.*/}
       <svg className="rtms-chip-clear-icon" viewBox="0 0 512 512">
         <path
@@ -28,8 +28,8 @@ interface ChipClearWrapperProps {
 export const ChipClearWrapper: FC<ChipClearWrapperProps> = memo(({chipClear, node, onClick, componentDisabled}) => {
   return (
     <chipClear.component
-      componentAttributes={{className: 'rtms-chip-clear', onClick: onClick(node)}}
-      componentProps={{componentDisabled}}
+      attributes={{className: 'rtms-chip-clear', onClick: onClick(node)}}
+      ownProps={{componentDisabled}}
       customProps={chipClear.props}
     />
   );

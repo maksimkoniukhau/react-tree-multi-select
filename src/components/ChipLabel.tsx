@@ -8,7 +8,7 @@ export interface ChipLabelOwnProps {
 
 export const ChipLabel: FC<ChipLabelProps> = memo((props) => {
   return (
-    <div {...props.componentAttributes}>{props.componentProps.label}</div>
+    <div {...props.attributes}>{props.ownProps.label}</div>
   );
 });
 
@@ -21,8 +21,8 @@ interface ChipLabelWrapperProps {
 export const ChipLabelWrapper: FC<ChipLabelWrapperProps> = memo(({chipLabel, label, componentDisabled}) => {
   return (
     <chipLabel.component
-      componentAttributes={{className: 'rtms-label'}}
-      componentProps={{label, componentDisabled}}
+      attributes={{className: 'rtms-label'}}
+      ownProps={{label, componentDisabled}}
       customProps={chipLabel.props}
     />
   );

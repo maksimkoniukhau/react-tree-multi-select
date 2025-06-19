@@ -84,8 +84,8 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
   const Footer: FC = useCallback(() => {
     return (
       <components.Footer.component
-        componentAttributes={{className: `rtms-footer${isFooterFocused ? ' focused' : ''}`, onClick: onFooterClick}}
-        componentProps={{focused: isFooterFocused}}
+        attributes={{className: `rtms-footer${isFooterFocused ? ' focused' : ''}`, onClick: onFooterClick}}
+        ownProps={{focused: isFooterFocused}}
         customProps={components.Footer.props}
       />
     );

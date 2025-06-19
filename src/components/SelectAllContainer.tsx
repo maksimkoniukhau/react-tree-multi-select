@@ -9,7 +9,7 @@ export interface SelectAllContainerOwnProps {
 
 export const SelectAllContainer: FC<SelectAllContainerProps> = memo((props) => {
   return (
-    <div {...props.componentAttributes}>
+    <div {...props.attributes}>
       {props.children}
     </div>
   );
@@ -36,8 +36,8 @@ export const SelectAllContainerWrapper: FC<SelectAllContainerWrapperProps> = mem
 
   return (
     <selectAllContainer.component
-      componentAttributes={{className: containerClasses, onClick}}
-      componentProps={{label, checkedState, focused}}
+      attributes={{className: containerClasses, onClick}}
+      ownProps={{label, checkedState, focused}}
       customProps={selectAllContainer.props}
     >
       {children}

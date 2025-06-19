@@ -7,7 +7,7 @@ export interface SelectAllLabelOwnProps {
 
 export const SelectAllLabel: FC<SelectAllLabelProps> = memo((props) => {
   return (
-    <div {...props.componentAttributes}>{props.componentProps.label}</div>
+    <div {...props.attributes}>{props.ownProps.label}</div>
   );
 });
 
@@ -19,8 +19,8 @@ interface SelectAllLabelWrapperProps {
 export const SelectAllLabelWrapper: FC<SelectAllLabelWrapperProps> = memo(({selectAllLabel, label}) => {
   return (
     <selectAllLabel.component
-      componentAttributes={{className: "rtms-label"}}
-      componentProps={{label}}
+      attributes={{className: "rtms-label"}}
+      ownProps={{label}}
       customProps={selectAllLabel.props}
     />
   );

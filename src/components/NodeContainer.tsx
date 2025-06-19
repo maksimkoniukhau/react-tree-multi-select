@@ -14,7 +14,7 @@ export interface NodeContainerOwnProps {
 
 export const NodeContainer: FC<NodeContainerProps> = memo((props) => {
   return (
-    <div {...props.componentAttributes}>
+    <div {...props.attributes}>
       {props.children}
     </div>
   );
@@ -61,8 +61,8 @@ export const NodeContainerWrapper: FC<NodeContainerWrapperProps> = memo((props) 
 
   return (
     <nodeContainer.component
-      componentAttributes={{className, onClick: onNodeChange(node)}}
-      componentProps={{label, disabled, selected, partial, expanded, focused, matched}}
+      attributes={{className, onClick: onNodeChange(node)}}
+      ownProps={{label, disabled, selected, partial, expanded, focused, matched}}
       customProps={nodeContainer.props}
     >
       {children}

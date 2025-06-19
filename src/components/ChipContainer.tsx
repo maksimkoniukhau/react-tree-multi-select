@@ -13,7 +13,7 @@ export interface ChipContainerOwnProps {
 
 export const ChipContainer: FC<ChipContainerProps> = memo((props) => {
   return (
-    <div {...props.componentAttributes}>
+    <div {...props.attributes}>
       {props.children}
     </div>
   );
@@ -36,13 +36,13 @@ export const ChipContainerWrapper: FC<ChipContainerWrapperProps> = memo((props) 
 
   return (
     <chipContainer.component
-      componentAttributes={{
+      attributes={{
         className: `rtms-chip${disabled ? ' disabled' : ''}${focused ? ' focused' : ''}`,
         onClick: onClick(node),
         // needed for staying focus on input
         onMouseDown: preventDefaultOnMouseEvent
       }}
-      componentProps={{label, focused, disabled, componentDisabled, withChipClear}}
+      ownProps={{label, focused, disabled, componentDisabled, withChipClear}}
       customProps={chipContainer.props}
     >
       {children}

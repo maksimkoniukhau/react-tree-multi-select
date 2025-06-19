@@ -7,7 +7,7 @@ export interface NodeLabelOwnProps {
 
 export const NodeLabel: FC<NodeLabelProps> = memo((props) => {
   return (
-    <div {...props.componentAttributes}>{props.componentProps.label}</div>
+    <div {...props.attributes}>{props.ownProps.label}</div>
   );
 });
 
@@ -19,8 +19,8 @@ interface NodeLabelWrapperProps {
 export const NodeLabelWrapper: FC<NodeLabelWrapperProps> = memo(({nodeLabel, label}) => {
   return (
     <nodeLabel.component
-      componentAttributes={{className: "rtms-label"}}
-      componentProps={{label}}
+      attributes={{className: "rtms-label"}}
+      ownProps={{label}}
       customProps={nodeLabel.props}
     />
   );
