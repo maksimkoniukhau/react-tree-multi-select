@@ -5,7 +5,7 @@ import {ChipClearProps, ChipClearType, Components, TreeMultiSelect} from '../../
 import {getTreeNodeData} from '../../utils';
 
 const CustomChipClear: FC<ChipClearProps> = (props) => (
-  <div {...props.componentAttributes}>
+  <div {...props.attributes}>
     <FontAwesomeIcon icon={faTrash}/>
   </div>
 );

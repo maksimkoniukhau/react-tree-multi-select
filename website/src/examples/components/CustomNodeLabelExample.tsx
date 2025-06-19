@@ -5,8 +5,8 @@ import {Components, NodeLabelProps, NodeLabelType, TreeMultiSelect} from '../../
 import {getTreeNodeData} from '../../utils';
 
 const CustomNodeLabel: FC<NodeLabelProps> = (props) => (
-  <div {...props.componentAttributes}>
-    <FontAwesomeIcon icon={faHandSpock}/>{' '}{props.componentProps.label}
+  <div {...props.attributes}>
+    <FontAwesomeIcon icon={faHandSpock}/>{' '}{props.ownProps.label}
   </div>
 );
 

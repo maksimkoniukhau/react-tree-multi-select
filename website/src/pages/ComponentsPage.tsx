@@ -51,13 +51,13 @@ export const ComponentsPage: FC = memo(() => {
           <div className="paragraph">
             <b>{'react-tree-multi-select'}</b>{' allows you to customize its built-in components by providing your own custom components as a property.'}
             {' This feature enables you to tailor the appearance and behavior of various components.\n'}
-            {'The general pattern for implementing a custom component involves creating a component and passing the componentAttributes prop to the root element. Here\'s a simple implementation:'}
+            {'The general pattern for implementing a custom component involves creating a component and passing the attributes prop to the root element. Here\'s a simple implementation:'}
           </div>
           <CodeBlock code={customComponentCommonPattern}/>
           <div className="paragraph important">
             <b>{'Important'}</b>
             <span>
-              {': you must pass componentAttributes prop to the root element in order for component to work properly.'}
+              {': you must pass attributes prop to the root element in order for component to work properly.'}
             </span>
           </div>
           <div className="paragraph">
@@ -74,8 +74,8 @@ export const ComponentsPage: FC = memo(() => {
           <div className="paragraph">
             <div><b>{'Custom props'}</b></div>
             <div className="paragraph">
-              {`You can pass your own properties to the component through the props object. When creating a custom component, 
-              you can access these properties and use them in your implementation.`}
+              {'You can pass your own properties to the component through the props object. When creating a custom component, ' +
+                'you can access these properties and use them in your implementation.'}
             </div>
             <div className="paragraph important">
               <b>{'Important'}</b>

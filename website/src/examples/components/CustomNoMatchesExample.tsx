@@ -5,8 +5,8 @@ import {Components, NoMatchesProps, NoMatchesType, TreeMultiSelect} from '../../
 import {getTreeNodeData} from '../../utils';
 
 const CustomNoMatches: FC<NoMatchesProps> = (props) => (
-  <div {...props.componentAttributes}>
-    <div><FontAwesomeIcon icon={faFaceSadTear}/>{' '}{props.componentProps.label}</div>
+  <div {...props.attributes}>
+    <div><FontAwesomeIcon icon={faFaceSadTear}/>{' '}{props.ownProps.label}</div>
   </div>
 );
 

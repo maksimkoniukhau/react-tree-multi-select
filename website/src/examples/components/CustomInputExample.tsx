@@ -5,18 +5,18 @@ import {Components, FieldProps, FieldType, InputProps, InputType, TreeMultiSelec
 import {getTreeNodeData} from '../../utils';
 
 const CustomField: FC<FieldProps> = (props) => (
-  <div {...props.componentAttributes}>
+  <div {...props.attributes}>
     <button className="filter-btn">Tree multi select</button>
   </div>
 );
 
 const CustomFieldInput: FC<InputProps> = (props) => (
-  <textarea {...props.componentAttributes as unknown as HTMLProps<HTMLTextAreaElement>}/>
+  <textarea {...props.attributes as unknown as HTMLProps<HTMLTextAreaElement>}/>
 );
 
 const CustomDropdownInput: FC<InputProps> = (props) => (
   <div style={{display: 'flex', flex: 1, alignItems: 'center'}}>
-    <input {...props.componentAttributes}/>
+    <input {...props.attributes}/>
     <div style={{padding: '0 4px'}}><FontAwesomeIcon icon={faMagnifyingGlass}/></div>
   </div>
 );

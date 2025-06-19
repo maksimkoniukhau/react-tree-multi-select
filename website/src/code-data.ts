@@ -92,8 +92,8 @@ type FooterConfig = {
 }
 
 interface ComponentProps<CustomProps = {}, OwnProps = {}, ComponentType = {}> {
-  componentAttributes: HTMLProps<ComponentType>;
-  componentProps: OwnProps;
+  attributes: HTMLProps<ComponentType>;
+  ownProps: OwnProps;
   customProps: CustomProps;
   children?: ReactNode;
 }
@@ -174,19 +174,19 @@ interface Components<
 }`;
 
 export const customComponentCommonPattern = `const CustomChipLabel: FC<ChipLabelProps> = (props) => (
-  <div {...props.componentAttributes}>
+  <div {...props.attributes}>
      {/*your custom code here*/}
   </div>
 );`;
 
 export const customComponentMergeClassname = `const CustomChipLabel: FC<ChipLabelProps> = (props) => (
-  <div {...props.componentAttributes} className={\`\${props.componentAttributes.className} custom-classname\`}>
+  <div {...props.attributes} className={\`\${props.attributes.className} custom-classname\`}>
      {/*your custom code here*/}
   </div>
 );`;
 
 export const customComponentBuiltin = `const CustomChipContainer: FC<ChipContainerProps> = (props) => (
-  <Tooltip content={\`Tooltip for the \${props.componentProps.label}\`}>
+  <Tooltip content={\`Tooltip for the \${props.ownProps.label}\`}>
     <components.ChipContainer {...props}/>
   </Tooltip>
 );`;
@@ -222,7 +222,7 @@ interface CustomFieldProps {
 }
 
 const CustomField: FC<FieldProps<CustomFieldProps>> = (props) => (
-  <div {...props.componentAttributes}>
+  <div {...props.attributes}>
     <button className="filter-btn">{props.customProps.label}</button>
   </div>
 );
@@ -302,7 +302,7 @@ import {
 import {getTreeNodeData} from '../../utils';
 
 const CustomChipContainer: FC<ChipContainerProps> = (props) => (
-  <Tooltip content={\`Tooltip for the \${props.componentProps.label}\`}>
+  <Tooltip content={\`Tooltip for the \${props.ownProps.label}\`}>
     <components.ChipContainer {...props}/>
   </Tooltip>
 );
@@ -331,8 +331,8 @@ interface CustomChipLabelProps {
 }
 
 const CustomChipLabel: FC<ChipLabelProps<CustomChipLabelProps>> = (props) => (
-  <div {...props.componentAttributes}>
-    {props.componentProps.label}{'-'}{props.customProps.suffix}
+  <div {...props.attributes}>
+    {props.ownProps.label}{'-'}{props.customProps.suffix}
   </div>
 );
 
@@ -366,7 +366,7 @@ import {ChipClearProps, ChipClearType, Components, TreeMultiSelect} from 'react-
 import {getTreeNodeData} from '../../utils';
 
 const CustomChipClear: FC<ChipClearProps> = (props) => (
-  <div {...props.componentAttributes}>
+  <div {...props.attributes}>
     <FontAwesomeIcon icon={faTrash}/>
   </div>
 );
@@ -393,18 +393,18 @@ import {Components, FieldProps, FieldType, InputProps, InputType, TreeMultiSelec
 import {getTreeNodeData} from '../../utils';
 
 const CustomField: FC<FieldProps> = (props) => (
-  <div {...props.componentAttributes}>
+  <div {...props.attributes}>
     <button className="filter-btn">Tree multi select</button>
   </div>
 );
 
 const CustomFieldInput: FC<InputProps> = (props) => (
-  <textarea {...props.componentAttributes as unknown as HTMLProps<HTMLTextAreaElement>}/>
+  <textarea {...props.attributes as unknown as HTMLProps<HTMLTextAreaElement>}/>
 );
 
 const CustomDropdownInput: FC<InputProps> = (props) => (
   <div style={{display: 'flex', flex: 1, alignItems: 'center'}}>
-    <input {...props.componentAttributes}/>
+    <input {...props.attributes}/>
     <div style={{padding: '0 4px'}}><FontAwesomeIcon icon={faMagnifyingGlass}/></div>
   </div>
 );
@@ -442,7 +442,7 @@ import {Components, FieldClearProps, FieldClearType, TreeMultiSelect} from 'reac
 import {getTreeNodeData} from '../../utils';
 
 const CustomFieldClear: FC<FieldClearProps> = (props) => (
-  <div {...props.componentAttributes}>
+  <div {...props.attributes}>
     <FontAwesomeIcon icon={faDeleteLeft}/>
   </div>
 );
@@ -469,8 +469,8 @@ import {Components, FieldToggleProps, FieldToggleType, TreeMultiSelect} from 're
 import {getTreeNodeData} from '../../utils';
 
 const CustomFieldToggle: FC<FieldToggleProps> = (props) => (
-  <div {...props.componentAttributes}>
-    {props.componentProps.expanded ? <FontAwesomeIcon icon={faCaretUp}/> : <FontAwesomeIcon icon={faCaretDown}/>}
+  <div {...props.attributes}>
+    {props.ownProps.expanded ? <FontAwesomeIcon icon={faCaretUp}/> : <FontAwesomeIcon icon={faCaretDown}/>}
   </div>
 );
 
@@ -495,8 +495,8 @@ import {Components, SelectAllContainerProps, SelectAllContainerType, TreeMultiSe
 import {getTreeNodeData} from '../../utils';
 
 const CustomSelectAllContainer: FC<SelectAllContainerProps> = (props) => (
-  <Tooltip content={\`Tooltip for the \${props.componentProps.label}\`}>
-    <div {...props.componentAttributes}>
+  <Tooltip content={\`Tooltip for the \${props.ownProps.label}\`}>
+    <div {...props.aAttributes}>
       {props.children}
     </div>
   </Tooltip>
@@ -525,10 +525,10 @@ import {Components, SelectAllCheckboxProps, SelectAllCheckboxType, TreeMultiSele
 import {getTreeNodeData} from '../../utils';
 
 const CustomSelectAllCheckbox: FC<SelectAllCheckboxProps> = (props) => (
-  <div {...props.componentAttributes}>
-    {props.componentProps.checked
+  <div {...props.attributes}>
+    {props.ownProps.checked
       ? <FontAwesomeIcon icon={faSquareCheck}/>
-      : props.componentProps.partial
+      : props.ownProps.partial
         ? <FontAwesomeIcon icon={faSquareMinus}/>
         : <FontAwesomeIcon icon={faSquare}/>
     }
@@ -558,8 +558,8 @@ import {Components, SelectAllLabelProps, SelectAllLabelType, TreeMultiSelect} fr
 import {getTreeNodeData} from '../../utils';
 
 const CustomSelectAllLabel: FC<SelectAllLabelProps> = (props) => (
-  <div {...props.componentAttributes}>
-    {props.componentProps.label}{' '}<FontAwesomeIcon icon={faCheckDouble}/>
+  <div {...props.attributes}>
+    {props.ownProps.label}{' '}<FontAwesomeIcon icon={faCheckDouble}/>
   </div>
 );
 
@@ -591,7 +591,7 @@ import {
 import {getTreeNodeData} from '../../utils';
 
 const CustomNodeContainer: FC<NodeContainerProps> = (props) => (
-  <Tooltip content={\`Tooltip for the \${props.componentProps.label}\`}>
+  <Tooltip content={\`Tooltip for the \${props.ownProps.label}\`}>
     <components.NodeContainer {...props}/>
   </Tooltip>
 );
@@ -618,8 +618,8 @@ import {Components, NodeToggleProps, NodeToggleType, TreeMultiSelect} from 'reac
 import {getTreeNodeData} from '../../utils';
 
 const CustomNodeToggle: FC<NodeToggleProps> = (props) => (
-  <div {...props.componentAttributes}>
-    {props.componentProps.expanded
+  <div {...props.attributes}>
+    {props.ownProps.expanded
       ? <FontAwesomeIcon icon={faMinus}/>
       : <FontAwesomeIcon icon={faPlus}/>
     }
@@ -648,10 +648,10 @@ import {Components, NodeCheckboxProps, NodeCheckboxType, TreeMultiSelect} from '
 import {getTreeNodeData} from '../../utils';
 
 const CustomNodeCheckbox: FC<NodeCheckboxProps> = (props) => (
-  <div {...props.componentAttributes}>
-    {props.componentProps.checked
+  <div {...props.attributes}>
+    {props.ownProps.checked
       ? <FontAwesomeIcon icon={faSquareCheck}/>
-      : props.componentProps.partial
+      : props.ownProps.partial
         ? <FontAwesomeIcon icon={faSquareMinus}/>
         : <FontAwesomeIcon icon={faSquare}/>
     }
@@ -680,9 +680,9 @@ import {Components, NodeLabelProps, NodeLabelType, TreeMultiSelect} from 'react-
 import {getTreeNodeData} from '../../utils';
 
 const CustomNodeLabel: FC<NodeLabelProps> = (props) => (
-  <div {...props.componentAttributes}>
+  <div {...props.attributes}>
     <FontAwesomeIcon icon={faHandSpock}/>
-    {props.componentProps.label}
+    {props.ownProps.label}
   </div>
 );
 
@@ -707,7 +707,7 @@ import {getTreeNodeData} from '../../utils';
 import {FooterProps, FooterType} from '../../../../src';
 
 const CustomFooter: FC<FooterProps> = (props) => (
-  <div {...props.componentAttributes}>
+  <div {...props.attributes}>
     <span style={{display: 'flex', justifyContent: 'center'}}>
       Footer component
     </span>
@@ -736,8 +736,8 @@ import {Components, NoMatchesProps, NoMatchesType, TreeMultiSelect} from 'react-
 import {getTreeNodeData} from '../../utils';
 
 const CustomNoMatches: FC<NoMatchesProps> = (props) => (
-  <div {...props.componentAttributes}>
-    <div><FontAwesomeIcon icon={faFaceSadTear}/>{' '}{props.componentProps.label}</div>
+  <div {...props.attributes}>
+    <div><FontAwesomeIcon icon={faFaceSadTear}/>{' '}{props.ownProps.label}</div>
   </div>
 );
 

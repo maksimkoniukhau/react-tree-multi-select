@@ -10,7 +10,7 @@ import {
 import {getTreeNodeData} from '../../utils';
 
 const CustomNodeContainer: FC<NodeContainerProps> = (props) => (
-  <Tooltip content={`Tooltip for the ${props.componentProps.label}`}>
+  <Tooltip content={`Tooltip for the ${props.ownProps.label}`}>
     <components.NodeContainer {...props}/>
   </Tooltip>
 );

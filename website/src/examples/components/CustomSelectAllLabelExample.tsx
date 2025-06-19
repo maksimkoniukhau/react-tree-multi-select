@@ -5,8 +5,8 @@ import {Components, SelectAllLabelProps, SelectAllLabelType, TreeMultiSelect} fr
 import {getTreeNodeData} from '../../utils';
 
 const CustomSelectAllLabel: FC<SelectAllLabelProps> = (props) => (
-  <div {...props.componentAttributes}>
-    {props.componentProps.label}{' '}<FontAwesomeIcon icon={faCheckDouble}/>
+  <div {...props.attributes}>
+    {props.ownProps.label}{' '}<FontAwesomeIcon icon={faCheckDouble}/>
   </div>
 );
 

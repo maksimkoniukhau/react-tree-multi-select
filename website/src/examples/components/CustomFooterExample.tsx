@@ -4,7 +4,7 @@ import {getTreeNodeData} from '../../utils';
 import {FooterProps, FooterType} from '../../../../src';
 
 const CustomFooter: FC<FooterProps> = (props) => (
-  <div {...props.componentAttributes}>
+  <div {...props.attributes}>
     <span style={{display: 'flex', justifyContent: 'center'}}>
       Footer component
     </span>

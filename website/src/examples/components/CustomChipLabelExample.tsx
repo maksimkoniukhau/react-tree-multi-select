@@ -7,8 +7,8 @@ interface CustomChipLabelProps {
 }
 
 const CustomChipLabel: FC<ChipLabelProps<CustomChipLabelProps>> = (props) => (
-  <div {...props.componentAttributes}>
-    {props.componentProps.label}{'-'}{props.customProps.suffix}
+  <div {...props.attributes}>
+    {props.ownProps.label}{'-'}{props.customProps.suffix}
   </div>
 );
 

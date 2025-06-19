@@ -5,8 +5,8 @@ import {Components, FieldToggleProps, FieldToggleType, TreeMultiSelect} from '..
 import {getTreeNodeData} from '../../utils';
 
 const CustomFieldToggle: FC<FieldToggleProps> = (props) => (
-  <div {...props.componentAttributes}>
-    {props.componentProps.expanded ? <FontAwesomeIcon icon={faCaretUp}/> : <FontAwesomeIcon icon={faCaretDown}/>}
+  <div {...props.attributes}>
+    {props.ownProps.expanded ? <FontAwesomeIcon icon={faCaretUp}/> : <FontAwesomeIcon icon={faCaretDown}/>}
   </div>
 );
 

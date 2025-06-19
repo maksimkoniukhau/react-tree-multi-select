@@ -5,8 +5,8 @@ import {Components, NodeToggleProps, NodeToggleType, TreeMultiSelect} from '../.
 import {getTreeNodeData} from '../../utils';
 
 const CustomNodeToggle: FC<NodeToggleProps> = (props) => (
-  <div {...props.componentAttributes}>
-    {props.componentProps.expanded
+  <div {...props.attributes}>
+    {props.ownProps.expanded
       ? <FontAwesomeIcon icon={faMinus}/>
       : <FontAwesomeIcon icon={faPlus}/>
     }

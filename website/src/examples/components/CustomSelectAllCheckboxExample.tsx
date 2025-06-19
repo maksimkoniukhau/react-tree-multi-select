@@ -5,10 +5,10 @@ import {Components, SelectAllCheckboxProps, SelectAllCheckboxType, TreeMultiSele
 import {getTreeNodeData} from '../../utils';
 
 const CustomSelectAllCheckbox: FC<SelectAllCheckboxProps> = (props) => (
-  <div {...props.componentAttributes}>
-    {props.componentProps.checked
+  <div {...props.attributes}>
+    {props.ownProps.checked
       ? <FontAwesomeIcon icon={faSquareCheck}/>
-      : props.componentProps.partial
+      : props.ownProps.partial
         ? <FontAwesomeIcon icon={faSquareMinus}/>
         : <FontAwesomeIcon icon={faSquare}/>
     }

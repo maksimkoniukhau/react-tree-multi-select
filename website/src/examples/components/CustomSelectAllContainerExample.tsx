@@ -9,8 +9,8 @@ import {
 import {getTreeNodeData} from '../../utils';
 
 const CustomSelectAllContainer: FC<SelectAllContainerProps> = (props) => (
-  <Tooltip content={`Tooltip for the ${props.componentProps.label}`}>
-    <div {...props.componentAttributes}>
+  <Tooltip content={`Tooltip for the ${props.ownProps.label}`}>
+    <div {...props.attributes}>
       {props.children}
     </div>
   </Tooltip>

@@ -5,7 +5,7 @@ import {Components, FieldClearProps, FieldClearType, TreeMultiSelect} from '../.
 import {getTreeNodeData} from '../../utils';
 
 const CustomFieldClear: FC<FieldClearProps> = (props) => (
-  <div {...props.componentAttributes}>
+  <div {...props.attributes}>
     <FontAwesomeIcon icon={faDeleteLeft}/>
   </div>
 );
