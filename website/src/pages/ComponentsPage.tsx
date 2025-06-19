@@ -44,7 +44,7 @@ import {CustomNoMatchesExample} from '../examples/components/CustomNoMatchesExam
 export const ComponentsPage: FC = memo(() => {
 
   return (
-    <div className="page">
+    <div className="page" style={{paddingBottom: '150px'}}>
       <div className="page-content">
         <Section id="overview">
           <h2>{'Components'}</h2>

@@ -109,7 +109,7 @@ export const BasicPage: FC = memo(() => {
   };
 
   return (
-    <div className="page">
+    <div className="page" style={{paddingBottom: '60px'}}>
       <div className="page-content">
         <h2>{'Basic Features'}</h2>
         <div className="paragraph">
