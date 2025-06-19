@@ -1,5 +1,5 @@
 import './styles/tree-multi-select.scss';
-import React, {FC, useCallback, useEffect, useMemo, useReducer, useRef, useState} from 'react';
+import React, {FC, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
 import {
   CLEAR_ALL,
   DEFAULT_OPTIONS_CONTAINER_HEIGHT,
@@ -19,7 +19,7 @@ import {
   isAnyExcludingDisabledSelected,
   isAnyHasChildren
 } from './utils/nodesUtils';
-import {getComponents, hasCustomFooter} from './utils/componentsUtils';
+import {getComponents, hasCustomFooterComponent} from './utils/componentsUtils';
 import {CheckedState, Components, FooterConfig, TreeNode, Type} from './types';
 import {useOnClickOutside} from './hooks/useOnClickOutside';
 import {
@@ -113,13 +113,35 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const nodeMapRef = useRef<Map<string, Node>>(new Map<string, Node>());
 
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [showFooterWhenSearching, setShowFooterWhenSearching] = useState<boolean>(false);
-  const [showFooterWhenNoItems, setShowFooterWhenNoItems] = useState<boolean>(false);
-  const [showFooter, setShowFooter] = useState<boolean>(false);
+
+  const components = useMemo(() => getComponents(propsComponents), [propsComponents]);
 
   const showClearAll = withClearAll && isAnyExcludingDisabledSelected(state.nodes);
 
-  const components = useMemo(() => getComponents(propsComponents), [propsComponents]);
+  const isAnyNodeDisplayed = state.displayedNodes.length > 0;
+
+  const isSearchMode = Boolean(state.searchValue);
+
+  const hasCustomFooter = useMemo(() => {
+    return hasCustomFooterComponent(components.Footer.component);
+  }, [components.Footer.component]);
+
+  const showFooterWhenSearching = useMemo(() => {
+    return footerConfig?.showWhenSearching !== undefined
+      ? footerConfig.showWhenSearching
+      : false;
+  }, [footerConfig]);
+
+  const showFooterWhenNoItems = useMemo(() => {
+    return footerConfig?.showWhenNoItems !== undefined
+      ? footerConfig.showWhenNoItems
+      : false;
+  }, [footerConfig]);
+
+  const showFooter = useMemo(() => {
+    return hasCustomFooter
+      && (isAnyNodeDisplayed || showFooterWhenNoItems) && (!isSearchMode || showFooterWhenSearching);
+  }, [showFooterWhenSearching, showFooterWhenNoItems, hasCustomFooter, isAnyNodeDisplayed, isSearchMode]);
 
   const dispatchToggleDropdown = (showDropdown: boolean): void => {
     dispatch({
@@ -210,7 +232,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       node.handleSearch(state.searchValue);
     });
 
-    const displayedNodes = nodes.filter(node => node.isDisplayed(Boolean(state.searchValue)));
+    const displayedNodes = nodes.filter(node => node.isDisplayed(isSearchMode));
     const selectedNodes = nodes.filter(node => node.selected);
 
     const showSelectAll = type !== Type.SELECT && displayedNodes.length
@@ -230,7 +252,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     let focusedElement = '';
     if (state.focusedElement) {
       if ((state.focusedElement === SELECT_ALL && showSelectAll)
-        || (state.focusedElement === FOOTER && hasCustomFooter(components.Footer.component))) {
+        || (state.focusedElement === FOOTER && hasCustomFooter)) {
         focusedElement = state.focusedElement;
       } else {
         const current = displayedNodes.find(node => node.path === state.focusedElement);
@@ -259,31 +281,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       dispatch({
         type: ActionType.SHOW_SELECT_ALL,
         payload: {
-          showSelectAll: withSelectAll && !state.searchValue,
+          showSelectAll: withSelectAll && !isSearchMode,
         } as ShowSelectAllPayload
       });
     }
   }, [withSelectAll]);
-
-  useEffect(() => {
-    const showWhenSearching = footerConfig?.showWhenSearching !== undefined
-      ? footerConfig.showWhenSearching
-      : false;
-    const showWhenNoItems = footerConfig?.showWhenNoItems !== undefined
-      ? footerConfig.showWhenNoItems
-      : false;
-    setShowFooterWhenSearching(showWhenSearching);
-    setShowFooterWhenNoItems(showWhenNoItems);
-  }, [footerConfig]);
-
-  useEffect(() => {
-    let showFooter = false;
-    if (hasCustomFooter(components.Footer.component)) {
-      showFooter = (state.displayedNodes.length > 0 || showFooterWhenNoItems)
-        && (!state.searchValue || showFooterWhenSearching);
-    }
-    setShowFooter(showFooter);
-  }, [components.Footer.component, showFooterWhenSearching, showFooterWhenNoItems, state.searchValue, state.displayedNodes]);
 
   const handleOutsideEvent = (event: MouseEvent | TouchEvent | FocusEvent) => {
     if (isDisabled) {
@@ -292,7 +294,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     if (isComponentFocused.current) {
       isOutsideClicked.current = true;
     }
-    if (state.showDropdown || state.searchValue || state.focusedFieldElement || state.focusedElement) {
+    if (state.showDropdown || isSearchMode || state.focusedFieldElement || state.focusedElement) {
       dispatch({
         type: ActionType.RESET,
         payload: {
@@ -318,11 +320,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       focusableElements.push(SELECT_ALL);
     }
     focusableElements.push(...state.displayedNodes.map(node => node.path));
-    if (hasCustomFooter(components.Footer.component)) {
+    if (hasCustomFooter) {
       focusableElements.push(FOOTER);
     }
     return focusableElements;
-  }, [state.displayedNodes, state.showSelectAll, components.Footer.component]);
+  }, [state.displayedNodes, state.showSelectAll, hasCustomFooter]);
 
   const getNextFocusedElement = useCallback((focusedElement: string): string => {
     const dropdownFocusableElements = getDropdownFocusableElements();
@@ -591,10 +593,10 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [state.nodes, state.selectedNodes, state.showDropdown, type, callNodeChangeHandler, isDisabled, dispatchFocusElement]);
 
   const handleNodeToggle = useCallback((node: Node, expand: boolean): void => {
-    node.handleExpand(Boolean(state.searchValue), expand);
+    node.handleExpand(isSearchMode, expand);
 
     const displayedNodes = state.nodes
-      .filter(node => node.isDisplayed(Boolean(state.searchValue)));
+      .filter(node => node.isDisplayed(isSearchMode));
 
     dispatch({
       type: ActionType.NODE_TOGGLE,
@@ -606,18 +608,18 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     });
 
     callNodeToggleHandler(node, state.nodes.filter(node => node.expanded));
-  }, [state.nodes, state.searchValue, callNodeToggleHandler]);
+  }, [state.nodes, isSearchMode, callNodeToggleHandler]);
 
   const handleNodeToggleOnClick = useCallback((node: Node) => (event: React.MouseEvent): void => {
     if (isDisabled) {
       return;
     }
     event.preventDefault();
-    const expand = state.searchValue
+    const expand = isSearchMode
       ? !node.searchExpanded
       : !node.expanded;
     handleNodeToggle(node, expand);
-  }, [state.searchValue, handleNodeToggle, isDisabled]);
+  }, [isSearchMode, handleNodeToggle, isDisabled]);
 
   const handleNodeToggleOnKeyDown = (expand: boolean): void => {
     if (isDisabled) {
@@ -626,8 +628,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     if (state.showDropdown && state.focusedElement && state.focusedElement !== SELECT_ALL) {
       const node = nodeMapRef.current.get(state.focusedElement);
       if (node?.hasChildren()
-        && !((Boolean(state.searchValue) && node?.searchExpanded === expand)
-          || (!Boolean(state.searchValue) && node?.expanded === expand))) {
+        && !((isSearchMode && node?.searchExpanded === expand)
+          || (!isSearchMode && node?.expanded === expand))) {
         handleNodeToggle(node, expand);
       }
     }
@@ -649,7 +651,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       case 'ArrowLeft':
         if (!state.focusedFieldElement && state.focusedElement) {
           handleNodeToggleOnKeyDown(false);
-        } else if (!state.searchValue) {
+        } else if (!isSearchMode) {
           dispatchFocusFieldElement(getPrevFocusedFieldElement(state.focusedFieldElement));
         }
         if (state.focusedElement) {
@@ -659,7 +661,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       case 'ArrowRight':
         if (!state.focusedFieldElement && state.focusedElement) {
           handleNodeToggleOnKeyDown(true);
-        } else if (!state.searchValue) {
+        } else if (!isSearchMode) {
           dispatchFocusFieldElement(getNextFocusedFieldElement(state.focusedFieldElement));
         }
         if (state.focusedElement) {
@@ -704,7 +706,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         event.preventDefault();
         break;
       case 'Backspace':
-        if (!state.searchValue && state.focusedFieldElement && state.focusedFieldElement !== INPUT) {
+        if (!isSearchMode && state.focusedFieldElement && state.focusedFieldElement !== INPUT) {
           if (state.focusedFieldElement === CLEAR_ALL) {
             handleDeleteAll(event);
           } else {

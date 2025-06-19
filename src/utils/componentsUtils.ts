@@ -77,6 +77,6 @@ export const getComponents = (propsComponents: Components = {}): InnerComponents
   };
 };
 
-export const hasCustomFooter = (footerComponent: ComponentType<FooterProps>): boolean => {
+export const hasCustomFooterComponent = (footerComponent: ComponentType<FooterProps>): boolean => {
   return footerComponent !== Footer;
 };
