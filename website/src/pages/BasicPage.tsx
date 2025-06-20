@@ -109,7 +109,7 @@ export const BasicPage: FC = memo(() => {
   };
 
   return (
-    <div className="page" style={{paddingBottom: '60px'}}>
+    <div className="page">
       <div className="page-content">
         <h2>{'Basic Features'}</h2>
         <div className="paragraph">
@@ -145,7 +145,7 @@ export const BasicPage: FC = memo(() => {
           <Checkbox label="expandedNodes" initChecked={true} onChange={handleOptionChange('expandedNodes')}/>
           <Checkbox label="disabledNodes" initChecked={true} onChange={handleOptionChange('disabledNodes')}/>
         </div>
-        <div className="tree-multi-select-wrapper">
+        <div className="tree-multi-select-wrapper" style={{paddingBottom: '60px'}}>
           <TreeMultiSelect
             data={getData}
             type={type}

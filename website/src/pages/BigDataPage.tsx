@@ -16,11 +16,7 @@ export const BigDataPage: FC = memo(() => {
       <div className="page-content big-data-page">
         <h2>{'Big Data'}</h2>
         <div className="paragraph">
-          <b>{'react-tree-multi-select'}</b>{' uses '}
-          <a className="link" href="https://github.com/petyosi/react-virtuoso" target="_blank" rel="noreferrer">
-            Virtuoso
-          </a>
-          {' library to render big amount of nodes.'}
+          <b>{'react-tree-multi-select'}</b>{' uses virtualization to efficiently render large numbers of nodes.'}
         </div>
         <Select
           label="Choose amount of nodes:"
