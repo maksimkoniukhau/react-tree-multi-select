@@ -75,12 +75,21 @@ export interface VirtualizedListProps {
   totalCount: number;
   topItemCount: number;
   renderItem: (index: number) => ReactNode;
-  estimatedItemHeight?: number;
+  onLastItemReached: () => void;
   overscan?: number;
+  estimatedItemHeight?: number;
 }
 
 export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedListProps>((props, ref) => {
-  const {height: propHeight, totalCount, topItemCount, renderItem, estimatedItemHeight = 20, overscan = 2} = props;
+  const {
+    height: propHeight,
+    totalCount,
+    topItemCount,
+    renderItem,
+    onLastItemReached,
+    overscan = 2,
+    estimatedItemHeight = 20
+  } = props;
 
   const outerRef = useRef<HTMLDivElement>(null);
 
@@ -181,6 +190,12 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
       }
     }
   }, [itemHeights]);
+
+  useEffect(() => {
+    if (overscanEndIndex === totalCount) {
+      onLastItemReached?.();
+    }
+  }, [overscanEndIndex, totalCount]);
 
   const outerStyle: CSSProperties = {
     height,

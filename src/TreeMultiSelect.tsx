@@ -1,5 +1,5 @@
 import './styles/tree-multi-select.scss';
-import React, {FC, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
+import React, {FC, useCallback, useEffect, useMemo, useReducer, useRef, useState} from 'react';
 import {
   CLEAR_ALL,
   DEFAULT_OPTIONS_CONTAINER_HEIGHT,
@@ -21,6 +21,7 @@ import {
 } from './utils/nodesUtils';
 import {getComponents, hasCustomFooterComponent} from './utils/componentsUtils';
 import {CheckedState, Components, FooterConfig, TreeNode, Type} from './types';
+import {InnerComponents} from './innerTypes';
 import {useOnClickOutside} from './hooks/useOnClickOutside';
 import {
   ActionType,
@@ -71,6 +72,7 @@ export interface TreeMultiSelectProps {
   onSelectAllChange?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => void;
   onFocus?: (event: React.FocusEvent) => void;
   onBlur?: (event: React.FocusEvent) => void;
+  onDropdownLastItemReached?: () => void;
 }
 
 export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
@@ -97,6 +99,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     onSelectAllChange,
     onFocus,
     onBlur,
+    onDropdownLastItemReached
   } = props;
 
   const treeMultiSelectRef = useRef<HTMLDivElement>(null);
@@ -114,7 +117,13 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const components = useMemo(() => getComponents(propsComponents), [propsComponents]);
+  // Store components in state to avoid async rendering issues (e.g., flickering)
+  // when both data and the Footer (e.g., its text) component update simultaneously during infinite scroll or pagination.
+  const [components, setComponents] = useState<InnerComponents>(getComponents(propsComponents));
+
+  useEffect(() => {
+    setComponents(getComponents(propsComponents));
+  }, [propsComponents]);
 
   const showClearAll = withClearAll && isAnyExcludingDisabledSelected(state.nodes);
 
@@ -774,6 +783,13 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   }, [fieldInputRef]);
 
+  const handleDropdownLastItemReached = useCallback(() => {
+    if (isSearchMode) {
+      return;
+    }
+    onDropdownLastItemReached?.();
+  }, [onDropdownLastItemReached, isSearchMode]);
+
   const handleDropdownUnmount = (): void => {
     if (withDropdownInput && isSearchable) {
       const fieldFocusableElement = getFieldFocusableElement(fieldRef);
@@ -894,6 +910,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
               />
             ) : null}
             inputRef={dropdownInputRef}
+            onLastItemReached={handleDropdownLastItemReached}
             onUnmount={handleDropdownUnmount}
             components={components}
             onListItemRender={debouncedHandleListItemRender}

@@ -25,6 +25,7 @@ export interface DropdownProps {
   onFooterClick: (e: React.MouseEvent) => void;
   input: ReactNode;
   inputRef: RefObject<HTMLInputElement | null>;
+  onLastItemReached: () => void;
   onUnmount: () => void;
   components: InnerComponents;
   onListItemRender: () => void;
@@ -50,6 +51,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     onFooterClick,
     input,
     inputRef,
+    onLastItemReached,
     onUnmount,
     components,
     onListItemRender
@@ -63,7 +65,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
 
   useEffect(() => {
     return () => onUnmount();
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (focusedElement && virtualizedListRef.current && displayedNodes.length) {
@@ -131,6 +133,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
         totalCount={itemCount}
         topItemCount={topItemCount}
         renderItem={itemContent}
+        onLastItemReached={onLastItemReached}
       />
     </div>
   );
