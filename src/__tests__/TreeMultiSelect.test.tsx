@@ -25,7 +25,7 @@ import {
   getListItems,
   getRootContainer
 } from './testutils/selectorUtils';
-import {NO_MATCHES} from '../constants';
+import {NO_MATCHES, NO_OPTIONS} from '../constants';
 
 const treeNodeData = getBaseTreeNodeData();
 
@@ -38,7 +38,7 @@ describe('TreeMultiSelect component: base', () => {
   });
 });
 
-describe('TreeMultiSelect component: noMatchesText prop', () => {
+describe('TreeMultiSelect component: noOptionsText, noMatchesText props', () => {
   const noMatchesTextMatcher = (
     container: HTMLElement,
     noMatchesText: string,
@@ -54,6 +54,47 @@ describe('TreeMultiSelect component: noMatchesText prop', () => {
       expect(screen.queryByText(noMatchesText)).not.toBeInTheDocument();
     }
   };
+
+  it('tests component with default noOptionsText', async () => {
+    const {container} = render(
+      <TreeMultiSelect data={[]}/>
+    );
+
+    const user: UserEvent = userEvent.setup();
+
+    await user.click(getField(container));
+    noMatchesTextMatcher(container, NO_OPTIONS, true);
+
+    await user.keyboard('qwerty');
+    noMatchesTextMatcher(container, NO_OPTIONS, true);
+
+    await user.keyboard('{Control>}a{Backspace}');
+    noMatchesTextMatcher(container, NO_OPTIONS, true);
+
+    await user.keyboard('java');
+    noMatchesTextMatcher(container, NO_OPTIONS, true);
+  });
+
+  it.each([['no data'], ['no items']])('tests component when noOptionsText={%s}',
+    async (noOptionsText) => {
+      const {container} = render(
+        <TreeMultiSelect data={[]} noOptionsText={noOptionsText}/>
+      );
+
+      const user: UserEvent = userEvent.setup();
+
+      await user.click(getField(container));
+      noMatchesTextMatcher(container, noOptionsText, true);
+
+      await user.keyboard('qwerty');
+      noMatchesTextMatcher(container, noOptionsText, true);
+
+      await user.keyboard('{Control>}a{Backspace}');
+      noMatchesTextMatcher(container, noOptionsText, true);
+
+      await user.keyboard('java');
+      noMatchesTextMatcher(container, noOptionsText, true);
+    });
 
   it('tests component with default noMatchesText', async () => {
     const {container} = render(
@@ -75,7 +116,7 @@ describe('TreeMultiSelect component: noMatchesText prop', () => {
     noMatchesTextMatcher(container, NO_MATCHES, false);
   });
 
-  it.each([['no options'], ['no results']])('tests component when noMatchesText={%s}',
+  it.each([['not found'], ['no items found']])('tests component when noMatchesText={%s}',
     async (noMatchesText) => {
       const {container} = render(
         <TreeMultiSelect data={treeNodeData} noMatchesText={noMatchesText}/>

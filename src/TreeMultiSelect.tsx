@@ -7,6 +7,7 @@ import {
   INPUT,
   INPUT_PLACEHOLDER,
   NO_MATCHES,
+  NO_OPTIONS,
   PATH_DELIMITER,
   SELECT_ALL
 } from './constants';
@@ -55,6 +56,7 @@ export interface TreeMultiSelectProps {
   id?: string;
   className?: string;
   inputPlaceholder?: string;
+  noOptionsText?: string;
   noMatchesText?: string;
   isDisabled?: boolean;
   isSearchable?: boolean;
@@ -82,6 +84,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     id = '',
     className = '',
     inputPlaceholder = INPUT_PLACEHOLDER,
+    noOptionsText = NO_OPTIONS,
     noMatchesText = NO_MATCHES,
     isDisabled = false,
     isSearchable = true,
@@ -892,6 +895,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
             showSelectAll={state.showSelectAll}
             selectAllCheckedState={state.selectAllCheckedState}
             focusedElement={state.focusedElement}
+            noOptionsText={noOptionsText}
             noMatchesText={noMatchesText}
             dropdownHeight={dropdownHeight}
             showFooter={showFooter}

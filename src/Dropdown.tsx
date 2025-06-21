@@ -16,6 +16,7 @@ export interface DropdownProps {
   showSelectAll: boolean;
   selectAllCheckedState: CheckedState;
   focusedElement: string;
+  noOptionsText: string;
   noMatchesText: string;
   dropdownHeight: number;
   showFooter: boolean;
@@ -34,7 +35,7 @@ export interface DropdownProps {
 export const Dropdown: FC<DropdownProps> = memo((props) => {
   const {
     type,
-    nodeMap = new Map(),
+    nodeMap,
     nodesAmount,
     displayedNodes,
     isAnyHasChildren,
@@ -42,6 +43,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     showSelectAll,
     selectAllCheckedState,
     focusedElement,
+    noOptionsText,
     noMatchesText,
     dropdownHeight,
     showFooter,
@@ -69,13 +71,16 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
 
   useEffect(() => {
     if (focusedElement && virtualizedListRef.current && displayedNodes.length) {
-      let elementIndex: number;
+      let elementIndex = -1;
       if (focusedElement === SELECT_ALL) {
         elementIndex = 0;
       } else if (focusedElement === FOOTER) {
         elementIndex = displayedNodes.length + (showSelectAll ? 1 : 0) + (input ? 1 : 0);
       } else {
-        elementIndex = displayedNodes.indexOf(nodeMap.get(focusedElement)) + (showSelectAll ? 1 : 0) + (input ? 1 : 0);
+        const node = nodeMap.get(focusedElement);
+        if (node) {
+          elementIndex = displayedNodes.indexOf(node) + (showSelectAll ? 1 : 0) + (input ? 1 : 0);
+        }
       }
       if (elementIndex >= 0) {
         virtualizedListRef.current.scrollIntoView(elementIndex);
@@ -107,6 +112,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
         showSelectAll={showSelectAll}
         selectAllCheckedState={selectAllCheckedState}
         focusedElement={focusedElement}
+        noOptionsText={noOptionsText}
         noMatchesText={noMatchesText}
         onSelectAllChange={onSelectAllChange}
         onNodeChange={onNodeChange}

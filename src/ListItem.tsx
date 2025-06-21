@@ -17,6 +17,7 @@ export interface ListItemProps {
   showSelectAll: boolean;
   selectAllCheckedState: CheckedState;
   focusedElement: string;
+  noOptionsText: string;
   noMatchesText: string;
   onSelectAllChange: (e: React.MouseEvent) => void;
   onNodeChange: (node: Node) => (e: React.MouseEvent) => void;
@@ -37,6 +38,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     showSelectAll,
     selectAllCheckedState,
     focusedElement,
+    noOptionsText,
     noMatchesText,
     onSelectAllChange,
     onNodeChange,
@@ -74,7 +76,10 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
 
   if (displayedNodes.length === 0) {
     return (
-      <NoMatchesWrapper noMatches={components.NoMatches} label={noMatchesText}/>
+      <NoMatchesWrapper
+        noMatches={components.NoMatches}
+        label={nodesAmount === 0 ? noOptionsText : noMatchesText}
+      />
     );
   }
 
