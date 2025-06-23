@@ -1,4 +1,4 @@
-import React, {FC, JSX, memo, ReactNode, RefObject, useCallback, useEffect, useRef} from 'react';
+import React, {FC, JSX, memo, ReactNode, RefObject, useEffect, useRef} from 'react';
 import {FOOTER, SELECT_ALL} from './constants';
 import {CheckedState, Type} from './types';
 import {InnerComponents} from './innerTypes';
@@ -62,8 +62,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
   const virtualizedListRef = useRef<VirtualizedListHandle>(null);
 
   const topItemCount = (showSelectAll ? 1 : 0) + (input ? 1 : 0);
-  const itemCount = (displayedNodes.length || 1) + topItemCount + (showFooter ? 1 : 0);
-  const isFooterFocused = focusedElement === FOOTER;
+  const displayedItemCount = (displayedNodes.length || 1) + topItemCount + (showFooter ? 1 : 0);
 
   useEffect(() => {
     return () => onUnmount();
@@ -88,25 +87,14 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     }
   }, [focusedElement, showSelectAll, input]);
 
-  const Footer: FC = useCallback(() => {
+  const renderItem = (index: number): JSX.Element => {
     return (
-      <components.Footer.component
-        attributes={{className: `rtms-footer${isFooterFocused ? ' focused' : ''}`, onClick: onFooterClick}}
-        ownProps={{focused: isFooterFocused}}
-        customProps={components.Footer.props}
-      />
-    );
-  }, [components.Footer, isFooterFocused, onFooterClick]);
-
-  const itemContent = (index: number): JSX.Element => {
-    return showFooter && index === itemCount - 1 ? (
-      <Footer/>
-    ) : (
       <ListItem
         type={type}
         index={index}
         nodesAmount={nodesAmount}
         displayedNodes={displayedNodes}
+        displayedItemCount={displayedItemCount}
         isAnyHasChildren={isAnyHasChildren}
         searchValue={searchValue}
         showSelectAll={showSelectAll}
@@ -114,9 +102,11 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
         focusedElement={focusedElement}
         noOptionsText={noOptionsText}
         noMatchesText={noMatchesText}
+        showFooter={showFooter}
         onSelectAllChange={onSelectAllChange}
         onNodeChange={onNodeChange}
         onNodeToggle={onNodeToggle}
+        onFooterClick={onFooterClick}
         input={input}
         components={components}
         onRender={onListItemRender}
@@ -136,9 +126,9 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
       <VirtualizedList
         ref={virtualizedListRef}
         height={dropdownHeight}
-        totalCount={itemCount}
+        totalCount={displayedItemCount}
         topItemCount={topItemCount}
-        renderItem={itemContent}
+        renderItem={renderItem}
         onLastItemReached={onLastItemReached}
       />
     </div>

@@ -1,5 +1,5 @@
 import React, {FC, memo, ReactNode, useEffect} from 'react';
-import {SELECT_ALL} from './constants';
+import {FOOTER, SELECT_ALL} from './constants';
 import {CheckedState, Type} from './types';
 import {InnerComponents} from './innerTypes';
 import {Node} from './Node';
@@ -12,6 +12,7 @@ export interface ListItemProps {
   index: number;
   nodesAmount: number;
   displayedNodes: Node[];
+  displayedItemCount: number;
   isAnyHasChildren: boolean;
   searchValue: string;
   showSelectAll: boolean;
@@ -19,9 +20,11 @@ export interface ListItemProps {
   focusedElement: string;
   noOptionsText: string;
   noMatchesText: string;
+  showFooter: boolean;
   onSelectAllChange: (e: React.MouseEvent) => void;
   onNodeChange: (node: Node) => (e: React.MouseEvent) => void;
   onNodeToggle: (node: Node) => (e: React.MouseEvent) => void;
+  onFooterClick: (e: React.MouseEvent) => void;
   input: ReactNode;
   components: InnerComponents;
   onRender: () => void;
@@ -33,6 +36,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     index,
     nodesAmount,
     displayedNodes,
+    displayedItemCount,
     isAnyHasChildren,
     searchValue,
     showSelectAll,
@@ -40,9 +44,11 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     focusedElement,
     noOptionsText,
     noMatchesText,
+    showFooter,
     onSelectAllChange,
     onNodeChange,
     onNodeToggle,
+    onFooterClick,
     input,
     components,
     onRender
@@ -70,6 +76,17 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
         checkedState={selectAllCheckedState}
         focused={focusedElement === SELECT_ALL}
         onClick={onSelectAllChange}
+      />
+    );
+  }
+
+  if (showFooter && index === displayedItemCount - 1) {
+    const isFooterFocused = focusedElement === FOOTER;
+    return (
+      <components.Footer.component
+        attributes={{className: `rtms-footer${isFooterFocused ? ' focused' : ''}`, onClick: onFooterClick}}
+        ownProps={{focused: isFooterFocused}}
+        customProps={components.Footer.props}
       />
     );
   }
