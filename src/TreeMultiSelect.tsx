@@ -267,7 +267,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     if (state.focusedElement) {
       if ((state.focusedElement === SELECT_ALL
           && shouldRenderSelectAll(type, displayedNodes, isSearchMode, withSelectAll))
-        || (state.focusedElement === FOOTER && hasCustomFooter)) {
+        || (state.focusedElement === FOOTER && showFooter)) {
         focusedElement = state.focusedElement;
       } else {
         const current = displayedNodes.find(node => node.path === state.focusedElement);
@@ -321,11 +321,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       focusableElements.push(SELECT_ALL);
     }
     focusableElements.push(...state.displayedNodes.map(node => node.path));
-    if (hasCustomFooter) {
+    if (showFooter) {
       focusableElements.push(FOOTER);
     }
     return focusableElements;
-  }, [state.displayedNodes, showSelectAll, hasCustomFooter]);
+  }, [state.displayedNodes, showSelectAll, showFooter]);
 
   const getNextFocusedElement = useCallback((focusedElement: string): string => {
     const dropdownFocusableElements = getDropdownFocusableElements();
