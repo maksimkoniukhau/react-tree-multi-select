@@ -5,7 +5,6 @@ export interface DataChangePayload {
   nodes: Node[];
   displayedNodes: Node[];
   selectedNodes: Node[];
-  showSelectAll: boolean;
   focusedFieldElement: string;
   focusedElement: string;
   selectAllCheckedState: CheckedState;
@@ -22,14 +21,9 @@ export interface FieldClickPayload {
   focusedElement: string;
 }
 
-export interface ShowSelectAllPayload {
-  showSelectAll: boolean;
-}
-
 export interface InputChangePayload {
   searchValue: string;
   displayedNodes: Node[];
-  showSelectAll: boolean;
   focusedFieldElement: string;
   focusedElement: string;
 }
@@ -91,7 +85,6 @@ export enum ActionType {
   DATA_CHANGE,
   TOGGLE_DROPDOWN,
   FIELD_CLICK,
-  SHOW_SELECT_ALL,
   INPUT_CHANGE,
   CHIP_CLICK,
   NODE_CHANGE,
@@ -106,7 +99,6 @@ export enum ActionType {
 export type Payload = DataChangePayload
   | ToggleDropdownPayload
   | FieldClickPayload
-  | ShowSelectAllPayload
   | InputChangePayload
   | ChipClickPayload
   | NodeChangePayload
@@ -128,7 +120,6 @@ export interface State {
   selectedNodes: Node[];
   searchValue: string;
   showDropdown: boolean;
-  showSelectAll: boolean;
   focusedFieldElement: string;
   focusedElement: string;
   selectAllCheckedState: CheckedState;
@@ -140,7 +131,6 @@ export const initialState: State = {
   selectedNodes: [],
   searchValue: '',
   showDropdown: false,
-  showSelectAll: false,
   focusedFieldElement: '',
   focusedElement: '',
   selectAllCheckedState: CheckedState.UNSELECTED
@@ -162,15 +152,6 @@ export const reducer = (state = initialState, action: Action): State => {
         ...state,
         ...action.payload
       };
-    }
-    case ActionType.SHOW_SELECT_ALL: {
-      const {showSelectAll} = action.payload as ShowSelectAllPayload;
-      return showSelectAll === state.showSelectAll
-        ? state
-        : {
-          ...state,
-          showSelectAll
-        };
     }
     case ActionType.FOCUS: {
       const {focusedFieldElement, focusedElement} = action.payload as FocusPayload;
