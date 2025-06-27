@@ -1,8 +1,14 @@
-import {Components} from './types';
+import {Components, KeyboardConfig} from './types';
 
 type Required<T> = {
-  [K in keyof T]-?: T[K];
+  [K in keyof T]-?: T[K] extends object
+    ? T[K] extends (...args: any[]) => any
+      ? T[K] // skip functions
+      : Required<T[K]>
+    : T[K];
 };
+
+export type InnerKeyboardConfig = Required<KeyboardConfig>;
 
 export type InnerComponents<
   FieldCustomProps = any,

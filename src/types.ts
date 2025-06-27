@@ -40,15 +40,62 @@ export enum CheckedState {
 }
 
 /**
+ * Configuration options for keyboard behavior in the Field component.
+ */
+export type FieldKeyboardOptions = {
+  /**
+   * Enables looping when navigating with arrow keys.
+   * If `true`, pressing ArrowRight on the last item will move focus to the first item, and vice versa.
+   *
+   * @default false
+   */
+  loopNavigation?: boolean;
+};
+
+/**
+ * Configuration options for keyboard behavior in the Dropdown component.
+ */
+export type DropdownKeyboardOptions = {
+  /**
+   * Enables looping when navigating with arrow keys.
+   * If `true`, pressing ArrowDown on the last item will move focus to the first item, and vice versa.
+   *
+   * @default true
+   */
+  loopNavigation?: boolean;
+};
+
+/**
+ * Controls keyboard navigation behavior for the component.
+ */
+export type KeyboardConfig = {
+  /**
+   * Configuration for the Field component (the selected items area).
+   */
+  field?: FieldKeyboardOptions;
+
+  /**
+   * Configuration for the Dropdown component (the available items list).
+   */
+  dropdown?: DropdownKeyboardOptions;
+};
+
+/**
  * Controls when the Footer component is rendered in the dropdown.
- *
- * @property showWhenSearching - Renders the Footer when the component is in search mode
- *                                (when the input contains value). Defaults to `false`.
- * @property showWhenNoItems - renders the Footer when no items are available in the dropdown
- *                              (takes precedence over `showWhenSearching` if both apply). Defaults to `false`.
  */
 export type FooterConfig = {
+  /**
+   * Renders the Footer when the component is in the search mode (when the input contains value).
+   *
+   * @default false
+   */
   showWhenSearching?: boolean;
+  /**
+   * Renders the Footer when no items are available in the dropdown
+   * (takes precedence over `showWhenSearching` if both apply).
+   *
+   * @default false
+   */
   showWhenNoItems?: boolean;
 }
 

@@ -11,7 +11,7 @@ import {
   PATH_DELIMITER,
   SELECT_ALL
 } from './constants';
-import {debounce, getFieldFocusableElement, typeToClassName} from './utils/commonUtils';
+import {debounce, getFieldFocusableElement} from './utils/commonUtils';
 import {
   areAllExcludingDisabledSelected,
   convertTreeArrayToFlatArray,
@@ -20,8 +20,9 @@ import {
   isAnyExcludingDisabledSelected,
   isAnyHasChildren
 } from './utils/nodesUtils';
+import {getKeyboardConfig, typeToClassName} from './utils/componentUtils';
 import {getComponents, hasCustomFooterComponent} from './utils/componentsUtils';
-import {CheckedState, Components, FooterConfig, TreeNode, Type} from './types';
+import {CheckedState, Components, FooterConfig, KeyboardConfig, TreeNode, Type} from './types';
 import {InnerComponents} from './innerTypes';
 import {useOnClickOutside} from './hooks/useOnClickOutside';
 import {
@@ -67,6 +68,7 @@ export interface TreeMultiSelectProps {
   closeDropdownOnNodeChange?: boolean;
   dropdownHeight?: number;
   footerConfig?: FooterConfig;
+  keyboardConfig?: KeyboardConfig;
   components?: Components;
   onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
   onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
@@ -95,6 +97,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     closeDropdownOnNodeChange = false,
     dropdownHeight = DEFAULT_OPTIONS_CONTAINER_HEIGHT,
     footerConfig,
+    keyboardConfig: propsKeyboardConfig,
     components: propsComponents,
     onNodeChange,
     onNodeToggle,
@@ -154,6 +157,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     return hasCustomFooter
       && (isAnyNodeDisplayed || showFooterWhenNoItems) && (!isSearchMode || showFooterWhenSearching);
   }, [showFooterWhenSearching, showFooterWhenNoItems, hasCustomFooter, isAnyNodeDisplayed, isSearchMode]);
+
+  const keyboardConfig = getKeyboardConfig(propsKeyboardConfig);
 
   const dispatchToggleDropdown = (showDropdown: boolean): void => {
     dispatch({
@@ -347,10 +352,14 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       return dropdownFocusableElements[0];
     }
     const currentIndex = dropdownFocusableElements.indexOf(focusedElement);
-    return currentIndex === dropdownFocusableElements.length - 1
-      ? dropdownFocusableElements[0]
-      : dropdownFocusableElements[currentIndex + 1];
-  }, [getDropdownFocusableElements]);
+    if (currentIndex === dropdownFocusableElements.length - 1) {
+      return keyboardConfig.dropdown.loopNavigation
+        ? dropdownFocusableElements[0]
+        : focusedElement;
+    } else {
+      return dropdownFocusableElements[currentIndex + 1];
+    }
+  }, [getDropdownFocusableElements, keyboardConfig.dropdown.loopNavigation]);
 
   const getPrevFocusedElement = useCallback((focusedElement: string): string => {
     const dropdownFocusableElements = getDropdownFocusableElements();
@@ -358,10 +367,14 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       return '';
     }
     const currentIndex = dropdownFocusableElements.indexOf(focusedElement);
-    return currentIndex === 0
-      ? dropdownFocusableElements[dropdownFocusableElements.length - 1]
-      : dropdownFocusableElements[currentIndex - 1];
-  }, [getDropdownFocusableElements]);
+    if (currentIndex === 0) {
+      return keyboardConfig.dropdown.loopNavigation
+        ? dropdownFocusableElements[dropdownFocusableElements.length - 1]
+        : focusedElement;
+    } else {
+      return dropdownFocusableElements[currentIndex - 1];
+    }
+  }, [getDropdownFocusableElements, keyboardConfig.dropdown.loopNavigation]);
 
   const getFocusedFieldElements = useCallback((): string[] => {
     const focusableElements: string[] = [];
@@ -682,7 +695,10 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         break;
       case 'ArrowUp':
         if (state.showDropdown && state.focusedElement) {
-          dispatchFocusElement(getPrevFocusedElement(state.focusedElement));
+          const prevFocusedElement = getPrevFocusedElement(state.focusedElement);
+          if (prevFocusedElement !== state.focusedElement) {
+            dispatchFocusElement(prevFocusedElement);
+          }
         } else {
           dispatchToggleDropdown(!state.showDropdown);
         }
@@ -690,7 +706,10 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         break;
       case 'ArrowDown':
         if (state.showDropdown) {
-          dispatchFocusElement(getNextFocusedElement(state.focusedElement));
+          const nextFocusedElement = getNextFocusedElement(state.focusedElement);
+          if (nextFocusedElement !== state.focusedElement) {
+            dispatchFocusElement(nextFocusedElement);
+          }
         } else {
           dispatchToggleDropdown(!state.showDropdown);
         }

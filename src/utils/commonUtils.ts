@@ -1,9 +1,4 @@
 import React, {RefObject} from 'react';
-import {Type} from '../types';
-
-export const typeToClassName = (type: Type): string => {
-  return `rtms-${type.toLowerCase().replaceAll('_', '-')}-type`;
-};
 
 export const preventDefaultOnMouseEvent = (e: React.MouseEvent): void => {
   e.preventDefault();
