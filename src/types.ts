@@ -44,12 +44,20 @@ export enum CheckedState {
  */
 export type FieldKeyboardOptions = {
   /**
-   * Enables looping when navigating with arrow keys.
-   * If `true`, pressing ArrowRight on the last item will move focus to the first item, and vice versa.
+   * Enables looping when navigating left with the ArrowLeft key.
+   * If `true`, pressing ArrowLeft on the first item will move focus to the last item.
    *
    * @default false
    */
-  loopNavigation?: boolean;
+  loopLeft?: boolean;
+
+  /**
+   * Enables looping when navigating right with the ArrowRight key.
+   * If `true`, pressing ArrowRight on the last item will move focus to the first item.
+   *
+   * @default false
+   */
+  loopRight?: boolean;
 };
 
 /**
@@ -57,12 +65,20 @@ export type FieldKeyboardOptions = {
  */
 export type DropdownKeyboardOptions = {
   /**
-   * Enables looping when navigating with arrow keys.
-   * If `true`, pressing ArrowDown on the last item will move focus to the first item, and vice versa.
+   * Enables looping when navigating upward with the ArrowUp key.
+   * If `true`, pressing ArrowUp on the first item will move focus to the last item.
    *
    * @default true
    */
-  loopNavigation?: boolean;
+  loopUp?: boolean;
+
+  /**
+   * Enables looping when navigating downward with the ArrowDown key.
+   * If `true`, pressing ArrowDown on the last item will move focus to the first item.
+   *
+   * @default true
+   */
+  loopDown?: boolean;
 };
 
 /**

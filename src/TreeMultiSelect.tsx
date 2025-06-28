@@ -337,13 +337,13 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
     const currentIndex = dropdownFocusableElements.indexOf(focusedElement);
     if (currentIndex === dropdownFocusableElements.length - 1) {
-      return keyboardConfig.dropdown.loopNavigation
+      return keyboardConfig.dropdown.loopDown
         ? dropdownFocusableElements[0]
         : focusedElement;
     } else {
       return dropdownFocusableElements[currentIndex + 1];
     }
-  }, [getDropdownFocusableElements, keyboardConfig.dropdown.loopNavigation]);
+  }, [getDropdownFocusableElements, keyboardConfig.dropdown.loopDown]);
 
   const getPrevFocusedElement = useCallback((focusedElement: string): string => {
     const dropdownFocusableElements = getDropdownFocusableElements();
@@ -352,13 +352,13 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
     const currentIndex = dropdownFocusableElements.indexOf(focusedElement);
     if (currentIndex === 0) {
-      return keyboardConfig.dropdown.loopNavigation
+      return keyboardConfig.dropdown.loopUp
         ? dropdownFocusableElements[dropdownFocusableElements.length - 1]
         : focusedElement;
     } else {
       return dropdownFocusableElements[currentIndex - 1];
     }
-  }, [getDropdownFocusableElements, keyboardConfig.dropdown.loopNavigation]);
+  }, [getDropdownFocusableElements, keyboardConfig.dropdown.loopUp]);
 
   const getFocusedFieldElements = useCallback((): string[] => {
     const focusableElements: string[] = [];
@@ -376,10 +376,14 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       return fieldFocusableElements[fieldFocusableElements.length - 1];
     }
     const currentIndex = fieldFocusableElements.indexOf(focusedFieldElement);
-    return currentIndex === fieldFocusableElements.length - 1
-      ? focusedFieldElement
-      : fieldFocusableElements[currentIndex + 1];
-  }, [getFocusedFieldElements]);
+    if (currentIndex === fieldFocusableElements.length - 1) {
+      return keyboardConfig.field.loopRight
+        ? fieldFocusableElements[0]
+        : focusedFieldElement;
+    } else {
+      return fieldFocusableElements[currentIndex + 1];
+    }
+  }, [getFocusedFieldElements, keyboardConfig.field.loopRight]);
 
   const getPrevFocusedFieldElement = useCallback((focusedFieldElement: string): string => {
     const fieldFocusableElements = getFocusedFieldElements();
@@ -389,10 +393,14 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         : INPUT;
     }
     const currentIndex = fieldFocusableElements.indexOf(focusedFieldElement);
-    return currentIndex === 0
-      ? fieldFocusableElements[0]
-      : fieldFocusableElements[currentIndex - 1];
-  }, [getFocusedFieldElements]);
+    if (currentIndex === 0) {
+      return keyboardConfig.field.loopLeft
+        ? fieldFocusableElements[fieldFocusableElements.length - 1]
+        : focusedFieldElement;
+    } else {
+      return fieldFocusableElements[currentIndex - 1];
+    }
+  }, [getFocusedFieldElements, keyboardConfig.field.loopLeft]);
 
   const handleFieldClick = useCallback((event: React.MouseEvent): void => {
     if (isDisabled) {

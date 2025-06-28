@@ -10,11 +10,13 @@ export const getKeyboardConfig = (propsKeyboardConfig: KeyboardConfig = {}): Inn
   const {field = {}, dropdown = {}} = propsKeyboardConfig;
   return {
     field: {
-      loopNavigation: field.loopNavigation ?? false,
+      loopLeft: field.loopLeft ?? false,
+      loopRight: field.loopRight ?? false
     },
     dropdown: {
-      loopNavigation: dropdown.loopNavigation ?? true,
-    },
+      loopUp: dropdown.loopUp ?? true,
+      loopDown: dropdown.loopDown ?? true
+    }
   };
 };
 
