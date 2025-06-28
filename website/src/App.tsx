@@ -7,6 +7,7 @@ import {GettingStartedPage} from './pages/GettingStartedPage';
 import {ApiPage} from './pages/ApiPage';
 import {BasicPage} from './pages/BasicPage';
 import {BigDataPage} from './pages/BigDataPage';
+import {InfiniteScrollPage} from './pages/InfiniteScrollPage';
 import {ComponentsPage} from './pages/ComponentsPage';
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
               <Route path="/api" element={<ApiPage/>}/>
               <Route path="/basic" element={<BasicPage/>}/>
               <Route path="/big-data" element={<BigDataPage/>}/>
+              <Route path="/infinite-scroll" element={<InfiniteScrollPage/>}/>
               <Route path="/components" element={<ComponentsPage/>}/>
             </Routes>
           </div>

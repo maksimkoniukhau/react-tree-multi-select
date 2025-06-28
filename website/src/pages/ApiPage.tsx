@@ -95,13 +95,14 @@ export const ApiPage: FC = () => {
               <td>{'withSelectAll'}</td>
               <td>{'boolean'}</td>
               <td>{'false'}</td>
-              <td>{`if 'true', select all nodes component is displayed in the dropdown header`}</td>
+              <td>{`if 'true', a 'Select all' component is rendered in the dropdown header. 
+              It is not rendered when the component type is 'SELECT', when the input has a value (search mode) or when there are no available options`}</td>
             </tr>
             <tr>
               <td>{'withDropdownInput'}</td>
               <td>{'boolean'}</td>
               <td>{'false'}</td>
-              <td>{`if 'true', input is displayed in dropdown (hidden input is rendered in field for focus to work)`}</td>
+              <td>{`if 'true', input is displayed in dropdown (hidden input is rendered in Field for focus to work)`}</td>
             </tr>
             <tr>
               <td>{'closeDropdownOnNodeChange'}</td>

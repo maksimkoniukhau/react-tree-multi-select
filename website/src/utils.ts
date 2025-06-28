@@ -104,3 +104,28 @@ const generateBigTreeNodeData = (rootAmount: number): { data: RandomTreeNode[], 
 
 export const bigTreeNodeData30: { data: RandomTreeNode[], amount: number } = generateBigTreeNodeData(30);
 export const bigTreeNodeData50: { data: RandomTreeNode[], amount: number } = generateBigTreeNodeData(50);
+
+export const fetchFakeService = (
+  page: number,
+  totalPage: number,
+  delay: number
+): Promise<{ data: OptionTreeNode[], nextPage: number | null }> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const newData = [];
+      for (let i = 0; i < 30; i++) {
+        const label = `${page}-${randomString(randomNumber(5, 15))}`;
+        const option = {
+          option: {
+            id: randomNumber(1, 1000000000),
+            name: label,
+            children: []
+          },
+          label,
+        }
+        newData.push(option);
+      }
+      resolve({data: newData, nextPage: page === totalPage ? null : page + 1});
+    }, delay);
+  });
+};
