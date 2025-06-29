@@ -49,7 +49,7 @@ export const InfiniteScrollPage: FC = memo(() => {
     if (lastPageReached) {
       return;
     }
-    const {data: newData, nextPage} = await fetchFakeService(page, 5, 1000);
+    const {data: newData, nextPage} = await fetchFakeService(page, 7, 1000);
     if (nextPage) {
       setPage(nextPage);
     } else {

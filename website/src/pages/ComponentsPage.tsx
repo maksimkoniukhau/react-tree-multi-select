@@ -246,7 +246,8 @@ export const ComponentsPage: FC = memo(() => {
             <h3 className="title">{'Footer'}</h3>
             <div className="paragraph">
               {`An optional custom component rendered at the bottom of the dropdown, scrolling together with the items. 
-            The default implementation is null, so the Footer is not rendered unless explicitly provided.`}
+            The default implementation is null, so the Footer is not rendered unless explicitly provided.
+            You can use the Footer to implement features like pagination.`}
             </div>
             <div className="paragraph note">
               <b>{'Note'}</b>
