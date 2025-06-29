@@ -1,7 +1,6 @@
-import React, {FC, useCallback, useMemo, useState} from 'react';
+import React, {FC, useCallback, useEffect, useMemo, useState} from 'react';
 import {Components, FooterProps, TreeMultiSelect, TreeNode} from '../../treeMultiSelectImport';
-import {fetchFakeService, generateRandomData} from '../../utils';
-import {OptionTreeNode} from '../../data';
+import {fetchFakeService, RandomTreeNode} from '../../utils';
 
 interface CustomFooterProps {
   isLoading: boolean;
@@ -27,28 +26,43 @@ const CustomFooter: FC<FooterProps<CustomFooterProps>> = (props) => {
 
 export const CustomFooterExample: FC = () => {
 
-  const [data, setData] = useState<OptionTreeNode[]>(generateRandomData(1));
+  const [data, setData] = useState<RandomTreeNode[]>([]);
   const [lastPageReached, setLastPageReached] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [page, setPage] = useState<number>(2);
+  const [page, setPage] = useState<number>(0);
+
+  const loadData = useCallback(async (delay: number) => {
+    setIsLoading(true);
+    const {data: newData, nextPage} = await fetchFakeService(page, 7, delay);
+    if (!nextPage) {
+      setLastPageReached(true);
+    }
+    setData([...data, ...newData]);
+    setPage(page + 1);
+    setIsLoading(false);
+  }, [page, data]);
+
+  useEffect(() => {
+    void loadData(0);
+  }, []);
 
   const selectNode = (node: TreeNode, selectedNodes: TreeNode[]): void => {
-    node.selected = selectedNodes.some(selectedNode => (selectedNode as OptionTreeNode).option.id === (node as OptionTreeNode).option.id);
+    node.selected = selectedNodes.some(selectedNode => (selectedNode as RandomTreeNode).id === (node as RandomTreeNode).id);
     node.children?.forEach(child => selectNode(child, selectedNodes));
   };
 
   const toggleNode = (node: TreeNode, expandedNodes: TreeNode[]): void => {
-    node.expanded = expandedNodes.some(expandedNode => (expandedNode as OptionTreeNode).option.id === (node as OptionTreeNode).option.id);
+    node.expanded = expandedNodes.some(expandedNode => (expandedNode as RandomTreeNode).id === (node as RandomTreeNode).id);
     node.children?.forEach(child => toggleNode(child, expandedNodes));
   };
 
   const handleNodeChange = (node: TreeNode, selectedNodes: TreeNode[]): void => {
-    data.forEach(optionTreeNode => selectNode(optionTreeNode, selectedNodes));
+    data.forEach(randomTreeNode => selectNode(randomTreeNode, selectedNodes));
     setData([...data]);
   };
 
   const handleNodeToggle = (node: TreeNode, expandedNodes: TreeNode[]): void => {
-    data.forEach(optionTreeNode => toggleNode(optionTreeNode, expandedNodes));
+    data.forEach(randomTreeNode => toggleNode(randomTreeNode, expandedNodes));
     setData([...data]);
   };
 
@@ -56,15 +70,8 @@ export const CustomFooterExample: FC = () => {
     if (lastPageReached) {
       return;
     }
-    setIsLoading(true);
-    const {data: newData, nextPage} = await fetchFakeService(page, 7, 1000);
-    if (!nextPage) {
-      setLastPageReached(true);
-    }
-    setData([...data, ...newData]);
-    setPage(page + 1);
-    setIsLoading(false);
-  }, [lastPageReached, page, data]);
+    void loadData(1000);
+  }, [lastPageReached, loadData]);
 
   const components: Components = useMemo(() => (
     {

@@ -18,6 +18,7 @@ import {
   FooterType,
   InputProps,
   InputType,
+  KeyboardConfig,
   NodeCheckboxProps,
   NodeCheckboxType,
   NodeContainerProps,
@@ -74,5 +75,6 @@ export type {
   SelectAllContainerProps,
   SelectAllContainerType,
   SelectAllLabelProps,
-  SelectAllLabelType
+  SelectAllLabelType,
+  KeyboardConfig
 };

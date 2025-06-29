@@ -21,6 +21,7 @@ import {
   selectAllContainerExample,
   selectAllLabelExample
 } from '../code-data';
+import {Alert} from '../components/Alert';
 import {CodeBlock} from '../components/CodeBlock';
 import {PageNavigation} from '../components/PageNavigation';
 import {Section} from '../components/Section';
@@ -54,12 +55,10 @@ export const ComponentsPage: FC = memo(() => {
             {'The general pattern for implementing a custom component involves creating a component and passing the attributes prop to the root element. Here\'s a simple implementation:'}
           </div>
           <CodeBlock code={customComponentCommonPattern}/>
-          <div className="paragraph important">
-            <b>{'Important'}</b>
-            <span>
-              {': you must pass attributes prop to the root element in order for component to work properly.'}
-            </span>
-          </div>
+          <Alert
+            type={'important'}
+            text={'You must pass attributes prop to the root element in order for component to work properly.'}
+          />
           <div className="paragraph">
             {'If you would like to add custom CSS class to component, you can merge component classname with your own like in the example below:'}
           </div>
@@ -77,15 +76,15 @@ export const ComponentsPage: FC = memo(() => {
               {'You can pass your own properties to the component through the props object. When creating a custom component, ' +
                 'you can access these properties and use them in your implementation.'}
             </div>
-            <div className="paragraph important">
-              <b>{'Important'}</b>
-              <span>
-              {': To improve performance, make sure to memoize '}
-                <i>components</i>
-                {' prop (and other props like objects, arrays, or callbacks). ' +
+            <Alert
+              type={'important'}
+              text={
+                <span>
+                  {'To improve performance, make sure to memoize '}<i>components</i>{' prop (and other props like objects, arrays, or callbacks). ' +
                   'This helps prevent unnecessary re-renders by ensuring prop references remain stable between renders.'}
-            </span>
-            </div>
+                </span>
+              }
+            />
           </div>
           <CodeBlock code={customProps}/>
           <div className="paragraph">
@@ -99,12 +98,10 @@ export const ComponentsPage: FC = memo(() => {
               {`Let's say you have filters on a page that, when clicked, open a dropdown with a range of filter options.\n`}
               {'It can be achieved by providing custom Field component like in the example below.\n'}
             </div>
-            <div className="paragraph important">
-              <b>{'Important'}</b>
-              <span>
-              {': your custom Field component must either be focusable itself or contain exactly one focusable child to ensure proper keyboard navigation.'}
-            </span>
-            </div>
+            <Alert
+              type={'important'}
+              text={'Your custom Field component must either be focusable itself or contain exactly one focusable child to ensure proper keyboard navigation.'}
+            />
           </div>
           <div className="example-container">
             <CodeBlock code={fieldExample}/>
@@ -249,12 +246,11 @@ export const ComponentsPage: FC = memo(() => {
             The default implementation is null, so the Footer is not rendered unless explicitly provided.
             You can use the Footer to implement features like pagination.`}
             </div>
-            <div className="paragraph note">
-              <b>{'Note'}</b>
-              <span>
-              {': By default, the Footer is not shown during search (when the input has a value) or when there are no items in the dropdown. This behavior can be customized using the footerConfig prop.'}
-            </span>
-            </div>
+            <Alert
+              type={'note'}
+              text={'By default, the Footer is not shown during search (when the input has a value) or when there are no items in the dropdown. ' +
+                'This behavior can be customized using the footerConfig prop.'}
+            />
           </div>
           <div className="example-container">
             <CodeBlock code={footerExample}/>

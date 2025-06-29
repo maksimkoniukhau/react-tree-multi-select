@@ -2,10 +2,8 @@ import {TreeNode} from './treeMultiSelectImport';
 import {Option, options, OptionTreeNode} from './data';
 
 export interface RandomTreeNode extends TreeNode {
-  id?: string;
-  name?: string;
+  id: string;
   description?: string;
-  customString?: string;
 }
 
 const mapOptionsToTreeNodes = (
@@ -49,6 +47,25 @@ export const randomString = (length: number): string => {
   return result;
 };
 
+export const generateRandomTreeNodeData = (
+  amount: number, depth: number, startCount: number = 0, parentPath: string = ''
+): RandomTreeNode[] => {
+  const hasChildren = depth > 0;
+  const res: RandomTreeNode[] = [];
+  for (let i = startCount; i < startCount + amount; i++) {
+    const delimiter = parentPath ? '.' : '';
+    const path = parentPath + delimiter + `${i}`;
+    res.push({
+      id: path,
+      description: randomString(7),
+      label: `${path} - ${randomString(20)}`,
+      expanded: hasChildren,
+      children: hasChildren ? generateRandomTreeNodeData(amount, depth - 1, 0, path) : []
+    });
+  }
+  return res;
+};
+
 const generateData = (amount: number, depth: string): RandomTreeNode[] => {
   let nextAmount = amount > 10 ? 50 : amount;
   switch (nextAmount) {
@@ -76,10 +93,9 @@ const generateData = (amount: number, depth: string): RandomTreeNode[] => {
     res.push({
       id,
       description: randomString(7),
-      customString: randomString(10),
       label: `${id} - ${randomString(20)}`,
       selected: id === '1' || id === '5.5.3' || id === '10.3',
-      expanded: true,
+      expanded: nextAmount > 0,
       children: nextAmount === 0 ? [] : generateData(nextAmount, id)
     });
   }
@@ -105,31 +121,15 @@ const generateBigTreeNodeData = (rootAmount: number): { data: RandomTreeNode[], 
 export const bigTreeNodeData30: { data: RandomTreeNode[], amount: number } = generateBigTreeNodeData(30);
 export const bigTreeNodeData50: { data: RandomTreeNode[], amount: number } = generateBigTreeNodeData(50);
 
-export const generateRandomData = (page: number): OptionTreeNode[] => {
-  const newData = [];
-  for (let i = 0; i < 30; i++) {
-    const label = `${page}-${randomString(randomNumber(5, 15))}`;
-    const option = {
-      option: {
-        id: randomNumber(1, 1000000000),
-        name: label,
-        children: []
-      },
-      label,
-    }
-    newData.push(option);
-  }
-  return newData;
-};
-
 export const fetchFakeService = (
   page: number,
   totalPage: number,
   delay: number
-): Promise<{ data: OptionTreeNode[], nextPage: number | null }> => {
+): Promise<{ data: RandomTreeNode[], nextPage: number | null }> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const newData = generateRandomData(page);
+      const amount = 5;
+      const newData = generateRandomTreeNodeData(amount, 2, page * amount);
       resolve({data: newData, nextPage: page === totalPage ? null : page + 1});
     }, delay);
   });
