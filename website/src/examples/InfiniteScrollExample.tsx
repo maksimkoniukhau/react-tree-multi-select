@@ -37,8 +37,8 @@ export const InfiniteScrollExample: FC = () => {
     setData([...data]);
   };
 
-  const handleDropdownLastItemReached = async (): Promise<void> => {
-    if (lastPageReached) {
+  const handleDropdownLastItemReached = async (inputValue: string): Promise<void> => {
+    if (inputValue || lastPageReached) {
       return;
     }
     const {data: newData, nextPage} = await fetchFakeService(page, 7, 1000);
@@ -64,7 +64,7 @@ export const InfiniteScrollExample: FC = () => {
     <div className="component-example">
       <TreeMultiSelect
         data={data}
-        noOptionsText="Initial data loading..."
+        noDataText="Initial data loading..."
         withClearAll={false}
         keyboardConfig={keyboardConfig}
         components={components}
