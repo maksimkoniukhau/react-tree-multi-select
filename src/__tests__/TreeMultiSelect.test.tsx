@@ -25,7 +25,7 @@ import {
   getListItems,
   getRootContainer
 } from './testutils/selectorUtils';
-import {NO_MATCHES, NO_OPTIONS} from '../constants';
+import {NO_MATCHES, NO_DATA} from '../constants';
 
 const treeNodeData = getBaseTreeNodeData();
 
@@ -38,7 +38,7 @@ describe('TreeMultiSelect component: base', () => {
   });
 });
 
-describe('TreeMultiSelect component: noOptionsText, noMatchesText props', () => {
+describe('TreeMultiSelect component: noDataText, noMatchesText props', () => {
   const noMatchesTextMatcher = (
     container: HTMLElement,
     noMatchesText: string,
@@ -55,7 +55,7 @@ describe('TreeMultiSelect component: noOptionsText, noMatchesText props', () => 
     }
   };
 
-  it('tests component with default noOptionsText', async () => {
+  it('tests component with default noDataText', async () => {
     const {container} = render(
       <TreeMultiSelect data={[]}/>
     );
@@ -63,37 +63,37 @@ describe('TreeMultiSelect component: noOptionsText, noMatchesText props', () => 
     const user: UserEvent = userEvent.setup();
 
     await user.click(getField(container));
-    noMatchesTextMatcher(container, NO_OPTIONS, true);
+    noMatchesTextMatcher(container, NO_DATA, true);
 
     await user.keyboard('qwerty');
-    noMatchesTextMatcher(container, NO_OPTIONS, true);
+    noMatchesTextMatcher(container, NO_DATA, true);
 
     await user.keyboard('{Control>}a{Backspace}');
-    noMatchesTextMatcher(container, NO_OPTIONS, true);
+    noMatchesTextMatcher(container, NO_DATA, true);
 
     await user.keyboard('java');
-    noMatchesTextMatcher(container, NO_OPTIONS, true);
+    noMatchesTextMatcher(container, NO_DATA, true);
   });
 
-  it.each([['no data'], ['no items']])('tests component when noOptionsText={%s}',
-    async (noOptionsText) => {
+  it.each([['no options'], ['no items']])('tests component when noDataText={%s}',
+    async (noDataText) => {
       const {container} = render(
-        <TreeMultiSelect data={[]} noOptionsText={noOptionsText}/>
+        <TreeMultiSelect data={[]} noDataText={noDataText}/>
       );
 
       const user: UserEvent = userEvent.setup();
 
       await user.click(getField(container));
-      noMatchesTextMatcher(container, noOptionsText, true);
+      noMatchesTextMatcher(container, noDataText, true);
 
       await user.keyboard('qwerty');
-      noMatchesTextMatcher(container, noOptionsText, true);
+      noMatchesTextMatcher(container, noDataText, true);
 
       await user.keyboard('{Control>}a{Backspace}');
-      noMatchesTextMatcher(container, noOptionsText, true);
+      noMatchesTextMatcher(container, noDataText, true);
 
       await user.keyboard('java');
-      noMatchesTextMatcher(container, noOptionsText, true);
+      noMatchesTextMatcher(container, noDataText, true);
     });
 
   it('tests component with default noMatchesText', async () => {

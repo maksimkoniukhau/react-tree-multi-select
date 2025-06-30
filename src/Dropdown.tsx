@@ -16,7 +16,7 @@ export interface DropdownProps {
   showSelectAll: boolean;
   selectAllCheckedState: CheckedState;
   focusedElement: string;
-  noOptionsText: string;
+  noDataText: string;
   noMatchesText: string;
   dropdownHeight: number;
   showFooter: boolean;
@@ -43,7 +43,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     showSelectAll,
     selectAllCheckedState,
     focusedElement,
-    noOptionsText,
+    noDataText,
     noMatchesText,
     dropdownHeight,
     showFooter,
@@ -100,7 +100,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
         showSelectAll={showSelectAll}
         selectAllCheckedState={selectAllCheckedState}
         focusedElement={focusedElement}
-        noOptionsText={noOptionsText}
+        noDataText={noDataText}
         noMatchesText={noMatchesText}
         showFooter={showFooter}
         onSelectAllChange={onSelectAllChange}
