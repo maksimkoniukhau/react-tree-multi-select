@@ -1,4 +1,4 @@
-import React, {FC, memo, useMemo, useState} from 'react';
+import React, {FC, memo, useEffect, useState} from 'react';
 import {CheckedState, TreeMultiSelect, TreeNode, Type} from '../treeMultiSelectImport';
 import {getTreeNodeData} from '../utils';
 import {Select} from '../components/Select';
@@ -7,13 +7,16 @@ import {Input} from '../components/Input';
 import {OptionTreeNode} from '../data';
 
 const INPUT_PLACEHOLDER = 'search...';
+const NO_DATA = 'No data';
 const NO_MATCHES = 'No matches';
 const DEFAULT_OPTIONS_CONTAINER_HEIGHT = 300;
 
 export const BasicPage: FC = memo(() => {
 
+  const [data, setData] = useState<OptionTreeNode[]>(getTreeNodeData(true, true, true));
   const [type, setType] = useState<Type>(Type.TREE_SELECT);
   const [inputPlaceholder, setInputPlaceholder] = useState<string>(INPUT_PLACEHOLDER);
+  const [noDataText, setNoDataText] = useState<string>(NO_DATA);
   const [noMatchesText, setNoMatchesText] = useState<string>(NO_MATCHES);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [isSearchable, setIsSearchable] = useState<boolean>(true);
@@ -26,10 +29,11 @@ export const BasicPage: FC = memo(() => {
   const [selectedNodes, setSelectedNodes] = useState<boolean>(true);
   const [expandedNodes, setExpandedNodes] = useState<boolean>(true);
   const [disabledNodes, setDisabledNodes] = useState<boolean>(true);
+  const [emptyData, setEmptyData] = useState<boolean>(false);
 
-  const getData = useMemo((): OptionTreeNode[] => {
-    return getTreeNodeData(selectedNodes, expandedNodes, disabledNodes);
-  }, [selectedNodes, expandedNodes, disabledNodes]);
+  useEffect(() => {
+    setData(emptyData ? [] : getTreeNodeData(selectedNodes, expandedNodes, disabledNodes));
+  }, [selectedNodes, expandedNodes, disabledNodes, emptyData]);
 
   const handleOptionChange = (name: string) => (value: string | number | boolean): void => {
     switch (name) {
@@ -38,6 +42,9 @@ export const BasicPage: FC = memo(() => {
         break;
       case 'inputPlaceholder' :
         setInputPlaceholder(value as string);
+        break;
+      case 'noDataText' :
+        setNoDataText(value as string);
         break;
       case 'noMatchesText' :
         setNoMatchesText(value as string);
@@ -74,6 +81,9 @@ export const BasicPage: FC = memo(() => {
         break;
       case 'disabledNodes' :
         setDisabledNodes(value as boolean);
+        break;
+      case 'emptyData' :
+        setEmptyData(value as boolean);
         break;
       default:
         break;
@@ -128,6 +138,7 @@ export const BasicPage: FC = memo(() => {
             onChange={handleOptionChange('type')}/>
           <Input label="inputPlaceholder:" initValue={INPUT_PLACEHOLDER}
                  onChange={handleOptionChange('inputPlaceholder')}/>
+          <Input label="noDataText:" initValue={NO_DATA} onChange={handleOptionChange('noDataText')}/>
           <Input label="noMatchesText:" initValue={NO_MATCHES} onChange={handleOptionChange('noMatchesText')}/>
           <Checkbox label="isDisabled" initChecked={false} onChange={handleOptionChange('isDisabled')}/>
           <Checkbox label="isSearchable" initChecked={true} onChange={handleOptionChange('isSearchable')}/>
@@ -141,17 +152,19 @@ export const BasicPage: FC = memo(() => {
                  onChange={handleOptionChange('dropdownHeight')} type="number"/>
           <div className="delimiter"/>
           <div>{'Data initial props:'}</div>
-          <Checkbox label="selectedNodes" initChecked={true} onChange={handleOptionChange('selectedNodes')}/>
-          <Checkbox label="expandedNodes" initChecked={true} onChange={handleOptionChange('expandedNodes')}/>
-          <Checkbox label="disabledNodes" initChecked={true} onChange={handleOptionChange('disabledNodes')}/>
+          <Checkbox label="selected nodes" initChecked={true} onChange={handleOptionChange('selectedNodes')}/>
+          <Checkbox label="expanded nodes" initChecked={true} onChange={handleOptionChange('expandedNodes')}/>
+          <Checkbox label="disabled nodes" initChecked={true} onChange={handleOptionChange('disabledNodes')}/>
+          <Checkbox label="empty data" initChecked={false} onChange={handleOptionChange('emptyData')}/>
         </div>
         <div className="tree-multi-select-wrapper" style={{paddingBottom: '60px'}}>
           <TreeMultiSelect
-            data={getData}
+            data={data}
             type={type}
             id="basic-rtms-id"
             className="basic-rtms-custom-class"
             inputPlaceholder={inputPlaceholder}
+            noDataText={noDataText}
             noMatchesText={noMatchesText}
             isDisabled={isDisabled}
             isSearchable={isSearchable}

@@ -86,6 +86,21 @@ enum CheckedState {
   UNSELECTED = 'UNSELECTED'
 }
 
+type FieldKeyboardOptions = {
+  loopLeft?: boolean;
+  loopRight?: boolean;
+};
+
+type DropdownKeyboardOptions = {
+  loopUp?: boolean;
+  loopDown?: boolean;
+};
+
+type KeyboardConfig = {
+  field?: FieldKeyboardOptions;
+  dropdown?: DropdownKeyboardOptions;
+};
+
 type FooterConfig = {
   showWhenSearching?: boolean;
   showWhenNoItems?: boolean;
