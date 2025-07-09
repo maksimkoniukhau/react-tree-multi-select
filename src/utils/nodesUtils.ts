@@ -1,5 +1,31 @@
-import {CheckedState, Type} from '../types';
+import {CheckedState, TreeNode, Type} from '../types';
+import {PATH_DELIMITER} from '../constants';
 import {Node} from '../Node';
+
+export const mapTreeNodeToNode = (treeNode: TreeNode, path: string, parent: Node | null, nodeMap: Map<string, Node>): Node => {
+  const parentPath = parent?.path || '';
+  const delimiter = parentPath ? PATH_DELIMITER : '';
+  const nodePath = parentPath + delimiter + path;
+  const children: TreeNode[] = treeNode.children || [];
+  const expanded = Boolean(children.length && treeNode.expanded);
+
+  const {children: omitChildren, ...initTreeNode} = treeNode;
+
+  const node: Node = new Node(
+    nodePath,
+    treeNode.label,
+    parent,
+    nodePath.split(PATH_DELIMITER).length - 1,
+    expanded,
+    initTreeNode
+  );
+
+  node.children = children.map((child, index) => mapTreeNodeToNode(child, index.toString(), node, nodeMap));
+
+  nodeMap.set(nodePath, node);
+
+  return node;
+};
 
 const fillArrayFromTreeArray = (treeArray: Node[], nodeArray: Node[]): void => {
   treeArray?.forEach(node => {

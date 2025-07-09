@@ -6,9 +6,8 @@ import {
   FOOTER,
   INPUT,
   INPUT_PLACEHOLDER,
-  NO_MATCHES,
   NO_DATA,
-  PATH_DELIMITER,
+  NO_MATCHES,
   SELECT_ALL
 } from './constants';
 import {debounce, getFieldFocusableElement} from './utils/commonUtils';
@@ -18,7 +17,8 @@ import {
   filterChips,
   getSelectAllCheckedState,
   isAnyExcludingDisabledSelected,
-  isAnyHasChildren
+  isAnyHasChildren,
+  mapTreeNodeToNode
 } from './utils/nodesUtils';
 import {getKeyboardConfig, shouldRenderSelectAll, typeToClassName} from './utils/componentUtils';
 import {getComponents, hasCustomFooterComponent} from './utils/componentsUtils';
@@ -200,36 +200,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     dispatchFocus(focusedFieldElement, focusedFieldElement ? '' : state.focusedElement);
   }, [state.focusedElement]);
 
-  const mapTreeNodeToNode = (treeNode: TreeNode, path: string, parent: Node | null): Node => {
-    const parentPath = parent?.path || '';
-    const delimiter = parentPath ? PATH_DELIMITER : '';
-    const nodePath = parentPath + delimiter + path;
-    const children: TreeNode[] = treeNode.children || [];
-    const expanded = Boolean(children.length && treeNode.expanded);
-
-    const {children: omitChildren, ...initTreeNode} = treeNode;
-
-    const node: Node = new Node(
-      nodePath,
-      treeNode.label,
-      parent,
-      nodePath.split(PATH_DELIMITER).length - 1,
-      expanded,
-      initTreeNode
-    );
-
-    node.children = children.map((child, index) => mapTreeNodeToNode(child, index.toString(), node));
-
-    nodeMapRef.current.set(nodePath, node);
-
-    return node;
-  };
-
   useEffect(() => {
     nodeMapRef.current = new Map<string, Node>();
     const nodeTree: Node[] = [];
     data.forEach((treeNode, index) => {
-      nodeTree.push(mapTreeNodeToNode(treeNode, index.toString(), null));
+      nodeTree.push(mapTreeNodeToNode(treeNode, index.toString(), null, nodeMapRef.current));
     });
 
     let nodes = nodeTree;
