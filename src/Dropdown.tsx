@@ -1,5 +1,6 @@
 import React, {FC, JSX, memo, ReactNode, RefObject, useEffect, useRef} from 'react';
-import {FOOTER, SELECT_ALL} from './constants';
+import {DROPDOWN, FOOTER, SELECT_ALL} from './constants';
+import {buildFocusedElement, extractPathFromFocusedElement, isFocusedElementInDropdown} from './utils/focusUtils';
 import {CheckedState, Type} from './types';
 import {InnerComponents} from './innerTypes';
 import {Node} from './Node';
@@ -69,14 +70,14 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
   }, []);
 
   useEffect(() => {
-    if (focusedElement && virtualizedListRef.current && displayedNodes.length) {
+    if (isFocusedElementInDropdown(focusedElement) && virtualizedListRef.current && displayedNodes.length) {
       let elementIndex = -1;
-      if (focusedElement === SELECT_ALL) {
+      if (focusedElement === buildFocusedElement(SELECT_ALL, DROPDOWN)) {
         elementIndex = 0;
-      } else if (focusedElement === FOOTER) {
+      } else if (focusedElement === buildFocusedElement(FOOTER, DROPDOWN)) {
         elementIndex = displayedNodes.length + (showSelectAll ? 1 : 0) + (input ? 1 : 0);
       } else {
-        const node = nodeMap.get(focusedElement);
+        const node = nodeMap.get(extractPathFromFocusedElement(focusedElement));
         if (node) {
           elementIndex = displayedNodes.indexOf(node) + (showSelectAll ? 1 : 0) + (input ? 1 : 0);
         }

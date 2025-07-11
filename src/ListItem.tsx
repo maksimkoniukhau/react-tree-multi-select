@@ -1,5 +1,6 @@
 import React, {FC, memo, ReactNode, useEffect} from 'react';
-import {FOOTER, SELECT_ALL} from './constants';
+import {DROPDOWN, FOOTER, SELECT_ALL} from './constants';
+import {buildFocusedElement} from './utils/focusUtils';
 import {CheckedState, Type} from './types';
 import {InnerComponents} from './innerTypes';
 import {Node} from './Node';
@@ -74,14 +75,14 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
         components={components}
         label={SELECT_ALL}
         checkedState={selectAllCheckedState}
-        focused={focusedElement === SELECT_ALL}
+        focused={focusedElement === buildFocusedElement(SELECT_ALL, DROPDOWN)}
         onClick={onSelectAllChange}
       />
     );
   }
 
   if (showFooter && index === displayedItemCount - 1) {
-    const isFooterFocused = focusedElement === FOOTER;
+    const isFooterFocused = focusedElement === buildFocusedElement(FOOTER, DROPDOWN);
     return (
       <components.Footer.component
         attributes={{className: `rtms-footer${isFooterFocused ? ' focused' : ''}`, onClick: onFooterClick}}
@@ -105,7 +106,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     nodeIndex = showSelectAll && Boolean(input) ? index - 2 : index - 1;
   }
   const node = displayedNodes[nodeIndex];
-  const focused = focusedElement === node.path;
+  const focused = focusedElement === buildFocusedElement(node.path, DROPDOWN);
   const expanded = searchValue ? node.searchExpanded : node.expanded;
   const indentation = !(type === Type.MULTI_SELECT || type === Type.SELECT)
     && isAnyHasChildren

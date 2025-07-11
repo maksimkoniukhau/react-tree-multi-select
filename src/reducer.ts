@@ -5,7 +5,6 @@ export interface DataChangePayload {
   nodes: Node[];
   displayedNodes: Node[];
   selectedNodes: Node[];
-  focusedFieldElement: string;
   focusedElement: string;
   selectAllCheckedState: CheckedState;
 }
@@ -17,27 +16,23 @@ export interface ToggleDropdownPayload {
 
 export interface FieldClickPayload {
   showDropdown: boolean;
-  focusedFieldElement: string;
   focusedElement: string;
 }
 
 export interface InputChangePayload {
   searchValue: string;
   displayedNodes: Node[];
-  focusedFieldElement: string;
   focusedElement: string;
 }
 
 export interface ChipClickPayload {
   showDropdown: boolean;
-  focusedFieldElement: string;
   focusedElement: string;
 }
 
 export interface NodeChangePayload {
   selectedNodes: Node[];
   selectAllCheckedState: CheckedState;
-  focusedFieldElement: string;
   focusedElement: string;
   showDropdown: boolean;
 }
@@ -45,39 +40,33 @@ export interface NodeChangePayload {
 export interface SelectAllChangePayload {
   selectedNodes: Node[];
   selectAllCheckedState: CheckedState;
-  focusedFieldElement: string;
   focusedElement: string;
 }
 
 export interface ChipDeletePayload {
   selectedNodes: Node[];
   selectAllCheckedState: CheckedState;
-  focusedFieldElement: string;
   focusedElement: string;
 }
 
 export interface ClearAllPayload {
   selectedNodes: Node[];
   selectAllCheckedState: CheckedState;
-  focusedFieldElement: string;
   focusedElement: string;
 }
 
 export interface NodeTogglePayload {
   displayedNodes: Node[];
-  focusedFieldElement: string;
   focusedElement: string;
 }
 
 export interface FocusPayload {
-  focusedFieldElement: string;
   focusedElement: string;
 }
 
 export interface ResetPayload {
   showDropdown: boolean;
   searchValue: string;
-  focusedFieldElement: string;
   focusedElement: string;
 }
 
@@ -120,7 +109,6 @@ export interface State {
   selectedNodes: Node[];
   searchValue: string;
   showDropdown: boolean;
-  focusedFieldElement: string;
   focusedElement: string;
   selectAllCheckedState: CheckedState;
 }
@@ -131,7 +119,6 @@ export const initialState: State = {
   selectedNodes: [],
   searchValue: '',
   showDropdown: false,
-  focusedFieldElement: '',
   focusedElement: '',
   selectAllCheckedState: CheckedState.UNSELECTED
 };
@@ -154,12 +141,11 @@ export const reducer = (state = initialState, action: Action): State => {
       };
     }
     case ActionType.FOCUS: {
-      const {focusedFieldElement, focusedElement} = action.payload as FocusPayload;
-      return focusedFieldElement === state.focusedFieldElement && focusedElement === state.focusedElement
+      const {focusedElement} = action.payload as FocusPayload;
+      return focusedElement === state.focusedElement
         ? state
         : {
           ...state,
-          focusedFieldElement,
           focusedElement
         };
     }
