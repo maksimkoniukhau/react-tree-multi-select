@@ -12,7 +12,7 @@ export const SelectAllLabel: FC<SelectAllLabelProps> = memo((props) => {
 });
 
 interface SelectAllLabelWrapperProps {
-  selectAllLabel: SelectAllLabelType<any>;
+  selectAllLabel: SelectAllLabelType;
   label: string;
 }
 

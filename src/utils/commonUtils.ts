@@ -20,9 +20,9 @@ export const getKeyboardFocusableElements = (htmlElement: HTMLElement | null): H
     .filter(el => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden')) as HTMLElement[];
 };
 
-export const debounce = (func: (...args: any[]) => void, delay: number) => {
+export const debounce = (func: (...args: unknown[]) => void, delay: number) => {
   let timeoutId: NodeJS.Timeout;
-  return (...args: any[]) => {
+  return (...args: unknown[]) => {
     if (timeoutId) {
       clearTimeout(timeoutId);
     }

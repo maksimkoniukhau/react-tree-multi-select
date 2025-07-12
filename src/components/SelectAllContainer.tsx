@@ -16,7 +16,7 @@ export const SelectAllContainer: FC<SelectAllContainerProps> = memo((props) => {
 });
 
 interface SelectAllContainerWrapperProps {
-  selectAllContainer: SelectAllContainerType<any>;
+  selectAllContainer: SelectAllContainerType;
   label: string;
   checkedState: CheckedState;
   focused: boolean;

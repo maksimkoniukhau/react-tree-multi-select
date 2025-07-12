@@ -25,7 +25,7 @@ export const FieldToggle: FC<FieldToggleProps> = memo((props) => {
 });
 
 interface FieldToggleWrapperProps {
-  fieldToggle: FieldToggleType<any>;
+  fieldToggle: FieldToggleType;
   expanded: boolean;
   componentDisabled: boolean;
 }

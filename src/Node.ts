@@ -156,7 +156,7 @@ export class Node {
     this._descendants = value || [];
   }
 
-  get initTreeNode(): any {
+  get initTreeNode(): TreeNode {
     return this._initTreeNode;
   }
 

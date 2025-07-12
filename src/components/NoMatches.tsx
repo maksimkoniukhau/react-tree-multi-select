@@ -16,7 +16,7 @@ export const NoMatches: FC<NoMatchesProps> = (props) => {
 };
 
 interface NoMatchesWrapperProps {
-  noMatches: NoMatchesType<any>;
+  noMatches: NoMatchesType;
   label: string;
 }
 

@@ -24,7 +24,7 @@ export const NodeToggle: FC<NodeToggleProps> = memo((props) => {
 });
 
 interface NodeToggleWrapperProps {
-  nodeToggle: NodeToggleType<any>;
+  nodeToggle: NodeToggleType;
   node: Node;
   expanded: boolean;
   onNodeToggle: (node: Node) => (event: React.MouseEvent) => void;

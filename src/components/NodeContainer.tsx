@@ -21,7 +21,7 @@ export const NodeContainer: FC<NodeContainerProps> = memo((props) => {
 });
 
 interface NodeContainerWrapperProps {
-  nodeContainer: NodeContainerType<any>;
+  nodeContainer: NodeContainerType;
   node: Node;
   label: string;
   disabled: boolean;

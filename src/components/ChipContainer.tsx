@@ -20,7 +20,7 @@ export const ChipContainer: FC<ChipContainerProps> = memo((props) => {
 });
 
 interface ChipContainerWrapperProps {
-  chipContainer: ChipContainerType<any>;
+  chipContainer: ChipContainerType;
   node: Node;
   label: string;
   focused: boolean;

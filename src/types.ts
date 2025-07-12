@@ -115,7 +115,9 @@ export type FooterConfig = {
   showWhenNoItems?: boolean;
 }
 
-export interface ComponentProps<CustomProps = {}, OwnProps = {}, ComponentType = {}> {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+export interface ComponentProps<CustomProps = unknown, OwnProps = unknown, ComponentType = unknown> {
   attributes: HTMLProps<ComponentType>;
   ownProps: OwnProps;
   customProps: CustomProps;
@@ -127,39 +129,39 @@ export interface Component<CustomProps, ComponentProps> {
   props?: CustomProps;
 }
 
-export type FieldProps<CustomProps = {}> = ComponentProps<CustomProps, FieldOwnProps, HTMLDivElement>;
-export type ChipContainerProps<CustomProps = {}> = ComponentProps<CustomProps, ChipContainerOwnProps, HTMLDivElement>;
-export type ChipLabelProps<CustomProps = {}> = ComponentProps<CustomProps, ChipLabelOwnProps, HTMLDivElement>;
-export type ChipClearProps<CustomProps = {}> = ComponentProps<CustomProps, ChipClearOwnProps, HTMLDivElement>;
-export type InputProps<CustomProps = {}> = ComponentProps<CustomProps, InputOwnProps, HTMLInputElement>;
-export type FieldClearProps<CustomProps = {}> = ComponentProps<CustomProps, FieldClearOwnProps, HTMLDivElement>;
-export type FieldToggleProps<CustomProps = {}> = ComponentProps<CustomProps, FieldToggleOwnProps, HTMLDivElement>;
-export type SelectAllContainerProps<CustomProps = {}> = ComponentProps<CustomProps, SelectAllContainerOwnProps, HTMLDivElement>;
-export type SelectAllCheckboxProps<CustomProps = {}> = ComponentProps<CustomProps, SelectAllCheckboxOwnProps, HTMLDivElement>;
-export type SelectAllLabelProps<CustomProps = {}> = ComponentProps<CustomProps, SelectAllLabelOwnProps, HTMLDivElement>;
-export type NodeContainerProps<CustomProps = {}> = ComponentProps<CustomProps, NodeContainerOwnProps, HTMLDivElement>;
-export type NodeToggleProps<CustomProps = {}> = ComponentProps<CustomProps, NodeToggleOwnProps, HTMLDivElement>;
-export type NodeCheckboxProps<CustomProps = {}> = ComponentProps<CustomProps, NodeCheckboxOwnProps, HTMLDivElement>;
-export type NodeLabelProps<CustomProps = {}> = ComponentProps<CustomProps, NodeLabelOwnProps, HTMLDivElement>;
-export type FooterProps<CustomProps = {}> = ComponentProps<CustomProps, FooterOwnProps, HTMLDivElement>;
-export type NoMatchesProps<CustomProps = {}> = ComponentProps<CustomProps, NoMatchesOwnProps, HTMLDivElement>;
+export type FieldProps<CustomProps = unknown> = ComponentProps<CustomProps, FieldOwnProps, HTMLDivElement>;
+export type ChipContainerProps<CustomProps = unknown> = ComponentProps<CustomProps, ChipContainerOwnProps, HTMLDivElement>;
+export type ChipLabelProps<CustomProps = unknown> = ComponentProps<CustomProps, ChipLabelOwnProps, HTMLDivElement>;
+export type ChipClearProps<CustomProps = unknown> = ComponentProps<CustomProps, ChipClearOwnProps, HTMLDivElement>;
+export type InputProps<CustomProps = unknown> = ComponentProps<CustomProps, InputOwnProps, HTMLInputElement>;
+export type FieldClearProps<CustomProps = unknown> = ComponentProps<CustomProps, FieldClearOwnProps, HTMLDivElement>;
+export type FieldToggleProps<CustomProps = unknown> = ComponentProps<CustomProps, FieldToggleOwnProps, HTMLDivElement>;
+export type SelectAllContainerProps<CustomProps = unknown> = ComponentProps<CustomProps, SelectAllContainerOwnProps, HTMLDivElement>;
+export type SelectAllCheckboxProps<CustomProps = unknown> = ComponentProps<CustomProps, SelectAllCheckboxOwnProps, HTMLDivElement>;
+export type SelectAllLabelProps<CustomProps = unknown> = ComponentProps<CustomProps, SelectAllLabelOwnProps, HTMLDivElement>;
+export type NodeContainerProps<CustomProps = unknown> = ComponentProps<CustomProps, NodeContainerOwnProps, HTMLDivElement>;
+export type NodeToggleProps<CustomProps = unknown> = ComponentProps<CustomProps, NodeToggleOwnProps, HTMLDivElement>;
+export type NodeCheckboxProps<CustomProps = unknown> = ComponentProps<CustomProps, NodeCheckboxOwnProps, HTMLDivElement>;
+export type NodeLabelProps<CustomProps = unknown> = ComponentProps<CustomProps, NodeLabelOwnProps, HTMLDivElement>;
+export type FooterProps<CustomProps = unknown> = ComponentProps<CustomProps, FooterOwnProps, HTMLDivElement>;
+export type NoMatchesProps<CustomProps = unknown> = ComponentProps<CustomProps, NoMatchesOwnProps, HTMLDivElement>;
 
-export type FieldType<CustomProps = {}> = Component<CustomProps, FieldProps<CustomProps>>;
-export type ChipContainerType<CustomProps = {}> = Component<CustomProps, ChipContainerProps<CustomProps>>;
-export type ChipLabelType<CustomProps = {}> = Component<CustomProps, ChipLabelProps<CustomProps>>;
-export type ChipClearType<CustomProps = {}> = Component<CustomProps, ChipClearProps<CustomProps>>;
-export type InputType<CustomProps = {}> = Component<CustomProps, InputProps<CustomProps>>;
-export type FieldClearType<CustomProps = {}> = Component<CustomProps, FieldClearProps<CustomProps>>;
-export type FieldToggleType<CustomProps = {}> = Component<CustomProps, FieldToggleProps<CustomProps>>;
-export type SelectAllContainerType<CustomProps = {}> = Component<CustomProps, SelectAllContainerProps<CustomProps>>;
-export type SelectAllCheckboxType<CustomProps = {}> = Component<CustomProps, SelectAllCheckboxProps<CustomProps>>;
-export type SelectAllLabelType<CustomProps = {}> = Component<CustomProps, SelectAllLabelProps<CustomProps>>;
-export type NodeContainerType<CustomProps = {}> = Component<CustomProps, NodeContainerProps<CustomProps>>;
-export type NodeToggleType<CustomProps = {}> = Component<CustomProps, NodeToggleProps<CustomProps>>;
-export type NodeCheckboxType<CustomProps = {}> = Component<CustomProps, NodeCheckboxProps<CustomProps>>;
-export type NodeLabelType<CustomProps = {}> = Component<CustomProps, NodeLabelProps<CustomProps>>;
-export type FooterType<CustomProps = {}> = Component<CustomProps, FooterProps<CustomProps>>;
-export type NoMatchesType<CustomProps = {}> = Component<CustomProps, NoMatchesProps<CustomProps>>;
+export type FieldType<CustomProps = unknown> = Component<CustomProps, FieldProps<CustomProps>>;
+export type ChipContainerType<CustomProps = unknown> = Component<CustomProps, ChipContainerProps<CustomProps>>;
+export type ChipLabelType<CustomProps = unknown> = Component<CustomProps, ChipLabelProps<CustomProps>>;
+export type ChipClearType<CustomProps = unknown> = Component<CustomProps, ChipClearProps<CustomProps>>;
+export type InputType<CustomProps = unknown> = Component<CustomProps, InputProps<CustomProps>>;
+export type FieldClearType<CustomProps = unknown> = Component<CustomProps, FieldClearProps<CustomProps>>;
+export type FieldToggleType<CustomProps = unknown> = Component<CustomProps, FieldToggleProps<CustomProps>>;
+export type SelectAllContainerType<CustomProps = unknown> = Component<CustomProps, SelectAllContainerProps<CustomProps>>;
+export type SelectAllCheckboxType<CustomProps = unknown> = Component<CustomProps, SelectAllCheckboxProps<CustomProps>>;
+export type SelectAllLabelType<CustomProps = unknown> = Component<CustomProps, SelectAllLabelProps<CustomProps>>;
+export type NodeContainerType<CustomProps = unknown> = Component<CustomProps, NodeContainerProps<CustomProps>>;
+export type NodeToggleType<CustomProps = unknown> = Component<CustomProps, NodeToggleProps<CustomProps>>;
+export type NodeCheckboxType<CustomProps = unknown> = Component<CustomProps, NodeCheckboxProps<CustomProps>>;
+export type NodeLabelType<CustomProps = unknown> = Component<CustomProps, NodeLabelProps<CustomProps>>;
+export type FooterType<CustomProps> = Component<CustomProps, FooterProps<CustomProps>>;
+export type NoMatchesType<CustomProps = unknown> = Component<CustomProps, NoMatchesProps<CustomProps>>;
 
 export interface Components<
   FieldCustomProps = any,

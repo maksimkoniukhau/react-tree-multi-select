@@ -9,6 +9,7 @@ export const mapTreeNodeToNode = (treeNode: TreeNode, path: string, parent: Node
   const children: TreeNode[] = treeNode.children || [];
   const expanded = Boolean(children.length && treeNode.expanded);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {children: omitChildren, ...initTreeNode} = treeNode;
 
   const node: Node = new Node(

@@ -67,6 +67,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
 
   useEffect(() => {
     return () => onUnmount();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -86,6 +87,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
         virtualizedListRef.current.scrollIntoView(elementIndex);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focusedElement, showSelectAll, input]);
 
   const renderItem = (index: number): JSX.Element => {

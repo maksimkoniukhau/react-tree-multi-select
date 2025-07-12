@@ -19,7 +19,7 @@ export const ChipClear: FC<ChipClearProps> = memo((props) => {
 });
 
 interface ChipClearWrapperProps {
-  chipClear: ChipClearType<any>;
+  chipClear: ChipClearType;
   node: Node;
   onClick: (node: Node) => (event: React.MouseEvent) => void;
   componentDisabled: boolean;

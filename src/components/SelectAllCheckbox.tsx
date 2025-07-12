@@ -19,7 +19,7 @@ export const SelectAllCheckbox: FC<SelectAllCheckboxProps> = memo((props) => {
 });
 
 interface SelectAllCheckboxWrapperProps {
-  selectAllCheckbox: SelectAllCheckboxType<any>;
+  selectAllCheckbox: SelectAllCheckboxType;
   checked: boolean;
   partial: boolean;
 }

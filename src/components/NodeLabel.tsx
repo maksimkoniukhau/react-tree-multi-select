@@ -12,7 +12,7 @@ export const NodeLabel: FC<NodeLabelProps> = memo((props) => {
 });
 
 interface NodeLabelWrapperProps {
-  nodeLabel: NodeLabelType<any>;
+  nodeLabel: NodeLabelType;
   label: string;
 }
 

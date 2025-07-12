@@ -20,7 +20,7 @@ export const FieldClear: FC<FieldClearProps> = memo((props) => {
 });
 
 interface FieldClearWrapperProps {
-  fieldClear: FieldClearType<any>;
+  fieldClear: FieldClearType;
   focused: boolean;
   onClick: (event: React.MouseEvent) => void;
   componentDisabled: boolean;

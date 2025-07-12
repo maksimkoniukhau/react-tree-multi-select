@@ -14,7 +14,7 @@ export const Input: FC<InputProps> = memo((props) => {
 });
 
 interface InputWrapperProps {
-  input: InputType<any>;
+  input: InputType;
   inputRef: RefObject<HTMLInputElement>;
   placeholder: string;
   value: string;

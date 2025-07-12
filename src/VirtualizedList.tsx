@@ -176,7 +176,7 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
     } else {
       setPendingScrollIndex(null);
     }
-  }, [topItemCount, outerRef.current, positions, scrollTop]);
+  }, [topItemCount, positions, scrollTop]);
 
   useImperativeHandle(ref, () => ({scrollIntoView}));
 
@@ -189,12 +189,14 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
         setPendingScrollIndex(null);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemHeights]);
 
   useEffect(() => {
     if (overscanEndIndex === totalCount) {
       onLastItemReached?.();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [overscanEndIndex, totalCount]);
 
   const outerStyle: CSSProperties = {

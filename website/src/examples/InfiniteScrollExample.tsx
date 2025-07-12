@@ -7,7 +7,7 @@ const Footer: FC<FooterProps<{ text: string }>> = (props) => {
     <div {...props.attributes} style={{padding: '5px', display: 'flex', justifyContent: 'center'}}>
       {props.customProps.text}
     </div>
-  )
+  );
 };
 
 export const InfiniteScrollExample: FC = () => {

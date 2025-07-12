@@ -22,7 +22,7 @@ export const NodeCheckbox: FC<NodeCheckboxProps> = memo((props) => {
 });
 
 interface NodeCheckboxWrapperProps {
-  nodeCheckbox: NodeCheckboxType<any>;
+  nodeCheckbox: NodeCheckboxType;
   checked: boolean;
   partial: boolean;
   disabled: boolean;

@@ -13,7 +13,7 @@ export const ChipLabel: FC<ChipLabelProps> = memo((props) => {
 });
 
 interface ChipLabelWrapperProps {
-  chipLabel: ChipLabelType<any>;
+  chipLabel: ChipLabelType;
   label: string;
   componentDisabled: boolean;
 }

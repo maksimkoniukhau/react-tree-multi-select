@@ -271,9 +271,10 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         selectAllCheckedState: getSelectAllCheckedState(selectedNodes, nodes)
       } as DataChangePayload
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, type]);
 
-  const handleOutsideEvent = (event: MouseEvent | TouchEvent | FocusEvent) => {
+  const handleOutsideEvent = () => {
     if (isDisabled) {
       return;
     }
@@ -401,7 +402,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         } as FieldClickPayload
       });
     }
-  }, [state.showDropdown, fieldRef, isDisabled]);
+  }, [state.showDropdown, isDisabled]);
 
   const callClearAllHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onClearAll) {
@@ -460,7 +461,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   }, [onSelectAllChange]);
 
-  const handleSelectAllChange = useCallback((event: React.MouseEvent | React.KeyboardEvent): void => {
+  const handleSelectAllChange = useCallback((): void => {
     if (isDisabled) {
       return;
     }
@@ -585,7 +586,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         dispatchFocus(buildFocusedElement(node.path, DROPDOWN));
       }
     }
-  }, [state.nodes, state.selectedNodes, state.showDropdown, type, callNodeChangeHandler, isDisabled, dispatchFocus]);
+  }, [state.nodes, state.selectedNodes, state.showDropdown, type, closeDropdownOnNodeChange, callNodeChangeHandler, isDisabled, dispatchFocus]);
 
   const handleNodeToggle = useCallback((node: Node, expand: boolean): void => {
     node.handleExpand(isSearchMode, expand);
@@ -694,7 +695,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           }
         } else if (state.showDropdown) {
           if (isFocused(SELECT_ALL, DROPDOWN, state.focusedElement)) {
-            handleSelectAllChange(event);
+            handleSelectAllChange();
           } else {
             const focusedNode = nodeMapRef.current.get(extractPathFromFocusedElement(state.focusedElement));
             if (focusedNode) {
