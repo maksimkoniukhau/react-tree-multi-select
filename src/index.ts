@@ -16,4 +16,5 @@ export type {NodeContainerOwnProps} from './components/NodeContainer';
 export type {NodeToggleOwnProps} from './components/NodeToggle';
 export type {NodeCheckboxOwnProps} from './components/NodeCheckbox';
 export type {NodeLabelOwnProps} from './components/NodeLabel';
+export type {FooterOwnProps} from './components/Footer';
 export type {NoMatchesOwnProps} from './components/NoMatches';
