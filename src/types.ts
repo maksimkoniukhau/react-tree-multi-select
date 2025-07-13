@@ -184,11 +184,15 @@ export type ComponentPropTypes = {
 export type ComponentNames = keyof ComponentPropTypes;
 
 export type Components<
-  CustomPropsMap extends Partial<Record<ComponentNames, unknown>>
-    & Record<Exclude<keyof CustomPropsMap, ComponentNames>, never> = any
+  ComponentsMap extends Partial<ComponentPropTypes>
+    & Record<Exclude<keyof ComponentsMap, ComponentNames>, never> = any
 > = {
   [K in ComponentNames]?: Component<
-    ComponentPropTypes[K] extends Component<any, infer P> ? P : never,
-    K extends keyof CustomPropsMap ? CustomPropsMap[K] : unknown
+    ComponentPropTypes[K] extends Component<infer ComponentProps, any> ? ComponentProps : never,
+    K extends keyof ComponentsMap
+      ? ComponentsMap[K] extends Component<any, infer CustomProps>
+        ? CustomProps
+        : unknown
+      : unknown
   >;
 };
