@@ -113,13 +113,13 @@ const countData = (data: TreeNode[]): number => {
   return count;
 };
 
-const generateBigTreeNodeData = (rootAmount: number): { data: RandomTreeNode[], amount: number } => {
+const generateLargeTreeNodeData = (rootAmount: number): { data: RandomTreeNode[], amount: number } => {
   const data = generateData(rootAmount, '0');
   return {data, amount: countData(data)};
 };
 
-export const bigTreeNodeData30: { data: RandomTreeNode[], amount: number } = generateBigTreeNodeData(30);
-export const bigTreeNodeData50: { data: RandomTreeNode[], amount: number } = generateBigTreeNodeData(50);
+export const largeTreeNodeData30: { data: RandomTreeNode[], amount: number } = generateLargeTreeNodeData(30);
+export const largeTreeNodeData50: { data: RandomTreeNode[], amount: number } = generateLargeTreeNodeData(50);
 
 export const fetchFakeService = (
   page: number,
