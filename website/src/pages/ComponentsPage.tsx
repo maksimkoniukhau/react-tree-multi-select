@@ -19,7 +19,8 @@ import {
   noMatchesExample,
   selectAllCheckboxExample,
   selectAllContainerExample,
-  selectAllLabelExample
+  selectAllLabelExample,
+  tsSupport
 } from '../code-data';
 import {Alert} from '../components/Alert';
 import {CodeBlock} from '../components/CodeBlock';
@@ -89,6 +90,28 @@ export const ComponentsPage: FC = memo(() => {
           <CodeBlock code={customProps}/>
           <div className="paragraph">
             {'For an example, refer to the '}<a className="link" href="#chip-label">CustomChipLabel</a>{'.'}
+          </div>
+          <div className="paragraph">
+            <div><b>{'TypeScript support'}</b></div>
+            <div className="paragraph">
+              {'You can use generic parameters to strongly type each component, ensuring type safety and preventing accidental misuse.'}
+            </div>
+            <Alert
+              type={'note'}
+              text={
+                <span>
+                  {`- Component type entries can be listed in any order. The order of keys in the generic argument does not matter — TypeScript will correctly match each one by name.
+                  - Only known component keys (Field, Footer, NodeContainer, etc.) are allowed.
+                  - Each component’s props are strongly typed according to the generics you specify.
+                  - Extra or unknown keys (like WrongComponent) or mismatched types will result in a TypeScript error.
+                  - Extra or unknown fields inside the component config (like wrongProp) are disallowed.`}
+                </span>
+              }
+            />
+          </div>
+          <CodeBlock code={tsSupport}/>
+          <div className="paragraph">
+            {'For an example, refer to the '}<a className="link" href="#field">CustomField</a>{'.'}
           </div>
         </Section>
         <Section id="field">

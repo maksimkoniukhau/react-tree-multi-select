@@ -1,5 +1,5 @@
 import React, {FC, useMemo} from 'react';
-import {Components, FieldProps, TreeMultiSelect, Type} from '../../treeMultiSelectImport';
+import {Components, FieldProps, FieldType, TreeMultiSelect, Type} from '../../treeMultiSelectImport';
 
 interface CustomFieldProps {
   label: string;
@@ -13,7 +13,7 @@ const CustomField: FC<FieldProps<CustomFieldProps>> = (props) => (
 
 export const CustomFieldExample: FC = () => {
 
-  const createComponents = (label: string): Components => ({
+  const createComponents = (label: string): Components<{ Field: FieldType<CustomFieldProps>; }> => ({
     Field: {
       component: CustomField,
       props: {label},

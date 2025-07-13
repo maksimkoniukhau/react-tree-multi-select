@@ -229,8 +229,15 @@ export const customProps = `export const CustomExample: FC = () => {
   );
 };`;
 
+export const tsSupport = `const createComponents = (label: string): Components<{ Field: FieldType<CustomFieldProps>; }> => ({
+    Field: {
+      component: CustomField,
+      props: {label},
+    },
+  });`;
+
 export const fieldExample = `import React, {FC, useMemo} from 'react';
-import {Components, FieldProps, TreeMultiSelect, Type} from 'react-tree-multi-select';
+import {Components, FieldProps, FieldType, TreeMultiSelect, Type} from 'react-tree-multi-select';
 
 interface CustomFieldProps {
   label: string;
@@ -244,7 +251,7 @@ const CustomField: FC<FieldProps<CustomFieldProps>> = (props) => (
 
 export const CustomFieldExample: FC = () => {
 
-  const createComponents = (label: string): Components => ({
+  const createComponents = (label: string): Components<{ Field: FieldType<CustomFieldProps>; }> => ({
     Field: {
       component: CustomField,
       props: {label},
