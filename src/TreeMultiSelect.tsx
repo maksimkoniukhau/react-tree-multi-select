@@ -74,10 +74,12 @@ export interface TreeMultiSelectProps {
   withSelectAll?: boolean;
   withDropdownInput?: boolean;
   closeDropdownOnNodeChange?: boolean;
+  openDropdown?: boolean;
   dropdownHeight?: number;
   footerConfig?: FooterConfig;
   keyboardConfig?: KeyboardConfig;
   components?: Components;
+  onDropdownToggle?: (open: boolean) => void;
   onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
   onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
   onClearAll?: (selectedNodes: TreeNode[], selectAllCheckedState?: CheckedState) => void;
@@ -115,10 +117,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     withSelectAll = false,
     withDropdownInput = false,
     closeDropdownOnNodeChange = false,
+    openDropdown,
     dropdownHeight = DEFAULT_OPTIONS_CONTAINER_HEIGHT,
     footerConfig,
     keyboardConfig: propsKeyboardConfig,
     components: propsComponents,
+    onDropdownToggle,
     onNodeChange,
     onNodeToggle,
     onClearAll,
@@ -199,6 +203,13 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       } as FocusPayload
     });
   }, []);
+
+  useEffect(() => {
+    if (openDropdown !== undefined) {
+      dispatchToggleDropdown(openDropdown);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openDropdown]);
 
   useEffect(() => {
     nodeMapRef.current = new Map<string, Node>();
@@ -282,10 +293,15 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       isOutsideClicked.current = true;
     }
     if (state.showDropdown || isSearchMode || state.focusedElement) {
+      let showDropdown = false;
+      if (openDropdown !== undefined) {
+        onDropdownToggle?.(showDropdown);
+        showDropdown = state.showDropdown;
+      }
       dispatch({
         type: ActionType.RESET,
         payload: {
-          showDropdown: false,
+          showDropdown,
           searchValue: '',
           focusedElement: ''
         } as ResetPayload
@@ -394,15 +410,20 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     focusFieldElement();
     // defaultPrevented is on click field clear icon or chip (or in custom field)
     if (!event.defaultPrevented) {
+      let showDropdown = !state.showDropdown;
+      if (openDropdown !== undefined) {
+        onDropdownToggle?.(showDropdown);
+        showDropdown = state.showDropdown;
+      }
       dispatch({
         type: ActionType.FIELD_CLICK,
         payload: {
-          showDropdown: !state.showDropdown,
+          showDropdown,
           focusedElement: buildFocusedElement(INPUT, FIELD)
         } as FieldClickPayload
       });
     }
-  }, [state.showDropdown, isDisabled]);
+  }, [state.showDropdown, isDisabled, openDropdown, onDropdownToggle]);
 
   const callClearAllHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onClearAll) {
@@ -516,15 +537,20 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     // defaultPrevented is on click chip clear icon
     if (!event.defaultPrevented) {
       event.preventDefault();
+      let showDropdown = !state.showDropdown;
+      if (openDropdown !== undefined) {
+        onDropdownToggle?.(showDropdown);
+        showDropdown = state.showDropdown;
+      }
       dispatch({
         type: ActionType.CHIP_CLICK,
         payload: {
-          showDropdown: !state.showDropdown,
+          showDropdown,
           focusedElement: buildFocusedElement(node.path, FIELD)
         } as ChipClickPayload
       });
     }
-  }, [state.showDropdown, isDisabled]);
+  }, [state.showDropdown, openDropdown, onDropdownToggle, isDisabled]);
 
   const handleNodeDelete = useCallback((node: Node) => (event: React.MouseEvent | React.KeyboardEvent): void => {
     if (!withChipClear || isDisabled) {
@@ -566,9 +592,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           state.selectedNodes.forEach(node => node.handleUnselect(type));
           node.handleSelect(type);
         }
-
         const selectedNodes = state.nodes.filter(node => node.selected);
-
+        let showDropdown = closeDropdownOnNodeChange ? false : state.showDropdown;
+        if (openDropdown !== undefined) {
+          onDropdownToggle?.(showDropdown);
+          showDropdown = state.showDropdown;
+        }
         dispatch({
           type: ActionType.NODE_CHANGE,
           payload: {
@@ -577,7 +606,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
             focusedElement: closeDropdownOnNodeChange
               ? buildFocusedElement(INPUT, FIELD)
               : buildFocusedElement(node.path, DROPDOWN),
-            showDropdown: closeDropdownOnNodeChange ? false : state.showDropdown
+            showDropdown
           } as NodeChangePayload
         });
 
@@ -586,7 +615,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         dispatchFocus(buildFocusedElement(node.path, DROPDOWN));
       }
     }
-  }, [state.nodes, state.selectedNodes, state.showDropdown, type, closeDropdownOnNodeChange, callNodeChangeHandler, isDisabled, dispatchFocus]);
+  }, [state.nodes, state.selectedNodes, state.showDropdown, type, openDropdown, onDropdownToggle, closeDropdownOnNodeChange, callNodeChangeHandler, isDisabled, dispatchFocus]);
 
   const handleNodeToggle = useCallback((node: Node, expand: boolean): void => {
     node.handleExpand(isSearchMode, expand);
@@ -669,7 +698,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
             dispatchFocus(prevFocusedElement);
           }
         } else {
-          dispatchToggleDropdown(!state.showDropdown);
+          const showDropdown = !state.showDropdown;
+          if (openDropdown !== undefined) {
+            onDropdownToggle?.(showDropdown);
+          } else {
+            dispatchToggleDropdown(showDropdown);
+          }
         }
         event.preventDefault();
         break;
@@ -680,7 +714,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
             dispatchFocus(nextFocusedElement);
           }
         } else {
-          dispatchToggleDropdown(!state.showDropdown);
+          const showDropdown = !state.showDropdown;
+          if (openDropdown !== undefined) {
+            onDropdownToggle?.(showDropdown);
+          } else {
+            dispatchToggleDropdown(showDropdown);
+          }
         }
         event.preventDefault();
         break;
@@ -691,7 +730,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           if (chipNode) {
             handleChipClick(chipNode)(event);
           } else {
-            dispatchToggleDropdown(!state.showDropdown);
+            const showDropdown = !state.showDropdown;
+            if (openDropdown !== undefined) {
+              onDropdownToggle?.(showDropdown);
+            } else {
+              dispatchToggleDropdown(showDropdown);
+            }
           }
         } else if (state.showDropdown) {
           if (isFocused(SELECT_ALL, DROPDOWN, state.focusedElement)) {
@@ -720,13 +764,23 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         break;
       case 'Escape':
         if (state.showDropdown) {
-          dispatchToggleDropdown(false);
+          const showDropdown = false;
+          if (openDropdown !== undefined) {
+            onDropdownToggle?.(showDropdown);
+          } else {
+            dispatchToggleDropdown(showDropdown);
+          }
           event.preventDefault();
         }
         break;
       case 'Tab':
         if (state.showDropdown) {
-          dispatchToggleDropdown(false);
+          const showDropdown = false;
+          if (openDropdown !== undefined) {
+            onDropdownToggle?.(showDropdown);
+          } else {
+            dispatchToggleDropdown(showDropdown);
+          }
           event.preventDefault();
         }
         break;
