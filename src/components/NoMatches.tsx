@@ -1,10 +1,6 @@
 import React, {FC, memo} from 'react';
 import {NoMatchesProps, NoMatchesType} from '../types';
 
-export interface NoMatchesOwnProps {
-  label: string;
-}
-
 export const NoMatches: FC<NoMatchesProps> = (props) => {
   return (
     <div {...props.attributes}>

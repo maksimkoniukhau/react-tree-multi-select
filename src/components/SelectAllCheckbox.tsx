@@ -1,11 +1,6 @@
 import React, {FC, memo} from 'react';
 import {SelectAllCheckboxProps, SelectAllCheckboxType} from '../types';
 
-export interface SelectAllCheckboxOwnProps {
-  checked: boolean;
-  partial: boolean;
-}
-
 export const SelectAllCheckbox: FC<SelectAllCheckboxProps> = memo((props) => {
   const {checked, partial} = props.ownProps;
 

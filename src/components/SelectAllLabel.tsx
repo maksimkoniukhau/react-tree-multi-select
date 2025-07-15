@@ -1,10 +1,6 @@
 import React, {FC, memo} from 'react';
 import {SelectAllLabelProps, SelectAllLabelType} from '../types';
 
-export interface SelectAllLabelOwnProps {
-  label: string;
-}
-
 export const SelectAllLabel: FC<SelectAllLabelProps> = memo((props) => {
   return (
     <div {...props.attributes}>{props.ownProps.label}</div>

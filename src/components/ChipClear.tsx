@@ -2,10 +2,6 @@ import React, {FC, memo} from 'react';
 import {ChipClearProps, ChipClearType} from '../types';
 import {Node} from '../Node';
 
-export interface ChipClearOwnProps {
-  componentDisabled: boolean;
-}
-
 export const ChipClear: FC<ChipClearProps> = memo((props) => {
   return (
     <div {...props.attributes}>

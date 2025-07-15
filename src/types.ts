@@ -1,20 +1,4 @@
 import {ComponentType, HTMLProps, ReactNode} from 'react';
-import {FieldOwnProps} from './components/Field';
-import {ChipContainerOwnProps} from './components/ChipContainer';
-import {ChipLabelOwnProps} from './components/ChipLabel';
-import {ChipClearOwnProps} from './components/ChipClear';
-import {InputOwnProps} from './components/Input';
-import {FieldClearOwnProps} from './components/FieldClear';
-import {FieldToggleOwnProps} from './components/FieldToggle';
-import {SelectAllContainerOwnProps} from './components/SelectAllContainer';
-import {SelectAllCheckboxOwnProps} from './components/SelectAllCheckbox';
-import {SelectAllLabelOwnProps} from './components/SelectAllLabel';
-import {NodeContainerOwnProps} from './components/NodeContainer';
-import {NodeToggleOwnProps} from './components/NodeToggle';
-import {NodeCheckboxOwnProps} from './components/NodeCheckbox';
-import {NodeLabelOwnProps} from './components/NodeLabel';
-import {FooterOwnProps} from './components/Footer';
-import {NoMatchesOwnProps} from './components/NoMatches';
 
 export enum Type {
   TREE_SELECT = 'TREE_SELECT',
@@ -115,6 +99,93 @@ export type FooterConfig = {
   showWhenNoItems?: boolean;
 }
 
+export interface FieldOwnProps {
+  type: Type;
+  showDropdown: boolean;
+  withClearAll: boolean;
+  componentDisabled: boolean;
+}
+
+export interface ChipContainerOwnProps {
+  label: string;
+  focused: boolean;
+  disabled: boolean;
+  componentDisabled: boolean;
+  withChipClear: boolean;
+}
+
+export interface ChipLabelOwnProps {
+  label: string;
+  componentDisabled: boolean;
+}
+
+export interface ChipClearOwnProps {
+  componentDisabled: boolean;
+}
+
+export interface InputOwnProps {
+  placeholder: string;
+  value: string;
+  disabled: boolean;
+}
+
+export interface FieldClearOwnProps {
+  focused: boolean;
+  componentDisabled: boolean;
+}
+
+export interface FieldToggleOwnProps {
+  expanded: boolean;
+  componentDisabled: boolean;
+}
+
+export interface SelectAllContainerOwnProps {
+  label: string;
+  checkedState: CheckedState;
+  focused: boolean;
+}
+
+export interface SelectAllCheckboxOwnProps {
+  checked: boolean;
+  partial: boolean;
+}
+
+export interface SelectAllLabelOwnProps {
+  label: string;
+}
+
+export interface NodeContainerOwnProps {
+  label: string;
+  disabled: boolean;
+  selected: boolean;
+  partial: boolean;
+  expanded: boolean;
+  focused: boolean;
+  matched: boolean;
+}
+
+export interface NodeToggleOwnProps {
+  expanded: boolean;
+}
+
+export interface NodeCheckboxOwnProps {
+  checked: boolean;
+  partial: boolean;
+  disabled: boolean;
+}
+
+export interface NodeLabelOwnProps {
+  label: string;
+}
+
+export interface FooterOwnProps {
+  focused: boolean;
+}
+
+export interface NoMatchesOwnProps {
+  label: string;
+}
+
 export interface ComponentProps<ComponentType, OwnProps, CustomProps = unknown> {
   attributes: HTMLProps<ComponentType>;
   ownProps: OwnProps;
@@ -162,7 +233,7 @@ export type FooterType<CustomProps = unknown> = Component<FooterProps<CustomProp
 export type NoMatchesType<CustomProps = unknown> = Component<NoMatchesProps<CustomProps>, CustomProps>;
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type ComponentPropTypes = {
+export type ComponentTypes = {
   Field: FieldType<any>;
   ChipContainer: ChipContainerType<any>;
   ChipLabel: ChipLabelType<any>;
@@ -181,14 +252,14 @@ export type ComponentPropTypes = {
   NoMatches: NoMatchesType<any>;
 };
 
-export type ComponentNames = keyof ComponentPropTypes;
+export type ComponentNames = keyof ComponentTypes;
 
 export type Components<
-  ComponentsMap extends Partial<ComponentPropTypes>
+  ComponentsMap extends Partial<ComponentTypes>
     & Record<Exclude<keyof ComponentsMap, ComponentNames>, never> = any
 > = {
   [K in ComponentNames]?: Component<
-    ComponentPropTypes[K] extends Component<infer ComponentProps, any> ? ComponentProps : never,
+    ComponentTypes[K] extends Component<infer ComponentProps, any> ? ComponentProps : never,
     K extends keyof ComponentsMap
       ? ComponentsMap[K] extends Component<any, infer CustomProps>
         ? CustomProps

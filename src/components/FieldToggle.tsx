@@ -2,11 +2,6 @@ import React, {FC, memo} from 'react';
 import {FieldToggleProps, FieldToggleType} from '../types';
 import {preventDefaultOnMouseEvent} from '../utils/commonUtils';
 
-export interface FieldToggleOwnProps {
-  expanded: boolean;
-  componentDisabled: boolean;
-}
-
 export const FieldToggle: FC<FieldToggleProps> = memo((props) => {
   return (
     <div {...props.attributes}>

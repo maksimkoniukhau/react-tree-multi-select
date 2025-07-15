@@ -1,13 +1,6 @@
 import React, {FC, memo, ReactNode, RefObject} from 'react';
 import {FieldProps, FieldType, Type} from '../types';
 
-export interface FieldOwnProps {
-  type: Type;
-  showDropdown: boolean;
-  withClearAll: boolean;
-  componentDisabled: boolean;
-}
-
 export const Field: FC<FieldProps> = memo((props) => {
   return (
     <div {...props.attributes}>

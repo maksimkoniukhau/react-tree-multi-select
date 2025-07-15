@@ -1,12 +1,6 @@
 import React, {FC, memo} from 'react';
 import {NodeCheckboxProps, NodeCheckboxType} from '../types';
 
-export interface NodeCheckboxOwnProps {
-  checked: boolean;
-  partial: boolean;
-  disabled: boolean;
-}
-
 export const NodeCheckbox: FC<NodeCheckboxProps> = memo((props) => {
   const {checked, partial, disabled} = props.ownProps;
 

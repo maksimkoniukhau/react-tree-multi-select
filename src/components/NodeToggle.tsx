@@ -2,10 +2,6 @@ import React, {FC, memo} from 'react';
 import {NodeToggleProps, NodeToggleType} from '../types';
 import {Node} from '../Node';
 
-export interface NodeToggleOwnProps {
-  expanded: boolean;
-}
-
 export const NodeToggle: FC<NodeToggleProps> = memo((props) => {
   return (
     <div {...props.attributes}>

@@ -1,12 +1,6 @@
 import React, {FC, memo, RefObject} from 'react';
 import {InputProps, InputType} from '../types';
 
-export interface InputOwnProps {
-  placeholder: string;
-  value: string;
-  disabled: boolean;
-}
-
 export const Input: FC<InputProps> = memo((props) => {
   return (
     <input {...props.attributes}/>

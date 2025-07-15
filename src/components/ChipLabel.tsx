@@ -1,11 +1,6 @@
 import React, {FC, memo} from 'react';
 import {ChipLabelProps, ChipLabelType} from '../types';
 
-export interface ChipLabelOwnProps {
-  label: string;
-  componentDisabled: boolean;
-}
-
 export const ChipLabel: FC<ChipLabelProps> = memo((props) => {
   return (
     <div {...props.attributes}>{props.ownProps.label}</div>

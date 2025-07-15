@@ -2,16 +2,6 @@ import React, {FC, memo, ReactNode} from 'react';
 import {NodeContainerProps, NodeContainerType} from '../types';
 import {Node} from '../Node';
 
-export interface NodeContainerOwnProps {
-  label: string;
-  disabled: boolean;
-  selected: boolean;
-  partial: boolean;
-  expanded: boolean;
-  focused: boolean;
-  matched: boolean;
-}
-
 export const NodeContainer: FC<NodeContainerProps> = memo((props) => {
   return (
     <div {...props.attributes}>

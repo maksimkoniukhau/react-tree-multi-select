@@ -3,14 +3,6 @@ import {ChipContainerProps, ChipContainerType} from '../types';
 import {preventDefaultOnMouseEvent} from '../utils/commonUtils';
 import {Node} from '../Node';
 
-export interface ChipContainerOwnProps {
-  label: string;
-  focused: boolean;
-  disabled: boolean;
-  componentDisabled: boolean;
-  withChipClear: boolean;
-}
-
 export const ChipContainer: FC<ChipContainerProps> = memo((props) => {
   return (
     <div {...props.attributes}>

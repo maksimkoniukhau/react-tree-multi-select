@@ -2,11 +2,6 @@ import React, {FC, memo} from 'react';
 import {FieldClearProps, FieldClearType} from '../types';
 import {preventDefaultOnMouseEvent} from '../utils/commonUtils';
 
-export interface FieldClearOwnProps {
-  focused: boolean;
-  componentDisabled: boolean;
-}
-
 export const FieldClear: FC<FieldClearProps> = memo((props) => {
   return (
     <div {...props.attributes}>
