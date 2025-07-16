@@ -9,6 +9,7 @@ import {BasicPage} from './pages/BasicPage';
 import {LargeDataPage} from './pages/LargeDataPage';
 import {InfiniteScrollPage} from './pages/InfiniteScrollPage';
 import {ComponentsPage} from './pages/ComponentsPage';
+import {ControlledPage} from './pages/ControlledPage';
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
               <Route path="/" element={<GettingStartedPage/>}/>
               <Route path="/api" element={<ApiPage/>}/>
               <Route path="/basic" element={<BasicPage/>}/>
+              <Route path="/controlled" element={<ControlledPage/>}/>
               <Route path="/large-data" element={<LargeDataPage/>}/>
               <Route path="/infinite-scroll" element={<InfiniteScrollPage/>}/>
               <Route path="/components" element={<ComponentsPage/>}/>

@@ -56,12 +56,12 @@ export const CustomFooterExample: FC = () => {
     node.children?.forEach(child => toggleNode(child, expandedNodes));
   };
 
-  const handleNodeChange = (node: TreeNode, selectedNodes: TreeNode[]): void => {
+  const handleNodeChange = (_: TreeNode, selectedNodes: TreeNode[]): void => {
     data.forEach(randomTreeNode => selectNode(randomTreeNode, selectedNodes));
     setData([...data]);
   };
 
-  const handleNodeToggle = (node: TreeNode, expandedNodes: TreeNode[]): void => {
+  const handleNodeToggle = (_: TreeNode, expandedNodes: TreeNode[]): void => {
     data.forEach(randomTreeNode => toggleNode(randomTreeNode, expandedNodes));
     setData([...data]);
   };

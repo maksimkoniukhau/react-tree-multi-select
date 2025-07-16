@@ -781,12 +781,12 @@ export const CustomFooterExample: FC = () => {
     node.children?.forEach(child => toggleNode(child, expandedNodes));
   };
 
-  const handleNodeChange = (node: TreeNode, selectedNodes: TreeNode[]): void => {
+  const handleNodeChange = (_: TreeNode, selectedNodes: TreeNode[]): void => {
     data.forEach(randomTreeNode => selectNode(randomTreeNode, selectedNodes));
     setData([...data]);
   };
 
-  const handleNodeToggle = (node: TreeNode, expandedNodes: TreeNode[]): void => {
+  const handleNodeToggle = (_: TreeNode, expandedNodes: TreeNode[]): void => {
     data.forEach(randomTreeNode => toggleNode(randomTreeNode, expandedNodes));
     setData([...data]);
   };
@@ -847,6 +847,54 @@ export const CustomNoMatchesExample: FC = () => {
   );
 };`;
 
+export const controlledExample = `import React, {FC, memo, useState} from 'react';
+import {TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
+import {getTreeNodeData} from '../utils';
+import {OptionTreeNode} from '../data';
+
+export const ControlledExample: FC = memo(() => {
+
+  const [data, setData] = useState<OptionTreeNode[]>(getTreeNodeData(true, true, true));
+  const [open, setOpen] = useState<boolean>(true);
+
+  const handleDropdownToggle = (open: boolean): void => {
+    setOpen(open);
+  };
+
+  const selectNode = (node: TreeNode, selectedNodes: TreeNode[]): void => {
+    node.selected = selectedNodes.some(selectedNode => (selectedNode as OptionTreeNode).option.id === (node as OptionTreeNode).option.id);
+    node.children?.forEach(child => selectNode(child, selectedNodes));
+  };
+
+  const toggleNode = (node: TreeNode, expandedNodes: TreeNode[]): void => {
+    node.expanded = expandedNodes.some(expandedNode => (expandedNode as OptionTreeNode).option.id === (node as OptionTreeNode).option.id);
+    node.children?.forEach(child => toggleNode(child, expandedNodes));
+  };
+
+  const handleNodeChange = (_: TreeNode, selectedNodes: TreeNode[]): void => {
+    data.forEach(optionTreeNode => selectNode(optionTreeNode, selectedNodes));
+    setData([...data]);
+  };
+
+  const handleNodeToggle = (_: TreeNode, expandedNodes: TreeNode[]): void => {
+    data.forEach(optionTreeNode => toggleNode(optionTreeNode, expandedNodes));
+    setData([...data]);
+  };
+
+  return (
+    <div className="component-example">
+      <TreeMultiSelect
+        data={data}
+        withClearAll={false}
+        openDropdown={open}
+        onDropdownToggle={handleDropdownToggle}
+        onNodeChange={handleNodeChange}
+        onNodeToggle={handleNodeToggle}
+      />
+    </div>
+  );
+});`;
+
 export const infiniteScrollExample = `import React, {FC, useMemo, useState} from 'react';
 import {FooterProps, KeyboardConfig, TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
 import {fetchFakeService, RandomTreeNode} from '../utils';
@@ -876,12 +924,12 @@ export const InfiniteScrollExample: FC = () => {
     node.children?.forEach(child => toggleNode(child, expandedNodes));
   };
 
-  const handleNodeChange = (node: TreeNode, selectedNodes: TreeNode[]): void => {
+  const handleNodeChange = (_: TreeNode, selectedNodes: TreeNode[]): void => {
     data.forEach(randomTreeNode => selectNode(randomTreeNode, selectedNodes));
     setData([...data]);
   };
 
-  const handleNodeToggle = (node: TreeNode, expandedNodes: TreeNode[]): void => {
+  const handleNodeToggle = (_: TreeNode, expandedNodes: TreeNode[]): void => {
     data.forEach(randomTreeNode => toggleNode(randomTreeNode, expandedNodes));
     setData([...data]);
   };

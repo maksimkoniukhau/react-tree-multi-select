@@ -1,0 +1,23 @@
+import React, {FC, memo} from 'react';
+import {CodeBlock} from '../components/CodeBlock';
+import {controlledExample} from '../code-data';
+import {ControlledExample} from '../examples/ControlledExample';
+
+export const ControlledPage: FC = memo(() => {
+
+  return (
+    <div className="page" style={{paddingBottom: '150px'}}>
+      <div className="page-content">
+        <h2>{'Controlled'}</h2>
+        <div className="paragraph">
+          <div className="paragraph">
+            {`Controlled component.`}
+          </div>
+        </div>
+        <CodeBlock code={controlledExample}/>
+        <ControlledExample/>
+      </div>
+      <div className="page-navigation"></div>
+    </div>
+  );
+});
