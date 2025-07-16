@@ -26,7 +26,7 @@ export const SelectAllContainerWrapper: FC<SelectAllContainerWrapperProps> = mem
     : checkedState === CheckedState.PARTIAL
       ? ' partial'
       : '';
-  const containerClasses = `rtms-header-item${selectedClass}${focused ? ' focused' : ''}`;
+  const containerClasses = `rtms-sticky-item${selectedClass}${focused ? ' focused' : ''}`;
 
   return (
     <selectAllContainer.component

@@ -31,12 +31,6 @@ TreeMultiSelect styles
 
   position: relative;
 
-  @for $i from 0 through 100 {
-    .pl-#{$i} {
-      padding-left: calc((var(--rtms-checkbox-width) + var(--rtms-list-item-gap)) * $i + var(--rtms-list-item-lr-padding));
-    }
-  }
-
   @include chip.chip-styles;
   @include input.input-styles;
   @include checkbox.checkbox-styles;

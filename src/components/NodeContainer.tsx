@@ -1,4 +1,4 @@
-import React, {FC, memo, ReactNode} from 'react';
+import React, {CSSProperties, FC, memo, ReactNode} from 'react';
 import {NodeContainerProps, NodeContainerType} from '../types';
 import {Node} from '../Node';
 
@@ -46,12 +46,18 @@ export const NodeContainerWrapper: FC<NodeContainerWrapperProps> = memo((props) 
   const expandedClass = expanded ? ' expanded' : '';
   const focusedClass = focused ? ' focused' : '';
   const matchedClass = matched ? ' matched' : '';
-  const plClass = ` pl-${node.depth + (indentation ? 1 : 0)}`;
-  const className = `rtms-list-item${disabledClass}${selectedClass}${expandedClass}${focusedClass}${matchedClass}${plClass}`;
+  const className = `rtms-list-item${disabledClass}${selectedClass}${expandedClass}${focusedClass}${matchedClass}`;
 
   return (
     <nodeContainer.component
-      attributes={{className, onClick: onNodeChange(node)}}
+      attributes={{
+        style: {
+          '--rtms-list-item-depth': node.depth,
+          '--rtms-list-item-indentation': indentation ? 1 : 0
+        } as CSSProperties,
+        className,
+        onClick: onNodeChange(node)
+      }}
       ownProps={{label, disabled, selected, partial, expanded, focused, matched}}
       customProps={nodeContainer.props}
     >

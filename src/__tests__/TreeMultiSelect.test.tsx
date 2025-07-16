@@ -18,8 +18,8 @@ import {
   getFieldClear,
   getFieldInput,
   getFieldToggle,
-  getHeaderItem,
-  getHeaderItems,
+  getStickyItem,
+  getStickyItems,
   getHiddenInput,
   getListItem,
   getListItems,
@@ -361,7 +361,7 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
     handleSelectAllChange: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => void,
     selectAllChangeTimes: number
   ): void => {
-    const selectAll = getHeaderItem(container, 0);
+    const selectAll = getStickyItem(container, 0);
     expect(selectAll).toBeInTheDocument();
     if (selectAllState === CheckedState.UNSELECTED) {
       expect(selectAll.classList.contains('selected')).toBeFalsy();
@@ -385,7 +385,7 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
     );
 
     await user.click(getField(container));
-    expect(getHeaderItems(container).length).toBe(0);
+    expect(getStickyItems(container).length).toBe(0);
   });
 
   it('tests component when withSelectAll=true and component type=SELECT', async () => {
@@ -401,7 +401,7 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
     );
 
     await user.click(getField(container));
-    expect(getHeaderItem(container, 0)).toBeInTheDocument();
+    expect(getStickyItem(container, 0)).toBeInTheDocument();
 
     rerender(
       <TreeMultiSelect
@@ -412,7 +412,7 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
       />
     );
 
-    expect(getHeaderItems(container).length).toBe(0);
+    expect(getStickyItems(container).length).toBe(0);
   });
 
   it('tests component when withSelectAll=true', async () => {
@@ -429,10 +429,10 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
     await user.click(getField(container));
     withSelectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange, 0);
 
-    await user.click(getHeaderItem(container, 0));
+    await user.click(getStickyItem(container, 0));
     withSelectAllMatcher(container, CheckedState.SELECTED, 8, 8, handleSelectAllChange, 1);
 
-    await user.click(getHeaderItem(container, 0));
+    await user.click(getStickyItem(container, 0));
     withSelectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange, 2);
 
     await user.keyboard('{enter}');
@@ -473,10 +473,10 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
     await user.click(getListItem(container, 10));
     withSelectAllMatcher(container, CheckedState.PARTIAL, 8, 10, handleSelectAllChange, 4);
 
-    await user.click(getHeaderItem(container, 0));
+    await user.click(getStickyItem(container, 0));
     withSelectAllMatcher(container, CheckedState.SELECTED, 8, 13, handleSelectAllChange, 5);
 
-    await user.click(getHeaderItem(container, 0));
+    await user.click(getStickyItem(container, 0));
     withSelectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange, 6);
 
     await user.click(getListItem(container, 4));

@@ -2,10 +2,10 @@
   --rtms-line-height: 1;
   --rtms-font-size: 16px;
 
-  --rtms-field-line-height: 1;
-  --rtms-field-font-size: 16px;
-  --rtms-dropdown-line-height: 1;
-  --rtms-dropdown-font-size: 16px;
+  --rtms-field-line-height: var(--rtms-line-height);
+  --rtms-field-font-size: var(--rtms-font-size);
+  --rtms-dropdown-line-height: var(--rtms-line-height);
+  --rtms-dropdown-font-size: var(--rtms-font-size);
 
   --rtms-disabled-color: #acacac;
   --rtms-disabled-background-color: #f5f5f5;
@@ -20,8 +20,11 @@
   --rtms-chip-clear-icon-width: var(--rtms-icon-base-width);
   --rtms-chip-clear-icon-height: var(--rtms-icon-base-height);
 
-  --rtms-checkbox-width: 16px;
-  --rtms-checkbox-height: 16px;
+  --rtms-node-toggle-icon-width: var(--rtms-icon-base-width);
+  --rtms-node-toggle-icon-height: var(--rtms-icon-base-height);
+
+  --rtms-checkbox-width: var(--rtms-icon-base-width);
+  --rtms-checkbox-height: var(--rtms-icon-base-height);
 
   --rtms-list-item-gap: 3px;
   --rtms-list-item-tb-padding: 2px;

@@ -25,7 +25,7 @@
       border-radius: 4px;
     }
 
-    .rtms-list-item, .rtms-header-item {
+    .rtms-list-item, .rtms-sticky-item {
       display: flex;
       align-items: center;
       padding-top: var(--rtms-list-item-tb-padding);
@@ -38,6 +38,11 @@
 
     .rtms-list-item {
       background-color: #ffffff;
+      padding-left: calc(
+              ((var(--rtms-checkbox-width) + var(--rtms-list-item-gap)) * var(--rtms-list-item-depth, 0))
+              + ((var(--rtms-node-toggle-icon-width) + var(--rtms-list-item-gap)) * var(--rtms-list-item-indentation))
+              + var(--rtms-list-item-lr-padding)
+      );
       padding-right: var(--rtms-list-item-lr-padding);
 
       &.selected {
@@ -63,8 +68,8 @@
         cursor: pointer;
 
         .rtms-node-toggle-icon {
-          width: var(--rtms-checkbox-width);
-          height: var(--rtms-checkbox-height);
+          width: var(--rtms-node-toggle-icon-width);
+          height: var(--rtms-node-toggle-icon-height);
 
           path {
             fill: var(--rtms-icon-base-color);
@@ -78,7 +83,7 @@
       }
     }
 
-    .rtms-header-item {
+    .rtms-sticky-item {
       background-color: #ffffff;
       padding-left: var(--rtms-list-item-lr-padding);
       padding-right: var(--rtms-list-item-lr-padding);
