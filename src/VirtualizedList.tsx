@@ -208,6 +208,7 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
 
   return (
     <div
+      tabIndex={-1}
       ref={outerRef}
       style={outerStyle}
       className="rtms-dropdown-list-outer"

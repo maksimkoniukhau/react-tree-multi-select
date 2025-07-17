@@ -21,6 +21,14 @@
     box-sizing: border-box;
     animation: fadeIn 0.1s forwards;
 
+    &.disabled {
+      background-color: var(--rtms-disabled-background-color);
+
+      .rtms-sticky-item, .rtms-list-item, .rtms-footer {
+        background-color: var(--rtms-disabled-background-color);
+      }
+    }
+
     .rtms-dropdown-list-outer {
       border-radius: 4px;
     }

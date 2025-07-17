@@ -31,6 +31,7 @@ export interface DropdownProps {
   onUnmount: () => void;
   components: InnerComponents;
   onListItemRender: () => void;
+  componentDisabled: boolean;
 }
 
 export const Dropdown: FC<DropdownProps> = memo((props) => {
@@ -57,7 +58,8 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     onLastItemReached,
     onUnmount,
     components,
-    onListItemRender
+    onListItemRender,
+    componentDisabled
   } = props;
 
   const virtualizedListRef = useRef<VirtualizedListHandle>(null);
@@ -125,7 +127,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
   };
 
   return (
-    <div className="rtms-dropdown" onMouseDown={handleMouseDown}>
+    <div className={`rtms-dropdown${componentDisabled ? ' disabled' : ''}`} onMouseDown={handleMouseDown}>
       <VirtualizedList
         ref={virtualizedListRef}
         height={dropdownHeight}

@@ -789,7 +789,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const debouncedHandleListItemRender = debounce(handleListItemRender, 150);
 
   const typeClassName = useMemo(() => typeToClassName(type), [type]);
-  const rootClasses = `rtms-tree-multi-select ${typeClassName} ${isDisabled ? ' disabled' : ''}`
+  const rootClasses = `rtms-tree-multi-select ${typeClassName}${isDisabled ? ' disabled' : ''}`
     + (className ? ` ${className}` : '');
 
   useOnClickOutside(treeMultiSelectRef, handleOutsideEvent);
@@ -829,7 +829,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
               />
             ))}
           {withDropdownInput || !isSearchable ? (
-            <input className="rtms-input-hidden" readOnly/>
+            <input className="rtms-input-hidden" disabled={isDisabled} readOnly/>
           ) : (
             <InputWrapper
               input={components.Input}
@@ -892,6 +892,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
             onUnmount={handleDropdownUnmount}
             components={components}
             onListItemRender={debouncedHandleListItemRender}
+            componentDisabled={isDisabled}
           />
         ) : null
       }

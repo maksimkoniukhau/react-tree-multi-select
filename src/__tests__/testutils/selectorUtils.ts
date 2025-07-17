@@ -70,3 +70,7 @@ export const getListItems = (container: HTMLElement): HTMLElement[] => {
 export const getListItem = (container: HTMLElement, index: number): HTMLElement => {
   return getListItems(container)[index];
 };
+
+export const getNodeToggle = (container: HTMLElement, index: number): HTMLElement => {
+  return getListItems(container)[index].querySelector('.rtms-node-toggle') as HTMLElement;
+};
