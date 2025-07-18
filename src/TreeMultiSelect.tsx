@@ -626,6 +626,10 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     setFocusedElement(buildFocusedElement(FOOTER, DROPDOWN));
   }, [isDisabled]);
 
+  const handleComponentClick = (): void => {
+    focusFieldElement();
+  };
+
   const handleComponentKeyDown = (event: React.KeyboardEvent): void => {
     if (isDisabled) {
       return;
@@ -801,6 +805,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       className={rootClasses}
       onFocus={handleComponentFocus}
       onBlur={handleComponentBlur}
+      onClick={handleComponentClick}
       onKeyDown={handleComponentKeyDown}
       onMouseDown={handleComponentMouseDown}
     >
