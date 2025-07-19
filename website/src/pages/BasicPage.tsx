@@ -90,22 +90,22 @@ export const BasicPage: FC = memo(() => {
     }
   };
 
-  const handleNodeChange = (node: TreeNode, selectedNodes: TreeNode[]): void => {
+  const handleNodeChange = (node: TreeNode, selectedNodes: TreeNode[], _data: TreeNode[]): void => {
     console.log('handleNodeChange node:', node);
     console.log('handleNodeChange selectedNodes:', selectedNodes);
   };
 
-  const handleNodeToggle = (node: TreeNode, expandedNodes: TreeNode[]): void => {
+  const handleNodeToggle = (node: TreeNode, expandedNodes: TreeNode[], _data: TreeNode[]): void => {
     console.log('handleNodeToggle node:', node);
     console.log('handleNodeToggle expandedNodes:', expandedNodes);
   };
 
-  const handleClearAll = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState | undefined): void => {
+  const handleClearAll = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState | undefined, _data: TreeNode[]): void => {
     console.log('handleClearAll selectedNodes:', selectedNodes);
     console.log('handleClearAll selectAllCheckedState:', selectAllCheckedState);
   };
 
-  const handleSelectAllChange = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState): void => {
+  const handleSelectAllChange = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState, _data: TreeNode[]): void => {
     console.log('handleSelectAllChange selectedNodes:', selectedNodes);
     console.log('handleSelectAllChange selectAllCheckedState:', selectAllCheckedState);
   };

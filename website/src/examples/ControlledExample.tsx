@@ -12,24 +12,12 @@ export const ControlledExample: FC = memo(() => {
     setOpen(open);
   };
 
-  const selectNode = (node: TreeNode, selectedNodes: TreeNode[]): void => {
-    node.selected = selectedNodes.some(selectedNode => (selectedNode as OptionTreeNode).option.id === (node as OptionTreeNode).option.id);
-    node.children?.forEach(child => selectNode(child, selectedNodes));
+  const handleNodeChange = (_node: TreeNode, _selectedNodes: TreeNode[], data: TreeNode[]): void => {
+    setData(data as OptionTreeNode[]);
   };
 
-  const toggleNode = (node: TreeNode, expandedNodes: TreeNode[]): void => {
-    node.expanded = expandedNodes.some(expandedNode => (expandedNode as OptionTreeNode).option.id === (node as OptionTreeNode).option.id);
-    node.children?.forEach(child => toggleNode(child, expandedNodes));
-  };
-
-  const handleNodeChange = (_: TreeNode, selectedNodes: TreeNode[]): void => {
-    data.forEach(optionTreeNode => selectNode(optionTreeNode, selectedNodes));
-    setData([...data]);
-  };
-
-  const handleNodeToggle = (_: TreeNode, expandedNodes: TreeNode[]): void => {
-    data.forEach(optionTreeNode => toggleNode(optionTreeNode, expandedNodes));
-    setData([...data]);
+  const handleNodeToggle = (_node: TreeNode, _expandedNodes: TreeNode[], data: TreeNode[]): void => {
+    setData(data as OptionTreeNode[]);
   };
 
   return (

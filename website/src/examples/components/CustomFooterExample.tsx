@@ -37,33 +37,21 @@ export const CustomFooterExample: FC = () => {
     if (!nextPage) {
       setLastPageReached(true);
     }
-    setData([...data, ...newData]);
+    setData(prevData => [...prevData, ...newData]);
     setPage(page + 1);
     setIsLoading(false);
-  }, [page, data]);
+  }, [page, fetchFakeService]);
 
   useEffect(() => {
     void loadData(0);
   }, []);
 
-  const selectNode = (node: TreeNode, selectedNodes: TreeNode[]): void => {
-    node.selected = selectedNodes.some(selectedNode => (selectedNode as RandomTreeNode).id === (node as RandomTreeNode).id);
-    node.children?.forEach(child => selectNode(child, selectedNodes));
+  const handleNodeChange = (_node: TreeNode, _selectedNodes: TreeNode[], data: TreeNode[]): void => {
+    setData(data as RandomTreeNode[]);
   };
 
-  const toggleNode = (node: TreeNode, expandedNodes: TreeNode[]): void => {
-    node.expanded = expandedNodes.some(expandedNode => (expandedNode as RandomTreeNode).id === (node as RandomTreeNode).id);
-    node.children?.forEach(child => toggleNode(child, expandedNodes));
-  };
-
-  const handleNodeChange = (_: TreeNode, selectedNodes: TreeNode[]): void => {
-    data.forEach(randomTreeNode => selectNode(randomTreeNode, selectedNodes));
-    setData([...data]);
-  };
-
-  const handleNodeToggle = (_: TreeNode, expandedNodes: TreeNode[]): void => {
-    data.forEach(randomTreeNode => toggleNode(randomTreeNode, expandedNodes));
-    setData([...data]);
+  const handleNodeToggle = (_node: TreeNode, _expandedNodes: TreeNode[], data: TreeNode[]): void => {
+    setData(data as RandomTreeNode[]);
   };
 
   const loadMore = useCallback(async () => {
