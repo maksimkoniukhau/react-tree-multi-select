@@ -726,7 +726,6 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       case 'Tab':
         if (showDropdown) {
           handleShowDropdown(false, true);
-          event.preventDefault();
         }
         break;
       default:
