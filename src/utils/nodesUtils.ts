@@ -2,15 +2,19 @@ import {CheckedState, TreeNode, Type} from '../types';
 import {PATH_DELIMITER} from '../constants';
 import {Node} from '../Node';
 
-export const mapTreeNodeToNode = (treeNode: TreeNode, path: string, parent: Node | null, nodeMap: Map<string, Node>): Node => {
+export const mapTreeNodeToNode = (
+  treeNode: TreeNode,
+  path: string,
+  parent: Node | null,
+  nodeMap: Map<string, Node>
+): Node => {
   const parentPath = parent?.path || '';
   const delimiter = parentPath ? PATH_DELIMITER : '';
   const nodePath = parentPath + delimiter + path;
   const children: TreeNode[] = treeNode.children || [];
   const expanded = Boolean(children.length && treeNode.expanded);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const {children: omitChildren, ...initTreeNode} = treeNode;
+  const initTreeNode = Object.assign(Object.create(Object.getPrototypeOf(treeNode)), treeNode);
 
   const node: Node = new Node(
     nodePath,
@@ -22,6 +26,7 @@ export const mapTreeNodeToNode = (treeNode: TreeNode, path: string, parent: Node
   );
 
   node.children = children.map((child, index) => mapTreeNodeToNode(child, index.toString(), node, nodeMap));
+  node.initTreeNode.children = treeNode.children && node.children.map(child => child.initTreeNode);
 
   nodeMap.set(nodePath, node);
 

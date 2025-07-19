@@ -15,9 +15,11 @@ export class Node {
   private _matched: boolean;
   private _filtered: boolean;
 
+  // flat ordered array of this node ancestors
   private _ancestors: Node[];
+  // flat ordered array of this node descendants
   private _descendants: Node[];
-
+  // shallow copy of original TreeNode with actual selected/expanded/disabled props
   private _initTreeNode: TreeNode;
 
   constructor(path: string, name: string, parent: Node | null, depth: number, expanded: boolean, initTreeNode: TreeNode) {
@@ -82,6 +84,7 @@ export class Node {
 
   set disabled(value: boolean) {
     this._disabled = value || false;
+    this._initTreeNode.disabled = value || false;
   }
 
   get selected(): boolean {
@@ -90,6 +93,7 @@ export class Node {
 
   set selected(value: boolean) {
     this._selected = value || false;
+    this._initTreeNode.selected = value || false;
   }
 
   get partiallySelected(): boolean {
@@ -106,6 +110,7 @@ export class Node {
 
   set expanded(value: boolean) {
     this._expanded = value || false;
+    this._initTreeNode.expanded = value || false;
   }
 
   get searchExpanded(): boolean {
@@ -163,10 +168,6 @@ export class Node {
   set initTreeNode(value: TreeNode) {
     this._initTreeNode = value;
   }
-
-  public toTreeNode = (): TreeNode => {
-    return this.mapToTreeNode(this);
-  };
 
   public hasChildren = (): boolean => {
     return this.children?.length > 0;
@@ -269,25 +270,6 @@ export class Node {
     return !this.ancestors.some(ancestor => isSearchMode
       ? !ancestor.searchExpanded
       : !ancestor.expanded);
-  };
-
-  private mapToTreeNode = (node: Node): TreeNode => {
-    const treeNode: TreeNode = {
-      ...node.initTreeNode,
-      selected: node.selected,
-      expanded: node.expanded,
-      disabled: node.disabled
-    };
-
-    let children: TreeNode[] = [];
-
-    if (node.children?.length) {
-      children = node.children.map(nod => this.mapToTreeNode(nod));
-    }
-
-    treeNode.children = children;
-
-    return treeNode;
   };
 
   private shouldBeUnselected = (type: Type): boolean => {

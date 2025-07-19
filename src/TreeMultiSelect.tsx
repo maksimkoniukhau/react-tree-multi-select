@@ -76,10 +76,10 @@ export interface TreeMultiSelectProps {
   keyboardConfig?: KeyboardConfig;
   components?: Components;
   onDropdownToggle?: (open: boolean) => void;
-  onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
-  onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
-  onClearAll?: (selectedNodes: TreeNode[], selectAllCheckedState?: CheckedState) => void;
-  onSelectAllChange?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => void;
+  onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[], data: TreeNode[]) => void;
+  onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[], data: TreeNode[]) => void;
+  onClearAll?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState | undefined, data: TreeNode[]) => void;
+  onSelectAllChange?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState, data: TreeNode[]) => void;
   onFocus?: (event: React.FocusEvent) => void;
   onBlur?: (event: React.FocusEvent) => void;
   /**
@@ -139,6 +139,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const dropdownUnmountedOnClickOutside = useRef<boolean>(false);
 
   const nodeMapRef = useRef<Map<string, Node>>(new Map<string, Node>());
+
+  // shallow copy of data with actual selected/expanded/disabled props
+  const copiedData = useRef<TreeNode[]>([]);
 
   const [state, dispatch] = useReducer(reducer, initialState);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
@@ -204,8 +207,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   useEffect(() => {
     nodeMapRef.current = new Map<string, Node>();
     const nodeTree: Node[] = [];
+    copiedData.current = [];
     data.forEach((treeNode, index) => {
-      nodeTree.push(mapTreeNodeToNode(treeNode, index.toString(), null, nodeMapRef.current));
+      const node = mapTreeNodeToNode(treeNode, index.toString(), null, nodeMapRef.current);
+      nodeTree.push(node);
+      copiedData.current.push(node.initTreeNode);
     });
 
     let nodes = nodeTree;
@@ -402,8 +408,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
   const callClearAllHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onClearAll) {
-      const selectedTreeNodes = selectedNodes.map(node => node.toTreeNode());
-      onClearAll(selectedTreeNodes, type !== Type.SELECT ? selectAllCheckedState : undefined);
+      const selectedTreeNodes = selectedNodes.map(node => node.initTreeNode);
+      onClearAll(selectedTreeNodes, type !== Type.SELECT ? selectAllCheckedState : undefined, copiedData.current);
     }
   }, [onClearAll, type]);
 
@@ -452,8 +458,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
   const callSelectAllChangeHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onSelectAllChange) {
-      const selectedTreeNodes = selectedNodes.map(node => node.toTreeNode());
-      onSelectAllChange(selectedTreeNodes, selectAllCheckedState);
+      const selectedTreeNodes = selectedNodes.map(node => node.initTreeNode);
+      onSelectAllChange(selectedTreeNodes, selectAllCheckedState, copiedData.current);
     }
   }, [onSelectAllChange]);
 
@@ -491,17 +497,17 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
   const callNodeToggleHandler = useCallback((toggledNode: Node, expandedNodes: Node[]): void => {
     if (onNodeToggle) {
-      const toggledTreeNode = toggledNode.toTreeNode();
-      const expandedTreeNodes = expandedNodes.map(node => node.toTreeNode());
-      onNodeToggle(toggledTreeNode, expandedTreeNodes);
+      const toggledTreeNode = toggledNode.initTreeNode;
+      const expandedTreeNodes = expandedNodes.map(node => node.initTreeNode);
+      onNodeToggle(toggledTreeNode, expandedTreeNodes, copiedData.current);
     }
   }, [onNodeToggle]);
 
   const callNodeChangeHandler = useCallback((changedNode: Node, selectedNodes: Node[]): void => {
     if (onNodeChange && !changedNode.disabled) {
-      const changedTreeNode = changedNode.toTreeNode();
-      const selectedTreeNodes = selectedNodes.map(node => node.toTreeNode());
-      onNodeChange(changedTreeNode, selectedTreeNodes);
+      const changedTreeNode = changedNode.initTreeNode;
+      const selectedTreeNodes = selectedNodes.map(node => node.initTreeNode);
+      onNodeChange(changedTreeNode, selectedTreeNodes, copiedData.current);
     }
   }, [onNodeChange]);
 
@@ -768,7 +774,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [fieldInputRef]);
 
   const handleDropdownLastItemReached = useCallback(() => {
-    onDropdownLastItemReached?.(state.searchValue, state.displayedNodes.map(node => node.toTreeNode()));
+    onDropdownLastItemReached?.(state.searchValue, state.displayedNodes.map(node => node.initTreeNode));
   }, [onDropdownLastItemReached, state.searchValue, state.displayedNodes]);
 
   const handleDropdownUnmount = (): void => {
