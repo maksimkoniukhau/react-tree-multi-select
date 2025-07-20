@@ -30,16 +30,17 @@ export const ApiPage: FC = () => {
               <td>{'data'}</td>
               <td>{'TreeNode[]'}</td>
               <td>{'[]'}</td>
-              <td>{'(required) TreeNode data array.'}</td>
+              <td>{'(required) The data to be rendered in the component.'}</td>
             </tr>
             <tr>
               <td>{'type'}</td>
               <td>{'Type'}</td>
               <td>{'TREE_SELECT'}</td>
-              <td>{`TREE_SELECT - component behaves as a normal tree structure. 
-              TREE_SELECT_FLAT - component behaves as a flat tree structure (selecting a node have no affect on its descendants or ancestors). 
-              MULTI_SELECT - component behaves as a multiselect. 
-              SELECT - component behaves as a simple select.`}
+              <td>{`Specifies the type of the component, determining its behavior and rendering.
+              - \`TREE_SELECT\`: Component behaves as a normal tree structure.
+              - \`TREE_SELECT_FLAT\`: Component behaves as a flat tree structure (selecting a node has no effect on its descendants or ancestors).
+              - \`MULTI_SELECT\`: Component behaves as a multi-select.
+              - \`SELECT\`: Component behaves as a simple select.`}
               </td>
             </tr>
             <tr>
@@ -94,13 +95,13 @@ export const ApiPage: FC = () => {
               <td>{'withClearAll'}</td>
               <td>{'boolean'}</td>
               <td>{'true'}</td>
-              <td>{`If 'true', clear all nodes icon is displayed in the input field.`}</td>
+              <td>{`If 'true', FieldClear component is rendered.`}</td>
             </tr>
             <tr>
               <td>{'withSelectAll'}</td>
               <td>{'boolean'}</td>
               <td>{'false'}</td>
-              <td>{`If 'true', a 'Select all' component is rendered in the dropdown header. 
+              <td>{`If 'true', a sticky 'Select all' component is rendered in the dropdown. 
               It is not rendered when the component type is 'SELECT', when the input has a value (search mode), when there is no available data.`}</td>
             </tr>
             <tr>
@@ -113,7 +114,19 @@ export const ApiPage: FC = () => {
               <td>{'closeDropdownOnNodeChange'}</td>
               <td>{'boolean'}</td>
               <td>{'false'}</td>
-              <td>{`If 'true', close dropdown after node change (select/unselect in dropdown).`}</td>
+              <td>{`Closes the dropdown automatically after a node is changed (selected/unselected in dropdown).
+              Useful when \`type\` is \`Type.SELECT\`.`}</td>
+            </tr>
+            <tr>
+              <td>{'openDropdown'}</td>
+              <td>{'boolean'}</td>
+              <td>{'-'}</td>
+              <td>{`Controls whether the dropdown is rendered (open) or hidden (closed).
+              This enables external control over the dropdown's rendering state.
+              When set to \`true\`, the dropdown is rendered (opened).
+              When set to \`false\`, the dropdown is hidden (closed).
+              If omitted, the component manages the dropdown state internally.
+              For full control, use this prop in conjunction with the \`onDropdownToggle\` callback.`}</td>
             </tr>
             <tr>
               <td>{'dropdownHeight'}</td>
@@ -145,6 +158,14 @@ export const ApiPage: FC = () => {
               <td>{'Components'}</td>
               <td>{'{}'}</td>
               <td>{'Custom components are applied to the tree multi select (see examples for more details).'}</td>
+            </tr>
+            <tr>
+              <td>{'onDropdownToggle'}</td>
+              <td>{`(open: boolean) => void`}</td>
+              <td>{'-'}</td>
+              <td>{`Callback triggered when the dropdown is opened or closed by user interaction.
+              This is used to synchronize external state with the dropdown’s rendering state.
+              Note: This callback is only invoked when the \`openDropdown\` prop is provided. If \`openDropdown\` is undefined, the component manages its own state and \`onDropdownToggle\` will not be called.`}</td>
             </tr>
             <tr>
               <td>{'onNodeChange'}</td>

@@ -43,7 +43,17 @@ import {InputWrapper} from './components/Input';
 import {ChipWrapper} from './components/ChipWrapper';
 
 export interface TreeMultiSelectProps {
+  /**
+   * The data to be rendered in the component.
+   *
+   * This is a required prop.
+   */
   data: TreeNode[];
+  /**
+   * Specifies the type of the component, determining its behavior and rendering.
+   *
+   * @default Type.TREE_SELECT
+   */
   type?: Type;
   id?: string;
   className?: string;
@@ -56,12 +66,44 @@ export interface TreeMultiSelectProps {
   withClearAll?: boolean;
   withSelectAll?: boolean;
   withDropdownInput?: boolean;
+  /**
+   * Closes the dropdown automatically after a node is changed (selected/unselected in dropdown).
+   * Useful when `type` is `Type.SELECT`.
+   *
+   * @default false
+   */
   closeDropdownOnNodeChange?: boolean;
+  /**
+   * Controls whether the dropdown is rendered (open) or hidden (closed).
+   * This enables external control over the dropdown's rendering state.
+   *
+   * When set to `true`, the dropdown is rendered (opened).
+   * When set to `false`, the dropdown is hidden (closed).
+   *
+   * If omitted, the component manages the dropdown state internally.
+   * For full control, use this prop in conjunction with the `onDropdownToggle` callback.
+   */
   openDropdown?: boolean;
   dropdownHeight?: number;
+  /**
+   * Controls when the Footer component is rendered in the dropdown.
+   */
   footerConfig?: FooterConfig;
+  /**
+   * Controls keyboard navigation behavior for the component.
+   */
   keyboardConfig?: KeyboardConfig;
   components?: Components;
+  /**
+   * Callback triggered when the dropdown is opened or closed by user interaction.
+   * This is used to synchronize external state with the dropdown’s rendering state.
+   *
+   * Note: This callback is only invoked when the `openDropdown` prop is provided.
+   * If `openDropdown` is undefined, the component manages its own state and
+   * `onDropdownToggle` will not be called.
+   *
+   * @param open - `true` if the dropdown was opened, `false` if it was closed.
+   */
   onDropdownToggle?: (open: boolean) => void;
   onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[], data: TreeNode[]) => void;
   onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[], data: TreeNode[]) => void;

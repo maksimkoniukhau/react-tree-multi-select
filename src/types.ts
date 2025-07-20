@@ -1,25 +1,56 @@
 import {ComponentType, HTMLProps, ReactNode} from 'react';
 
+/**
+ * Enum representing the different types of the component.
+ */
 export enum Type {
+  /** Component behaves as a normal tree structure. */
   TREE_SELECT = 'TREE_SELECT',
+
+  /** Component behaves as a flat tree structure (selecting a node has no effect on its descendants or ancestors). */
   TREE_SELECT_FLAT = 'TREE_SELECT_FLAT',
+
+  /** Component behaves as a multi-select. */
   MULTI_SELECT = 'MULTI_SELECT',
+
+  /** Component behaves as a simple select. */
   SELECT = 'SELECT'
 }
 
+/**
+ * Interface representing a node.
+ */
 export interface TreeNode {
+  /** The display label of the node. */
   label: string;
+
+  /** Optional child nodes, enabling a nested tree structure. */
   children?: TreeNode[];
+
+  /** Whether the node is selected. */
   selected?: boolean;
+
+  /** Whether the node is expanded to show its children. */
   expanded?: boolean;
+
+  /** Whether the node is disabled. */
   disabled?: boolean;
 
+  /** Additional properties can be added as needed. */
   [key: PropertyKey]: unknown;
 }
 
+/**
+ * Enum representing the checked state for the SelectAll component.
+ */
 export enum CheckedState {
+  /** All items are selected. */
   SELECTED = 'SELECTED',
+
+  /** Some (but not all) items are selected (partial selection). */
   PARTIAL = 'PARTIAL',
+
+  /** No items are selected. */
   UNSELECTED = 'UNSELECTED'
 }
 

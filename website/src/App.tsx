@@ -6,10 +6,10 @@ import {Menu} from './Menu';
 import {GettingStartedPage} from './pages/GettingStartedPage';
 import {ApiPage} from './pages/ApiPage';
 import {BasicPage} from './pages/BasicPage';
+import {ControlledPage} from './pages/ControlledPage';
 import {LargeDataPage} from './pages/LargeDataPage';
 import {InfiniteScrollPage} from './pages/InfiniteScrollPage';
 import {ComponentsPage} from './pages/ComponentsPage';
-import {ControlledPage} from './pages/ControlledPage';
 
 function App() {
 
