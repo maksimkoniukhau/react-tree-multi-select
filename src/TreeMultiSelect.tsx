@@ -1,5 +1,5 @@
 import './styles/tree-multi-select.scss';
-import React, {FC, useCallback, useEffect, useMemo, useReducer, useRef, useState} from 'react';
+import React, {FC, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   CLEAR_ALL,
   DEFAULT_OPTIONS_CONTAINER_HEIGHT,
@@ -34,19 +34,6 @@ import {
 import {CheckedState, Components, FooterConfig, KeyboardConfig, TreeNode, Type} from './types';
 import {InnerComponents} from './innerTypes';
 import {useOnClickOutside} from './hooks/useOnClickOutside';
-import {
-  ActionType,
-  ChipDeletePayload,
-  ClearAllPayload,
-  DataChangePayload,
-  initialState,
-  InputChangePayload,
-  NodeChangePayload,
-  NodeTogglePayload,
-  reducer,
-  ResetPayload,
-  SelectAllChangePayload
-} from './reducer';
 import {Dropdown} from './Dropdown';
 import {Node} from './Node';
 import {FieldToggleWrapper} from './components/FieldToggle';
@@ -143,10 +130,13 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   // shallow copy of data with actual selected/expanded/disabled props
   const copiedData = useRef<TreeNode[]>([]);
 
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [nodes, setNodes] = useState<Node[]>([]);
+  const [displayedNodes, setDisplayedNodes] = useState<Node[]>([]);
+  const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
+  const [searchValue, setSearchValue] = useState<string>('');
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [focusedElement, setFocusedElement] = useState<string>('');
-
+  const [selectAllCheckedState, setSelectAllCheckedState] = useState<CheckedState>(CheckedState.UNSELECTED);
   // Store components in state to avoid async rendering issues (e.g., flickering)
   // when both data and the Footer (e.g., its text) component update simultaneously during infinite scroll or pagination.
   const [components, setComponents] = useState<InnerComponents>(getComponents(propsComponents));
@@ -155,13 +145,13 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     setComponents(getComponents(propsComponents));
   }, [propsComponents]);
 
-  const isAnyNodeDisplayed = state.displayedNodes.length > 0;
+  const isAnyNodeDisplayed = displayedNodes.length > 0;
 
-  const isSearchMode = Boolean(state.searchValue);
+  const isSearchMode = Boolean(searchValue);
 
-  const showClearAll = withClearAll && isAnyExcludingDisabledSelected(state.nodes);
+  const showClearAll = withClearAll && isAnyExcludingDisabledSelected(nodes);
 
-  const showSelectAll = shouldRenderSelectAll(type, state.displayedNodes, isSearchMode, withSelectAll);
+  const showSelectAll = shouldRenderSelectAll(type, displayedNodes, isSearchMode, withSelectAll);
 
   const hasCustomFooter = useMemo(() => {
     return hasCustomFooterComponent(components.Footer.component);
@@ -214,13 +204,13 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       copiedData.current.push(node.initTreeNode);
     });
 
-    let nodes = nodeTree;
+    let newNodes = nodeTree;
 
     if (type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT) {
-      nodes = convertTreeArrayToFlatArray(nodeTree);
+      newNodes = convertTreeArrayToFlatArray(nodeTree);
     }
     if (type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT || type === Type.MULTI_SELECT) {
-      nodes.forEach(node => {
+      newNodes.forEach(node => {
         if (node.initTreeNode.selected) {
           // handleSelect (not handleChange) should be used!!!
           node.handleSelect(type);
@@ -228,7 +218,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       });
     }
     if (type === Type.SELECT) {
-      const lastSelectedNode = nodes.findLast(node => node.initTreeNode.selected);
+      const lastSelectedNode = newNodes.findLast(node => node.initTreeNode.selected);
       if (lastSelectedNode) {
         // handleSelect (not handleChange) should be used!!!
         lastSelectedNode.handleSelect(type);
@@ -236,48 +226,43 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
     // disabled should be processed in separate cycle after selected,
     // cause disabled node initially might be selected!!!
-    nodes.forEach(node => {
+    newNodes.forEach(node => {
       if (node.initTreeNode.disabled) {
         node.handleDisable(type);
       }
-      node.handleSearch(state.searchValue);
+      node.handleSearch(searchValue);
     });
 
-    const displayedNodes = nodes.filter(node => node.isDisplayed(isSearchMode));
-    const selectedNodes = nodes.filter(node => node.selected);
-
+    const newDisplayedNodes = newNodes.filter(node => node.isDisplayed(isSearchMode));
+    const newSelectedNodes = newNodes.filter(node => node.selected);
     let newFocusedElement = '';
     if (isFocusedElementInField(focusedElement)) {
       if (isFocused(INPUT, FIELD, focusedElement)
         || (isFocused(CLEAR_ALL, FIELD, focusedElement) && showClearAll)) {
         newFocusedElement = focusedElement;
       } else {
-        const chipNodes = filterChips(selectedNodes, type);
+        const chipNodes = filterChips(newSelectedNodes, type);
         const current = chipNodes.find(node => isFocused(node.path, FIELD, focusedElement));
         newFocusedElement = current ? focusedElement : '';
       }
     }
     if (isFocusedElementInDropdown(focusedElement)) {
       if ((isFocused(SELECT_ALL, DROPDOWN, focusedElement)
-          && shouldRenderSelectAll(type, displayedNodes, isSearchMode, withSelectAll))
+          && shouldRenderSelectAll(type, newDisplayedNodes, isSearchMode, withSelectAll))
         || (isFocused(FOOTER, DROPDOWN, focusedElement) && showFooter)) {
         newFocusedElement = focusedElement;
       } else {
-        const current = displayedNodes.find(node => isFocused(node.path, DROPDOWN, focusedElement));
+        const current = newDisplayedNodes.find(node => isFocused(node.path, DROPDOWN, focusedElement));
         newFocusedElement = current ? focusedElement : '';
       }
     }
+    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, newNodes);
 
+    setNodes(newNodes);
+    setDisplayedNodes(newDisplayedNodes);
+    setSelectedNodes(newSelectedNodes);
     setFocusedElement(newFocusedElement);
-    dispatch({
-      type: ActionType.DATA_CHANGE,
-      payload: {
-        nodes,
-        displayedNodes,
-        selectedNodes,
-        selectAllCheckedState: getSelectAllCheckedState(selectedNodes, nodes)
-      } as DataChangePayload
-    });
+    setSelectAllCheckedState(newSelectAllCheckedState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, type]);
 
@@ -289,14 +274,16 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       isOutsideClicked.current = true;
     }
     if (showDropdown || isSearchMode || focusedElement) {
+      nodes.forEach(node => {
+        node.searchExpanded = false;
+        node.matched = false;
+        node.filtered = true;
+      });
+      const newDisplayedNodes = nodes
+        .filter(node => node.isDisplayed(false));
+      setDisplayedNodes(newDisplayedNodes);
       handleShowDropdown(false, false);
       setFocusedElement('');
-      dispatch({
-        type: ActionType.RESET,
-        payload: {
-          searchValue: ''
-        } as ResetPayload
-      });
     }
   };
 
@@ -312,12 +299,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     if (showSelectAll) {
       focusableElements.push(buildFocusedElement(SELECT_ALL, DROPDOWN));
     }
-    focusableElements.push(...state.displayedNodes.map(node => buildFocusedElement(node.path, DROPDOWN)));
+    focusableElements.push(...displayedNodes.map(node => buildFocusedElement(node.path, DROPDOWN)));
     if (showFooter) {
       focusableElements.push(buildFocusedElement(FOOTER, DROPDOWN));
     }
     return focusableElements;
-  }, [state.displayedNodes, showSelectAll, showFooter]);
+  }, [displayedNodes, showSelectAll, showFooter]);
 
   const getNextFocusedElement = useCallback((focusedElement: string): string => {
     const dropdownFocusableElements = getDropdownFocusableElements();
@@ -354,13 +341,13 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
   const getFocusedFieldElements = useCallback((): string[] => {
     const focusableElements: string[] = [];
-    focusableElements.push(...filterChips(state.selectedNodes, type).map(node => buildFocusedElement(node.path, FIELD)));
+    focusableElements.push(...filterChips(selectedNodes, type).map(node => buildFocusedElement(node.path, FIELD)));
     focusableElements.push(buildFocusedElement(INPUT, FIELD));
     if (showClearAll) {
       focusableElements.push(buildFocusedElement(CLEAR_ALL, FIELD));
     }
     return focusableElements;
-  }, [state.selectedNodes, type, showClearAll]);
+  }, [selectedNodes, type, showClearAll]);
 
   const getNextFocusedFieldElement = useCallback((focusedFieldElement: string): string => {
     const fieldFocusableElements = getFocusedFieldElements();
@@ -418,20 +405,16 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       return;
     }
     event.preventDefault();
-    state.nodes.forEach(node => node.handleUnselect(type));
-    const selectedNodes = state.nodes.filter(node => node.selected);
-    const selectAllCheckedState = getSelectAllCheckedState(selectedNodes, state.nodes);
-    setFocusedElement(buildFocusedElement(INPUT, FIELD));
-    dispatch({
-      type: ActionType.CLEAR_ALL,
-      payload: {
-        selectedNodes,
-        selectAllCheckedState
-      } as ClearAllPayload
-    });
+    nodes.forEach(node => node.handleUnselect(type));
+    const newSelectedNodes = nodes.filter(node => node.selected);
+    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodes);
 
-    callClearAllHandler(selectAllCheckedState, selectedNodes);
-  }, [state.nodes, type, callClearAllHandler, isDisabled]);
+    setSelectedNodes(newSelectedNodes);
+    setFocusedElement(buildFocusedElement(INPUT, FIELD));
+    setSelectAllCheckedState(newSelectAllCheckedState);
+
+    callClearAllHandler(newSelectAllCheckedState, newSelectedNodes);
+  }, [nodes, type, callClearAllHandler, isDisabled]);
 
   const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>): void => {
     if (isDisabled) {
@@ -439,22 +422,17 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
     const value = event.currentTarget.value;
 
-    state.nodes.forEach(node => {
+    nodes.forEach(node => {
       node.handleSearch(value);
     });
 
-    const displayedNodes = state.nodes
+    const newDisplayedNodes = nodes
       .filter(node => node.isDisplayed(Boolean(value)));
 
+    setDisplayedNodes(newDisplayedNodes);
+    setSearchValue(value);
     setFocusedElement(buildFocusedElement(INPUT, FIELD));
-    dispatch({
-      type: ActionType.INPUT_CHANGE,
-      payload: {
-        searchValue: value,
-        displayedNodes
-      } as InputChangePayload
-    });
-  }, [state.nodes, isDisabled]);
+  }, [nodes, isDisabled]);
 
   const callSelectAllChangeHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onSelectAllChange) {
@@ -467,33 +445,28 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     if (isDisabled) {
       return;
     }
-    const shouldBeUnselected = state.selectAllCheckedState === CheckedState.SELECTED
-      || (state.selectAllCheckedState === CheckedState.PARTIAL && areAllExcludingDisabledSelected(state.nodes));
-    state.nodes.forEach(node => {
+    const shouldBeUnselected = selectAllCheckedState === CheckedState.SELECTED
+      || (selectAllCheckedState === CheckedState.PARTIAL && areAllExcludingDisabledSelected(nodes));
+    nodes.forEach(node => {
       if (!node.disabled) {
         node.selected = !shouldBeUnselected;
       }
     });
     // partiallySelected should be processed in separate cycle after selected,
     // cause all nodes should be selected/unselected at first!!!
-    state.nodes.forEach(node => {
+    nodes.forEach(node => {
       node.handleCheckAndSetPartiallySelected(type);
     });
 
-    const selectedNodes = state.nodes.filter(node => node.selected);
-    const selectAllCheckedState = getSelectAllCheckedState(selectedNodes, state.nodes);
+    const newSelectedNodes = nodes.filter(node => node.selected);
+    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodes);
 
+    setSelectedNodes(newSelectedNodes);
     setFocusedElement(buildFocusedElement(SELECT_ALL, DROPDOWN));
-    dispatch({
-      type: ActionType.SELECT_ALL_CHANGE,
-      payload: {
-        selectedNodes,
-        selectAllCheckedState
-      } as SelectAllChangePayload
-    });
+    setSelectAllCheckedState(newSelectAllCheckedState);
 
-    callSelectAllChangeHandler(selectAllCheckedState, selectedNodes);
-  }, [state.selectAllCheckedState, state.nodes, type, callSelectAllChangeHandler, isDisabled]);
+    callSelectAllChangeHandler(newSelectAllCheckedState, newSelectedNodes);
+  }, [selectAllCheckedState, nodes, type, callSelectAllChangeHandler, isDisabled]);
 
   const callNodeToggleHandler = useCallback((toggledNode: Node, expandedNodes: Node[]): void => {
     if (onNodeToggle) {
@@ -534,20 +507,16 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         ? buildFocusedElement(INPUT, FIELD)
         : prevFocusedFieldElement;
       node.handleUnselect(type);
-      const selectedNodes = state.nodes.filter(node => node.selected);
+      const newSelectedNodes = nodes.filter(node => node.selected);
+      const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodes);
 
+      setSelectedNodes(newSelectedNodes);
       setFocusedElement(newFocusedFieldElement);
-      dispatch({
-        type: ActionType.CHIP_DELETE,
-        payload: {
-          selectedNodes,
-          selectAllCheckedState: getSelectAllCheckedState(selectedNodes, state.nodes)
-        } as ChipDeletePayload
-      });
+      setSelectAllCheckedState(newSelectAllCheckedState);
 
-      callNodeChangeHandler(node, selectedNodes);
+      callNodeChangeHandler(node, newSelectedNodes);
     }
-  }, [withChipClear, state.nodes, focusedElement, type, callNodeChangeHandler, isDisabled, getPrevFocusedFieldElement]);
+  }, [withChipClear, nodes, focusedElement, type, callNodeChangeHandler, isDisabled, getPrevFocusedFieldElement]);
 
   const handleNodeChange = useCallback((node: Node) => (event: React.MouseEvent | React.KeyboardEvent): void => {
     if (isDisabled) {
@@ -560,45 +529,37 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           node.handleChange(type);
         }
         if (type === Type.SELECT) {
-          state.selectedNodes.forEach(node => node.handleUnselect(type));
+          selectedNodes.forEach(node => node.handleUnselect(type));
           node.handleSelect(type);
         }
-        const selectedNodes = state.nodes.filter(node => node.selected);
+        const newSelectedNodes = nodes.filter(node => node.selected);
+        const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodes);
+
+        setSelectedNodes(newSelectedNodes);
         handleShowDropdown(closeDropdownOnNodeChange ? false : showDropdown, false);
         setFocusedElement(closeDropdownOnNodeChange
           ? buildFocusedElement(INPUT, FIELD)
           : buildFocusedElement(node.path, DROPDOWN));
-        dispatch({
-          type: ActionType.NODE_CHANGE,
-          payload: {
-            selectedNodes,
-            selectAllCheckedState: getSelectAllCheckedState(selectedNodes, state.nodes)
-          } as NodeChangePayload
-        });
+        setSelectAllCheckedState(newSelectAllCheckedState);
 
-        callNodeChangeHandler(node, selectedNodes);
+        callNodeChangeHandler(node, newSelectedNodes);
       } else {
         setFocusedElement(buildFocusedElement(node.path, DROPDOWN));
       }
     }
-  }, [state.nodes, state.selectedNodes, showDropdown, type, closeDropdownOnNodeChange, callNodeChangeHandler, isDisabled, handleShowDropdown]);
+  }, [nodes, selectedNodes, showDropdown, type, closeDropdownOnNodeChange, callNodeChangeHandler, isDisabled, handleShowDropdown]);
 
   const handleNodeToggle = useCallback((node: Node, expand: boolean): void => {
     node.handleExpand(isSearchMode, expand);
 
-    const displayedNodes = state.nodes
+    const newDisplayedNodes = nodes
       .filter(node => node.isDisplayed(isSearchMode));
 
+    setDisplayedNodes(newDisplayedNodes);
     setFocusedElement(buildFocusedElement(node.path, DROPDOWN));
-    dispatch({
-      type: ActionType.NODE_TOGGLE,
-      payload: {
-        displayedNodes
-      } as NodeTogglePayload
-    });
 
-    callNodeToggleHandler(node, state.nodes.filter(node => node.expanded));
-  }, [state.nodes, isSearchMode, callNodeToggleHandler]);
+    callNodeToggleHandler(node, nodes.filter(node => node.expanded));
+  }, [nodes, isSearchMode, callNodeToggleHandler]);
 
   const handleNodeToggleOnClick = useCallback((node: Node) => (event: React.MouseEvent): void => {
     if (isDisabled) {
@@ -685,7 +646,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         break;
       case 'Enter':
         if (!isFocusedElementInDropdown(focusedElement)) {
-          const chipNode = filterChips(state.selectedNodes, type)
+          const chipNode = filterChips(selectedNodes, type)
             ?.find(node => isFocused(node.path, FIELD, focusedElement));
           if (chipNode) {
             handleChipClick(chipNode)(event);
@@ -773,8 +734,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [fieldInputRef]);
 
   const handleDropdownLastItemReached = useCallback(() => {
-    onDropdownLastItemReached?.(state.searchValue, state.displayedNodes.map(node => node.initTreeNode));
-  }, [onDropdownLastItemReached, state.searchValue, state.displayedNodes]);
+    onDropdownLastItemReached?.(searchValue, displayedNodes.map(node => node.initTreeNode));
+  }, [onDropdownLastItemReached, searchValue, displayedNodes]);
 
   const handleDropdownUnmount = (): void => {
     if (withDropdownInput && isSearchable) {
@@ -825,7 +786,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         componentDisabled={isDisabled}
       >
         <div className="rtms-field-content">
-          {filterChips(state.selectedNodes, type)
+          {filterChips(selectedNodes, type)
             .map(node => (
               <ChipWrapper
                 key={node.path}
@@ -845,7 +806,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
               input={components.Input}
               inputRef={fieldInputRef}
               placeholder={inputPlaceholder}
-              value={state.searchValue}
+              value={searchValue}
               onChange={handleInputChange}
               componentDisabled={isDisabled}
             />
@@ -872,12 +833,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           <Dropdown
             type={type}
             nodeMap={nodeMapRef.current}
-            nodesAmount={state.nodes.length}
-            displayedNodes={state.displayedNodes}
-            isAnyHasChildren={isAnyHasChildren(state.nodes)}
-            searchValue={state.searchValue}
+            nodesAmount={nodes.length}
+            displayedNodes={displayedNodes}
+            isAnyHasChildren={isAnyHasChildren(nodes)}
+            searchValue={searchValue}
             showSelectAll={showSelectAll}
-            selectAllCheckedState={state.selectAllCheckedState}
+            selectAllCheckedState={selectAllCheckedState}
             focusedElement={focusedElement}
             noDataText={noDataText}
             noMatchesText={noMatchesText}
@@ -892,7 +853,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
                 input={components.Input}
                 inputRef={dropdownInputRef}
                 placeholder={inputPlaceholder}
-                value={state.searchValue}
+                value={searchValue}
                 onChange={handleInputChange}
                 componentDisabled={isDisabled}
               />
