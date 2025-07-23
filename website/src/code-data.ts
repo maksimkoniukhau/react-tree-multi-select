@@ -133,7 +133,7 @@ type NodeToggleProps<CustomProps = {}> = ComponentProps<CustomProps, NodeToggleO
 type NodeCheckboxProps<CustomProps = {}> = ComponentProps<CustomProps, NodeCheckboxOwnProps, HTMLDivElement>;
 type NodeLabelProps<CustomProps = {}> = ComponentProps<CustomProps, NodeLabelOwnProps, HTMLDivElement>;
 type FooterProps<CustomProps = {}> = ComponentProps<CustomProps, FooterOwnProps, HTMLDivElement>;
-type NoMatchesProps<CustomProps = {}> = ComponentProps<CustomProps, NoMatchesOwnProps, HTMLDivElement>;
+type NoDataProps<CustomProps = {}> = ComponentProps<CustomProps, NoDataOwnProps, HTMLDivElement>;
 
 type FieldType<CustomProps = {}> = Component<CustomProps, FieldProps<CustomProps>>;
 type ChipContainerType<CustomProps = {}> = Component<CustomProps, ChipContainerProps<CustomProps>>;
@@ -150,7 +150,7 @@ type NodeToggleType<CustomProps = {}> = Component<CustomProps, NodeToggleProps<C
 type NodeCheckboxType<CustomProps = {}> = Component<CustomProps, NodeCheckboxProps<CustomProps>>;
 type NodeLabelType<CustomProps = {}> = Component<CustomProps, NodeLabelProps<CustomProps>>;
 type FooterType<CustomProps = {}> = Component<CustomProps, FooterProps<CustomProps>>;
-type NoMatchesType<CustomProps = {}> = Component<CustomProps, NoMatchesProps<CustomProps>>;
+type NoDataType<CustomProps = {}> = Component<CustomProps, NoDataProps<CustomProps>>;
 
 interface Components<
   FieldCustomProps = any,
@@ -168,7 +168,7 @@ interface Components<
   NodeCheckboxCustomProps = any,
   NodeLabelCustomProps = any,
   FooterCustomProps = any,
-  NoMatchesCustomProps = any
+  NoDataCustomProps = any
 > {
   Field?: FieldType<FieldCustomProps>;
   ChipContainer?: ChipContainerType<ChipContainerCustomProps>;
@@ -185,7 +185,7 @@ interface Components<
   NodeCheckbox?: NodeCheckboxType<NodeCheckboxCustomProps>;
   NodeLabel?: NodeLabelType<NodeLabelCustomProps>;
   Footer?: FooterType<FooterCustomProps>;
-  NoMatches?: NoMatchesType<NoMatchesCustomProps>;
+  NoData?: NoDataType<NoDataCustomProps>;
 }`;
 
 export const customComponentCommonPattern = `const CustomChipLabel: FC<ChipLabelProps> = (props) => (
@@ -808,22 +808,22 @@ export const CustomFooterExample: FC = () => {
   );
 };`;
 
-export const noMatchesExample = `import React, {FC} from 'react';
+export const noDataExample = `import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faFaceSadTear} from '@fortawesome/free-regular-svg-icons';
-import {Components, NoMatchesProps, NoMatchesType, TreeMultiSelect} from 'react-tree-multi-select';
+import {Components, NoDataProps, NoDataType, TreeMultiSelect} from 'react-tree-multi-select';
 import {getTreeNodeData} from '../../utils';
 
-const CustomNoMatches: FC<NoMatchesProps> = (props) => (
+const CustomNoData: FC<NoDataProps> = (props) => (
   <div {...props.attributes}>
     <div><FontAwesomeIcon icon={faFaceSadTear}/>{' '}{props.ownProps.label}</div>
   </div>
 );
 
-const NoMatches: NoMatchesType = {component: CustomNoMatches};
-const components: Components = {NoMatches};
+const NoData: NoDataType = {component: CustomNoData};
+const components: Components = {NoData};
 
-export const CustomNoMatchesExample: FC = () => {
+export const CustomNoDataExample: FC = () => {
 
   return (
     <div className="component-example">

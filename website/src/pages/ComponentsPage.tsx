@@ -16,7 +16,7 @@ import {
   nodeContainerExample,
   nodeLabelExample,
   nodeToggleExample,
-  noMatchesExample,
+  noDataExample,
   selectAllCheckboxExample,
   selectAllContainerExample,
   selectAllLabelExample,
@@ -41,7 +41,7 @@ import {CustomNodeToggleExample} from '../examples/components/CustomNodeToggleEx
 import {CustomNodeCheckboxExample} from '../examples/components/CustomNodeCheckboxExample';
 import {CustomNodeLabelExample} from '../examples/components/CustomNodeLabelExample';
 import {CustomFooterExample} from '../examples/components/CustomFooterExample';
-import {CustomNoMatchesExample} from '../examples/components/CustomNoMatchesExample';
+import {CustomNoDataExample} from '../examples/components/CustomNoDataExample';
 
 export const ComponentsPage: FC = memo(() => {
 
@@ -280,14 +280,14 @@ export const ComponentsPage: FC = memo(() => {
             <CustomFooterExample/>
           </div>
         </Section>
-        <Section id="no-matches">
+        <Section id="no-data">
           <div className="paragraph">
-            <h3 className="title">{'NoMatches'}</h3>
-            {`Custom NoMatches component example.`}
+            <h3 className="title">{'NoData'}</h3>
+            {`Custom NoData component example.`}
           </div>
           <div className="example-container">
-            <CodeBlock code={noMatchesExample}/>
-            <CustomNoMatchesExample/>
+            <CodeBlock code={noDataExample}/>
+            <CustomNoDataExample/>
           </div>
         </Section>
       </div>
@@ -309,7 +309,7 @@ export const ComponentsPage: FC = memo(() => {
           {link: '#node-checkbox', label: 'NodeCheckbox'},
           {link: '#node-label', label: 'NodeLabel'},
           {link: '#footer', label: 'Footer'},
-          {link: '#no-matches', label: 'NoMatches'}
+          {link: '#no-data', label: 'NoData'}
         ]}
       />
     </div>

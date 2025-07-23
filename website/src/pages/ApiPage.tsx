@@ -37,10 +37,10 @@ export const ApiPage: FC = () => {
               <td>{'Type'}</td>
               <td>{'TREE_SELECT'}</td>
               <td>{`Specifies the type of the component, determining its behavior and rendering.
-              - \`TREE_SELECT\`: Component behaves as a normal tree structure.
-              - \`TREE_SELECT_FLAT\`: Component behaves as a flat tree structure (selecting a node has no effect on its descendants or ancestors).
-              - \`MULTI_SELECT\`: Component behaves as a multi-select.
-              - \`SELECT\`: Component behaves as a simple select.`}
+              - TREE_SELECT: Component behaves as a normal tree structure.
+              - TREE_SELECT_FLAT: Component behaves as a flat tree structure (selecting a node has no effect on its descendants or ancestors).
+              - MULTI_SELECT: Component behaves as a multi-select.
+              - SELECT: Component behaves as a simple select.`}
               </td>
             </tr>
             <tr>
@@ -115,7 +115,7 @@ export const ApiPage: FC = () => {
               <td>{'boolean'}</td>
               <td>{'false'}</td>
               <td>{`Closes the dropdown automatically after a node is changed (selected/unselected in dropdown).
-              Useful when \`type\` is \`Type.SELECT\`.`}</td>
+              Useful when 'type' is 'Type.SELECT'.`}</td>
             </tr>
             <tr>
               <td>{'openDropdown'}</td>
@@ -123,10 +123,10 @@ export const ApiPage: FC = () => {
               <td>{'-'}</td>
               <td>{`Controls whether the dropdown is rendered (open) or hidden (closed).
               This enables external control over the dropdown's rendering state.
-              When set to \`true\`, the dropdown is rendered (opened).
-              When set to \`false\`, the dropdown is hidden (closed).
+              When set to 'true', the dropdown is rendered (opened).
+              When set to 'false', the dropdown is hidden (closed).
               If omitted, the component manages the dropdown state internally.
-              For full control, use this prop in conjunction with the \`onDropdownToggle\` callback.`}</td>
+              For full control, use this prop in conjunction with the 'onDropdownToggle' callback.`}</td>
             </tr>
             <tr>
               <td>{'dropdownHeight'}</td>
@@ -165,7 +165,7 @@ export const ApiPage: FC = () => {
               <td>{'-'}</td>
               <td>{`Callback triggered when the dropdown is opened or closed by user interaction.
               This is used to synchronize external state with the dropdown’s rendering state.
-              Note: This callback is only invoked when the \`openDropdown\` prop is provided. If \`openDropdown\` is undefined, the component manages its own state and \`onDropdownToggle\` will not be called.`}</td>
+              Note: This callback is only invoked when the 'openDropdown' prop is provided. If 'openDropdown' is undefined, the component manages its own state and 'onDropdownToggle' will not be called.`}</td>
             </tr>
             <tr>
               <td>{'onNodeChange'}</td>

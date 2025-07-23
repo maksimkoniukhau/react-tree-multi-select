@@ -7,11 +7,11 @@ import {
   FieldProps,
   FieldToggleProps,
   InputProps,
+  NoDataProps,
   NodeCheckboxProps,
   NodeContainerProps,
   NodeLabelProps,
   NodeToggleProps,
-  NoMatchesProps,
   SelectAllCheckboxProps,
   SelectAllContainerProps,
   SelectAllLabelProps
@@ -30,7 +30,7 @@ import {NodeContainer} from './NodeContainer';
 import {NodeToggle} from './NodeToggle';
 import {NodeCheckbox} from './NodeCheckbox';
 import {NodeLabel} from './NodeLabel';
-import {NoMatches} from './NoMatches';
+import {NoData} from './NoData';
 
 export interface ComponentsType {
   Field: FC<FieldProps>;
@@ -47,7 +47,7 @@ export interface ComponentsType {
   NodeToggle: FC<NodeToggleProps>;
   NodeCheckbox: FC<NodeCheckboxProps>;
   NodeLabel: FC<NodeLabelProps>;
-  NoMatches: FC<NoMatchesProps>;
+  NoData: FC<NoDataProps>;
 }
 
 export const components: ComponentsType = {
@@ -65,5 +65,5 @@ export const components: ComponentsType = {
   NodeToggle,
   NodeCheckbox,
   NodeLabel,
-  NoMatches
+  NoData
 };

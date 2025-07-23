@@ -213,7 +213,7 @@ export interface FooterOwnProps {
   focused: boolean;
 }
 
-export interface NoMatchesOwnProps {
+export interface NoDataOwnProps {
   label: string;
 }
 
@@ -244,7 +244,7 @@ export type NodeToggleProps<CustomProps = unknown> = ComponentProps<HTMLDivEleme
 export type NodeCheckboxProps<CustomProps = unknown> = ComponentProps<HTMLDivElement, NodeCheckboxOwnProps, CustomProps>;
 export type NodeLabelProps<CustomProps = unknown> = ComponentProps<HTMLDivElement, NodeLabelOwnProps, CustomProps>;
 export type FooterProps<CustomProps = unknown> = ComponentProps<HTMLDivElement, FooterOwnProps, CustomProps>;
-export type NoMatchesProps<CustomProps = unknown> = ComponentProps<HTMLDivElement, NoMatchesOwnProps, CustomProps>;
+export type NoDataProps<CustomProps = unknown> = ComponentProps<HTMLDivElement, NoDataOwnProps, CustomProps>;
 
 export type FieldType<CustomProps = unknown> = Component<FieldProps<CustomProps>, CustomProps>;
 export type ChipContainerType<CustomProps = unknown> = Component<ChipContainerProps<CustomProps>, CustomProps>;
@@ -261,7 +261,7 @@ export type NodeToggleType<CustomProps = unknown> = Component<NodeToggleProps<Cu
 export type NodeCheckboxType<CustomProps = unknown> = Component<NodeCheckboxProps<CustomProps>, CustomProps>;
 export type NodeLabelType<CustomProps = unknown> = Component<NodeLabelProps<CustomProps>, CustomProps>;
 export type FooterType<CustomProps = unknown> = Component<FooterProps<CustomProps>, CustomProps>;
-export type NoMatchesType<CustomProps = unknown> = Component<NoMatchesProps<CustomProps>, CustomProps>;
+export type NoDataType<CustomProps = unknown> = Component<NoDataProps<CustomProps>, CustomProps>;
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type ComponentTypes = {
@@ -280,7 +280,7 @@ export type ComponentTypes = {
   NodeCheckbox: NodeCheckboxType<any>;
   NodeLabel: NodeLabelType<any>;
   Footer: FooterType<any>;
-  NoMatches: NoMatchesType<any>;
+  NoData: NoDataType<any>;
 };
 
 export type ComponentNames = keyof ComponentTypes;

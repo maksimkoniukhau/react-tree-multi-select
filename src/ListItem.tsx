@@ -4,7 +4,7 @@ import {buildFocusedElement} from './utils/focusUtils';
 import {CheckedState, Type} from './types';
 import {InnerComponents} from './innerTypes';
 import {Node} from './Node';
-import {NoMatchesWrapper} from './components/NoMatches';
+import {NoDataWrapper} from './components/NoData';
 import {SelectAllWrapper} from './components/SelectAllWrapper';
 import {NodeWrapper} from './components/NodeWrapper';
 
@@ -94,8 +94,8 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
 
   if (displayedNodes.length === 0) {
     return (
-      <NoMatchesWrapper
-        noMatches={components.NoMatches}
+      <NoDataWrapper
+        noData={components.NoData}
         label={nodesAmount === 0 ? noDataText : noMatchesText}
       />
     );

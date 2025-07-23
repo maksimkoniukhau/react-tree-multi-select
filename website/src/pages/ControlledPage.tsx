@@ -11,7 +11,10 @@ export const ControlledPage: FC = memo(() => {
         <h2>{'Controlled'}</h2>
         <div className="paragraph">
           <div className="paragraph">
-            {`Controlled component.`}
+            <b>{'react-tree-multi-select'}</b>{` allows you to externally control the dropdown’s open and close state using the openDropdown prop.
+            This gives you full control over when the dropdown is rendered or hidden.
+            By pairing 'openDropdown' with the 'onDropdownToggle' callback, you can synchronize the dropdown’s visibility state with your application’s state, enabling custom behaviors such as toggling from external controls or reacting to other UI events.
+            Here’s how to implement controlled dropdown behavior:`}
           </div>
         </div>
         <CodeBlock code={controlledExample}/>

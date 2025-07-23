@@ -16,7 +16,7 @@ import {NodeToggle} from '../components/NodeToggle';
 import {NodeCheckbox} from '../components/NodeCheckbox';
 import {NodeLabel} from '../components/NodeLabel';
 import {Footer} from '../components/Footer';
-import {NoMatches} from '../components/NoMatches';
+import {NoData} from '../components/NoData';
 
 const components: InnerComponents = {
   Field: {
@@ -64,8 +64,8 @@ const components: InnerComponents = {
   Footer: {
     component: Footer
   },
-  NoMatches: {
-    component: NoMatches
+  NoData: {
+    component: NoData
   }
 };
 

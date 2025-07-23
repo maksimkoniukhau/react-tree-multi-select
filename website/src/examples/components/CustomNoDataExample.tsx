@@ -1,19 +1,19 @@
 import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faFaceSadTear} from '@fortawesome/free-regular-svg-icons';
-import {Components, NoMatchesProps, NoMatchesType, TreeMultiSelect} from '../../treeMultiSelectImport';
+import {Components, NoDataProps, NoDataType, TreeMultiSelect} from '../../treeMultiSelectImport';
 import {getTreeNodeData} from '../../utils';
 
-const CustomNoMatches: FC<NoMatchesProps> = (props) => (
+const CustomNoData: FC<NoDataProps> = (props) => (
   <div {...props.attributes}>
     <div><FontAwesomeIcon icon={faFaceSadTear}/>{' '}{props.ownProps.label}</div>
   </div>
 );
 
-const NoMatches: NoMatchesType = {component: CustomNoMatches};
-const components: Components = {NoMatches};
+const NoData: NoDataType = {component: CustomNoData};
+const components: Components = {NoData};
 
-export const CustomNoMatchesExample: FC = () => {
+export const CustomNoDataExample: FC = () => {
 
   return (
     <div className="component-example">
