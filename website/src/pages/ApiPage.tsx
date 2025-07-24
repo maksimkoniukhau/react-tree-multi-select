@@ -132,7 +132,14 @@ export const ApiPage: FC = () => {
               <td>{'dropdownHeight'}</td>
               <td>{'number'}</td>
               <td>{'300'}</td>
-              <td>{`Dropdown height in pixels (it is automatically reduced if the content height is less than the value in the property).`}</td>
+              <td>{`Dropdown height in pixels. 
+              If the content height is smaller than this value, the dropdown height is automatically reduced to fit the content.`}</td>
+            </tr>
+            <tr>
+              <td>{'overscan'}</td>
+              <td>{'number'}</td>
+              <td>{'1'}</td>
+              <td>{`The number of items to render outside the visible viewport (above and below) to improve scroll performance and reduce flickering during fast scrolling.`}</td>
             </tr>
             <tr>
               <td>{'footerConfig'}</td>

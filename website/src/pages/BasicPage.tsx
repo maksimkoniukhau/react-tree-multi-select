@@ -10,6 +10,7 @@ const INPUT_PLACEHOLDER = 'search...';
 const NO_DATA = 'No data';
 const NO_MATCHES = 'No matches';
 const DEFAULT_OPTIONS_CONTAINER_HEIGHT = 300;
+const OVERSCAN = 2;
 
 export const BasicPage: FC = memo(() => {
 
@@ -26,6 +27,7 @@ export const BasicPage: FC = memo(() => {
   const [withDropdownInput, setWithDropdownInput] = useState<boolean>(false);
   const [closeDropdownOnNodeChange, setCloseDropdownOnNodeChange] = useState<boolean>(false);
   const [dropdownHeight, setDropdownHeight] = useState<number>(DEFAULT_OPTIONS_CONTAINER_HEIGHT);
+  const [overscan, setOverscan] = useState<number>(OVERSCAN);
   const [selectedNodes, setSelectedNodes] = useState<boolean>(true);
   const [expandedNodes, setExpandedNodes] = useState<boolean>(true);
   const [disabledNodes, setDisabledNodes] = useState<boolean>(true);
@@ -71,7 +73,10 @@ export const BasicPage: FC = memo(() => {
         setCloseDropdownOnNodeChange(value as boolean);
         break;
       case 'dropdownHeight' :
-        setDropdownHeight(value as number);
+        setDropdownHeight(Number(value));
+        break;
+      case 'overscan' :
+        setOverscan(Number(value));
         break;
       case 'selectedNodes' :
         setSelectedNodes(value as boolean);
@@ -150,6 +155,7 @@ export const BasicPage: FC = memo(() => {
                     onChange={handleOptionChange('closeDropdownOnNodeChange')}/>
           <Input label="dropdownHeight:" initValue={DEFAULT_OPTIONS_CONTAINER_HEIGHT}
                  onChange={handleOptionChange('dropdownHeight')} type="number"/>
+          <Input label="overscan:" initValue={OVERSCAN} onChange={handleOptionChange('overscan')} type="number"/>
           <div className="delimiter"/>
           <div>{'Data initial props:'}</div>
           <Checkbox label="selected nodes" initChecked={true} onChange={handleOptionChange('selectedNodes')}/>
@@ -174,6 +180,7 @@ export const BasicPage: FC = memo(() => {
             withDropdownInput={withDropdownInput}
             closeDropdownOnNodeChange={closeDropdownOnNodeChange}
             dropdownHeight={dropdownHeight}
+            overscan={overscan}
             onNodeChange={handleNodeChange}
             onNodeToggle={handleNodeToggle}
             onClearAll={handleClearAll}
