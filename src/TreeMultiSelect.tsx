@@ -10,6 +10,7 @@ import {
   INPUT_PLACEHOLDER,
   NO_DATA,
   NO_MATCHES,
+  OVERSCAN,
   SELECT_ALL
 } from './constants';
 import {debounce, getFieldFocusableElement} from './utils/commonUtils';
@@ -84,7 +85,20 @@ export interface TreeMultiSelectProps {
    * For full control, use this prop in conjunction with the `onDropdownToggle` callback.
    */
   openDropdown?: boolean;
+  /**
+   * Dropdown height in pixels. If the content height is smaller than this value,
+   * the dropdown height is automatically reduced to fit the content.
+   *
+   * @default 300
+   */
   dropdownHeight?: number;
+  /**
+   * The number of items to render outside the visible viewport (above and below)
+   * to improve scroll performance and reduce flickering during fast scrolling.
+   *
+   * @default 1
+   */
+  overscan?: number;
   /**
    * Controls when the Footer component is rendered in the dropdown.
    */
@@ -144,6 +158,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     closeDropdownOnNodeChange = false,
     openDropdown,
     dropdownHeight = DEFAULT_OPTIONS_CONTAINER_HEIGHT,
+    overscan = OVERSCAN,
     footerConfig,
     keyboardConfig: propsKeyboardConfig,
     components: propsComponents,
@@ -886,6 +901,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
             noMatchesText={noMatchesText}
             dropdownHeight={dropdownHeight}
             showFooter={showFooter}
+            overscan={overscan}
             onSelectAllChange={handleSelectAllChange}
             onNodeChange={handleNodeChange}
             onNodeToggle={handleNodeToggleOnClick}

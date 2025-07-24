@@ -11,3 +11,4 @@ export const DROPDOWN = 'Dropdown-';
 
 export const DEFAULT_OPTIONS_CONTAINER_WIDTH = '100%';
 export const DEFAULT_OPTIONS_CONTAINER_HEIGHT = 300;
+export const OVERSCAN = 1;

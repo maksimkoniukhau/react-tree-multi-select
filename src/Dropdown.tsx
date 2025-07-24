@@ -21,6 +21,7 @@ export interface DropdownProps {
   noMatchesText: string;
   dropdownHeight: number;
   showFooter: boolean;
+  overscan: number;
   onSelectAllChange: (e: React.MouseEvent) => void;
   onNodeChange: (node: Node) => (e: React.MouseEvent) => void;
   onNodeToggle: (node: Node) => (e: React.MouseEvent) => void;
@@ -49,6 +50,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     noMatchesText,
     dropdownHeight,
     showFooter,
+    overscan,
     onSelectAllChange,
     onNodeChange,
     onNodeToggle,
@@ -135,6 +137,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
         topItemCount={topItemCount}
         renderItem={renderItem}
         onLastItemReached={onLastItemReached}
+        overscan={overscan}
       />
     </div>
   );
