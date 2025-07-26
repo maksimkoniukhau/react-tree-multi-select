@@ -2,6 +2,7 @@ import React, {FC, memo} from 'react';
 import {infiniteScrollExample} from '../code-data';
 import {CodeBlock} from '../components/CodeBlock';
 import {Alert} from '../components/Alert';
+import {PageNavigation} from '../components/PageNavigation';
 import {InfiniteScrollExample} from '../examples/InfiniteScrollExample';
 
 export const InfiniteScrollPage: FC = memo(() => {
@@ -24,7 +25,7 @@ export const InfiniteScrollPage: FC = memo(() => {
         <CodeBlock code={infiniteScrollExample}/>
         <InfiniteScrollExample/>
       </div>
-      <div className="page-navigation"></div>
+      <PageNavigation items={[]}/>
     </div>
   );
 });

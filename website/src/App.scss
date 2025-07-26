@@ -70,6 +70,12 @@
           flex: 1 1 100%;
           max-width: 75%;
 
+          &.api-page {
+            .code-container {
+              max-height: unset;
+            }
+          }
+
           &.large-data-page {
             .select-container {
               margin-bottom: 10px;
@@ -135,6 +141,7 @@
             background: #fcfcfc;
             font-size: 12px;
             overflow-y: auto;
+            max-height: 450px;
 
             pre {
               margin: 0;
@@ -159,10 +166,6 @@
             tr:nth-child(even) {
               background-color: #f3f3f3;
             }
-          }
-
-          .code-container {
-            max-height: 450px;
           }
 
           .rtms-tree-multi-select.focused {

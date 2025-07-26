@@ -23,12 +23,7 @@ export const GettingStartedPage: FC = () => {
           <CodeBlock code={basicUsageCode}/>
         </Section>
       </div>
-      <PageNavigation
-        items={[
-          {link: '#installation', label: 'Installation'},
-          {link: '#usage', label: 'Usage'}
-        ]}
-      />
+      <PageNavigation items={[]}/>
     </div>
   );
 };

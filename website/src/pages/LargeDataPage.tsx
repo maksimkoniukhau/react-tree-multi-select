@@ -2,6 +2,7 @@ import React, {FC, memo, useState} from 'react';
 import {TreeMultiSelect} from '../treeMultiSelectImport';
 import {largeTreeNodeData30, largeTreeNodeData50, RandomTreeNode} from '../utils';
 import {Select} from '../components/Select';
+import {PageNavigation} from '../components/PageNavigation';
 
 export const LargeDataPage: FC = memo(() => {
 
@@ -34,7 +35,7 @@ export const LargeDataPage: FC = memo(() => {
           />
         </div>
       </div>
-      <div className="page-navigation"></div>
+      <PageNavigation items={[]}/>
     </div>
   );
 });

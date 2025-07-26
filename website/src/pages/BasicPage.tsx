@@ -4,6 +4,7 @@ import {getTreeNodeData} from '../utils';
 import {Select} from '../components/Select';
 import {Checkbox} from '../components/Checkbox';
 import {Input} from '../components/Input';
+import {PageNavigation} from '../components/PageNavigation';
 import {OptionTreeNode} from '../data';
 
 const INPUT_PLACEHOLDER = 'search...';
@@ -206,7 +207,7 @@ export const BasicPage: FC = memo(() => {
           />
         </div>
       </div>
-      <div className="page-navigation"></div>
+      <PageNavigation items={[]}/>
     </div>
   );
 });

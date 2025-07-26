@@ -1,4 +1,4 @@
-import React, {ComponentType, HTMLProps, ReactNode} from 'react';
+import React from 'react';
 
 /**
  * Enum representing the different types of the component.
@@ -101,12 +101,12 @@ export type DropdownKeyboardOptions = {
  */
 export type KeyboardConfig = {
   /**
-   * Configuration for the Field component (the selected items area).
+   * Configuration for the Field component.
    */
   field?: FieldKeyboardOptions;
 
   /**
-   * Configuration for the Dropdown component (the available items list).
+   * Configuration for the Dropdown component.
    */
   dropdown?: DropdownKeyboardOptions;
 };
@@ -133,8 +133,6 @@ export type FooterConfig = {
 export interface TreeMultiSelectProps {
   /**
    * The data to be rendered in the component.
-   *
-   * This is a required prop.
    */
   data: TreeNode[];
   /**
@@ -424,14 +422,14 @@ export interface NoDataOwnProps {
 }
 
 export interface ComponentProps<ComponentType, OwnProps, CustomProps = unknown> {
-  attributes: HTMLProps<ComponentType>;
+  attributes: React.HTMLProps<ComponentType>;
   ownProps: OwnProps;
   customProps: CustomProps;
-  children?: ReactNode;
+  children?: React.ReactNode;
 }
 
 export interface Component<ComponentProps, CustomProps = unknown> {
-  component: ComponentType<ComponentProps>;
+  component: React.ComponentType<ComponentProps>;
   props?: CustomProps;
 }
 

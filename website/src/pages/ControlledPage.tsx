@@ -1,5 +1,6 @@
 import React, {FC, memo} from 'react';
 import {CodeBlock} from '../components/CodeBlock';
+import {PageNavigation} from '../components/PageNavigation';
 import {controlledExample} from '../code-data';
 import {ControlledExample} from '../examples/ControlledExample';
 
@@ -20,7 +21,7 @@ export const ControlledPage: FC = memo(() => {
         <CodeBlock code={controlledExample}/>
         <ControlledExample/>
       </div>
-      <div className="page-navigation"></div>
+      <PageNavigation items={[]}/>
     </div>
   );
 });
