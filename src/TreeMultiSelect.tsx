@@ -32,7 +32,7 @@ import {
   isFocusedElementInDropdown,
   isFocusedElementInField
 } from './utils/focusUtils';
-import {CheckedState, Components, FooterConfig, KeyboardConfig, TreeNode, Type} from './types';
+import {CheckedState, TreeMultiSelectProps, TreeNode, Type} from './types';
 import {InnerComponents} from './innerTypes';
 import {useOnClickOutside} from './hooks/useOnClickOutside';
 import {Dropdown} from './Dropdown';
@@ -42,103 +42,6 @@ import {FieldClearWrapper} from './components/FieldClear';
 import {FieldWrapper} from './components/Field';
 import {InputWrapper} from './components/Input';
 import {ChipWrapper} from './components/ChipWrapper';
-
-export interface TreeMultiSelectProps {
-  /**
-   * The data to be rendered in the component.
-   *
-   * This is a required prop.
-   */
-  data: TreeNode[];
-  /**
-   * Specifies the type of the component, determining its behavior and rendering.
-   *
-   * @default Type.TREE_SELECT
-   */
-  type?: Type;
-  id?: string;
-  className?: string;
-  inputPlaceholder?: string;
-  noDataText?: string;
-  noMatchesText?: string;
-  isDisabled?: boolean;
-  isSearchable?: boolean;
-  withChipClear?: boolean;
-  withClearAll?: boolean;
-  withSelectAll?: boolean;
-  withDropdownInput?: boolean;
-  /**
-   * Closes the dropdown automatically after a node is changed (selected/unselected in dropdown).
-   * Useful when `type` is `Type.SELECT`.
-   *
-   * @default false
-   */
-  closeDropdownOnNodeChange?: boolean;
-  /**
-   * Controls whether the dropdown is rendered (open) or hidden (closed).
-   * This enables external control over the dropdown's rendering state.
-   *
-   * When set to `true`, the dropdown is rendered (opened).
-   * When set to `false`, the dropdown is hidden (closed).
-   *
-   * If omitted, the component manages the dropdown state internally.
-   * For full control, use this prop in conjunction with the `onDropdownToggle` callback.
-   */
-  openDropdown?: boolean;
-  /**
-   * Dropdown height in pixels. If the content height is smaller than this value,
-   * the dropdown height is automatically reduced to fit the content.
-   *
-   * @default 300
-   */
-  dropdownHeight?: number;
-  /**
-   * The number of items to render outside the visible viewport (above and below)
-   * to improve scroll performance and reduce flickering during fast scrolling.
-   *
-   * @default 1
-   */
-  overscan?: number;
-  /**
-   * Controls when the Footer component is rendered in the dropdown.
-   */
-  footerConfig?: FooterConfig;
-  /**
-   * Controls keyboard navigation behavior for the component.
-   */
-  keyboardConfig?: KeyboardConfig;
-  components?: Components;
-  /**
-   * Callback triggered when the dropdown is opened or closed by user interaction.
-   * This is used to synchronize external state with the dropdown’s rendering state.
-   *
-   * Note: This callback is only invoked when the `openDropdown` prop is provided.
-   * If `openDropdown` is undefined, the component manages its own state and
-   * `onDropdownToggle` will not be called.
-   *
-   * @param open - `true` if the dropdown was opened, `false` if it was closed.
-   */
-  onDropdownToggle?: (open: boolean) => void;
-  onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[], data: TreeNode[]) => void;
-  onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[], data: TreeNode[]) => void;
-  onClearAll?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState | undefined, data: TreeNode[]) => void;
-  onSelectAllChange?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState, data: TreeNode[]) => void;
-  onFocus?: (event: React.FocusEvent) => void;
-  onBlur?: (event: React.FocusEvent) => void;
-  /**
-   * Callback triggered when the last item in the dropdown is rendered.
-   * This is useful for implementing infinite scrolling or lazy loading.
-   *
-   * Note: The callback is invoked when the last item (including overscan)
-   * is rendered, not based on actual scroll position.
-   *
-   * By default, the dropdown overscans 2 items above and below the visible area.
-   *
-   * @param inputValue - The current search input value.
-   * @param displayedNodes - An array of TreeNode objects currently displayed in the dropdown.
-   */
-  onDropdownLastItemReached?: (inputValue: string, displayedNodes: TreeNode[]) => void;
-}
 
 export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const {
@@ -885,47 +788,44 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           />
         </div>
       </FieldWrapper>
-      {
-        showDropdown ? (
-          <Dropdown
-            type={type}
-            nodeMap={nodeMapRef.current}
-            nodesAmount={nodes.length}
-            displayedNodes={displayedNodes}
-            isAnyHasChildren={isAnyHasChildren(nodes)}
-            searchValue={searchValue}
-            showSelectAll={showSelectAll}
-            selectAllCheckedState={selectAllCheckedState}
-            focusedElement={focusedElement}
-            noDataText={noDataText}
-            noMatchesText={noMatchesText}
-            dropdownHeight={dropdownHeight}
-            showFooter={showFooter}
-            overscan={overscan}
-            onSelectAllChange={handleSelectAllChange}
-            onNodeChange={handleNodeChange}
-            onNodeToggle={handleNodeToggleOnClick}
-            onFooterClick={handleFooterClick}
-            input={withDropdownInput && isSearchable ? (
-              <InputWrapper
-                input={components.Input}
-                inputRef={dropdownInputRef}
-                placeholder={inputPlaceholder}
-                value={searchValue}
-                onChange={handleInputChange}
-                componentDisabled={isDisabled}
-              />
-            ) : null}
-            inputRef={dropdownInputRef}
-            onLastItemReached={handleDropdownLastItemReached}
-            onUnmount={handleDropdownUnmount}
-            components={components}
-            onListItemRender={debouncedHandleListItemRender}
-            componentDisabled={isDisabled}
-          />
-        ) : null
-      }
+      {showDropdown ? (
+        <Dropdown
+          type={type}
+          nodeMap={nodeMapRef.current}
+          nodesAmount={nodes.length}
+          displayedNodes={displayedNodes}
+          isAnyHasChildren={isAnyHasChildren(nodes)}
+          searchValue={searchValue}
+          showSelectAll={showSelectAll}
+          selectAllCheckedState={selectAllCheckedState}
+          focusedElement={focusedElement}
+          noDataText={noDataText}
+          noMatchesText={noMatchesText}
+          dropdownHeight={dropdownHeight}
+          showFooter={showFooter}
+          overscan={overscan}
+          onSelectAllChange={handleSelectAllChange}
+          onNodeChange={handleNodeChange}
+          onNodeToggle={handleNodeToggleOnClick}
+          onFooterClick={handleFooterClick}
+          input={withDropdownInput && isSearchable ? (
+            <InputWrapper
+              input={components.Input}
+              inputRef={dropdownInputRef}
+              placeholder={inputPlaceholder}
+              value={searchValue}
+              onChange={handleInputChange}
+              componentDisabled={isDisabled}
+            />
+          ) : null}
+          inputRef={dropdownInputRef}
+          onLastItemReached={handleDropdownLastItemReached}
+          onUnmount={handleDropdownUnmount}
+          components={components}
+          onListItemRender={debouncedHandleListItemRender}
+          componentDisabled={isDisabled}
+        />
+      ) : null}
     </div>
-  )
-    ;
+  );
 };
