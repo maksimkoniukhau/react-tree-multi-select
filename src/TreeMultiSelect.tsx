@@ -226,7 +226,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, type]);
 
-  const handleOutsideEvent = () => {
+  const handleOutsideEvent = useCallback(() => {
     if (isDisabled) {
       return;
     }
@@ -245,7 +245,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       handleShowDropdown(false, false);
       setFocusedElement('');
     }
-  };
+  }, [isDisabled, showDropdown, isSearchMode, focusedElement, nodes, handleShowDropdown]);
 
   const focusFieldElement = (): void => {
     if (document.activeElement === dropdownInputRef?.current) {
@@ -266,7 +266,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     return focusableElements;
   }, [displayedNodes, showSelectAll, showFooter]);
 
-  const getNextFocusedElement = useCallback((focusedElement: string): string => {
+  const getNextFocusedDropdownElement = useCallback((focusedElement: string): string => {
     const dropdownFocusableElements = getDropdownFocusableElements();
     if (dropdownFocusableElements.length === 0) {
       return '';
@@ -284,7 +284,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   }, [getDropdownFocusableElements, keyboardConfig.dropdown.loopDown]);
 
-  const getPrevFocusedElement = useCallback((focusedElement: string): string => {
+  const getPrevFocusedDropdownElement = useCallback((focusedElement: string): string => {
     const dropdownFocusableElements = getDropdownFocusableElements();
     if (dropdownFocusableElements.length === 0 || !isFocusedElementInDropdown(focusedElement)) {
       return '';
@@ -299,7 +299,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   }, [getDropdownFocusableElements, keyboardConfig.dropdown.loopUp]);
 
-  const getFocusedFieldElements = useCallback((): string[] => {
+  const getFieldFocusableElements = useCallback((): string[] => {
     const focusableElements: string[] = [];
     focusableElements.push(...filterChips(selectedNodes, type).map(node => buildFocusedElement(node.path, FIELD)));
     focusableElements.push(buildFocusedElement(INPUT, FIELD));
@@ -310,7 +310,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [selectedNodes, type, showClearAll]);
 
   const getNextFocusedFieldElement = useCallback((focusedFieldElement: string): string => {
-    const fieldFocusableElements = getFocusedFieldElements();
+    const fieldFocusableElements = getFieldFocusableElements();
     if (!isFocusedElementInField(focusedFieldElement)) {
       return fieldFocusableElements[fieldFocusableElements.length - 1];
     }
@@ -322,10 +322,10 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     } else {
       return fieldFocusableElements[currentIndex + 1];
     }
-  }, [getFocusedFieldElements, keyboardConfig.field.loopRight]);
+  }, [getFieldFocusableElements, keyboardConfig.field.loopRight]);
 
   const getPrevFocusedFieldElement = useCallback((focusedFieldElement: string): string => {
-    const fieldFocusableElements = getFocusedFieldElements();
+    const fieldFocusableElements = getFieldFocusableElements();
     if (!isFocusedElementInField(focusedFieldElement)) {
       return fieldFocusableElements.length > 1
         ? fieldFocusableElements[fieldFocusableElements.indexOf(buildFocusedElement(INPUT, FIELD)) - 1]
@@ -339,7 +339,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     } else {
       return fieldFocusableElements[currentIndex - 1];
     }
-  }, [getFocusedFieldElements, keyboardConfig.field.loopLeft]);
+  }, [getFieldFocusableElements, keyboardConfig.field.loopLeft]);
 
   const handleFieldClick = useCallback((event: React.MouseEvent): void => {
     if (isDisabled) {
@@ -564,48 +564,50 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     switch (event.key) {
       case 'ArrowLeft':
         if (isFocusedElementInDropdown(focusedElement)) {
+          if (isSearchMode) {
+            event.preventDefault(); // Prevent the caret from moving inside the input.
+          }
           handleNodeToggleOnKeyDown(false);
-        } else if (!isSearchMode) {
-          setFocusedElement(getPrevFocusedFieldElement(focusedElement));
-        }
-        if (isFocusedElementInDropdown(focusedElement)) {
-          event.preventDefault();
+        } else {
+          if (!isSearchMode) {
+            setFocusedElement(getPrevFocusedFieldElement(focusedElement));
+          }
         }
         break;
       case 'ArrowRight':
         if (isFocusedElementInDropdown(focusedElement)) {
+          if (isSearchMode) {
+            event.preventDefault(); // Prevent the caret from moving inside the input.
+          }
           handleNodeToggleOnKeyDown(true);
-        } else if (!isSearchMode) {
-          setFocusedElement(getNextFocusedFieldElement(focusedElement));
-        }
-        if (isFocusedElementInDropdown(focusedElement)) {
-          event.preventDefault();
+        } else {
+          if (!isSearchMode) {
+            setFocusedElement(getNextFocusedFieldElement(focusedElement));
+          }
         }
         break;
       case 'ArrowUp':
         if (showDropdown && isFocusedElementInDropdown(focusedElement)) {
-          const prevFocusedElement = getPrevFocusedElement(focusedElement);
-          if (prevFocusedElement !== focusedElement) {
-            setFocusedElement(prevFocusedElement);
-          }
+          setFocusedElement(getPrevFocusedDropdownElement(focusedElement));
         } else {
           handleShowDropdown(!showDropdown, true);
         }
-        event.preventDefault();
+        if (isSearchMode) {
+          event.preventDefault(); // Prevent the caret from moving inside the input.
+        }
         break;
       case 'ArrowDown':
         if (showDropdown) {
-          const nextFocusedElement = getNextFocusedElement(focusedElement);
-          if (nextFocusedElement !== focusedElement) {
-            setFocusedElement(nextFocusedElement);
-          }
+          setFocusedElement(getNextFocusedDropdownElement(focusedElement));
         } else {
           handleShowDropdown(!showDropdown, true);
         }
-        event.preventDefault();
+        if (isSearchMode) {
+          event.preventDefault(); // Prevent the caret from moving inside the input.
+        }
         break;
       case 'Enter':
-        if (!isFocusedElementInDropdown(focusedElement)) {
+        if (!focusedElement || isFocusedElementInField(focusedElement)) {
           const chipNode = filterChips(selectedNodes, type)
             ?.find(node => isFocused(node.path, FIELD, focusedElement));
           if (chipNode) {
@@ -613,7 +615,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           } else {
             handleShowDropdown(!showDropdown, true);
           }
-        } else if (showDropdown) {
+        } else {
           if (isFocused(SELECT_ALL, DROPDOWN, focusedElement)) {
             handleSelectAllChange();
           } else {
