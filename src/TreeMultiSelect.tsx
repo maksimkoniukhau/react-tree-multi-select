@@ -226,12 +226,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, type]);
 
-  const handleOutsideEvent = useCallback(() => {
+  const resetState = useCallback(() => {
     if (isDisabled) {
       return;
-    }
-    if (isComponentFocused.current) {
-      isOutsideClicked.current = true;
     }
     if (showDropdown || isSearchMode || focusedElement) {
       nodes.forEach(node => {
@@ -244,8 +241,19 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       setDisplayedNodes(newDisplayedNodes);
       handleShowDropdown(false, false);
       setFocusedElement('');
+      setSearchValue('');
     }
   }, [isDisabled, showDropdown, isSearchMode, focusedElement, nodes, handleShowDropdown]);
+
+  const handleOutsideEvent = useCallback(() => {
+    if (isDisabled) {
+      return;
+    }
+    if (isComponentFocused.current) {
+      isOutsideClicked.current = true;
+    }
+    resetState();
+  }, [isDisabled, resetState]);
 
   const focusFieldElement = (): void => {
     if (document.activeElement === dropdownInputRef?.current) {
@@ -647,9 +655,10 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         }
         break;
       case 'Tab':
-        if (showDropdown) {
-          handleShowDropdown(false, true);
-        }
+        // If the component is the last focusable element in the DOM, pressing Tab won’t shift focus,
+        // and `focusin` won’t fire — so useOnClickOutside won’t trigger the reset handler.
+        // Manually reset the state in this case.
+        resetState();
         break;
       default:
         break;
