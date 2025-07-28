@@ -1,4 +1,134 @@
-export const rtmsTypes = `export interface FieldOwnProps {
+export const rtmsTypes = `/**
+ * Enum representing the different types of the component.
+ */
+export enum Type {
+  /** Component behaves as a normal tree structure. */
+  TREE_SELECT = 'TREE_SELECT',
+
+  /** Component behaves as a flat tree structure (selecting a node has no effect on its descendants or ancestors). */
+  TREE_SELECT_FLAT = 'TREE_SELECT_FLAT',
+
+  /** Component behaves as a multi-select. */
+  MULTI_SELECT = 'MULTI_SELECT',
+
+  /** Component behaves as a simple select. */
+  SELECT = 'SELECT'
+}
+
+/**
+ * Interface representing a node.
+ */
+export interface TreeNode {
+  /** The display label of the node. */
+  label: string;
+
+  /** Optional child nodes, enabling a nested tree structure. */
+  children?: TreeNode[];
+
+  /** Whether the node is selected. */
+  selected?: boolean;
+
+  /** Whether the node is expanded to show its children. */
+  expanded?: boolean;
+
+  /** Whether the node is disabled. */
+  disabled?: boolean;
+
+  /** Additional properties can be added as needed. */
+  [key: PropertyKey]: unknown;
+}
+
+/**
+ * Enum representing the checked state for the SelectAll component.
+ */
+export enum CheckedState {
+  /** All items are selected. */
+  SELECTED = 'SELECTED',
+
+  /** Some (but not all) items are selected (partial selection). */
+  PARTIAL = 'PARTIAL',
+
+  /** No items are selected. */
+  UNSELECTED = 'UNSELECTED'
+}
+
+/**
+ * Configuration options for keyboard behavior in the Field component.
+ */
+export type FieldKeyboardOptions = {
+  /**
+   * Enables looping when navigating left with the ArrowLeft key.
+   * If \`true\`, pressing ArrowLeft on the first item will move focus to the last item.
+   *
+   * @default false
+   */
+  loopLeft?: boolean;
+
+  /**
+   * Enables looping when navigating right with the ArrowRight key.
+   * If \`true\`, pressing ArrowRight on the last item will move focus to the first item.
+   *
+   * @default false
+   */
+  loopRight?: boolean;
+};
+
+/**
+ * Configuration options for keyboard behavior in the Dropdown component.
+ */
+export type DropdownKeyboardOptions = {
+  /**
+   * Enables looping when navigating upward with the ArrowUp key.
+   * If \`true\`, pressing ArrowUp on the first item will move focus to the last item.
+   *
+   * @default true
+   */
+  loopUp?: boolean;
+
+  /**
+   * Enables looping when navigating downward with the ArrowDown key.
+   * If \`true\`, pressing ArrowDown on the last item will move focus to the first item.
+   *
+   * @default true
+   */
+  loopDown?: boolean;
+};
+
+/**
+ * Controls keyboard navigation behavior for the component.
+ */
+export type KeyboardConfig = {
+  /**
+   * Configuration for the Field component.
+   */
+  field?: FieldKeyboardOptions;
+
+  /**
+   * Configuration for the Dropdown component.
+   */
+  dropdown?: DropdownKeyboardOptions;
+};
+
+/**
+ * Controls when the Footer component is rendered in the dropdown.
+ */
+export type FooterConfig = {
+  /**
+   * Renders the Footer when the component is in the search mode (when the input contains value).
+   *
+   * @default false
+   */
+  showWhenSearching?: boolean;
+  /**
+   * Renders the Footer when no items are available in the dropdown
+   * (takes precedence over \`showWhenSearching\` if both apply).
+   *
+   * @default false
+   */
+  showWhenNoItems?: boolean;
+}
+
+export interface FieldOwnProps {
   type: Type;
   showDropdown: boolean;
   withClearAll: boolean;
@@ -166,137 +296,7 @@ export type Components<
   >;
 };`;
 
-export const rtmsProps = `/**
- * Enum representing the different types of the component.
- */
-export enum Type {
-  /** Component behaves as a normal tree structure. */
-  TREE_SELECT = 'TREE_SELECT',
-
-  /** Component behaves as a flat tree structure (selecting a node has no effect on its descendants or ancestors). */
-  TREE_SELECT_FLAT = 'TREE_SELECT_FLAT',
-
-  /** Component behaves as a multi-select. */
-  MULTI_SELECT = 'MULTI_SELECT',
-
-  /** Component behaves as a simple select. */
-  SELECT = 'SELECT'
-}
-
-/**
- * Interface representing a node.
- */
-export interface TreeNode {
-  /** The display label of the node. */
-  label: string;
-
-  /** Optional child nodes, enabling a nested tree structure. */
-  children?: TreeNode[];
-
-  /** Whether the node is selected. */
-  selected?: boolean;
-
-  /** Whether the node is expanded to show its children. */
-  expanded?: boolean;
-
-  /** Whether the node is disabled. */
-  disabled?: boolean;
-
-  /** Additional properties can be added as needed. */
-  [key: PropertyKey]: unknown;
-}
-
-/**
- * Enum representing the checked state for the SelectAll component.
- */
-export enum CheckedState {
-  /** All items are selected. */
-  SELECTED = 'SELECTED',
-
-  /** Some (but not all) items are selected (partial selection). */
-  PARTIAL = 'PARTIAL',
-
-  /** No items are selected. */
-  UNSELECTED = 'UNSELECTED'
-}
-
-/**
- * Configuration options for keyboard behavior in the Field component.
- */
-export type FieldKeyboardOptions = {
-  /**
-   * Enables looping when navigating left with the ArrowLeft key.
-   * If \`true\`, pressing ArrowLeft on the first item will move focus to the last item.
-   *
-   * @default false
-   */
-  loopLeft?: boolean;
-
-  /**
-   * Enables looping when navigating right with the ArrowRight key.
-   * If \`true\`, pressing ArrowRight on the last item will move focus to the first item.
-   *
-   * @default false
-   */
-  loopRight?: boolean;
-};
-
-/**
- * Configuration options for keyboard behavior in the Dropdown component.
- */
-export type DropdownKeyboardOptions = {
-  /**
-   * Enables looping when navigating upward with the ArrowUp key.
-   * If \`true\`, pressing ArrowUp on the first item will move focus to the last item.
-   *
-   * @default true
-   */
-  loopUp?: boolean;
-
-  /**
-   * Enables looping when navigating downward with the ArrowDown key.
-   * If \`true\`, pressing ArrowDown on the last item will move focus to the first item.
-   *
-   * @default true
-   */
-  loopDown?: boolean;
-};
-
-/**
- * Controls keyboard navigation behavior for the component.
- */
-export type KeyboardConfig = {
-  /**
-   * Configuration for the Field component.
-   */
-  field?: FieldKeyboardOptions;
-
-  /**
-   * Configuration for the Dropdown component.
-   */
-  dropdown?: DropdownKeyboardOptions;
-};
-
-/**
- * Controls when the Footer component is rendered in the dropdown.
- */
-export type FooterConfig = {
-  /**
-   * Renders the Footer when the component is in the search mode (when the input contains value).
-   *
-   * @default false
-   */
-  showWhenSearching?: boolean;
-  /**
-   * Renders the Footer when no items are available in the dropdown
-   * (takes precedence over \`showWhenSearching\` if both apply).
-   *
-   * @default false
-   */
-  showWhenNoItems?: boolean;
-}
-
-export interface TreeMultiSelectProps {
+export const rtmsProps = `export interface TreeMultiSelectProps {
   /**
    * The data to be rendered in the component.
    */
