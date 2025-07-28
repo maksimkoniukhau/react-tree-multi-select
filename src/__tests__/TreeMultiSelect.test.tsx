@@ -57,11 +57,11 @@ describe('TreeMultiSelect component: noDataText, noMatchesText props', () => {
   };
 
   it('tests component with default noDataText', async () => {
+    const user: UserEvent = userEvent.setup();
+
     const {container} = render(
       <TreeMultiSelect data={[]}/>
     );
-
-    const user: UserEvent = userEvent.setup();
 
     await user.click(getField(container));
     noMatchesTextMatcher(container, NO_DATA, true);
@@ -78,11 +78,11 @@ describe('TreeMultiSelect component: noDataText, noMatchesText props', () => {
 
   it.each([['no options'], ['no items']])('tests component when noDataText={%s}',
     async (noDataText) => {
+      const user: UserEvent = userEvent.setup();
+
       const {container} = render(
         <TreeMultiSelect data={[]} noDataText={noDataText}/>
       );
-
-      const user: UserEvent = userEvent.setup();
 
       await user.click(getField(container));
       noMatchesTextMatcher(container, noDataText, true);
@@ -98,11 +98,11 @@ describe('TreeMultiSelect component: noDataText, noMatchesText props', () => {
     });
 
   it('tests component with default noMatchesText', async () => {
+    const user: UserEvent = userEvent.setup();
+
     const {container} = render(
       <TreeMultiSelect data={treeNodeData}/>
     );
-
-    const user: UserEvent = userEvent.setup();
 
     await user.click(getField(container));
     noMatchesTextMatcher(container, NO_MATCHES, false);
@@ -119,11 +119,11 @@ describe('TreeMultiSelect component: noDataText, noMatchesText props', () => {
 
   it.each([['not found'], ['no items found']])('tests component when noMatchesText={%s}',
     async (noMatchesText) => {
+      const user: UserEvent = userEvent.setup();
+
       const {container} = render(
         <TreeMultiSelect data={treeNodeData} noMatchesText={noMatchesText}/>
       );
-
-      const user: UserEvent = userEvent.setup();
 
       await user.click(getField(container));
       noMatchesTextMatcher(container, noMatchesText, false);
@@ -172,12 +172,12 @@ describe('TreeMultiSelect component: isDisabled prop', () => {
     expect(getChipContainers(container).length).toBe(8);
   };
 
-  const user: UserEvent = userEvent.setup();
-
   it.each([[true, true], [false, true], [true, false], [false, false]])(
     'tests component when isDisabled=true and withDropdownInput={%s} and openDropdown={%s}',
     async (withDropdownInput, openDropdown
     ) => {
+      const user: UserEvent = userEvent.setup();
+
       const handleFocus = jest.fn();
       const handleBlur = jest.fn();
       const handleNodeChange = jest.fn();
@@ -270,12 +270,12 @@ describe('TreeMultiSelect component: isSearchable prop', () => {
     }
   };
 
-  const user: UserEvent = userEvent.setup();
-
   it.each([[true, false], [true, true], [false, false], [false, true]])(
     'tests component when isSearchable={%s} and withDropdownInput={%s}',
     async (isSearchable, withDropdownInput
     ) => {
+      const user: UserEvent = userEvent.setup();
+
       const {container} = render(
         <TreeMultiSelect data={treeNodeData} isSearchable={isSearchable} withDropdownInput={withDropdownInput}/>
       );
@@ -305,9 +305,9 @@ describe('TreeMultiSelect component: withChipClear prop', () => {
     }
   };
 
-  const user: UserEvent = userEvent.setup();
-
   it.each([[true], [false]])('tests component when withChipClear={%s} (click)', async (withChipClear) => {
+    const user: UserEvent = userEvent.setup();
+
     const handleNodeChange = jest.fn();
 
     const {container} = render(
@@ -339,6 +339,8 @@ describe('TreeMultiSelect component: withChipClear prop', () => {
   });
 
   it.each([[true], [false]])('tests component when withChipClear={%s} (keydown)', async (withChipClear) => {
+    const user: UserEvent = userEvent.setup();
+
     const handleNodeChange = jest.fn();
 
     const {container} = render(
@@ -398,9 +400,9 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
     expect(handleSelectAllChange).toHaveBeenCalledTimes(selectAllChangeTimes);
   };
 
-  const user: UserEvent = userEvent.setup();
-
   it('tests component when withSelectAll=false as a default', async () => {
+    const user: UserEvent = userEvent.setup();
+
     const handleSelectAllChange = jest.fn();
 
     const {container} = render(
@@ -412,6 +414,8 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
   });
 
   it('tests component when withSelectAll=true and component type=SELECT', async () => {
+    const user: UserEvent = userEvent.setup();
+
     const handleSelectAllChange = jest.fn();
     const treeNodeData = getTreeNodeData([], [], []);
 
@@ -439,6 +443,8 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
   });
 
   it('tests component when withSelectAll=true', async () => {
+    const user: UserEvent = userEvent.setup();
+
     const handleSelectAllChange = jest.fn();
 
     const {container} = render(
@@ -565,12 +571,12 @@ describe('TreeMultiSelect component: closeDropdownOnNodeChange prop', () => {
     expect(handleBlur).toHaveBeenCalledTimes(blurTimes);
   };
 
-  const user: UserEvent = userEvent.setup();
-
   it.each([[false, false], [true, false], [false, true], [true, true]])(
     'tests component when closeDropdownOnNodeChange={%s} and withDropdownInput={%s}',
     async (closeDropdownOnNodeChange, withDropdownInput
     ) => {
+      const user: UserEvent = userEvent.setup();
+
       const handleFocus = jest.fn();
       const handleBlur = jest.fn();
 
@@ -613,9 +619,9 @@ describe('TreeMultiSelect component: closeDropdownOnNodeChange prop', () => {
 });
 
 describe('TreeMultiSelect component: dropdownHeight prop', () => {
-  const user: UserEvent = userEvent.setup();
-
   it('tests component with default dropdownHeight', async () => {
+    const user: UserEvent = userEvent.setup();
+
     const {container} = render(<TreeMultiSelect data={treeNodeData}/>);
 
     await user.click(getField(container));
@@ -626,19 +632,18 @@ describe('TreeMultiSelect component: dropdownHeight prop', () => {
     expect(computedStyles.height).toEqual('300px');
   });
 
-  it.each([[100], [200], [400]])(
-    'tests component when dropdownHeight={%s}',
-    async (dropdownHeight
-    ) => {
-      const {container} = render(<TreeMultiSelect data={treeNodeData} dropdownHeight={dropdownHeight}/>);
+  it.each([[100], [200], [400]])('tests component when dropdownHeight={%s}', async (dropdownHeight) => {
+    const user: UserEvent = userEvent.setup();
 
-      await user.click(getField(container));
+    const {container} = render(<TreeMultiSelect data={treeNodeData} dropdownHeight={dropdownHeight}/>);
 
-      const dropdownListOuter = getDropdownListOuter(container);
-      expect(dropdownListOuter).toBeInTheDocument();
-      const computedStyles = window.getComputedStyle(dropdownListOuter);
-      expect(computedStyles.height).toEqual(`${dropdownHeight}px`);
-    });
+    await user.click(getField(container));
+
+    const dropdownListOuter = getDropdownListOuter(container);
+    expect(dropdownListOuter).toBeInTheDocument();
+    const computedStyles = window.getComputedStyle(dropdownListOuter);
+    expect(computedStyles.height).toEqual(`${dropdownHeight}px`);
+  });
 });
 
 describe('TreeMultiSelect component: focus/blur component and open/close dropdown', () => {
@@ -683,10 +688,19 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
     }
   };
 
-  const user: UserEvent = userEvent.setup();
+  const resetMatcher = (container: HTMLElement, opened: boolean, value: string): void => {
+    if (opened) {
+      expect(getDropdown(container)).toBeInTheDocument();
+    } else {
+      expect(getDropdown(container)).not.toBeInTheDocument();
+    }
+    expect(getFieldInput(container)).toHaveValue(value);
+  };
 
   it.each([[false], [true]])(`focus/blur and open/close when withDropdownInput={%s} (click)`,
     async (withDropdownInput) => {
+      const user: UserEvent = userEvent.setup();
+
       const handleFocus = jest.fn();
       const handleBlur = jest.fn();
 
@@ -734,6 +748,8 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
 
   it.each([[false], [true]])(`focus/blur and open/close when withDropdownInput={%s} (keydown)`,
     async (withDropdownInput) => {
+      const user: UserEvent = userEvent.setup();
+
       const handleFocus = jest.fn();
       const handleBlur = jest.fn();
 
@@ -787,6 +803,8 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
 
   it.each([[false], [true]])(`focus/blur and open/close when withDropdownInput={%s} (click/keydown)`,
     async (withDropdownInput) => {
+      const user: UserEvent = userEvent.setup();
+
       const handleFocus = jest.fn();
       const handleBlur = jest.fn();
 
@@ -936,4 +954,72 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
       await user.click(document.body);
       focusBlurMatcher(container, false, false, handleFocus, 3, handleBlur, 3);
     });
+
+  it(`focus/blur, open/close and reset state`, async () => {
+    const user: UserEvent = userEvent.setup();
+
+    const handleFocus = jest.fn();
+    const handleBlur = jest.fn();
+
+    const {container} = render(
+      <TreeMultiSelect
+        data={treeNodeData}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+      />
+    );
+
+    expect(getRootContainer(container)).toBeInTheDocument();
+    focusBlurMatcher(container, false, false, handleFocus, 0, handleBlur, 0);
+
+    await user.keyboard('{tab}');
+    focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+
+    await user.click(getChipContainer(container, 0));
+    focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+
+    await user.keyboard('{arrowup}');
+    focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
+
+    await user.keyboard('java');
+    resetMatcher(container, false, 'java');
+
+    await user.keyboard('{tab}');
+    focusBlurMatcher(container, false, false, handleFocus, 1, handleBlur, 1);
+    resetMatcher(container, false, '');
+
+    await user.click(getField(container));
+    focusBlurMatcher(container, true, true, handleFocus, 2, handleBlur, 1);
+    resetMatcher(container, true, '');
+
+    await user.keyboard('java');
+    resetMatcher(container, true, 'java');
+
+    await user.click(getListItem(container, 0));
+    focusBlurMatcher(container, true, true, handleFocus, 2, handleBlur, 1);
+    resetMatcher(container, true, 'java');
+
+    await user.keyboard('{shift}{tab}');
+    focusBlurMatcher(container, false, false, handleFocus, 2, handleBlur, 2);
+    resetMatcher(container, false, '');
+
+    await user.keyboard('{tab}');
+    focusBlurMatcher(container, true, false, handleFocus, 3, handleBlur, 2);
+    resetMatcher(container, false, '');
+
+    await user.click(getField(container));
+    focusBlurMatcher(container, true, true, handleFocus, 3, handleBlur, 2);
+    resetMatcher(container, true, '');
+
+    await user.keyboard('java');
+    resetMatcher(container, true, 'java');
+
+    await user.click(getListItem(container, 0));
+    focusBlurMatcher(container, true, true, handleFocus, 3, handleBlur, 2);
+    resetMatcher(container, true, 'java');
+
+    await user.click(document.body);
+    focusBlurMatcher(container, false, false, handleFocus, 3, handleBlur, 3);
+    resetMatcher(container, false, '');
+  });
 });
