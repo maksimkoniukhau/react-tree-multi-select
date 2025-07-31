@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/react-tree-multi-select/static/css/main.eb86411c.css",
-    "main.js": "/react-tree-multi-select/static/js/main.5b77b1ec.js",
+    "main.js": "/react-tree-multi-select/static/js/main.649a9fda.js",
     "static/js/453.a8c2f096.chunk.js": "/react-tree-multi-select/static/js/453.a8c2f096.chunk.js",
     "index.html": "/react-tree-multi-select/index.html",
     "main.eb86411c.css.map": "/react-tree-multi-select/static/css/main.eb86411c.css.map",
-    "main.5b77b1ec.js.map": "/react-tree-multi-select/static/js/main.5b77b1ec.js.map",
+    "main.649a9fda.js.map": "/react-tree-multi-select/static/js/main.649a9fda.js.map",
     "453.a8c2f096.chunk.js.map": "/react-tree-multi-select/static/js/453.a8c2f096.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.eb86411c.css",
-    "static/js/main.5b77b1ec.js"
+    "static/js/main.649a9fda.js"
   ]
 }
