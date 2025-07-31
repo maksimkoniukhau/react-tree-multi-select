@@ -106,6 +106,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [propsComponents]);
 
   const isAnyNodeDisplayed = displayedNodes.length > 0;
+  const isAnyNodeSelected = selectedNodes.length > 0;
 
   const isSearchMode = Boolean(searchValue);
 
@@ -776,7 +777,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
             <InputWrapper
               input={components.Input}
               inputRef={fieldInputRef}
-              placeholder={inputPlaceholder}
+              placeholder={isAnyNodeSelected ? '' : inputPlaceholder}
               value={searchValue}
               onChange={handleInputChange}
               componentDisabled={isDisabled}
