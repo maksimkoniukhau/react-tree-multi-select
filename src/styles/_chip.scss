@@ -6,26 +6,30 @@
     gap: 4px;
     margin: 2px;
     padding: 4px 6px;
-    background-color: #ebebeb;
+    background-color: var(--rtms-chip-background-color-default);
     border-radius: 16px;
     cursor: default;
 
-    &.focused, &:hover {
-      box-shadow: 0 0 5px 1px #a1a1a1;
+    &.focused {
+      box-shadow: 0 0 5px 1px var(--rtms-chip-box-shadow-color-focus);
+    }
+
+    &:hover {
+      box-shadow: 0 0 5px 1px var(--rtms-chip-box-shadow-color-hover);
     }
 
     &.focused {
       .rtms-chip-clear {
-        color: #ff3b3b;
+        color: var(--rtms-chip-clear-color-focus);
 
         path {
-          fill: #ff3b3b;
+          fill: var(--rtms-chip-clear-color-focus);
         }
       }
     }
 
     &.disabled {
-      color: var(--rtms-disabled-color);
+      color: var(--rtms-chip-color-disabled);
     }
 
     .rtms-chip-clear {
@@ -39,10 +43,10 @@
       }
 
       &:hover {
-        color: #ff3b3b;
+        color: var(--rtms-chip-clear-color-hover);
 
         path {
-          fill: #ff3b3b;
+          fill: var(--rtms-chip-clear-color-hover);
         }
       }
 

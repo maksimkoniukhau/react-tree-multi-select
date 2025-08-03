@@ -6,20 +6,20 @@
     width: var(--rtms-checkbox-width);
     height: var(--rtms-checkbox-height);
     flex: 0 0 auto;
-    background-color: #ffffff;
+    background-color: var(--rtms-checkbox-background-color-default);
     border-radius: 3px;
-    box-shadow: inset 0 0 2px 0 rgb(0 0 0);
+    box-shadow: inset 0 0 2px 0 var(--rtms-checkbox-box-shadow-color-default);
 
     &:hover {
-      background-color: #f1f1f1;
+      background-color: var(--rtms-checkbox-background-color-hover);
     }
 
     &.selected {
-      background-color: #0784e7;
+      background-color: var(--rtms-checkbox-background-color-selected);
       box-shadow: none;
 
       &:hover {
-        background-color: #0a6bb8
+        background-color: var(--rtms-checkbox-background-color-selected-hover)
       }
 
       &:after {
@@ -30,7 +30,7 @@
         left: 5.7px;
         width: 5.5px;
         height: 11px;
-        border: solid #ffffff;
+        border: solid var(--rtms-checkbox-content-color-selected);
         border-width: 0 3.1px 3.1px 0;
         transform: rotate(43deg);
         box-sizing: border-box;
@@ -46,7 +46,7 @@
         left: 3.5px;
         width: 9px;
         height: 3px;
-        background-color: #808080;
+        background-color: var(--rtms-checkbox-content-color-partial);
       }
     }
 

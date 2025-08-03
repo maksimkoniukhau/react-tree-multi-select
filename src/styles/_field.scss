@@ -11,14 +11,14 @@
       padding: 2px;
       font-weight: 400;
       outline: none;
-      color: #212529;
-      background-color: #ffffff;
-      border: 1px solid #ced4da;
+      color: var(--rtms-field-color-default);
+      background-color: var(--rtms-field-background-color-default);
+      border: 1px solid var(--rtms-field-border-color-default);
       border-radius: 4px;
       box-sizing: border-box;
 
       &.disabled {
-        background-color: var(--rtms-disabled-background-color);
+        background-color: var(--rtms-field-background-color-disabled);
       }
     }
 
@@ -40,18 +40,30 @@
         justify-content: center;
         cursor: pointer;
         padding: 4px;
+      }
 
+      .rtms-field-clear {
+        &.focused {
+          path {
+            fill: var(--rtms-field-clear-color-focus);
+          }
+        }
+        &:hover {
+          path {
+            fill: var(--rtms-field-clear-color-hover);
+          }
+        }
         &.disabled {
           path {
-            fill: var(--rtms-disabled-color);
+            fill: var(--rtms-field-clear-color-disabled);
           }
         }
       }
 
-      .rtms-field-clear {
-        &.focused, &:hover {
+      .rtms-field-toggle {
+        &.disabled {
           path {
-            fill: #ff3b3b;
+            fill: var(--rtms-field-toggle-color-disabled);
           }
         }
       }

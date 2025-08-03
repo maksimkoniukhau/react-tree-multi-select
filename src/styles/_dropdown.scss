@@ -15,17 +15,25 @@
     line-height: var(--rtms-dropdown-line-height);
     font-size: var(--rtms-dropdown-font-size);
     margin-top: 7px;
-    background-color: #ffffff;
-    border: 1px solid #ced4da;
+    background-color: var(--rtms-dropdown-background-color-default);
+    border: 1px solid var(--rtms-dropdown-border-color-default);
     border-radius: 4px;
     box-sizing: border-box;
     animation: fadeIn 0.1s forwards;
 
     &.disabled {
-      background-color: var(--rtms-disabled-background-color);
+      background-color: var(--rtms-dropdown-background-color-disabled);
 
-      .rtms-sticky-item, .rtms-list-item, .rtms-footer {
-        background-color: var(--rtms-disabled-background-color);
+      .rtms-sticky-item {
+        background-color: var(--rtms-sticky-item-background-color-disabled);
+      }
+
+      .rtms-list-item {
+        background-color: var(--rtms-list-item-background-color-disabled);
+      }
+
+      .rtms-footer {
+        background-color: var(--rtms-footer-background-color-disabled);
       }
     }
 
@@ -39,13 +47,13 @@
       padding-top: var(--rtms-list-item-tb-padding);
       padding-bottom: var(--rtms-list-item-tb-padding);
       outline: none;
-      color: #212529;
       cursor: pointer;
       gap: var(--rtms-list-item-gap);
     }
 
     .rtms-list-item {
-      background-color: #ffffff;
+      color: var(--rtms-list-item-color-default);
+      background-color: var(--rtms-list-item-background-color-default);
       padding-left: calc(
               ((var(--rtms-checkbox-width) + var(--rtms-list-item-gap)) * var(--rtms-list-item-depth, 0))
               + ((var(--rtms-node-toggle-icon-width) + var(--rtms-list-item-gap)) * var(--rtms-list-item-indentation))
@@ -57,16 +65,20 @@
         background-color: var(--rtms-list-item-selected-background-color);
       }
 
-      &.focused, &:hover {
-        background-color: #ebebeb;
+      &.focused {
+        background-color: var(--rtms-list-item-background-color-focus);
+      }
+
+      &:hover {
+        background-color: var(--rtms-list-item-background-color-hover);
       }
 
       &.matched .rtms-label {
-        background-color: #ffffb0b0;
+        background-color: var(--rtms-list-item-background-color-matched);
       }
 
       &.disabled .rtms-label {
-        color: var(--rtms-disabled-color);
+        color: var(--rtms-list-item-color-disabled);
       }
 
       .rtms-node-toggle {
@@ -74,6 +86,8 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
+        width: var(--rtms-node-toggle-width);
+        height: var(--rtms-node-toggle-height);
 
         .rtms-node-toggle-icon {
           width: var(--rtms-node-toggle-icon-width);
@@ -88,16 +102,23 @@
       .rtms-node-checkbox {
         display: flex;
         align-items: center;
+        width: var(--rtms-node-checkbox-width);
+        height: var(--rtms-node-checkbox-height);
       }
     }
 
     .rtms-sticky-item {
-      background-color: #ffffff;
+      color: var(--rtms-sticky-item-color-default);
+      background-color: var(--rtms-sticky-item-background-color-default);
       padding-left: var(--rtms-list-item-lr-padding);
       padding-right: var(--rtms-list-item-lr-padding);
 
-      &.focused:not(:has(.rtms-input-container)), &:hover:not(:has(.rtms-input-container)) {
-        background-color: #ebebeb;
+      &.focused:not(:has(.rtms-input-container)) {
+        background-color: var(--rtms-sticky-item-background-color-focus);
+      }
+
+      &:hover:not(:has(.rtms-input-container)) {
+        background-color: var(--rtms-sticky-item-background-color-hover);
       }
 
       .rtms-select-all-checkbox {
@@ -107,11 +128,17 @@
     }
 
     .rtms-footer {
+      color: var(--rtms-footer-color-default);
+      background-color: var(--rtms-footer-background-color-default);
       padding: var(--rtms-list-item-tb-padding) var(--rtms-list-item-lr-padding);
       outline: none;
 
-      &.focused, &:hover {
-        background-color: #ebebeb;
+      &.focused {
+        background-color: var(--rtms-footer-background-color-focus);
+      }
+
+      &:hover {
+        background-color: var(--rtms-footer-background-color-hover);
       }
     }
 

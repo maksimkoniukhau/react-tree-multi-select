@@ -1,4 +1,7 @@
 @mixin variables {
+  /* ========================================================
+    Sizes
+  ======================================================== */
   --rtms-line-height: 1;
   --rtms-font-size: 16px;
 
@@ -7,11 +10,6 @@
   --rtms-dropdown-line-height: var(--rtms-line-height);
   --rtms-dropdown-font-size: var(--rtms-font-size);
 
-  --rtms-disabled-color: #acacac;
-  --rtms-disabled-background-color: #f5f5f5;
-  --rtms-list-item-selected-background-color: transparent;
-
-  --rtms-icon-base-color: #6c6c6c;
   --rtms-icon-base-width: 16px;
   --rtms-icon-base-height: 16px;
 
@@ -20,12 +18,112 @@
   --rtms-chip-clear-icon-width: var(--rtms-icon-base-width);
   --rtms-chip-clear-icon-height: var(--rtms-icon-base-height);
 
+  --rtms-node-toggle-width: var(--rtms-icon-base-width);
+  --rtms-node-toggle-height: var(--rtms-icon-base-height);
+
   --rtms-node-toggle-icon-width: var(--rtms-icon-base-width);
   --rtms-node-toggle-icon-height: var(--rtms-icon-base-height);
 
   --rtms-checkbox-width: var(--rtms-icon-base-width);
   --rtms-checkbox-height: var(--rtms-icon-base-height);
 
+  --rtms-node-checkbox-width: var(--rtms-icon-base-width);
+  --rtms-node-checkbox-height: var(--rtms-icon-base-height);
+
+  /* ========================================================
+    Colors
+  ======================================================== */
+  --rtms-border-color-default: #ced4da;
+  --rtms-border-color-focus: #92bcff;
+
+  --rtms-box-shadow-color-focus: #016aff;
+
+  --rtms-background-color-default: #ffffff;
+  --rtms-background-color-focus: #ebebeb;
+  --rtms-background-color-hover: #ebebeb;
+  --rtms-disabled-background-color: #f5f5f5;
+
+  --rtms-color-default: #212529;
+  --rtms-disabled-color: #acacac;
+  --rtms-color-error: #ff3b3b;
+
+  --rtms-icon-base-color: #6c6c6c;
+
+  // Field
+  --rtms-field-border-color-default: var(--rtms-border-color-default);
+  --rtms-field-border-color-focus: var(--rtms-border-color-focus);
+  --rtms-field-box-shadow-color-focus: var(--rtms-box-shadow-color-focus);
+  --rtms-field-background-color-default: var(--rtms-background-color-default);
+  --rtms-field-background-color-disabled: var(--rtms-disabled-background-color);
+  --rtms-field-color-default: var(--rtms-color-default);
+
+  // Chip
+  --rtms-chip-background-color-default: #ebebeb;
+  --rtms-chip-box-shadow-color-focus: #a1a1a1;
+  --rtms-chip-box-shadow-color-hover: #a1a1a1;
+  --rtms-chip-color-disabled: var(--rtms-disabled-color);
+
+  // ChipClear
+  --rtms-chip-clear-color-focus: var(--rtms-color-error);
+  --rtms-chip-clear-color-hover: var(--rtms-color-error);
+
+  // Input
+  --rtms-input-container-border-color-default: var(--rtms-border-color-default);
+  --rtms-input-container-border-color-focus: var(--rtms-border-color-focus);
+  --rtms-input-container-background-color-default: var(--rtms-background-color-default);
+  --rtms-input-background-color-disabled: var(--rtms-disabled-background-color);
+
+  // FieldClear
+  --rtms-field-clear-color-focus: var(--rtms-color-error);
+  --rtms-field-clear-color-hover: var(--rtms-color-error);
+  --rtms-field-clear-color-disabled: var(--rtms-disabled-color);
+
+  // FieldToggle
+  --rtms-field-toggle-color-disabled: var(--rtms-disabled-color);
+
+  // Dropdown
+  --rtms-dropdown-border-color-default: var(--rtms-border-color-default);
+  --rtms-dropdown-background-color-default: var(--rtms-background-color-default);
+  --rtms-dropdown-background-color-disabled: var(--rtms-disabled-background-color);
+
+  // StickyItem
+  --rtms-sticky-item-background-color-default: var(--rtms-background-color-default);
+  --rtms-sticky-item-background-color-focus: var(--rtms-background-color-focus);
+  --rtms-sticky-item-background-color-hover: var(--rtms-background-color-hover);
+  --rtms-sticky-item-background-color-disabled: var(--rtms-disabled-background-color);
+  --rtms-sticky-item-color-default: var(--rtms-color-default);
+
+  // ListItem
+  --rtms-tree-select-list-item-background-color-selected: transparent;
+  --rtms-multi-select-list-item-background-color-selected: #e7f3fc;
+  --rtms-list-item-selected-background-color: var(--rtms-tree-select-list-item-background-color-selected);
+  --rtms-list-item-background-color-default: var(--rtms-background-color-default);
+  --rtms-list-item-background-color-focus: var(--rtms-background-color-focus);
+  --rtms-list-item-background-color-hover: var(--rtms-background-color-hover);
+  --rtms-list-item-background-color-disabled: var(--rtms-disabled-background-color);
+  --rtms-list-item-background-color-matched: #ffffb0b0;
+  --rtms-list-item-color-default: var(--rtms-color-default);
+  --rtms-list-item-color-disabled: var(--rtms-disabled-color);
+
+  // Checkbox
+  --rtms-checkbox-box-shadow-color-default: #000000;
+  --rtms-checkbox-background-color-default: var(--rtms-background-color-default);
+  --rtms-checkbox-background-color-hover: #f1f1f1;
+  --rtms-checkbox-background-color-selected: #0784e7;
+  --rtms-checkbox-background-color-selected-hover: #0a6bb8;
+  --rtms-checkbox-content-color-selected: #ffffff;
+  --rtms-checkbox-content-color-partial: #808080;
+
+  // Footer
+  --rtms-footer-background-color-default: var(--rtms-background-color-default);
+  --rtms-footer-background-color-focus: var(--rtms-background-color-focus);
+  --rtms-footer-background-color-hover: var(--rtms-background-color-hover);
+  --rtms-footer-background-color-disabled: var(--rtms-disabled-background-color);
+  --rtms-footer-color-default: var(--rtms-color-default);
+
+  /* ========================================================
+    Paddings, Margins, Gaps
+  ======================================================== */
   --rtms-list-item-gap: 3px;
   --rtms-list-item-tb-padding: 2px;
   --rtms-list-item-lr-padding: 5px;

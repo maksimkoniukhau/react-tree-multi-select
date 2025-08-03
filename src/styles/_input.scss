@@ -3,8 +3,8 @@
     display: flex;
     flex: 1;
     align-items: center;
-    background-color: #ffffff;
-    border: 2px solid #92bcff;
+    background-color: var(--rtms-input-container-background-color-default);
+    border: 2px solid var(--rtms-input-container-border-color-default);
     border-radius: 4px;
   }
 
@@ -17,7 +17,7 @@
     outline: none;
 
     &:disabled {
-      background-color: var(--rtms-disabled-background-color);
+      background-color: var(--rtms-input-background-color-disabled);
     }
   }
 
