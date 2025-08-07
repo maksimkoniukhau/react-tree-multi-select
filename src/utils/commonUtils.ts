@@ -15,9 +15,16 @@ export const getFieldFocusableElement = (fieldRef: RefObject<HTMLDivElement | nu
  * @returns {Array<HTMLElement>}
  */
 export const getKeyboardFocusableElements = (htmlElement: HTMLElement | null): HTMLElement[] => {
-  return Array.from(htmlElement?.querySelectorAll(
+  return Array.from(htmlElement?.querySelectorAll<HTMLElement>(
     'a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])') || [])
-    .filter(el => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden')) as HTMLElement[];
+    .filter(el => {
+      const style = window.getComputedStyle(el);
+      const isVisible = style.display !== 'none' && style.visibility !== 'hidden';
+      return isVisible
+        && el.tabIndex >= 0
+        && !el.hasAttribute('disabled')
+        && el.getAttribute('aria-hidden') !== 'true';
+    });
 };
 
 export const debounce = (func: (...args: unknown[]) => void, delay: number) => {
