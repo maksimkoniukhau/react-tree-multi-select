@@ -26,7 +26,7 @@ import {
   getStickyItem,
   getStickyItems
 } from './testutils/selectorUtils';
-import {NO_DATA, NO_MATCHES} from '../constants';
+import {INPUT_PLACEHOLDER, NO_DATA, NO_MATCHES} from '../constants';
 
 const treeNodeData = getBaseTreeNodeData();
 
@@ -37,6 +37,92 @@ describe('TreeMultiSelect component: base', () => {
     const chip = screen.getByText(/Angular/i);
     expect(chip).toBeInTheDocument();
   });
+});
+
+describe('TreeMultiSelect component: inputPlaceholder prop', () => {
+  const inputPlaceholderMatcher = (
+    container: HTMLElement,
+    inputPlaceholder: string,
+    isPresent: boolean,
+    inputValue: string,
+    withDropdownInput: boolean
+  ): void => {
+    if (withDropdownInput) {
+      expect(getDropdownInput(container)).toHaveAttribute('placeholder', inputPlaceholder);
+      expect(getDropdownInput(container)).toHaveValue(inputValue);
+    } else {
+      if (isPresent) {
+        expect(getFieldInput(container)).toHaveAttribute('placeholder', inputPlaceholder);
+      } else {
+        expect(getFieldInput(container)).toHaveAttribute('placeholder', '');
+      }
+      expect(getFieldInput(container)).toHaveValue(inputValue);
+    }
+  };
+
+  it.each([[true, Type.TREE_SELECT], [false, Type.TREE_SELECT],
+    [true, Type.TREE_SELECT_FLAT], [false, Type.TREE_SELECT_FLAT],
+    [true, Type.MULTI_SELECT], [false, Type.MULTI_SELECT],
+    [true, Type.SELECT], [false, Type.SELECT]])(
+    'tests component with default inputPlaceholder and withDropdownInput={%s} and component type={%s}',
+    async (withDropdownInput, type) => {
+      const user: UserEvent = userEvent.setup();
+
+      const {container} = render(
+        <TreeMultiSelect
+          data={getTreeNodeData([], [], [])}
+          type={type}
+          withDropdownInput={withDropdownInput}/>
+      );
+
+      await user.click(getField(container));
+      inputPlaceholderMatcher(container, INPUT_PLACEHOLDER, true, '', withDropdownInput);
+
+      await user.keyboard('qwerty');
+      inputPlaceholderMatcher(container, INPUT_PLACEHOLDER, true, 'qwerty', withDropdownInput);
+
+      await user.keyboard('{Control>}a{Backspace}');
+      inputPlaceholderMatcher(container, INPUT_PLACEHOLDER, true, '', withDropdownInput);
+
+      await user.click(getListItem(container, 0));
+      inputPlaceholderMatcher(container, INPUT_PLACEHOLDER, false, '', withDropdownInput);
+
+      await user.click(getChipClear(container, 0));
+      inputPlaceholderMatcher(container, INPUT_PLACEHOLDER, true, '', withDropdownInput);
+    });
+
+  it.each([['search nodes', true, Type.TREE_SELECT], ['search nodes', false, Type.TREE_SELECT],
+    ['search options', true, Type.TREE_SELECT_FLAT], ['search options', false, Type.TREE_SELECT_FLAT],
+    ['custom placeholder', true, Type.MULTI_SELECT], ['custom placeholder', false, Type.MULTI_SELECT],
+    ['some text', true, Type.SELECT], ['some text', false, Type.SELECT]])(
+    'tests component when inputPlaceholder={%s} and withDropdownInput={%s} and component type={%s}',
+    async (inputPlaceholder, withDropdownInput, type) => {
+      const user: UserEvent = userEvent.setup();
+
+      const {container} = render(
+        <TreeMultiSelect
+          data={getTreeNodeData([], [], [])}
+          type={type}
+          inputPlaceholder={inputPlaceholder}
+          withDropdownInput={withDropdownInput}
+        />
+      );
+
+      await user.click(getField(container));
+      inputPlaceholderMatcher(container, inputPlaceholder, true, '', withDropdownInput);
+
+      await user.keyboard('qwerty');
+      inputPlaceholderMatcher(container, inputPlaceholder, true, 'qwerty', withDropdownInput);
+
+      await user.keyboard('{Control>}a{Backspace}');
+      inputPlaceholderMatcher(container, inputPlaceholder, true, '', withDropdownInput);
+
+      await user.click(getListItem(container, 0));
+      inputPlaceholderMatcher(container, inputPlaceholder, false, '', withDropdownInput);
+
+      await user.click(getChipClear(container, 0));
+      inputPlaceholderMatcher(container, inputPlaceholder, true, '', withDropdownInput);
+    });
 });
 
 describe('TreeMultiSelect component: noDataText, noMatchesText props', () => {
@@ -672,6 +758,19 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
     expect(handleBlur).toHaveBeenCalledTimes(blurTimes);
   };
 
+  const focusBlurMatcherAsync = async (
+    container: HTMLElement,
+    focused: boolean,
+    opened: boolean,
+    handleFocus: (event: React.FocusEvent) => void,
+    focusTimes: number,
+    handleBlur: (event: React.FocusEvent) => void,
+    blurTimes: number
+  ): Promise<void> => {
+    await new Promise((r) => setTimeout(r, 10));
+    focusBlurMatcher(container, focused, opened, handleFocus, focusTimes, handleBlur, blurTimes);
+  };
+
   const inputMatcher = (container: HTMLElement, withDropdownInput: boolean, opened: boolean): void => {
     if (withDropdownInput) {
       expect(getFieldInput(container)).not.toBeInTheDocument();
@@ -686,6 +785,13 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
         expect(getDropdownInput(container)).not.toBeInTheDocument();
       }
     }
+  };
+
+  const inputMatcherAsync = async (
+    container: HTMLElement, withDropdownInput: boolean, opened: boolean
+  ): Promise<void> => {
+    await new Promise((r) => setTimeout(r, 10));
+    inputMatcher(container, withDropdownInput, opened);
   };
 
   const resetMatcher = (container: HTMLElement, opened: boolean, value: string): void => {
@@ -797,6 +903,9 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
       await user.keyboard('{escape}');
       focusBlurMatcher(container, true, false, handleFocus, 2, handleBlur, 1);
 
+      await user.keyboard('{enter}');
+      focusBlurMatcher(container, true, true, handleFocus, 2, handleBlur, 1);
+
       await user.keyboard('{shift}{tab}');
       focusBlurMatcher(container, false, false, handleFocus, 2, handleBlur, 2);
     });
@@ -903,6 +1012,11 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
       await user.click(getListItem(container, 0));
       focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
 
+      if (withDropdownInput) {
+        await user.click(getDropdownInput(container));
+        focusBlurMatcher(container, true, true, handleFocus, 1, handleBlur, 0);
+      }
+
       await user.click(getField(container));
       focusBlurMatcher(container, true, false, handleFocus, 1, handleBlur, 0);
 
@@ -953,6 +1067,165 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
 
       await user.click(document.body);
       focusBlurMatcher(container, false, false, handleFocus, 3, handleBlur, 3);
+    });
+
+  it.each([[false], [true]])(`focus/blur and open/close when withDropdownInput={%s} (click/keydown) async`,
+    async (withDropdownInput) => {
+      const user: UserEvent = userEvent.setup();
+
+      const handleFocus = jest.fn();
+      const handleBlur = jest.fn();
+
+      const {container} = render(
+        <TreeMultiSelect
+          data={treeNodeData}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          withDropdownInput={withDropdownInput}
+        />
+      );
+
+      expect(getRootContainer(container)).toBeInTheDocument();
+      await focusBlurMatcherAsync(container, false, false, handleFocus, 0, handleBlur, 0);
+
+      await user.keyboard('{tab}');
+      await inputMatcherAsync(container, withDropdownInput, false);
+      await focusBlurMatcherAsync(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{enter}');
+      await inputMatcherAsync(container, withDropdownInput, true);
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      await focusBlurMatcherAsync(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{enter}');
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getFieldToggle(container));
+      await focusBlurMatcherAsync(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{arrowup}');
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getChipContainer(container, 0));
+      await focusBlurMatcherAsync(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{arrowup}');
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      await focusBlurMatcherAsync(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{arrowdown}');
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getChipLabel(container, 0));
+      await focusBlurMatcherAsync(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{arrowdown}');
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      await focusBlurMatcherAsync(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getFieldToggle(container));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{escape}');
+      await focusBlurMatcherAsync(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{escape}');
+      await focusBlurMatcherAsync(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getChipLabel(container, 0));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getListItem(container, 0));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      if (withDropdownInput) {
+        await user.click(getDropdownInput(container));
+        await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+      }
+
+      await user.click(getField(container));
+      await focusBlurMatcherAsync(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getFieldToggle(container));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{enter}');
+      await focusBlurMatcherAsync(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{enter}');
+      await focusBlurMatcherAsync(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getField(container));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{arrowup}');
+      await focusBlurMatcherAsync(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.click(getChipContainer(container, 0));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{arrowup}');
+      await focusBlurMatcherAsync(container, true, false, handleFocus, 1, handleBlur, 0);
+
+      await user.keyboard('{tab}');
+      await focusBlurMatcherAsync(container, false, false, handleFocus, 1, handleBlur, 1);
+
+      await user.click(getField(container));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 2, handleBlur, 1);
+
+      await user.click(getListItem(container, 0));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 2, handleBlur, 1);
+
+      await user.keyboard('{shift}{tab}');
+      await focusBlurMatcherAsync(container, false, false, handleFocus, 2, handleBlur, 2);
+
+      await user.keyboard('{tab}');
+      await focusBlurMatcherAsync(container, true, false, handleFocus, 3, handleBlur, 2);
+
+      await user.click(getField(container));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 3, handleBlur, 2);
+
+      await user.click(getListItem(container, 0));
+      await focusBlurMatcherAsync(container, true, true, handleFocus, 3, handleBlur, 2);
+
+      await user.click(document.body);
+      await focusBlurMatcherAsync(container, false, false, handleFocus, 3, handleBlur, 3);
     });
 
   it(`focus/blur, open/close and reset state`, async () => {
