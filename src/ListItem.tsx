@@ -1,4 +1,4 @@
-import React, {FC, memo, ReactNode, useEffect} from 'react';
+import React, {FC, memo, ReactNode} from 'react';
 import {DROPDOWN, FOOTER, SELECT_ALL} from './constants';
 import {buildFocusedElement} from './utils/focusUtils';
 import {CheckedState, Type} from './types';
@@ -28,7 +28,6 @@ export interface ListItemProps {
   onFooterClick: (e: React.MouseEvent) => void;
   input: ReactNode;
   components: InnerComponents;
-  onRender: () => void;
 }
 
 export const ListItem: FC<ListItemProps> = memo((props) => {
@@ -51,13 +50,8 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     onNodeToggle,
     onFooterClick,
     input,
-    components,
-    onRender
+    components
   } = props;
-
-  useEffect(() => {
-    onRender();
-  });
 
   if (Boolean(input) && index === 0) {
     return (

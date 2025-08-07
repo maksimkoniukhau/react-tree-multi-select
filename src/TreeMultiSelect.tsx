@@ -13,7 +13,7 @@ import {
   OVERSCAN,
   SELECT_ALL
 } from './constants';
-import {debounce, getFieldFocusableElement} from './utils/commonUtils';
+import {getFieldFocusableElement} from './utils/commonUtils';
 import {
   areAllExcludingDisabledSelected,
   convertTreeArrayToFlatArray,
@@ -81,9 +81,6 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const dropdownInputRef = useRef<HTMLInputElement>(null);
 
   const isComponentFocused = useRef<boolean>(false);
-  const isDropdownInputFocused = useRef<boolean>(false);
-  const isOutsideClicked = useRef<boolean>(false);
-  const dropdownUnmountedOnClickOutside = useRef<boolean>(false);
 
   const nodeMapRef = useRef<Map<string, Node>>(new Map<string, Node>());
 
@@ -100,6 +97,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   // Store components in state to avoid async rendering issues (e.g., flickering)
   // when both data and the Footer (e.g., its text) component update simultaneously during infinite scroll or pagination.
   const [components, setComponents] = useState<InnerComponents>(getComponents(propsComponents));
+
+  const [dropdownMounted, setIsDropdownMounted] = useState<boolean>(false);
 
   useEffect(() => {
     setComponents(getComponents(propsComponents));
@@ -250,17 +249,15 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     if (isDisabled) {
       return;
     }
-    if (isComponentFocused.current) {
-      isOutsideClicked.current = true;
-    }
     resetState();
   }, [isDisabled, resetState]);
 
-  const focusFieldElement = (): void => {
-    if (document.activeElement === dropdownInputRef?.current) {
-      isDropdownInputFocused.current = true;
+  const focusComponentElement = (): void => {
+    if (dropdownInputRef.current) {
+      dropdownInputRef.current?.focus();
+    } else {
+      getFieldFocusableElement(fieldRef)?.focus();
     }
-    getFieldFocusableElement(fieldRef)?.focus();
   };
 
   const getDropdownFocusableElements = useCallback((): string[] => {
@@ -354,7 +351,6 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     if (isDisabled) {
       return;
     }
-    focusFieldElement();
     // defaultPrevented is on click field clear icon or chip (or in custom field)
     if (!event.defaultPrevented) {
       handleShowDropdown(!showDropdown, false);
@@ -563,7 +559,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [isDisabled]);
 
   const handleComponentClick = (): void => {
-    focusFieldElement();
+    if (!isComponentFocused.current) {
+      focusComponentElement();
+    }
   };
 
   const handleComponentKeyDown = (event: React.KeyboardEvent): void => {
@@ -681,15 +679,13 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     if (isDisabled) {
       return;
     }
-    if (isDropdownInputFocused.current && !dropdownUnmountedOnClickOutside.current) {
-      isDropdownInputFocused.current = false;
-      return;
-    }
-    isComponentFocused.current = false;
-    isOutsideClicked.current = false;
-    dropdownUnmountedOnClickOutside.current = false;
-    treeMultiSelectRef?.current?.classList?.remove('focused');
-    onBlur?.(event);
+    setTimeout(() => {
+      if (!treeMultiSelectRef.current?.contains(document.activeElement) && isComponentFocused.current) {
+        isComponentFocused.current = false;
+        treeMultiSelectRef?.current?.classList?.remove('focused');
+        onBlur?.(event);
+      }
+    }, 0);
   };
 
   const handleComponentMouseDown = useCallback((event: React.MouseEvent) => {
@@ -709,26 +705,19 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     onDropdownLastItemReached?.(searchValue, displayedNodes.map(node => node.initTreeNode));
   }, [onDropdownLastItemReached, searchValue, displayedNodes]);
 
-  const handleDropdownUnmount = (): void => {
-    if (withDropdownInput && isSearchable) {
-      const fieldFocusableElement = getFieldFocusableElement(fieldRef);
-      if (document.activeElement !== fieldFocusableElement) {
-        if (isOutsideClicked.current) {
-          dropdownUnmountedOnClickOutside.current = true;
-        }
-        fieldFocusableElement?.focus();
-      }
+  const handleDropdownMount = useCallback(() => {
+    setIsDropdownMounted(true);
+    if (isComponentFocused.current) {
+      focusComponentElement();
     }
-  };
+  }, []);
 
-  const handleListItemRender = useCallback(() => {
-    if (withDropdownInput && isSearchable && dropdownInputRef?.current && document.activeElement !== dropdownInputRef?.current) {
-      isDropdownInputFocused.current = true;
-      dropdownInputRef?.current?.focus();
+  const handleDropdownUnmount = useCallback(() => {
+    setIsDropdownMounted(false);
+    if (!treeMultiSelectRef.current?.contains(document.activeElement) && isComponentFocused.current) {
+      focusComponentElement();
     }
-  }, [withDropdownInput, isSearchable, dropdownInputRef]);
-
-  const debouncedHandleListItemRender = debounce(handleListItemRender, 150);
+  }, []);
 
   const typeClassName = useMemo(() => typeToClassName(type), [type]);
   const rootClasses = `rtms-tree-multi-select ${typeClassName}${isDisabled ? ' disabled' : ''}`
@@ -772,7 +761,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
               />
             ))}
           {withDropdownInput || !isSearchable ? (
-            <input className="rtms-input-hidden" disabled={isDisabled} readOnly/>
+            <input
+              tabIndex={withDropdownInput && showDropdown && dropdownMounted ? -1 : 0}
+              className="rtms-input-hidden"
+              disabled={isDisabled}
+              readOnly
+            />
           ) : (
             <InputWrapper
               input={components.Input}
@@ -832,9 +826,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           ) : null}
           inputRef={dropdownInputRef}
           onLastItemReached={handleDropdownLastItemReached}
+          onMount={handleDropdownMount}
           onUnmount={handleDropdownUnmount}
           components={components}
-          onListItemRender={debouncedHandleListItemRender}
           componentDisabled={isDisabled}
         />
       ) : null}

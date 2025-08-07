@@ -29,9 +29,9 @@ export interface DropdownProps {
   input: ReactNode;
   inputRef: RefObject<HTMLInputElement | null>;
   onLastItemReached: () => void;
+  onMount: () => void;
   onUnmount: () => void;
   components: InnerComponents;
-  onListItemRender: () => void;
   componentDisabled: boolean;
 }
 
@@ -58,9 +58,9 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     input,
     inputRef,
     onLastItemReached,
+    onMount,
     onUnmount,
     components,
-    onListItemRender,
     componentDisabled
   } = props;
 
@@ -70,6 +70,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
   const displayedItemCount = (displayedNodes.length || 1) + topItemCount + (showFooter ? 1 : 0);
 
   useEffect(() => {
+    onMount();
     return () => onUnmount();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -116,7 +117,6 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
         onFooterClick={onFooterClick}
         input={input}
         components={components}
-        onRender={onListItemRender}
       />
     );
   };
