@@ -326,7 +326,7 @@ module.exports = function (webpackEnv) {
         // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
         // please link the files into your node_modules/ and let module-resolution kick in.
         // Make sure your source files are compiled, as they will not be processed in any way.
-        new ModuleScopePlugin([paths.appSrc, path.resolve(__dirname, '../../src')], [
+        new ModuleScopePlugin([paths.appSrc, path.resolve(__dirname, '../../../packages/react-tree-multi-select')], [
           paths.appPackageJson,
           reactRefreshRuntimeEntry,
           reactRefreshWebpackPluginRuntimeEntry,
@@ -407,7 +407,7 @@ module.exports = function (webpackEnv) {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
               include: [
                   paths.appSrc,
-                path.resolve(__dirname, '../../src'),
+                path.resolve(__dirname, '../../../packages/react-tree-multi-select'),
               ],
               loader: require.resolve('babel-loader'),
               options: {

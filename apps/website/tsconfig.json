@@ -19,7 +19,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "react-tree-multi-select": [
+        "../../packages/react-tree-multi-select/src/"
+      ]
+    }
   },
   "include": [
     "src"

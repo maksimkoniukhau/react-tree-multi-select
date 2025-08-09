@@ -1,75 +1,18 @@
 {
-  "name": "react-tree-multi-select",
-  "version": "3.1.0",
-  "description": "React component that combines tree select, multi-select and simple select functionality into a single versatile solution",
-  "author": "Maksim Koniukau",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/maksimkoniukhau/react-tree-multi-select.git"
-  },
-  "keywords": [
-    "react",
-    "react-select",
-    "react-tree-multi-select",
-    "react-tree-select",
-    "tree-select",
-    "multi-select",
-    "select",
-    "dropdown",
-    "typescript"
+  "name": "react-tree-multi-select-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
   ],
-  "license": "MIT",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist/"
-  ],
-  "scripts": {
-    "build": "webpack --config webpack.config.ts && dts-bundle-generator -o dist/index.d.ts src/index.ts --no-banner",
-    "test": "jest"
-  },
-  "peerDependencies": {
-    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
-  },
   "devDependencies": {
-    "@eslint/js": "^9.31.0",
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^14.6.1",
-    "@types/jest": "^29.5.14",
-    "@types/node": "^22.14.1",
-    "@types/react": "^18.3.10",
-    "@types/react-dom": "^18.3.0",
-    "@typescript-eslint/eslint-plugin": "^8.36.0",
-    "@typescript-eslint/parser": "^8.36.0",
-    "css-loader": "^7.1.2",
-    "dts-bundle-generator": "^9.5.1",
-    "eslint": "^9.30.1",
-    "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-webpack-plugin": "^5.0.2",
-    "globals": "^16.3.0",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "postcss-loader": "^8.1.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "sass": "^1.86.3",
-    "sass-loader": "^16.0.5",
-    "style-loader": "^4.0.0",
-    "terser-webpack-plugin": "^5.3.14",
-    "ts-jest": "^29.3.2",
-    "ts-loader": "^9.5.2",
-    "ts-node": "^10.9.2",
-    "tslib": "^2.8.1",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.36.0",
-    "webpack": "^5.99.6",
-    "webpack-cli": "^6.0.1"
-  }
+    "turbo": "^2.5.5"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "start": "turbo run start",
+    "build-lib": "turbo run build --filter=react-tree-multi-select",
+    "build": "turbo run build"
+  },
+  "packageManager": "npm@10.9.3"
 }
