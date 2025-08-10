@@ -2,12 +2,12 @@
 
 import React, {FC, memo, useEffect, useState} from 'react';
 import {CheckedState, TreeMultiSelect, TreeNode, Type} from 'react-tree-multi-select';
-import {getTreeNodeData} from '@/utils';
+import {getTreeNodeData} from '@/utils/utils';
 import {Select} from '@/shared-components/Select';
 import {Checkbox} from '@/shared-components/Checkbox';
 import {Input} from '@/shared-components/Input';
 import {PageNavigation} from '@/shared-components/PageNavigation';
-import {OptionTreeNode} from '@/data';
+import {OptionTreeNode} from '@/utils/data';
 
 const INPUT_PLACEHOLDER = 'search...';
 const NO_DATA = 'No data';

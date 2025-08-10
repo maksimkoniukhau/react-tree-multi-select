@@ -2,7 +2,7 @@ import './globals.scss';
 
 import {Metadata} from 'next';
 import React from 'react';
-import {Menu} from '@/Menu';
+import {Menu} from '@/shared-components/Menu';
 
 export const metadata: Metadata = {
   title: "react-tree-multi-select docs",

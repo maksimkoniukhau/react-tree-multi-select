@@ -1,7 +1,7 @@
 'use client'
 
 import React, {FC} from 'react';
-import {rtmsProps, rtmsTypes} from '@/api-data';
+import {rtmsProps, rtmsTypes} from '@/utils/api-data';
 import {CodeBlock} from '@/shared-components/CodeBlock';
 import {PageNavigation} from '@/shared-components/PageNavigation';
 import {Section} from '@/shared-components/Section';

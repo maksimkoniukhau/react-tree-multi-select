@@ -1,6 +1,6 @@
 import React, {FC, useMemo} from 'react';
 import {ChipLabelProps, Components, TreeMultiSelect} from 'react-tree-multi-select';
-import {getTreeNodeData} from '@/utils';
+import {getTreeNodeData} from '@/utils/utils';
 
 interface CustomChipLabelProps {
   suffix: string;

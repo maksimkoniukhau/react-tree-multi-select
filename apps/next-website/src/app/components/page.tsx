@@ -23,7 +23,7 @@ import {
   selectAllContainerExample,
   selectAllLabelExample,
   tsSupport
-} from '@/code-data';
+} from '@/utils/code-data';
 import {Alert} from '@/shared-components/Alert';
 import {CodeBlock} from '@/shared-components/CodeBlock';
 import {PageNavigation} from '@/shared-components/PageNavigation';

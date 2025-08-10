@@ -1,7 +1,7 @@
 'use client'
 
 import React, {FC} from 'react';
-import {basicUsageCode} from '@/code-data';
+import {basicUsageCode} from '@/utils/code-data';
 import {CodeBlock} from '@/shared-components/CodeBlock';
 import {PageNavigation} from '@/shared-components/PageNavigation';
 import {Section} from '@/shared-components/Section';

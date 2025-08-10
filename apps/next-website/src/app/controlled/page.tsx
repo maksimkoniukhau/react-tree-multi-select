@@ -3,7 +3,7 @@
 import React, {FC, memo} from 'react';
 import {CodeBlock} from '@/shared-components/CodeBlock';
 import {PageNavigation} from '@/shared-components/PageNavigation';
-import {controlledExample} from '@/code-data';
+import {controlledExample} from '@/utils/code-data';
 import {ControlledExample} from '@/examples/ControlledExample';
 
 const ControlledPage: FC = memo(() => {

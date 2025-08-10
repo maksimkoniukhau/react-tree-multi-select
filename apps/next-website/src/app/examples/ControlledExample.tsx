@@ -1,7 +1,7 @@
 import React, {FC, memo, useState} from 'react';
 import {TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
-import {getTreeNodeData} from '@/utils';
-import {OptionTreeNode} from '@/data';
+import {getTreeNodeData} from '@/utils/utils';
+import {OptionTreeNode} from '@/utils/data';
 
 export const ControlledExample: FC = memo(() => {
 

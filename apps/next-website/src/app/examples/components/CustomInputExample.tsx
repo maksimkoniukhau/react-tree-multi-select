@@ -2,7 +2,7 @@ import React, {FC, HTMLProps} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
 import {Components, FieldProps, FieldType, InputProps, InputType, TreeMultiSelect} from 'react-tree-multi-select';
-import {getTreeNodeData} from '@/utils';
+import {getTreeNodeData} from '@/utils/utils';
 
 const CustomField: FC<FieldProps> = (props) => (
   <div {...props.attributes}>

@@ -1,6 +1,6 @@
 import React, {FC, useCallback, useEffect, useMemo, useState} from 'react';
 import {Components, FooterProps, TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
-import {fetchFakeService, RandomTreeNode} from '@/utils';
+import {fetchFakeService, RandomTreeNode} from '@/utils/utils';
 
 interface CustomFooterProps {
   isLoading: boolean;

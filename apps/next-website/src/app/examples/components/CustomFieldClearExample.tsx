@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faDeleteLeft} from '@fortawesome/free-solid-svg-icons';
 import {Components, FieldClearProps, FieldClearType, TreeMultiSelect} from 'react-tree-multi-select';
-import {getTreeNodeData} from '@/utils';
+import {getTreeNodeData} from '@/utils/utils';
 
 const CustomFieldClear: FC<FieldClearProps> = (props) => (
   <div {...props.attributes}>

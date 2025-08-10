@@ -1,7 +1,7 @@
 'use client'
 
 import React, {FC, memo} from 'react';
-import {infiniteScrollExample} from '@/code-data';
+import {infiniteScrollExample} from '@/utils/code-data';
 import {CodeBlock} from '@/shared-components/CodeBlock';
 import {Alert} from '@/shared-components/Alert';
 import {PageNavigation} from '@/shared-components/PageNavigation';

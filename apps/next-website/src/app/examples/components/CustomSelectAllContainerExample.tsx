@@ -6,7 +6,7 @@ import {
   SelectAllContainerType,
   TreeMultiSelect
 } from 'react-tree-multi-select';
-import {getTreeNodeData} from '@/utils';
+import {getTreeNodeData} from '@/utils/utils';
 
 const CustomSelectAllContainer: FC<SelectAllContainerProps> = (props) => (
   <Tooltip content={`Tooltip for the ${props.ownProps.label}`}>

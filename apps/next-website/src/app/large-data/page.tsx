@@ -2,7 +2,7 @@
 
 import React, {FC, memo, useState} from 'react';
 import {TreeMultiSelect} from 'react-tree-multi-select';
-import {largeTreeNodeData30, largeTreeNodeData50, RandomTreeNode} from '@/utils';
+import {largeTreeNodeData30, largeTreeNodeData50, RandomTreeNode} from '@/utils/utils';
 import {Select} from '@/shared-components/Select';
 import {PageNavigation} from '@/shared-components/PageNavigation';
 

@@ -1,5 +1,5 @@
 import {TreeNode} from 'react-tree-multi-select';
-import {Option, options, OptionTreeNode} from '@/data';
+import {Option, options, OptionTreeNode} from './data';
 
 export interface RandomTreeNode extends TreeNode {
   id: string;
