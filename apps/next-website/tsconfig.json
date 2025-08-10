@@ -24,7 +24,7 @@
     ],
     "paths": {
       "@/*": [
-        "./src/*"
+        "./src/app/*"
       ],
       "react-tree-multi-select": [
         "../../packages/react-tree-multi-select/src/"
