@@ -32,11 +32,11 @@
     }
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "../../packages/react-tree-multi-select/src/**/*",
     ".next/types/**/*.ts",
-    "../../packages/react-tree-multi-select/src/**/*"
+    "next-env.d.ts"
   ],
   "exclude": [
     "node_modules"

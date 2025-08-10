@@ -1,5 +1,8 @@
 import React, {FC} from 'react';
-import Prism from 'prismjs';
+import {createHighlighter} from 'shiki';
+
+const highlighter = await createHighlighter({themes: ['light-plus'], langs: ['typescript']});
+await highlighter.loadLanguage('typescript');
 
 export interface CodeBlockProps {
   code: string;
@@ -7,13 +10,11 @@ export interface CodeBlockProps {
 
 export const CodeBlock: FC<CodeBlockProps> = ({code}) => {
 
-  const codeExampleHtml = Prism.highlight(code, Prism.languages.javascript, 'typescript');
+  const html = highlighter.codeToHtml(code, {lang: 'typescript', theme: 'light-plus'});
 
   return (
     <div className="code-container">
-        <pre>
-          <code className="language-ts" dangerouslySetInnerHTML={{__html: codeExampleHtml}}/>
-        </pre>
+      <code className="language-ts" dangerouslySetInnerHTML={{__html: html}}/>
     </div>
   );
 };
