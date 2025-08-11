@@ -43,7 +43,7 @@ const BasicPage: FC = memo(() => {
   const handleOptionChange = (name: string) => (value: string | number | boolean): void => {
     switch (name) {
       case 'type' :
-        setType((Type as any)[value as string]);
+        setType(Type[value as keyof typeof Type]);
         break;
       case 'inputPlaceholder' :
         setInputPlaceholder(value as string);

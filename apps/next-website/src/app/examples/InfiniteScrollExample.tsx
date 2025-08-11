@@ -25,7 +25,7 @@ export const InfiniteScrollExample: FC = () => {
     setData(data as RandomTreeNode[]);
   };
 
-  const handleDropdownLastItemReached = async (inputValue: string, disp: any): Promise<void> => {
+  const handleDropdownLastItemReached = async (inputValue: string): Promise<void> => {
     if (inputValue || lastPageReached) {
       return;
     }

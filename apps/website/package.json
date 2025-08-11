@@ -77,8 +77,8 @@
     "gh-pages": "^6.3.0"
   },
   "scripts": {
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
+    "start-docs": "node scripts/start.js",
+    "build-docs": "node scripts/build.js",
     "test": "node scripts/test.js",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"

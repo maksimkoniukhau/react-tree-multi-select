@@ -5,8 +5,7 @@
       "dependsOn": ["^build"]
     },
     "start": {
-      "persistent": true,
-      "cache": false
+      "dependsOn": ["^start"]
     },
     "dev": {
       "persistent": true,
