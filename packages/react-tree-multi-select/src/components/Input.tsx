@@ -9,7 +9,7 @@ export const Input: FC<InputProps> = memo((props) => {
 
 interface InputWrapperProps {
   input: InputType;
-  inputRef: RefObject<HTMLInputElement>;
+  inputRef: RefObject<HTMLInputElement | null>;
   placeholder: string;
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
