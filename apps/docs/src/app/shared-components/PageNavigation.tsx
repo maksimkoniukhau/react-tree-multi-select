@@ -7,7 +7,7 @@ export interface PageNavigationProps {
 export const PageNavigation: FC<PageNavigationProps> = memo(({items}) => {
 
   return (
-    <div className="page-navigation">
+    <nav className="page-navigation">
       <ul className="navigation">
         {items.map((item, index) => (
           <li key={index} className="navigation-item">
@@ -17,6 +17,6 @@ export const PageNavigation: FC<PageNavigationProps> = memo(({items}) => {
           </li>
         ))}
       </ul>
-    </div>
+    </nav>
   );
 });

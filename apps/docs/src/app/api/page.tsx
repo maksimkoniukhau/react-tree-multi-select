@@ -9,7 +9,7 @@ import {Section} from '@/shared-components/Section';
 const ApiPage: FC = () => {
 
   return (
-    <div className="page">
+    <>
       <div className="page-content api-page">
         <Section id="types">
           <h2>{'API'}</h2>
@@ -27,7 +27,7 @@ const ApiPage: FC = () => {
           {link: '#props', label: 'Props'}
         ]}
       />
-    </div>
+    </>
   );
 };
 

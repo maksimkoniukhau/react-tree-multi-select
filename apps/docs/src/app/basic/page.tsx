@@ -6,7 +6,6 @@ import {getTreeNodeData} from '@/utils/utils';
 import {Select} from '@/shared-components/Select';
 import {Checkbox} from '@/shared-components/Checkbox';
 import {Input} from '@/shared-components/Input';
-import {PageNavigation} from '@/shared-components/PageNavigation';
 import {OptionTreeNode} from '@/utils/data';
 
 const INPUT_PLACEHOLDER = 'search...';
@@ -127,89 +126,86 @@ const BasicPage: FC = memo(() => {
   };
 
   return (
-    <div className="page">
-      <div className="page-content">
-        <h2>{'Basic Features'}</h2>
-        <div className="paragraph">
-          {'Toggle different options in order to see how the component behaves and looks depends on properties passed to it.'}
-        </div>
-        <div className="basic-options">
-          <div>{'Component props:'}</div>
-          <Select
-            label="type:"
-            options={[
-              {name: Type.TREE_SELECT, value: Type.TREE_SELECT},
-              {name: Type.TREE_SELECT_FLAT, value: Type.TREE_SELECT_FLAT},
-              {name: Type.MULTI_SELECT, value: Type.MULTI_SELECT},
-              {name: Type.SELECT, value: Type.SELECT}
-            ]}
-            onChange={handleOptionChange('type')}/>
-          <Input label="inputPlaceholder:" initValue={INPUT_PLACEHOLDER}
-                 onChange={handleOptionChange('inputPlaceholder')}/>
-          <Input label="noDataText:" initValue={NO_DATA} onChange={handleOptionChange('noDataText')}/>
-          <Input label="noMatchesText:" initValue={NO_MATCHES} onChange={handleOptionChange('noMatchesText')}/>
-          <Checkbox label="isDisabled" initChecked={false} onChange={handleOptionChange('isDisabled')}/>
-          <Checkbox label="isSearchable" initChecked={true} onChange={handleOptionChange('isSearchable')}/>
-          <Checkbox label="withChipClear" initChecked={true} onChange={handleOptionChange('withChipClear')}/>
-          <Checkbox label="withClearAll" initChecked={true} onChange={handleOptionChange('withClearAll')}/>
-          <Checkbox label="withSelectAll" initChecked={false} onChange={handleOptionChange('withSelectAll')}/>
-          <Checkbox label="withDropdownInput" initChecked={false} onChange={handleOptionChange('withDropdownInput')}/>
-          <Checkbox label="closeDropdownOnNodeChange" initChecked={false}
-                    onChange={handleOptionChange('closeDropdownOnNodeChange')}/>
-          <Input label="dropdownHeight:" initValue={DEFAULT_OPTIONS_CONTAINER_HEIGHT}
-                 onChange={handleOptionChange('dropdownHeight')} type="number"/>
-          <Input label="overscan:" initValue={OVERSCAN} onChange={handleOptionChange('overscan')} type="number"/>
-          <div className="delimiter"/>
-          <div>{'Data initial props:'}</div>
-          <Checkbox label="selected nodes" initChecked={true} onChange={handleOptionChange('selectedNodes')}/>
-          <Checkbox label="expanded nodes" initChecked={true} onChange={handleOptionChange('expandedNodes')}/>
-          <Checkbox label="disabled nodes" initChecked={true} onChange={handleOptionChange('disabledNodes')}/>
-          <Checkbox label="empty data" initChecked={false} onChange={handleOptionChange('emptyData')}/>
-        </div>
-        <div className="tree-multi-select-wrapper" style={{paddingBottom: '60px'}}>
-          <TreeMultiSelect
-            data={data}
-            type={type}
-            id="basic-rtms-id"
-            className="basic-rtms-custom-class"
-            inputPlaceholder={inputPlaceholder}
-            noDataText={noDataText}
-            noMatchesText={noMatchesText}
-            isDisabled={isDisabled}
-            isSearchable={isSearchable}
-            withChipClear={withChipClear}
-            withClearAll={withClearAll}
-            withSelectAll={withSelectAll}
-            withDropdownInput={withDropdownInput}
-            closeDropdownOnNodeChange={closeDropdownOnNodeChange}
-            dropdownHeight={dropdownHeight}
-            overscan={overscan}
-            onNodeChange={handleNodeChange}
-            onNodeToggle={handleNodeToggle}
-            onClearAll={handleClearAll}
-            onSelectAllChange={handleSelectAllChange}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-          />
-        </div>
-        <div style={{marginTop: '20px'}} className="paragraph">
-          {'You can pass data without children to component. Component will looks and behaves as a multiselect with checkboxes.'}
-        </div>
-        <div className="tree-multi-select-wrapper">
-          <TreeMultiSelect
-            data={[
-              {label: 'label1'},
-              {label: 'label2'},
-              {label: 'label3'},
-              {label: 'label4'},
-              {label: 'label5'}
-            ]}
-            id="rtms-multi-select"
-            withClearAll
-          />
-        </div>
+    <div className="page-content" style={{marginBottom: '100px'}}>
+      <h2>{'Basic Features'}</h2>
+      <div className="paragraph">
+        {'Toggle different options in order to see how the component behaves and looks depends on properties passed to it.'}
       </div>
-      <PageNavigation items={[]}/>
+      <div className="basic-options">
+        <div>{'Component props:'}</div>
+        <Select
+          label="type:"
+          options={[
+            {name: Type.TREE_SELECT, value: Type.TREE_SELECT},
+            {name: Type.TREE_SELECT_FLAT, value: Type.TREE_SELECT_FLAT},
+            {name: Type.MULTI_SELECT, value: Type.MULTI_SELECT},
+            {name: Type.SELECT, value: Type.SELECT}
+          ]}
+          onChange={handleOptionChange('type')}/>
+        <Input label="inputPlaceholder:" initValue={INPUT_PLACEHOLDER}
+               onChange={handleOptionChange('inputPlaceholder')}/>
+        <Input label="noDataText:" initValue={NO_DATA} onChange={handleOptionChange('noDataText')}/>
+        <Input label="noMatchesText:" initValue={NO_MATCHES} onChange={handleOptionChange('noMatchesText')}/>
+        <Checkbox label="isDisabled" initChecked={false} onChange={handleOptionChange('isDisabled')}/>
+        <Checkbox label="isSearchable" initChecked={true} onChange={handleOptionChange('isSearchable')}/>
+        <Checkbox label="withChipClear" initChecked={true} onChange={handleOptionChange('withChipClear')}/>
+        <Checkbox label="withClearAll" initChecked={true} onChange={handleOptionChange('withClearAll')}/>
+        <Checkbox label="withSelectAll" initChecked={false} onChange={handleOptionChange('withSelectAll')}/>
+        <Checkbox label="withDropdownInput" initChecked={false} onChange={handleOptionChange('withDropdownInput')}/>
+        <Checkbox label="closeDropdownOnNodeChange" initChecked={false}
+                  onChange={handleOptionChange('closeDropdownOnNodeChange')}/>
+        <Input label="dropdownHeight:" initValue={DEFAULT_OPTIONS_CONTAINER_HEIGHT}
+               onChange={handleOptionChange('dropdownHeight')} type="number"/>
+        <Input label="overscan:" initValue={OVERSCAN} onChange={handleOptionChange('overscan')} type="number"/>
+        <div className="delimiter"/>
+        <div>{'Data initial props:'}</div>
+        <Checkbox label="selected nodes" initChecked={true} onChange={handleOptionChange('selectedNodes')}/>
+        <Checkbox label="expanded nodes" initChecked={true} onChange={handleOptionChange('expandedNodes')}/>
+        <Checkbox label="disabled nodes" initChecked={true} onChange={handleOptionChange('disabledNodes')}/>
+        <Checkbox label="empty data" initChecked={false} onChange={handleOptionChange('emptyData')}/>
+      </div>
+      <div className="tree-multi-select-wrapper" style={{paddingBottom: '60px'}}>
+        <TreeMultiSelect
+          data={data}
+          type={type}
+          id="basic-rtms-id"
+          className="basic-rtms-custom-class"
+          inputPlaceholder={inputPlaceholder}
+          noDataText={noDataText}
+          noMatchesText={noMatchesText}
+          isDisabled={isDisabled}
+          isSearchable={isSearchable}
+          withChipClear={withChipClear}
+          withClearAll={withClearAll}
+          withSelectAll={withSelectAll}
+          withDropdownInput={withDropdownInput}
+          closeDropdownOnNodeChange={closeDropdownOnNodeChange}
+          dropdownHeight={dropdownHeight}
+          overscan={overscan}
+          onNodeChange={handleNodeChange}
+          onNodeToggle={handleNodeToggle}
+          onClearAll={handleClearAll}
+          onSelectAllChange={handleSelectAllChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+      </div>
+      <div style={{marginTop: '20px'}} className="paragraph">
+        {'You can pass data without children to component. Component will looks and behaves as a multiselect with checkboxes.'}
+      </div>
+      <div className="tree-multi-select-wrapper">
+        <TreeMultiSelect
+          data={[
+            {label: 'label1'},
+            {label: 'label2'},
+            {label: 'label3'},
+            {label: 'label4'},
+            {label: 'label5'}
+          ]}
+          id="rtms-multi-select"
+          withClearAll
+        />
+      </div>
     </div>
   );
 });

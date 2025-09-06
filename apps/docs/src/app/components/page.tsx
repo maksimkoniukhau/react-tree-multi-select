@@ -48,8 +48,8 @@ import {CustomNoDataExample} from '@/examples/components/CustomNoDataExample';
 const ComponentsPage: FC = memo(() => {
 
   return (
-    <div className="page" style={{paddingBottom: '150px'}}>
-      <div className="page-content">
+    <>
+      <div className="page-content" style={{marginBottom: '250px'}}>
         <Section id="overview">
           <h2>{'Components'}</h2>
           <div className="paragraph">
@@ -314,7 +314,7 @@ const ComponentsPage: FC = memo(() => {
           {link: '#no-data', label: 'NoData'}
         ]}
       />
-    </div>
+    </>
   );
 });
 
