@@ -2,6 +2,8 @@ import './globals.scss';
 
 import {Metadata} from 'next';
 import React from 'react';
+import {COPYRIGHT_TEXT} from '@/const';
+import {Header} from '@/shared-components/Header';
 import {Menu} from '@/shared-components/Menu';
 
 export const metadata: Metadata = {
@@ -15,15 +17,13 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
     <html lang="en">
     <body>
     <div className="app">
-      <header className="header">
-        <h1 className="header-title">{'REACT TREE MULTI SELECT'}</h1>
-      </header>
+      <Header/>
       <main className="content">
         <Menu/>
         {children}
       </main>
       <footer className="footer">
-        <span>{'Copyright © Maksim Koniukhau, 2025. MIT Licensed.'}</span>
+        <span>{COPYRIGHT_TEXT}</span>
       </footer>
     </div>
     </body>

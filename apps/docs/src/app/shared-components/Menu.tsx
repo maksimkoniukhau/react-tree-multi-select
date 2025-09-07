@@ -24,7 +24,11 @@ const pathPageMap = new Map<string, MENU_ITEM>([
   ['/components', MENU_ITEM.COMPONENTS]
 ]);
 
-export const Menu: FC = memo(() => {
+export interface MenuProps {
+  onMenuItemClick?: () => void;
+}
+
+export const Menu: FC<MenuProps> = memo(({onMenuItemClick}) => {
 
   const pathname = usePathname();
 
@@ -34,7 +38,11 @@ export const Menu: FC = memo(() => {
         <ul className="menu">
           {Array.from(pathPageMap.entries())
             .map((entry: [string, MENU_ITEM], idx: number) => (
-              <li key={idx} className={`menu-item ${pathname === entry[0] ? ' selected' : ''}`}>
+              <li
+                key={idx}
+                className={`menu-item ${pathname === entry[0] ? ' selected' : ''}`}
+                onClick={() => onMenuItemClick?.()}
+              >
                 <Link href={entry[0]}>{entry[1]}</Link>
               </li>
             ))}
