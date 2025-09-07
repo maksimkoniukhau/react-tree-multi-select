@@ -7,16 +7,18 @@ export interface PageNavigationProps {
 export const PageNavigation: FC<PageNavigationProps> = memo(({items}) => {
 
   return (
-    <nav className="page-navigation">
-      <ul className="navigation">
-        {items.map((item, index) => (
-          <li key={index} className="navigation-item">
-            <a href={item.link} className="nav-link">
-              <span>{item.label}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <div className="page-navigation-container">
+      <nav className="page-navigation">
+        <ul className="navigation">
+          {items.map((item, index) => (
+            <li key={index} className="navigation-item">
+              <a href={item.link} className="nav-link">
+                <span>{item.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
   );
 });

@@ -29,15 +29,17 @@ export const Menu: FC = memo(() => {
   const pathname = usePathname();
 
   return (
-    <nav className="menu-container">
-      <ul className="menu">
-        {Array.from(pathPageMap.entries())
-          .map((entry: [string, MENU_ITEM], idx: number) => (
-            <li key={idx} className={`menu-item ${pathname === entry[0] ? ' selected' : ''}`}>
-              <Link href={entry[0]}>{entry[1]}</Link>
-            </li>
-          ))}
-      </ul>
-    </nav>
+    <div className="menu-container">
+      <nav className="menu-navigation">
+        <ul className="menu">
+          {Array.from(pathPageMap.entries())
+            .map((entry: [string, MENU_ITEM], idx: number) => (
+              <li key={idx} className={`menu-item ${pathname === entry[0] ? ' selected' : ''}`}>
+                <Link href={entry[0]}>{entry[1]}</Link>
+              </li>
+            ))}
+        </ul>
+      </nav>
+    </div>
   );
 });

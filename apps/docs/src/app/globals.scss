@@ -6,6 +6,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
@@ -24,7 +30,8 @@ code {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f6f6f6;
+    background-color: #ffffff;
+    box-shadow: 0 5px 7px 0 rgba(212, 212, 212, 0.75);
 
     .header-title {
       text-align: center;
@@ -39,13 +46,17 @@ code {
     min-height: calc(100vh - 140px);
 
     .menu-container {
-      .menu {
-        position: fixed;
-        height: calc(100vh - 70px);
-        overflow-y: auto;
-        list-style: none;
-        margin: 0;
-        padding: 5px 0;
+      margin-top: -70px;
+
+      .menu-navigation {
+        position: sticky;
+        top: 0;
+        padding: 70px 0 0;
+
+        .menu {
+          height: calc(100vh - 140px);
+          overflow-y: auto;
+        }
 
         .menu-item {
           margin: 10px 0;
@@ -196,33 +207,45 @@ code {
       }
     }
 
-    .page-navigation {
-      display: flex;
-      justify-content: center;
+    .page-navigation-container {
+      margin-top: -70px;
 
-      .navigation {
-        position: fixed;
-        list-style: none;
-        margin: 0;
-        padding: 25px 0 0 0;
-        font-size: 14px;
+      .page-navigation {
+        position: sticky;
+        top: 0;
+        padding: 70px 0 0;
 
-        .navigation-item {
-          padding: 5px;
-          cursor: pointer;
-          opacity: 0.75;
+        .navigation {
+          height: calc(100vh - 140px);
+          overflow-y: auto;
+          font-size: 14px;
 
-          &:hover {
-            color: #12bef3;
-          }
+          .navigation-item {
+            margin: 5px 0;
+            cursor: pointer;
+            opacity: 0.75;
 
-          .nav-link {
-            display: block;
-            text-decoration: none;
-            color: inherit;
+            &:first-child {
+              margin-top: 15px;
+            }
 
-            &.active {
+            &:last-child {
+              margin-bottom: 15px;
+            }
+
+            &:hover {
               color: #12bef3;
+            }
+
+            .nav-link {
+              display: block;
+              padding: 2px 70px;
+              text-decoration: none;
+              color: inherit;
+
+              &.active {
+                color: #12bef3;
+              }
             }
           }
         }
@@ -235,10 +258,45 @@ code {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f6f6f6;
+    background-color: #ffffff;
+    box-shadow: 0px -5px 7px 0px rgba(212, 212, 212, 0.75);
 
     span {
       padding: 5px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .app {
+    .header {
+      .header-title {
+        font-size: 1.5em;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .app {
+    .content {
+      display: block;
+
+      .menu-container {
+        display: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .app {
+    .content {
+      grid-template-columns: 20% 80% 0;
+
+      .page-navigation {
+        display: none;
+      }
     }
   }
 }
