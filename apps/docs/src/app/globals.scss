@@ -146,6 +146,7 @@ code {
 
     .page-content {
       padding: 0 10px 10px;
+      overflow-x: clip;
 
       &.api-page {
         .code-container {
@@ -248,7 +249,7 @@ code {
         gap: 15px;
 
         .rtms-dropdown {
-          width: 250px;
+          width: 210px;
         }
       }
 
