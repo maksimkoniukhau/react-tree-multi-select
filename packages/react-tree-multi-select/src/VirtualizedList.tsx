@@ -2,6 +2,7 @@ import React, {
   CSSProperties,
   FC,
   forwardRef,
+  memo,
   ReactNode,
   UIEvent,
   useCallback,
@@ -29,13 +30,13 @@ interface ItemProps {
   index: number;
   top: number;
   updateHeight: (index: number, height: number) => void;
-  children: ReactNode;
+  renderItem: (index: number) => ReactNode;
   isSticky?: boolean;
 }
 
-const Item: FC<ItemProps> = (props) => {
+const Item: FC<ItemProps> = memo((props) => {
 
-  const {index, top, updateHeight, children, isSticky} = props;
+  const {index, top, updateHeight, renderItem, isSticky} = props;
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -61,10 +62,10 @@ const Item: FC<ItemProps> = (props) => {
 
   return (
     <div ref={ref} style={style}>
-      {children}
+      {renderItem(index)}
     </div>
   );
-};
+});
 
 export interface VirtualizedListHandle {
   scrollIntoView: (index: number) => void;
@@ -223,10 +224,9 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
             index={index}
             top={positions[index].top}
             updateHeight={updateHeight}
+            renderItem={renderItem}
             isSticky
-          >
-            {renderItem(index)}
-          </Item>
+          />
         ))}
         {positions.slice(overscanStartIndex, overscanEndIndex).map((pos: ItemPosition, idx: number) => {
           const index = overscanStartIndex + idx;
@@ -236,9 +236,8 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
               index={index}
               top={pos.top}
               updateHeight={updateHeight}
-            >
-              {renderItem(index)}
-            </Item>
+              renderItem={renderItem}
+            />
           );
         })}
       </div>
