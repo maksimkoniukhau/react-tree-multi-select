@@ -13,6 +13,7 @@ export interface ListItemProps {
   index: number;
   nodesAmount: number;
   displayedNodes: Node[];
+  selectedNodes: Node[];
   displayedItemCount: number;
   isAnyHasChildren: boolean;
   searchValue: string;
@@ -23,8 +24,8 @@ export interface ListItemProps {
   noMatchesText: string;
   showFooter: boolean;
   onSelectAllChange: (e: React.MouseEvent) => void;
-  onNodeChange: (node: Node) => (e: React.MouseEvent) => void;
-  onNodeToggle: (node: Node) => (e: React.MouseEvent) => void;
+  onNodeChange: (path: string) => (e: React.MouseEvent) => void;
+  onNodeToggle: (path: string) => (e: React.MouseEvent) => void;
   onFooterClick: (e: React.MouseEvent) => void;
   input: ReactNode;
   components: InnerComponents;
@@ -110,7 +111,9 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     <NodeWrapper
       components={components}
       type={type}
-      node={node}
+      path={node.path}
+      depth={node.depth}
+      hasChildren={node.hasChildren()}
       label={node.name}
       disabled={node.disabled}
       selected={node.selected}

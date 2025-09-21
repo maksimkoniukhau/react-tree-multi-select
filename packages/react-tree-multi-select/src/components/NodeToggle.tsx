@@ -1,6 +1,5 @@
 import React, {FC, memo} from 'react';
 import {NodeToggleProps, NodeToggleType} from '../types';
-import {Node} from '../Node';
 
 export const NodeToggle: FC<NodeToggleProps> = memo((props) => {
   return (
@@ -21,17 +20,17 @@ export const NodeToggle: FC<NodeToggleProps> = memo((props) => {
 
 interface NodeToggleWrapperProps {
   nodeToggle: NodeToggleType;
-  node: Node;
+  path: string;
   expanded: boolean;
-  onNodeToggle: (node: Node) => (event: React.MouseEvent) => void;
+  onNodeToggle: (path: string) => (event: React.MouseEvent) => void;
 }
 
-export const NodeToggleWrapper: FC<NodeToggleWrapperProps> = memo(({nodeToggle, node, expanded, onNodeToggle}) => {
+export const NodeToggleWrapper: FC<NodeToggleWrapperProps> = memo(({nodeToggle, path, expanded, onNodeToggle}) => {
   return (
     <nodeToggle.component
       attributes={{
         className: `rtms-node-toggle${expanded ? ' expanded' : ''}`,
-        onClick: onNodeToggle(node)
+        onClick: onNodeToggle(path)
       }}
       ownProps={{expanded}}
       customProps={nodeToggle.props}

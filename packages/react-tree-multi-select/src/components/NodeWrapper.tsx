@@ -1,7 +1,6 @@
 import React, {FC, memo} from 'react';
 import {Type} from '../types';
 import {InnerComponents} from '../innerTypes';
-import {Node} from '../Node';
 import {NodeToggleWrapper} from './NodeToggle';
 import {NodeCheckboxWrapper} from './NodeCheckbox';
 import {NodeLabelWrapper} from './NodeLabel';
@@ -10,7 +9,8 @@ import {NodeContainerWrapper} from './NodeContainer';
 export interface NodeWrapperProps {
   components: InnerComponents;
   type: Type;
-  node: Node;
+  path: string;
+  depth: number;
   label: string;
   disabled: boolean;
   selected: boolean;
@@ -18,16 +18,18 @@ export interface NodeWrapperProps {
   expanded: boolean;
   focused: boolean;
   matched: boolean;
+  hasChildren: boolean;
   indentation: boolean;
-  onNodeChange: (node: Node) => (event: React.MouseEvent) => void;
-  onNodeToggle: (node: Node) => (event: React.MouseEvent) => void;
+  onNodeChange: (path: string) => (event: React.MouseEvent) => void;
+  onNodeToggle: (path: string) => (event: React.MouseEvent) => void;
 }
 
 export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
   const {
     components,
     type,
-    node,
+    path,
+    depth,
     label,
     disabled,
     selected,
@@ -35,6 +37,7 @@ export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
     expanded,
     focused,
     matched,
+    hasChildren,
     indentation,
     onNodeChange,
     onNodeToggle
@@ -43,7 +46,8 @@ export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
   return (
     <NodeContainerWrapper
       nodeContainer={components.NodeContainer}
-      node={node}
+      path={path}
+      depth={depth}
       label={label}
       disabled={disabled}
       selected={selected}
@@ -54,10 +58,10 @@ export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
       indentation={indentation}
       onNodeChange={onNodeChange}
     >
-      {type !== Type.MULTI_SELECT && type !== Type.SELECT && node.hasChildren() && (
+      {type !== Type.MULTI_SELECT && type !== Type.SELECT && hasChildren && (
         <NodeToggleWrapper
           nodeToggle={components.NodeToggle}
-          node={node}
+          path={path}
           expanded={expanded}
           onNodeToggle={onNodeToggle}
         />

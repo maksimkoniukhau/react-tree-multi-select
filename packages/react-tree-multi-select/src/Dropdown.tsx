@@ -12,6 +12,7 @@ export interface DropdownProps {
   nodeMap: Map<string, Node>;
   nodesAmount: number;
   displayedNodes: Node[];
+  selectedNodes: Node[];
   isAnyHasChildren: boolean;
   searchValue: string;
   showSelectAll: boolean;
@@ -23,8 +24,8 @@ export interface DropdownProps {
   showFooter: boolean;
   overscan: number;
   onSelectAllChange: (e: React.MouseEvent) => void;
-  onNodeChange: (node: Node) => (e: React.MouseEvent) => void;
-  onNodeToggle: (node: Node) => (e: React.MouseEvent) => void;
+  onNodeChange: (path: string) => (e: React.MouseEvent) => void;
+  onNodeToggle: (path: string) => (e: React.MouseEvent) => void;
   onFooterClick: (e: React.MouseEvent) => void;
   input: ReactNode;
   inputRef: RefObject<HTMLInputElement | null>;
@@ -41,6 +42,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     nodeMap,
     nodesAmount,
     displayedNodes,
+    selectedNodes,
     isAnyHasChildren,
     searchValue,
     showSelectAll,
@@ -102,6 +104,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
         index={index}
         nodesAmount={nodesAmount}
         displayedNodes={displayedNodes}
+        selectedNodes={selectedNodes}
         displayedItemCount={displayedItemCount}
         isAnyHasChildren={isAnyHasChildren}
         searchValue={searchValue}

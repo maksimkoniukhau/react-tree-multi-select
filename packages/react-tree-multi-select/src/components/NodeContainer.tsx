@@ -1,6 +1,5 @@
 import React, {CSSProperties, FC, memo, ReactNode} from 'react';
 import {NodeContainerProps, NodeContainerType} from '../types';
-import {Node} from '../Node';
 
 export const NodeContainer: FC<NodeContainerProps> = memo((props) => {
   return (
@@ -12,7 +11,8 @@ export const NodeContainer: FC<NodeContainerProps> = memo((props) => {
 
 interface NodeContainerWrapperProps {
   nodeContainer: NodeContainerType;
-  node: Node;
+  path: string;
+  depth: number;
   label: string;
   disabled: boolean;
   selected: boolean;
@@ -21,14 +21,15 @@ interface NodeContainerWrapperProps {
   focused: boolean;
   matched: boolean;
   indentation: boolean;
-  onNodeChange: (node: Node) => (event: React.MouseEvent) => void;
+  onNodeChange: (path: string) => (event: React.MouseEvent) => void;
   children: ReactNode;
 }
 
 export const NodeContainerWrapper: FC<NodeContainerWrapperProps> = memo((props) => {
   const {
     nodeContainer,
-    node,
+    path,
+    depth,
     label,
     disabled,
     selected,
@@ -52,11 +53,11 @@ export const NodeContainerWrapper: FC<NodeContainerWrapperProps> = memo((props) 
     <nodeContainer.component
       attributes={{
         style: {
-          '--rtms-list-item-depth': node.depth,
+          '--rtms-list-item-depth': depth,
           '--rtms-list-item-indentation': indentation ? 1 : 0
         } as CSSProperties,
         className,
-        onClick: onNodeChange(node)
+        onClick: onNodeChange(path)
       }}
       ownProps={{label, disabled, selected, partial, expanded, focused, matched}}
       customProps={nodeContainer.props}
