@@ -62,6 +62,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     openDropdown,
     dropdownHeight = DEFAULT_OPTIONS_CONTAINER_HEIGHT,
     overscan = OVERSCAN,
+    isVirtualized = true,
     footerConfig,
     keyboardConfig: propsKeyboardConfig,
     components: propsComponents,
@@ -826,6 +827,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           dropdownHeight={dropdownHeight}
           showFooter={showFooter}
           overscan={overscan}
+          isVirtualized={isVirtualized}
           onSelectAllChange={handleSelectAllChange}
           onNodeChange={handleNodeChange}
           onNodeToggle={handleNodeToggleOnClick}

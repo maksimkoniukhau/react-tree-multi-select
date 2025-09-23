@@ -23,6 +23,7 @@ export interface DropdownProps {
   dropdownHeight: number;
   showFooter: boolean;
   overscan: number;
+  isVirtualized: boolean;
   onSelectAllChange: (e: React.MouseEvent) => void;
   onNodeChange: (path: string) => (e: React.MouseEvent) => void;
   onNodeToggle: (path: string) => (e: React.MouseEvent) => void;
@@ -53,6 +54,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     dropdownHeight,
     showFooter,
     overscan,
+    isVirtualized,
     onSelectAllChange,
     onNodeChange,
     onNodeToggle,
@@ -141,6 +143,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
         renderItem={renderItem}
         onLastItemReached={onLastItemReached}
         overscan={overscan}
+        isVirtualized={isVirtualized}
       />
     </div>
   );

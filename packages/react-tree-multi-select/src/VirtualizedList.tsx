@@ -32,11 +32,12 @@ interface ItemProps {
   updateHeight: (index: number, height: number) => void;
   renderItem: (index: number) => ReactNode;
   isSticky?: boolean;
+  isVirtualized?: boolean;
 }
 
 const Item: FC<ItemProps> = memo((props) => {
 
-  const {index, top, updateHeight, renderItem, isSticky} = props;
+  const {index, top, updateHeight, renderItem, isSticky, isVirtualized} = props;
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -55,10 +56,11 @@ const Item: FC<ItemProps> = memo((props) => {
 
   useResizeObserver(ref.current, updateHeightCallback);
 
-  const commonStyle = {top, width: '100%'};
-  const style: CSSProperties = isSticky
-    ? {...commonStyle, position: 'sticky', zIndex: 1}
-    : {...commonStyle, position: 'absolute'};
+  const style: CSSProperties = {
+    width: '100%',
+    ...(isSticky && {top, position: 'sticky', zIndex: 1}),
+    ...(isVirtualized && {top, position: 'absolute'})
+  };
 
   return (
     <div ref={ref} style={style}>
@@ -78,6 +80,7 @@ export interface VirtualizedListProps {
   renderItem: (index: number) => ReactNode;
   onLastItemReached: () => void;
   overscan: number;
+  isVirtualized: boolean;
   estimatedItemHeight?: number;
 }
 
@@ -89,6 +92,7 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
     renderItem,
     onLastItemReached,
     overscan: propOverscan,
+    isVirtualized,
     estimatedItemHeight = 20
   } = props;
 
@@ -147,6 +151,9 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
 
   const overscanStartIndex = Math.max(topItemCount, startIndex - overscan);
   const overscanEndIndex = Math.min(totalCount, endIndex + overscan);
+
+  const start = isVirtualized ? overscanStartIndex : topItemCount;
+  const end = isVirtualized ? overscanEndIndex : positions.length;
 
   const updateHeight = useCallback((index: number, height: number): void => {
     setItemHeights((prev: Map<number, number>) => {
@@ -228,8 +235,8 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
             isSticky
           />
         ))}
-        {positions.slice(overscanStartIndex, overscanEndIndex).map((pos: ItemPosition, idx: number) => {
-          const index = overscanStartIndex + idx;
+        {positions.slice(start, end).map((pos: ItemPosition, idx: number) => {
+          const index = start + idx;
           return (
             <Item
               key={index}
@@ -237,6 +244,7 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
               top={pos.top}
               updateHeight={updateHeight}
               renderItem={renderItem}
+              isVirtualized={isVirtualized}
             />
           );
         })}
