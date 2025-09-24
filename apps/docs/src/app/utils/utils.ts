@@ -102,7 +102,7 @@ const generateData = (amount: number, depth: string): RandomTreeNode[] => {
   return res;
 };
 
-const countData = (data: TreeNode[]): number => {
+export const countData = (data: TreeNode[]): number => {
   let count = 0;
   data.forEach(d => {
     count++;
@@ -118,7 +118,7 @@ const generateLargeTreeNodeData = (rootAmount: number): { data: RandomTreeNode[]
   return {data, amount: countData(data)};
 };
 
-export const largeTreeNodeData30: { data: RandomTreeNode[], amount: number } = generateLargeTreeNodeData(30);
+export const largeTreeNodeData25: { data: RandomTreeNode[], amount: number } = generateLargeTreeNodeData(25);
 export const largeTreeNodeData50: { data: RandomTreeNode[], amount: number } = generateLargeTreeNodeData(50);
 
 export const fetchFakeService = (

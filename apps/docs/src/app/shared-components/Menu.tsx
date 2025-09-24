@@ -9,7 +9,7 @@ export enum MENU_ITEM {
   API = 'API',
   BASIC = 'Basic',
   CONTROLLED = 'Controlled',
-  LARGE_DATA = 'Large Data',
+  VIRTUALIZATION = 'Virtualization',
   INFINITE_SCROLL = 'Infinite Scroll',
   COMPONENTS = 'Components'
 }
@@ -19,7 +19,7 @@ const pathPageMap = new Map<string, MENU_ITEM>([
   ['/api', MENU_ITEM.API],
   ['/basic', MENU_ITEM.BASIC],
   ['/controlled', MENU_ITEM.CONTROLLED],
-  ['/large-data', MENU_ITEM.LARGE_DATA],
+  ['/virtualization', MENU_ITEM.VIRTUALIZATION],
   ['/infinite-scroll', MENU_ITEM.INFINITE_SCROLL],
   ['/components', MENU_ITEM.COMPONENTS]
 ]);

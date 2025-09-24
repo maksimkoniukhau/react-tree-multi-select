@@ -712,8 +712,8 @@ export const CustomNoDataExample: FC = () => {
 
 export const controlledExample = `import React, {FC, memo, useState} from 'react';
 import {TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
-import {getTreeNodeData} from '../utils';
-import {OptionTreeNode} from '../data';
+import {getTreeNodeData} from '@/utils/utils';
+import {OptionTreeNode} from '@/utils/data';
 
 export const ControlledExample: FC = memo(() => {
 
@@ -746,9 +746,59 @@ export const ControlledExample: FC = memo(() => {
   );
 });`;
 
+export const largeDataExample = `import React, {FC, memo, useState} from 'react';
+import {TreeMultiSelect} from 'react-tree-multi-select';
+import {largeTreeNodeData25, largeTreeNodeData50, RandomTreeNode} from '@/utils/utils';
+import {Select} from '@/shared-components/Select';
+
+export const LargeDataExample: FC = memo(() => {
+
+  const [data, setData] = useState<RandomTreeNode[]>(largeTreeNodeData25.data);
+
+  const handleOptionChange = (value: string): void => {
+    setData(value === '50' ? largeTreeNodeData50.data : largeTreeNodeData25.data);
+  };
+
+  return (
+    <div className="large-data-example">
+      <Select
+        label="Choose amount of nodes:"
+        options={[
+          {name: \`\${largeTreeNodeData25.amount}\`, value: '25'},
+          {name: \`\${largeTreeNodeData50.amount}\`, value: '50'}
+        ]}
+        onChange={handleOptionChange}
+      />
+      <TreeMultiSelect data={data}/>
+    </div>
+  );
+});`;
+
+export const nonVirtualizedExample = `import React, {FC, memo, useState} from 'react';
+import {TreeMultiSelect} from 'react-tree-multi-select';
+import {generateRandomTreeNodeData, RandomTreeNode} from '@/utils/utils';
+
+/*Add to styles:
+.non-virtualized-example .rtms-dropdown {
+  width: auto;
+}*/
+export const NonVirtualizedExample: FC = memo(() => {
+
+  const [data] = useState<RandomTreeNode[]>(generateRandomTreeNodeData(3, 3));
+
+  return (
+    <div className="non-virtualized-example">
+      <TreeMultiSelect
+        data={data}
+        isVirtualized={false}
+      />
+    </div>
+  );
+});`;
+
 export const infiniteScrollExample = `import React, {FC, useMemo, useState} from 'react';
 import {FooterProps, KeyboardConfig, TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
-import {fetchFakeService, RandomTreeNode} from '../utils';
+import {fetchFakeService, RandomTreeNode} from '@/utils/utils';
 
 const Footer: FC<FooterProps<{ text: string }>> = (props) => {
   return (
@@ -773,7 +823,7 @@ export const InfiniteScrollExample: FC = () => {
     setData(data as RandomTreeNode[]);
   };
 
-  const handleDropdownLastItemReached = async (inputValue: string, disp: any): Promise<void> => {
+  const handleDropdownLastItemReached = async (inputValue: string): Promise<void> => {
     if (inputValue || lastPageReached) {
       return;
     }

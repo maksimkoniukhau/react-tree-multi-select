@@ -154,12 +154,6 @@ code {
         }
       }
 
-      &.large-data-page {
-        .select-container {
-          margin-bottom: 10px;
-        }
-      }
-
       .title {
         margin: 10px 0;
       }
@@ -242,6 +236,18 @@ code {
         padding: 5px 10px;
         border-radius: 8px;
         outline: none;
+      }
+
+      .large-data-example {
+        .select-container {
+          margin-bottom: 10px;
+        }
+      }
+
+      .non-virtualized-example {
+        .rtms-dropdown {
+          width: auto;
+        }
       }
 
       .field-example {
