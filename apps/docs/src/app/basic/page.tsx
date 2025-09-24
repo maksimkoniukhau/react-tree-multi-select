@@ -12,7 +12,7 @@ const INPUT_PLACEHOLDER = 'search...';
 const NO_DATA = 'No data';
 const NO_MATCHES = 'No matches';
 const DEFAULT_OPTIONS_CONTAINER_HEIGHT = 300;
-const OVERSCAN = 2;
+const OVERSCAN = 1;
 
 const BasicPage: FC = memo(() => {
 
@@ -30,6 +30,7 @@ const BasicPage: FC = memo(() => {
   const [closeDropdownOnNodeChange, setCloseDropdownOnNodeChange] = useState<boolean>(false);
   const [dropdownHeight, setDropdownHeight] = useState<number>(DEFAULT_OPTIONS_CONTAINER_HEIGHT);
   const [overscan, setOverscan] = useState<number>(OVERSCAN);
+  const [isVirtualized, setIsVirtualized] = useState<boolean>(true);
   const [selectedNodes, setSelectedNodes] = useState<boolean>(true);
   const [expandedNodes, setExpandedNodes] = useState<boolean>(true);
   const [disabledNodes, setDisabledNodes] = useState<boolean>(true);
@@ -79,6 +80,9 @@ const BasicPage: FC = memo(() => {
         break;
       case 'overscan' :
         setOverscan(Number(value));
+        break;
+      case 'isVirtualized' :
+        setIsVirtualized(value as boolean);
         break;
       case 'selectedNodes' :
         setSelectedNodes(value as boolean);
@@ -157,6 +161,7 @@ const BasicPage: FC = memo(() => {
         <Input label="dropdownHeight:" initValue={DEFAULT_OPTIONS_CONTAINER_HEIGHT}
                onChange={handleOptionChange('dropdownHeight')} type="number"/>
         <Input label="overscan:" initValue={OVERSCAN} onChange={handleOptionChange('overscan')} type="number"/>
+        <Checkbox label="isVirtualized" initChecked={true} onChange={handleOptionChange('isVirtualized')}/>
         <div className="delimiter"/>
         <div>{'Data initial props:'}</div>
         <Checkbox label="selected nodes" initChecked={true} onChange={handleOptionChange('selectedNodes')}/>
@@ -182,6 +187,7 @@ const BasicPage: FC = memo(() => {
           closeDropdownOnNodeChange={closeDropdownOnNodeChange}
           dropdownHeight={dropdownHeight}
           overscan={overscan}
+          isVirtualized={isVirtualized}
           onNodeChange={handleNodeChange}
           onNodeToggle={handleNodeToggle}
           onClearAll={handleClearAll}

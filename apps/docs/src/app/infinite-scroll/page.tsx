@@ -19,7 +19,7 @@ const InfiniteScrollPage: FC = memo(() => {
           type={'note'}
           text={`The onDropdownLastItemReached callback is triggered when the last item (including overscan) is rendered. 
             The component uses overscan to render a small number of additional items just outside the visible area for smoother scrolling. 
-            By default, it overscans 2 items above and below the visible range.`}
+            By default, it overscans 1 item above and below the visible range.`}
         />
       </div>
       <CodeBlock code={infiniteScrollExample}/>

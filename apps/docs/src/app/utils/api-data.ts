@@ -409,6 +409,14 @@ export const rtmsProps = `export interface TreeMultiSelectProps {
    */
   overscan?: number;
   /**
+   * Determines whether the dropdown list is rendered using virtualization.
+   * When enabled, only the visible portion of the list (plus overscan items)
+   * is rendered to improve performance with large datasets.
+   *
+   * @default true
+   */
+  isVirtualized?: boolean;
+  /**
    * Controls when the Footer component is rendered in the dropdown.
    */
   footerConfig?: FooterConfig;
@@ -491,8 +499,6 @@ export const rtmsProps = `export interface TreeMultiSelectProps {
    *
    * Note: The callback is invoked when the last item (including overscan)
    * is rendered, not based on actual scroll position.
-   *
-   * By default, the dropdown overscans 2 items above and below the visible area.
    *
    * @param inputValue - The current search input value.
    * @param displayedNodes - An array of TreeNode objects currently displayed in the dropdown.
