@@ -1,4 +1,4 @@
-import React, {FC, JSX, memo, ReactNode, RefObject, useEffect, useRef} from 'react';
+import React, {FC, JSX, memo, RefObject, useEffect, useRef} from 'react';
 import {CheckedState, Type} from './types';
 import {InnerComponents} from './innerTypes';
 import {DROPDOWN, FOOTER, SELECT_ALL} from './constants';
@@ -6,6 +6,7 @@ import {buildFocusedElement, extractPathFromFocusedElement, isFocusedElementInDr
 import {Node} from './Node';
 import {ListItem} from './ListItem';
 import {VirtualizedList, VirtualizedListHandle} from './VirtualizedList';
+import {InputWrapper} from './components/Input';
 
 export interface DropdownProps {
   type: Type;
@@ -14,6 +15,9 @@ export interface DropdownProps {
   displayedNodes: Node[];
   selectedNodes: Node[];
   isAnyHasChildren: boolean;
+  isSearchable: boolean;
+  withDropdownInput: boolean;
+  inputPlaceholder: string;
   searchValue: string;
   showSelectAll: boolean;
   selectAllCheckedState: CheckedState;
@@ -24,17 +28,17 @@ export interface DropdownProps {
   showFooter: boolean;
   overscan: number;
   isVirtualized: boolean;
+  components: InnerComponents;
+  componentDisabled: boolean;
+  inputRef: RefObject<HTMLInputElement | null>;
+  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onSelectAllChange: (e: React.MouseEvent) => void;
   onNodeChange: (path: string) => (e: React.MouseEvent) => void;
   onNodeToggle: (path: string) => (e: React.MouseEvent) => void;
   onFooterClick: (e: React.MouseEvent) => void;
-  input: ReactNode;
-  inputRef: RefObject<HTMLInputElement | null>;
   onLastItemReached: () => void;
   onMount: () => void;
   onUnmount: () => void;
-  components: InnerComponents;
-  componentDisabled: boolean;
 }
 
 export const Dropdown: FC<DropdownProps> = memo((props) => {
@@ -45,6 +49,9 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     displayedNodes,
     selectedNodes,
     isAnyHasChildren,
+    isSearchable,
+    withDropdownInput,
+    inputPlaceholder,
     searchValue,
     showSelectAll,
     selectAllCheckedState,
@@ -55,22 +62,23 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
     showFooter,
     overscan,
     isVirtualized,
+    components,
+    componentDisabled,
+    inputRef,
+    onInputChange,
     onSelectAllChange,
     onNodeChange,
     onNodeToggle,
     onFooterClick,
-    input,
-    inputRef,
     onLastItemReached,
     onMount,
-    onUnmount,
-    components,
-    componentDisabled
+    onUnmount
   } = props;
 
   const virtualizedListRef = useRef<VirtualizedListHandle>(null);
 
-  const topItemCount = (showSelectAll ? 1 : 0) + (input ? 1 : 0);
+  const withInput = withDropdownInput && isSearchable;
+  const topItemCount = (showSelectAll ? 1 : 0) + (withInput ? 1 : 0);
   const displayedItemCount = (displayedNodes.length || 1) + topItemCount + (showFooter ? 1 : 0);
 
   useEffect(() => {
@@ -85,11 +93,11 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
       if (focusedElement === buildFocusedElement(SELECT_ALL, DROPDOWN)) {
         elementIndex = 0;
       } else if (focusedElement === buildFocusedElement(FOOTER, DROPDOWN)) {
-        elementIndex = displayedNodes.length + (showSelectAll ? 1 : 0) + (input ? 1 : 0);
+        elementIndex = displayedNodes.length + (showSelectAll ? 1 : 0) + (withInput ? 1 : 0);
       } else {
         const node = nodeMap.get(extractPathFromFocusedElement(focusedElement));
         if (node) {
-          elementIndex = displayedNodes.indexOf(node) + (showSelectAll ? 1 : 0) + (input ? 1 : 0);
+          elementIndex = displayedNodes.indexOf(node) + (showSelectAll ? 1 : 0) + (withInput ? 1 : 0);
         }
       }
       if (elementIndex >= 0) {
@@ -97,7 +105,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [focusedElement, showSelectAll, input]);
+  }, [focusedElement, showSelectAll, withInput]);
 
   const renderItem = (index: number): JSX.Element => {
     return (
@@ -120,7 +128,16 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
         onNodeChange={onNodeChange}
         onNodeToggle={onNodeToggle}
         onFooterClick={onFooterClick}
-        input={input}
+        input={withInput ? (
+          <InputWrapper
+            input={components.Input}
+            inputRef={inputRef}
+            placeholder={inputPlaceholder}
+            value={searchValue}
+            onChange={onInputChange}
+            componentDisabled={componentDisabled}
+          />
+        ) : null}
         components={components}
       />
     );

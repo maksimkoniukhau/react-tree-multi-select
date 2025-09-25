@@ -37,7 +37,6 @@ import {
 import {useOnClickOutside} from './hooks/useOnClickOutside';
 import {Node} from './Node';
 import {FieldContainer} from './components/Field';
-import {InputWrapper} from './components/Input';
 import {Dropdown} from './Dropdown';
 
 export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
@@ -790,14 +789,14 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         searchValue={searchValue}
         withDropdownInput={withDropdownInput}
         dropdownMounted={dropdownMounted}
+        components={components}
+        componentDisabled={isDisabled}
         onMouseDown={handleFieldMouseDown}
         onClick={handleFieldClick}
         onInputChange={handleInputChange}
         onChipClick={handleChipClick}
         onChipDelete={handleNodeDelete}
         onDeleteAll={handleDeleteAll}
-        components={components}
-        componentDisabled={isDisabled}
       />
       {showDropdown ? (
         <Dropdown
@@ -807,36 +806,30 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           displayedNodes={displayedNodes}
           selectedNodes={selectedNodes}
           isAnyHasChildren={isAnyHasChildren(nodes)}
+          isSearchable={isSearchable}
+          withDropdownInput={withDropdownInput}
+          inputPlaceholder={inputPlaceholder}
           searchValue={searchValue}
           showSelectAll={showSelectAll}
           selectAllCheckedState={selectAllCheckedState}
-          focusedElement={focusedElement}
+          focusedElement={isFocusedElementInDropdown(focusedElement) ? focusedElement : ''}
           noDataText={noDataText}
           noMatchesText={noMatchesText}
           dropdownHeight={dropdownHeight}
           showFooter={showFooter}
           overscan={overscan}
           isVirtualized={isVirtualized}
+          components={components}
+          componentDisabled={isDisabled}
+          inputRef={dropdownInputRef}
+          onInputChange={handleInputChange}
           onSelectAllChange={handleSelectAllChange}
           onNodeChange={handleNodeChange}
           onNodeToggle={handleNodeToggleOnClick}
           onFooterClick={handleFooterClick}
-          input={withDropdownInput && isSearchable ? (
-            <InputWrapper
-              input={components.Input}
-              inputRef={dropdownInputRef}
-              placeholder={inputPlaceholder}
-              value={searchValue}
-              onChange={handleInputChange}
-              componentDisabled={isDisabled}
-            />
-          ) : null}
-          inputRef={dropdownInputRef}
           onLastItemReached={handleDropdownLastItemReached}
           onMount={handleDropdownMount}
           onUnmount={handleDropdownUnmount}
-          components={components}
-          componentDisabled={isDisabled}
         />
       ) : null}
     </div>

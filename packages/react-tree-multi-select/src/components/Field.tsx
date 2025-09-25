@@ -33,14 +33,14 @@ interface FieldContainerProps {
   searchValue: string;
   withDropdownInput: boolean;
   dropdownMounted: boolean;
+  components: InnerComponents;
+  componentDisabled: boolean;
   onMouseDown: (event: React.MouseEvent) => void;
   onClick: (event: React.MouseEvent) => void;
   onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onChipClick: (path: string) => (event: React.MouseEvent) => void;
   onChipDelete: (path: string) => (event: React.MouseEvent) => void;
   onDeleteAll: (event: React.MouseEvent) => void;
-  components: InnerComponents;
-  componentDisabled: boolean;
 }
 
 export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
@@ -59,14 +59,14 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
     searchValue,
     withDropdownInput,
     dropdownMounted,
+    components,
+    componentDisabled,
     onMouseDown,
     onClick,
     onInputChange,
     onChipClick,
     onChipDelete,
-    onDeleteAll,
-    components,
-    componentDisabled
+    onDeleteAll
   } = props;
 
   return (
