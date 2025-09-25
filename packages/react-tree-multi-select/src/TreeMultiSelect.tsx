@@ -366,7 +366,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   }, [onClearAll, type]);
 
-  const handleDeleteAll = useCallback((event: React.MouseEvent | React.KeyboardEvent): void => {
+  const handleDeleteAllRef = useRef<(event: React.MouseEvent | React.KeyboardEvent) => void>(null);
+  handleDeleteAllRef.current = (event: React.MouseEvent | React.KeyboardEvent): void => {
     if (isDisabled) {
       return;
     }
@@ -380,7 +381,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     setSelectAllCheckedState(newSelectAllCheckedState);
 
     callClearAllHandler(newSelectAllCheckedState, newSelectedNodes);
-  }, [nodes, type, callClearAllHandler, isDisabled]);
+  };
+
+  const handleDeleteAll = useCallback((event: React.MouseEvent | React.KeyboardEvent): void => {
+    handleDeleteAllRef.current?.(event);
+  }, []);
 
   const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>): void => {
     if (isDisabled) {
@@ -407,7 +412,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   }, [onSelectAllChange]);
 
-  const handleSelectAllChange = useCallback((): void => {
+  const handleSelectAllChangeRef = useRef<() => void>(null);
+  handleSelectAllChangeRef.current = (): void => {
     if (isDisabled) {
       return;
     }
@@ -432,7 +438,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     setSelectAllCheckedState(newSelectAllCheckedState);
 
     callSelectAllChangeHandler(newSelectAllCheckedState, newSelectedNodes);
-  }, [selectAllCheckedState, nodes, type, callSelectAllChangeHandler, isDisabled]);
+  };
+
+  const handleSelectAllChange = useCallback((): void => {
+    handleSelectAllChangeRef.current?.();
+  }, []);
 
   const callNodeToggleHandler = useCallback((toggledNode: Node, expandedNodes: Node[]): void => {
     if (onNodeToggle) {
@@ -450,23 +460,37 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   }, [onNodeChange]);
 
-  const handleChipClick = useCallback((node: Node) => (event: React.MouseEvent | React.KeyboardEvent): void => {
+  const handleChipClickRef = useRef<(path: string, event: React.MouseEvent | React.KeyboardEvent) => void>(null);
+  handleChipClickRef.current = (path: string, event: React.MouseEvent | React.KeyboardEvent): void => {
     if (isDisabled) {
       return;
     }
     // defaultPrevented is on click chip clear icon
     if (!event.defaultPrevented) {
+      const node = nodeMapRef.current.get(path);
+      if (!node) {
+        return;
+      }
       event.preventDefault();
       handleShowDropdown(!showDropdown, false);
       setFocusedElement(buildFocusedElement(node.path, FIELD));
     }
-  }, [showDropdown, isDisabled, handleShowDropdown]);
+  };
 
-  const handleNodeDelete = useCallback((node: Node) => (event: React.MouseEvent | React.KeyboardEvent): void => {
+  const handleChipClick = useCallback((path: string) => (event: React.MouseEvent | React.KeyboardEvent): void => {
+    handleChipClickRef.current?.(path, event);
+  }, []);
+
+  const handleNodeDeleteRef = useRef<(path: string, event: React.MouseEvent | React.KeyboardEvent) => void>(null);
+  handleNodeDeleteRef.current = (path: string, event: React.MouseEvent | React.KeyboardEvent): void => {
     if (!withChipClear || isDisabled) {
       return;
     }
     event.preventDefault();
+    const node = nodeMapRef.current.get(path);
+    if (!node) {
+      return;
+    }
     if (!node.disabled) {
       const prevFocusedFieldElement = getPrevFocusedFieldElement(focusedElement);
       const newFocusedFieldElement = (prevFocusedFieldElement === focusedElement) || (event.type === 'click')
@@ -482,7 +506,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
       callNodeChangeHandler(node, newSelectedNodes);
     }
-  }, [withChipClear, nodes, focusedElement, type, callNodeChangeHandler, isDisabled, getPrevFocusedFieldElement]);
+  };
+
+  const handleNodeDelete = useCallback((path: string) => (event: React.MouseEvent | React.KeyboardEvent): void => {
+    handleNodeDeleteRef.current?.(path, event);
+  }, []);
 
   const handleNodeChangeRef = useRef<(path: string, event: React.MouseEvent | React.KeyboardEvent) => void>(null);
   handleNodeChangeRef.current = (path: string, event: React.MouseEvent | React.KeyboardEvent): void => {
@@ -634,10 +662,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         break;
       case 'Enter':
         if (!focusedElement || isFocusedElementInField(focusedElement)) {
-          const chipNode = filterChips(selectedNodes, type)
-            ?.find(node => isFocused(node.path, FIELD, focusedElement));
-          if (chipNode) {
-            handleChipClick(chipNode)(event);
+          const chipPath = filterChips(selectedNodes, type)
+            ?.find(node => isFocused(node.path, FIELD, focusedElement))
+            ?.path;
+          if (chipPath) {
+            handleChipClick(chipPath)(event);
           } else {
             handleShowDropdown(!showDropdown, true);
           }
@@ -655,10 +684,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           if (isFocused(CLEAR_ALL, FIELD, focusedElement)) {
             handleDeleteAll(event);
           } else {
-            const focusedNode = nodeMapRef.current.get(extractPathFromFocusedElement(focusedElement));
-            if (focusedNode) {
-              handleNodeDelete(focusedNode)(event);
-            }
+            handleNodeDelete(extractPathFromFocusedElement(focusedElement))(event);
           }
           event.preventDefault();
         }
@@ -768,8 +794,10 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
               <ChipWrapper
                 key={node.path}
                 components={components}
-                node={node}
+                path={node.path}
+                label={node.name}
                 focused={isFocused(node.path, FIELD, focusedElement)}
+                disabled={node.disabled}
                 withChipClear={withChipClear}
                 onChipClick={handleChipClick}
                 onChipDelete={handleNodeDelete}

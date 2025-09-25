@@ -7,33 +7,45 @@ import {ChipContainerWrapper} from './ChipContainer';
 
 interface ChipWrapperProps {
   components: InnerComponents;
-  node: Node;
+  path: string;
+  label: string;
   focused: boolean;
+  disabled: boolean;
   withChipClear: boolean;
-  onChipClick: (node: Node) => (event: React.MouseEvent) => void;
-  onChipDelete: (node: Node) => (event: React.MouseEvent) => void;
+  onChipClick: (path: string) => (event: React.MouseEvent) => void;
+  onChipDelete: (path: string) => (event: React.MouseEvent) => void;
   componentDisabled: boolean;
 }
 
 export const ChipWrapper: FC<ChipWrapperProps> = memo((props) => {
-  const {components, node, focused, withChipClear, onChipClick, onChipDelete, componentDisabled} = props;
+  const {
+    components,
+    path,
+    label,
+    focused,
+    disabled,
+    withChipClear,
+    onChipClick,
+    onChipDelete,
+    componentDisabled
+  } = props;
 
   return (
     <ChipContainerWrapper
       chipContainer={components.ChipContainer}
-      node={node}
-      label={node.name}
+      path={path}
+      label={label}
       focused={focused}
-      disabled={node.disabled}
+      disabled={disabled}
       onClick={onChipClick}
       componentDisabled={componentDisabled}
       withChipClear={withChipClear}
     >
-      <ChipLabelWrapper chipLabel={components.ChipLabel} label={node.name} componentDisabled={componentDisabled}/>
-      {withChipClear && !node.disabled && (
+      <ChipLabelWrapper chipLabel={components.ChipLabel} label={label} componentDisabled={componentDisabled}/>
+      {withChipClear && !disabled && (
         <ChipClearWrapper
           chipClear={components.ChipClear}
-          node={node}
+          path={path}
           onClick={onChipDelete}
           componentDisabled={componentDisabled}
         />

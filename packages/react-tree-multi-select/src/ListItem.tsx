@@ -103,17 +103,14 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
   const node = displayedNodes[nodeIndex];
   const focused = focusedElement === buildFocusedElement(node.path, DROPDOWN);
   const expanded = searchValue ? node.searchExpanded : node.expanded;
-  const indentation = !(type === Type.MULTI_SELECT || type === Type.SELECT)
-    && isAnyHasChildren
-    && !node.hasChildren();
+  const hasChildren = node.hasChildren();
+  const indentation = !(type === Type.MULTI_SELECT || type === Type.SELECT) && isAnyHasChildren && !hasChildren;
 
   return (
     <NodeWrapper
       components={components}
-      type={type}
       path={node.path}
       depth={node.depth}
-      hasChildren={node.hasChildren()}
       label={node.name}
       disabled={node.disabled}
       selected={node.selected}
@@ -122,6 +119,8 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
       focused={focused}
       matched={node.matched}
       indentation={indentation}
+      withToggle={type !== Type.MULTI_SELECT && type !== Type.SELECT && hasChildren}
+      withCheckbox={type !== Type.MULTI_SELECT && type !== Type.SELECT}
       onNodeChange={onNodeChange}
       onNodeToggle={onNodeToggle}
     />

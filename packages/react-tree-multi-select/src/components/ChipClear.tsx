@@ -1,6 +1,5 @@
 import React, {FC, memo} from 'react';
 import {ChipClearProps, ChipClearType} from '../types';
-import {Node} from '../Node';
 
 export const ChipClear: FC<ChipClearProps> = memo((props) => {
   return (
@@ -16,15 +15,15 @@ export const ChipClear: FC<ChipClearProps> = memo((props) => {
 
 interface ChipClearWrapperProps {
   chipClear: ChipClearType;
-  node: Node;
-  onClick: (node: Node) => (event: React.MouseEvent) => void;
+  path: string;
+  onClick: (path: string) => (event: React.MouseEvent) => void;
   componentDisabled: boolean;
 }
 
-export const ChipClearWrapper: FC<ChipClearWrapperProps> = memo(({chipClear, node, onClick, componentDisabled}) => {
+export const ChipClearWrapper: FC<ChipClearWrapperProps> = memo(({chipClear, path, onClick, componentDisabled}) => {
   return (
     <chipClear.component
-      attributes={{className: 'rtms-chip-clear', onClick: onClick(node)}}
+      attributes={{className: 'rtms-chip-clear', onClick: onClick(path)}}
       ownProps={{componentDisabled}}
       customProps={chipClear.props}
     />

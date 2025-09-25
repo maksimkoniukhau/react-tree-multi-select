@@ -1,5 +1,4 @@
 import React, {FC, memo} from 'react';
-import {Type} from '../types';
 import {InnerComponents} from '../innerTypes';
 import {NodeToggleWrapper} from './NodeToggle';
 import {NodeCheckboxWrapper} from './NodeCheckbox';
@@ -8,7 +7,6 @@ import {NodeContainerWrapper} from './NodeContainer';
 
 export interface NodeWrapperProps {
   components: InnerComponents;
-  type: Type;
   path: string;
   depth: number;
   label: string;
@@ -18,8 +16,9 @@ export interface NodeWrapperProps {
   expanded: boolean;
   focused: boolean;
   matched: boolean;
-  hasChildren: boolean;
   indentation: boolean;
+  withToggle: boolean;
+  withCheckbox: boolean;
   onNodeChange: (path: string) => (event: React.MouseEvent) => void;
   onNodeToggle: (path: string) => (event: React.MouseEvent) => void;
 }
@@ -27,7 +26,6 @@ export interface NodeWrapperProps {
 export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
   const {
     components,
-    type,
     path,
     depth,
     label,
@@ -37,8 +35,9 @@ export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
     expanded,
     focused,
     matched,
-    hasChildren,
     indentation,
+    withToggle,
+    withCheckbox,
     onNodeChange,
     onNodeToggle
   } = props;
@@ -58,7 +57,7 @@ export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
       indentation={indentation}
       onNodeChange={onNodeChange}
     >
-      {type !== Type.MULTI_SELECT && type !== Type.SELECT && hasChildren && (
+      {withToggle && (
         <NodeToggleWrapper
           nodeToggle={components.NodeToggle}
           path={path}
@@ -66,7 +65,7 @@ export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
           onNodeToggle={onNodeToggle}
         />
       )}
-      {type !== Type.MULTI_SELECT && type !== Type.SELECT && (
+      {withCheckbox && (
         <NodeCheckboxWrapper
           nodeCheckbox={components.NodeCheckbox}
           checked={selected}
