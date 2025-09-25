@@ -1,5 +1,7 @@
 import './styles/tree-multi-select.scss';
 import React, {FC, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {CheckedState, TreeMultiSelectProps, TreeNode, Type} from './types';
+import {InnerComponents} from './innerTypes';
 import {
   CLEAR_ALL,
   DEFAULT_OPTIONS_CONTAINER_HEIGHT,
@@ -32,16 +34,11 @@ import {
   isFocusedElementInDropdown,
   isFocusedElementInField
 } from './utils/focusUtils';
-import {CheckedState, TreeMultiSelectProps, TreeNode, Type} from './types';
-import {InnerComponents} from './innerTypes';
 import {useOnClickOutside} from './hooks/useOnClickOutside';
-import {Dropdown} from './Dropdown';
 import {Node} from './Node';
-import {FieldToggleWrapper} from './components/FieldToggle';
-import {FieldClearWrapper} from './components/FieldClear';
-import {FieldWrapper} from './components/Field';
+import {FieldContainer} from './components/Field';
 import {InputWrapper} from './components/Input';
-import {ChipWrapper} from './components/ChipWrapper';
+import {Dropdown} from './Dropdown';
 
 export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const {
@@ -778,66 +775,30 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       onKeyDown={handleComponentKeyDown}
       onMouseDown={handleComponentMouseDown}
     >
-      <FieldWrapper
-        field={components.Field}
+      <FieldContainer
         fieldRef={fieldRef}
+        fieldInputRef={fieldInputRef}
         type={type}
+        selectedNodes={selectedNodes}
         showDropdown={showDropdown}
         withClearAll={withClearAll}
+        showClearAll={showClearAll}
+        withChipClear={withChipClear}
+        focusedElement={isFocusedElementInField(focusedElement) ? focusedElement : ''}
+        isSearchable={isSearchable}
+        inputPlaceholder={isAnyNodeSelected ? '' : inputPlaceholder}
+        searchValue={searchValue}
+        withDropdownInput={withDropdownInput}
+        dropdownMounted={dropdownMounted}
         onMouseDown={handleFieldMouseDown}
         onClick={handleFieldClick}
+        onInputChange={handleInputChange}
+        onChipClick={handleChipClick}
+        onChipDelete={handleNodeDelete}
+        onDeleteAll={handleDeleteAll}
+        components={components}
         componentDisabled={isDisabled}
-      >
-        <div className="rtms-field-content">
-          {filterChips(selectedNodes, type)
-            .map(node => (
-              <ChipWrapper
-                key={node.path}
-                components={components}
-                path={node.path}
-                label={node.name}
-                focused={isFocused(node.path, FIELD, focusedElement)}
-                disabled={node.disabled}
-                withChipClear={withChipClear}
-                onChipClick={handleChipClick}
-                onChipDelete={handleNodeDelete}
-                componentDisabled={isDisabled}
-              />
-            ))}
-          {withDropdownInput || !isSearchable ? (
-            <input
-              tabIndex={withDropdownInput && showDropdown && dropdownMounted ? -1 : 0}
-              className="rtms-input-hidden"
-              disabled={isDisabled}
-              readOnly
-            />
-          ) : (
-            <InputWrapper
-              input={components.Input}
-              inputRef={fieldInputRef}
-              placeholder={isAnyNodeSelected ? '' : inputPlaceholder}
-              value={searchValue}
-              onChange={handleInputChange}
-              componentDisabled={isDisabled}
-            />
-          )}
-        </div>
-        <div className="rtms-actions">
-          {showClearAll && (
-            <FieldClearWrapper
-              fieldClear={components.FieldClear}
-              focused={isFocused(CLEAR_ALL, FIELD, focusedElement)}
-              onClick={handleDeleteAll}
-              componentDisabled={isDisabled}
-            />
-          )}
-          <FieldToggleWrapper
-            fieldToggle={components.FieldToggle}
-            expanded={showDropdown}
-            componentDisabled={isDisabled}
-          />
-        </div>
-      </FieldWrapper>
+      />
       {showDropdown ? (
         <Dropdown
           type={type}

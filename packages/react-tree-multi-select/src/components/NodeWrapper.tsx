@@ -1,9 +1,9 @@
 import React, {FC, memo} from 'react';
 import {InnerComponents} from '../innerTypes';
+import {NodeContainerWrapper} from './NodeContainer';
 import {NodeToggleWrapper} from './NodeToggle';
 import {NodeCheckboxWrapper} from './NodeCheckbox';
 import {NodeLabelWrapper} from './NodeLabel';
-import {NodeContainerWrapper} from './NodeContainer';
 
 export interface NodeWrapperProps {
   components: InnerComponents;

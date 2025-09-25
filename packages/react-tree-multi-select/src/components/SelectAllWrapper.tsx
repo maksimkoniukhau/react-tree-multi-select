@@ -1,9 +1,9 @@
 import React, {FC, memo} from 'react';
 import {CheckedState} from '../types';
 import {InnerComponents} from '../innerTypes';
+import {SelectAllContainerWrapper} from './SelectAllContainer';
 import {SelectAllCheckboxWrapper} from './SelectAllCheckbox';
 import {SelectAllLabelWrapper} from './SelectAllLabel';
-import {SelectAllContainerWrapper} from './SelectAllContainer';
 
 export interface SelectAllWrapperProps {
   components: InnerComponents;

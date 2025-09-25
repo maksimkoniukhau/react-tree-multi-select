@@ -1,9 +1,8 @@
 import React, {FC, memo} from 'react';
 import {InnerComponents} from '../innerTypes';
-import {Node} from '../Node';
+import {ChipContainerWrapper} from './ChipContainer';
 import {ChipLabelWrapper} from './ChipLabel';
 import {ChipClearWrapper} from './ChipClear';
-import {ChipContainerWrapper} from './ChipContainer';
 
 interface ChipWrapperProps {
   components: InnerComponents;

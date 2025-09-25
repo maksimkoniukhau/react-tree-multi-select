@@ -1,8 +1,8 @@
 import React, {FC, JSX, memo, ReactNode, RefObject, useEffect, useRef} from 'react';
-import {DROPDOWN, FOOTER, SELECT_ALL} from './constants';
-import {buildFocusedElement, extractPathFromFocusedElement, isFocusedElementInDropdown} from './utils/focusUtils';
 import {CheckedState, Type} from './types';
 import {InnerComponents} from './innerTypes';
+import {DROPDOWN, FOOTER, SELECT_ALL} from './constants';
+import {buildFocusedElement, extractPathFromFocusedElement, isFocusedElementInDropdown} from './utils/focusUtils';
 import {Node} from './Node';
 import {ListItem} from './ListItem';
 import {VirtualizedList, VirtualizedListHandle} from './VirtualizedList';
