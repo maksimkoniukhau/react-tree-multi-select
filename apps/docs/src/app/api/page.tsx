@@ -13,11 +13,11 @@ const ApiPage: FC = () => {
       <div className="page-content api-page">
         <Section id="types">
           <h2>{'API'}</h2>
-          <h3 className="title">{'TreeMultiSelect types:'}</h3>
+          <h3 className="title">{'TreeMultiSelect types'}</h3>
           <CodeBlock code={rtmsTypes}/>
         </Section>
         <Section id="props">
-          <h3 className="title">{'TreeMultiSelect props:'}</h3>
+          <h3 className="title">{'TreeMultiSelect props'}</h3>
           <CodeBlock code={rtmsProps}/>
         </Section>
       </div>

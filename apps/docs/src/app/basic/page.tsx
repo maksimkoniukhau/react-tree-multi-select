@@ -31,6 +31,10 @@ const BasicPage: FC = memo(() => {
   const [dropdownHeight, setDropdownHeight] = useState<number>(DEFAULT_OPTIONS_CONTAINER_HEIGHT);
   const [overscan, setOverscan] = useState<number>(OVERSCAN);
   const [isVirtualized, setIsVirtualized] = useState<boolean>(true);
+  const [loopLeft, setLoopLeft] = useState<boolean>(false);
+  const [loopRight, setLoopRight] = useState<boolean>(false);
+  const [loopUp, setLoopUp] = useState<boolean>(true);
+  const [loopDown, setLoopDown] = useState<boolean>(true);
   const [selectedNodes, setSelectedNodes] = useState<boolean>(true);
   const [expandedNodes, setExpandedNodes] = useState<boolean>(true);
   const [disabledNodes, setDisabledNodes] = useState<boolean>(true);
@@ -83,6 +87,18 @@ const BasicPage: FC = memo(() => {
         break;
       case 'isVirtualized' :
         setIsVirtualized(value as boolean);
+        break;
+      case 'loopLeft' :
+        setLoopLeft(value as boolean);
+        break;
+      case 'loopRight' :
+        setLoopRight(value as boolean);
+        break;
+      case 'loopUp' :
+        setLoopUp(value as boolean);
+        break;
+      case 'loopDown' :
+        setLoopDown(value as boolean);
         break;
       case 'selectedNodes' :
         setSelectedNodes(value as boolean);
@@ -162,6 +178,22 @@ const BasicPage: FC = memo(() => {
                onChange={handleOptionChange('dropdownHeight')} type="number"/>
         <Input label="overscan:" initValue={OVERSCAN} onChange={handleOptionChange('overscan')} type="number"/>
         <Checkbox label="isVirtualized" initChecked={true} onChange={handleOptionChange('isVirtualized')}/>
+        <div>
+          <label>{'keyboardConfig:'}</label>
+          <div style={{marginLeft: '15px'}}>
+            <div>{'field:'}</div>
+            <div style={{marginLeft: '15px'}}>
+              <Checkbox label="loopLeft" initChecked={false} onChange={handleOptionChange('loopLeft')}/>
+              <Checkbox label="loopRight" initChecked={false} onChange={handleOptionChange('loopRight')}/>
+            </div>
+            <div>{'dropdown:'}</div>
+            <div style={{marginLeft: '15px'}}>
+              <Checkbox label="loopUp" initChecked={true} onChange={handleOptionChange('loopUp')}/>
+              <Checkbox label="loopDown" initChecked={true} onChange={handleOptionChange('loopDown')}/>
+            </div>
+          </div>
+        </div>
+
         <div className="delimiter"/>
         <div>{'Data initial props:'}</div>
         <Checkbox label="selected nodes" initChecked={true} onChange={handleOptionChange('selectedNodes')}/>
@@ -188,6 +220,7 @@ const BasicPage: FC = memo(() => {
           dropdownHeight={dropdownHeight}
           overscan={overscan}
           isVirtualized={isVirtualized}
+          keyboardConfig={{field: {loopLeft, loopRight}, dropdown: {loopUp, loopDown}}}
           onNodeChange={handleNodeChange}
           onNodeToggle={handleNodeToggle}
           onClearAll={handleClearAll}
