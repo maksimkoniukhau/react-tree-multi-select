@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 
 import React from 'react';
-import {render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import userEvent, {UserEvent} from '@testing-library/user-event';
 import {CheckedState, TreeMultiSelect, TreeNode, Type} from '../index';
 import {getBaseTreeNodeData, getTreeNodeData} from './testutils/dataUtils';
@@ -704,6 +704,51 @@ describe('TreeMultiSelect component: closeDropdownOnNodeChange prop', () => {
     });
 });
 
+describe('TreeMultiSelect component: openDropdown and onDropdownToggle props', () => {
+  const openDropdownMatcher = (
+    container: HTMLElement,
+    openDropdown: boolean,
+    handleDropdownToggle: (open: boolean) => void,
+    handleDropdownTogglePayload: boolean | null
+  ): void => {
+    if (openDropdown) {
+      expect(getDropdown(container)).toBeInTheDocument();
+    } else {
+      expect(getDropdown(container)).not.toBeInTheDocument();
+    }
+    if (handleDropdownTogglePayload != null) {
+      expect(handleDropdownToggle).toHaveBeenCalledWith(handleDropdownTogglePayload);
+    } else {
+      expect(handleDropdownToggle).not.toHaveBeenCalled();
+    }
+  };
+
+  it('tests controlled component', async () => {
+    const user: UserEvent = userEvent.setup();
+
+    const handleDropdownToggle = jest.fn();
+
+    const {container, rerender} = render(
+      <TreeMultiSelect data={treeNodeData} openDropdown={true} onDropdownToggle={handleDropdownToggle}/>
+    );
+
+    openDropdownMatcher(container, true, handleDropdownToggle, null);
+    handleDropdownToggle.mockClear();
+
+    await user.click(getField(container));
+    openDropdownMatcher(container, true, handleDropdownToggle, false);
+    handleDropdownToggle.mockClear();
+
+    rerender(<TreeMultiSelect data={treeNodeData} openDropdown={false} onDropdownToggle={handleDropdownToggle}/>);
+    openDropdownMatcher(container, false, handleDropdownToggle, null);
+    handleDropdownToggle.mockClear();
+
+    await user.click(getField(container));
+    openDropdownMatcher(container, false, handleDropdownToggle, true);
+    handleDropdownToggle.mockClear();
+  });
+});
+
 describe('TreeMultiSelect component: dropdownHeight prop', () => {
   it('tests component with default dropdownHeight', async () => {
     const user: UserEvent = userEvent.setup();
@@ -729,6 +774,62 @@ describe('TreeMultiSelect component: dropdownHeight prop', () => {
     expect(dropdownListOuter).toBeInTheDocument();
     const computedStyles = window.getComputedStyle(dropdownListOuter);
     expect(computedStyles.height).toEqual(`${dropdownHeight}px`);
+  });
+});
+
+describe('TreeMultiSelect component: isVirtualized prop', () => {
+  const isVirtualizedMatcher = (
+    container: HTMLElement,
+    isVirtualized: boolean,
+    listItemsAmount: number
+  ): void => {
+    if (isVirtualized) {
+      expect(getListItems(container).length).toBe(listItemsAmount);
+    } else {
+      expect(getListItems(container).length).toBe(listItemsAmount);
+    }
+  };
+
+  it.each([[true], [false]])('tests component when isVirtualized={%s}', async (isVirtualized) => {
+    const user: UserEvent = userEvent.setup();
+
+    const {container} = render(
+      <TreeMultiSelect data={treeNodeData} isVirtualized={isVirtualized}/>
+    );
+
+    await user.click(getField(container));
+    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 16 : 21);
+
+    await user.click(getNodeToggle(container, 6));
+    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 16 : 23);
+
+    await user.click(getNodeToggle(container, 12));
+    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 16 : 26);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 20}});
+    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 17 : 26);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 220}});
+    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 16 : 26);
+
+    await user.click(getNodeToggle(container, 12));
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 160}});
+    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 16 : 23);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 80}});
+    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 17 : 23);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 81}});
+    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 18 : 23);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 79}});
+    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 18 : 23);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 0}});
+    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 16 : 23);
+
+    await user.click(getNodeToggle(container, 0));
+    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 16 : 18);
   });
 });
 
