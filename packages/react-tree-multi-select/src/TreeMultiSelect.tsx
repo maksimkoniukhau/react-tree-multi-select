@@ -414,16 +414,13 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       return;
     }
     const shouldBeUnselected = selectAllCheckedState === CheckedState.SELECTED
-      || (selectAllCheckedState === CheckedState.PARTIAL && areAllExcludingDisabledSelected(nodes));
+      || (selectAllCheckedState === CheckedState.PARTIAL && areAllExcludingDisabledSelected(nodes, type));
     nodes.forEach(node => {
-      if (!node.disabled) {
-        node.selected = !shouldBeUnselected;
+      if (shouldBeUnselected) {
+        node.handleUnselect(type);
+      } else {
+        node.handleSelect(type);
       }
-    });
-    // partiallySelected should be processed in separate cycle after selected,
-    // cause all nodes should be selected/unselected at first!!!
-    nodes.forEach(node => {
-      node.handleCheckAndSetPartiallySelected(type);
     });
 
     const newSelectedNodes = nodes.filter(node => node.selected);

@@ -48,10 +48,10 @@ export const convertTreeArrayToFlatArray = (treeArray: Node[]): Node[] => {
   return nodeArray;
 };
 
-export const areAllExcludingDisabledSelected = (nodes: Node[]): boolean => {
+export const areAllExcludingDisabledSelected = (nodes: Node[], type: Type): boolean => {
   return nodes
     .filter(node => !node.disabled)
-    .every(node => node.selected);
+    .every(node => node.shouldBeUnselected(type));
 };
 
 export const isAnyExcludingDisabledSelected = (nodes: Node[]): boolean => {

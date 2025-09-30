@@ -30,6 +30,29 @@ import {INPUT_PLACEHOLDER, NO_DATA, NO_MATCHES} from '../constants';
 
 const treeNodeData = getBaseTreeNodeData();
 
+const selectAllMatcher = (
+  container: HTMLElement,
+  selectAllState: CheckedState,
+  chipsAmount: number,
+  selectedNodesAmount: number,
+  handleSelectAllChange?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => void
+): void => {
+  const selectAll = getStickyItem(container, 0);
+  expect(selectAll).toBeInTheDocument();
+  if (selectAllState === CheckedState.UNSELECTED) {
+    expect(selectAll.classList.contains('selected')).toBeFalsy();
+    expect(selectAll.classList.contains('partial')).toBeFalsy();
+  } else {
+    expect(selectAll.classList.contains(selectAllState.toLowerCase())).toBeTruthy();
+  }
+  expect(getChipContainers(container).length).toBe(chipsAmount);
+  const selectedNodes = getListItems(container).filter(el => el.classList.contains('selected'));
+  expect(selectedNodes.length).toBe(selectedNodesAmount);
+  if (handleSelectAllChange) {
+    expect(handleSelectAllChange).toHaveBeenCalledTimes(1);
+  }
+};
+
 describe('TreeMultiSelect component: base', () => {
   it('renders component', () => {
     render(<TreeMultiSelect data={treeNodeData}/>);
@@ -462,28 +485,6 @@ describe('TreeMultiSelect component: withChipClear prop', () => {
 });
 
 describe('TreeMultiSelect component: withSelectAll prop', () => {
-  const withSelectAllMatcher = (
-    container: HTMLElement,
-    selectAllState: CheckedState,
-    chipsAmount: number,
-    selectedNodesAmount: number,
-    handleSelectAllChange: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => void,
-    selectAllChangeTimes: number
-  ): void => {
-    const selectAll = getStickyItem(container, 0);
-    expect(selectAll).toBeInTheDocument();
-    if (selectAllState === CheckedState.UNSELECTED) {
-      expect(selectAll.classList.contains('selected')).toBeFalsy();
-      expect(selectAll.classList.contains('partial')).toBeFalsy();
-    } else {
-      expect(selectAll.classList.contains(selectAllState.toLowerCase())).toBeTruthy();
-    }
-    expect(getChipContainers(container).length).toBe(chipsAmount);
-    const selectedNodes = getListItems(container).filter(el => el.classList.contains('selected'));
-    expect(selectedNodes.length).toBe(selectedNodesAmount);
-    expect(handleSelectAllChange).toHaveBeenCalledTimes(selectAllChangeTimes);
-  };
-
   it('tests component when withSelectAll=false as a default', async () => {
     const user: UserEvent = userEvent.setup();
 
@@ -540,60 +541,66 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
     );
 
     await user.click(getField(container));
-    withSelectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange, 0);
+    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0);
 
     await user.click(getStickyItem(container, 0));
-    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 8, handleSelectAllChange, 1);
+    selectAllMatcher(container, CheckedState.SELECTED, 8, 8, handleSelectAllChange);
+    handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
-    withSelectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange, 2);
+    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange);
+    handleSelectAllChange.mockClear();
 
     await user.keyboard('{enter}');
-    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 8, handleSelectAllChange, 3);
+    selectAllMatcher(container, CheckedState.SELECTED, 8, 8, handleSelectAllChange);
+    handleSelectAllChange.mockClear();
 
     await user.keyboard('{arrowdown}');
     await user.keyboard('{enter}');
-    withSelectAllMatcher(container, CheckedState.PARTIAL, 7, 7, handleSelectAllChange, 3);
+    selectAllMatcher(container, CheckedState.PARTIAL, 7, 7);
 
     await user.keyboard('{arrowdown}');
     await user.keyboard('{enter}');
-    withSelectAllMatcher(container, CheckedState.PARTIAL, 6, 6, handleSelectAllChange, 3);
+    selectAllMatcher(container, CheckedState.PARTIAL, 6, 6);
 
     await user.keyboard('{arrowup}');
     await user.keyboard('{arrowup}');
     await user.keyboard('{enter}');
-    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 8, handleSelectAllChange, 4);
+    selectAllMatcher(container, CheckedState.SELECTED, 8, 8, handleSelectAllChange);
+    handleSelectAllChange.mockClear();
 
     await user.keyboard('{arrowdown}');
     await user.keyboard('{arrowright}');
-    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 11, handleSelectAllChange, 4);
+    selectAllMatcher(container, CheckedState.SELECTED, 8, 11);
 
     await user.keyboard('{arrowdown}');
     await user.keyboard('{arrowright}');
-    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 13, handleSelectAllChange, 4);
+    selectAllMatcher(container, CheckedState.SELECTED, 8, 13);
 
     await user.keyboard('{arrowdown}');
     await user.keyboard('{enter}');
-    withSelectAllMatcher(container, CheckedState.PARTIAL, 10, 10, handleSelectAllChange, 4);
+    selectAllMatcher(container, CheckedState.PARTIAL, 10, 10);
 
     await user.keyboard('{arrowup}');
     await user.keyboard('{enter}');
-    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 13, handleSelectAllChange, 4);
+    selectAllMatcher(container, CheckedState.SELECTED, 8, 13);
 
     await user.click(getListItem(container, 5));
-    withSelectAllMatcher(container, CheckedState.PARTIAL, 9, 11, handleSelectAllChange, 4);
+    selectAllMatcher(container, CheckedState.PARTIAL, 9, 11);
 
     await user.click(getListItem(container, 10));
-    withSelectAllMatcher(container, CheckedState.PARTIAL, 8, 10, handleSelectAllChange, 4);
+    selectAllMatcher(container, CheckedState.PARTIAL, 8, 10);
 
     await user.click(getStickyItem(container, 0));
-    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 13, handleSelectAllChange, 5);
+    selectAllMatcher(container, CheckedState.SELECTED, 8, 13, handleSelectAllChange);
+    handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
-    withSelectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange, 6);
+    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange);
+    handleSelectAllChange.mockClear();
 
     await user.click(getListItem(container, 4));
-    withSelectAllMatcher(container, CheckedState.PARTIAL, 1, 1, handleSelectAllChange, 6);
+    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
 
     await user.click(getListItem(container, 0));
     await user.click(getListItem(container, 6));
@@ -602,17 +609,17 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
     await user.click(getListItem(container, 9));
     await user.click(getListItem(container, 10));
     await user.click(getListItem(container, 11));
-    withSelectAllMatcher(container, CheckedState.PARTIAL, 7, 12, handleSelectAllChange, 6);
+    selectAllMatcher(container, CheckedState.PARTIAL, 7, 12);
 
     await user.click(getListItem(container, 12));
-    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 13, handleSelectAllChange, 6);
+    selectAllMatcher(container, CheckedState.SELECTED, 8, 13);
 
     await user.click(getField(container));
     expect(getDropdown(container)).not.toBeInTheDocument();
     expect(getChipContainers(container).length).toBe(8);
 
     await user.click(getField(container));
-    withSelectAllMatcher(container, CheckedState.SELECTED, 8, 13, handleSelectAllChange, 6);
+    selectAllMatcher(container, CheckedState.SELECTED, 8, 13);
   });
 });
 
@@ -1441,5 +1448,649 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
     await user.click(document.body);
     focusBlurMatcher(container, false, false, handleFocus, 3, handleBlur, 3);
     resetMatcher(container, false, '');
+  });
+});
+
+describe('TreeMultiSelect component: nodes state behavior', () => {
+  const itemsStateMatcher = (
+    container: HTMLElement,
+    itemsState: { index: number, state: 'selected' | 'partial' | 'unselected' }[]
+  ): void => {
+    itemsState.forEach((item) => {
+      switch (item.state) {
+        case 'selected':
+          expect(getListItem(container, item.index).classList.contains('selected')).toBeTruthy();
+          expect(getListItem(container, item.index).classList.contains('partial')).toBeFalsy();
+          break;
+        case 'partial':
+          expect(getListItem(container, item.index).classList.contains('selected')).toBeFalsy();
+          expect(getListItem(container, item.index).classList.contains('partial')).toBeTruthy();
+          break;
+        default:
+          expect(getListItem(container, item.index).classList.contains('selected')).toBeFalsy();
+          expect(getListItem(container, item.index).classList.contains('partial')).toBeFalsy();
+          break;
+      }
+    })
+  };
+
+  it('tests nodes state behavior when deep inner node is disabled and unselected', async () => {
+    const user: UserEvent = userEvent.setup();
+
+    const handleSelectAllChange = jest.fn();
+    const {container} = render(
+      <TreeMultiSelect
+        data={getTreeNodeData([], [1, 2], [4])}
+        withSelectAll
+        onSelectAllChange={handleSelectAllChange}
+      />
+    );
+
+    await user.click(getField(container));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'unselected'},
+      {index: 1, state: 'unselected'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'unselected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0);
+
+    await user.click(getListItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'selected'},
+      {index: 3, state: 'unselected'},
+      {index: 4, state: 'selected'},
+      {index: 5, state: 'selected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 3, 3);
+
+    await user.click(getListItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'unselected'},
+      {index: 1, state: 'unselected'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'unselected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0);
+
+    await user.click(getListItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'selected'},
+      {index: 3, state: 'unselected'},
+      {index: 4, state: 'selected'},
+      {index: 5, state: 'selected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 3, 3);
+
+    await user.click(getStickyItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'selected'},
+      {index: 3, state: 'unselected'},
+      {index: 4, state: 'selected'},
+      {index: 5, state: 'selected'},
+      {index: 6, state: 'selected'},
+      {index: 7, state: 'selected'},
+      {index: 8, state: 'selected'},
+      {index: 9, state: 'selected'},
+      {index: 10, state: 'selected'},
+      {index: 11, state: 'selected'},
+      {index: 12, state: 'selected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 10, 10, handleSelectAllChange);
+    handleSelectAllChange.mockClear();
+
+    await user.click(getStickyItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'unselected'},
+      {index: 1, state: 'unselected'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'unselected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange);
+    handleSelectAllChange.mockClear();
+  });
+
+  it('tests nodes state behavior when click disabled and unselected node', async () => {
+    const user: UserEvent = userEvent.setup();
+
+    const handleSelectAllChange = jest.fn();
+    const {container} = render(
+      <TreeMultiSelect
+        data={getTreeNodeData([], [1, 2], [4, 10])}
+        withSelectAll
+        onSelectAllChange={handleSelectAllChange}
+      />
+    );
+
+    await user.click(getField(container));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'unselected'},
+      {index: 1, state: 'unselected'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'unselected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0);
+
+    await user.click(getListItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'selected'},
+      {index: 3, state: 'unselected'},
+      {index: 4, state: 'selected'},
+      {index: 5, state: 'selected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 3, 3);
+
+    await user.click(getListItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'unselected'},
+      {index: 1, state: 'unselected'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'unselected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0);
+
+    await user.click(getListItem(container, 7));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'unselected'},
+      {index: 1, state: 'unselected'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'unselected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0);
+
+    await user.click(getStickyItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'selected'},
+      {index: 3, state: 'unselected'},
+      {index: 4, state: 'selected'},
+      {index: 5, state: 'selected'},
+      {index: 6, state: 'selected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'selected'},
+      {index: 9, state: 'selected'},
+      {index: 10, state: 'selected'},
+      {index: 11, state: 'selected'},
+      {index: 12, state: 'selected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 9, 9, handleSelectAllChange);
+    handleSelectAllChange.mockClear();
+
+    await user.click(getStickyItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'unselected'},
+      {index: 1, state: 'unselected'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'unselected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange);
+    handleSelectAllChange.mockClear();
+  });
+
+  it('tests nodes state behavior when deep inner node is disabled and selected', async () => {
+    const user: UserEvent = userEvent.setup();
+
+    const handleSelectAllChange = jest.fn();
+    const {container} = render(
+      <TreeMultiSelect
+        data={getTreeNodeData([4], [1, 2], [4])}
+        withSelectAll
+        onSelectAllChange={handleSelectAllChange}
+      />
+    );
+
+    await user.click(getField(container));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+
+    await user.click(getListItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'selected'},
+      {index: 1, state: 'selected'},
+      {index: 2, state: 'selected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'selected'},
+      {index: 5, state: 'selected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 1, 6);
+
+    await user.click(getListItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+
+    await user.click(getListItem(container, 7));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'selected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 2, 2);
+
+    await user.click(getListItem(container, 3));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'selected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 2, 2);
+
+    await user.click(getStickyItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'selected'},
+      {index: 1, state: 'selected'},
+      {index: 2, state: 'selected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'selected'},
+      {index: 5, state: 'selected'},
+      {index: 6, state: 'selected'},
+      {index: 7, state: 'selected'},
+      {index: 8, state: 'selected'},
+      {index: 9, state: 'selected'},
+      {index: 10, state: 'selected'},
+      {index: 11, state: 'selected'},
+      {index: 12, state: 'selected'}
+    ]);
+    selectAllMatcher(container, CheckedState.SELECTED, 8, 13, handleSelectAllChange);
+    handleSelectAllChange.mockClear();
+
+    await user.click(getStickyItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1, handleSelectAllChange);
+    handleSelectAllChange.mockClear();
+  });
+
+  it('tests nodes state behavior when parent inner node is disabled and one its child is selected', async () => {
+    const user: UserEvent = userEvent.setup();
+
+    const handleSelectAllChange = jest.fn();
+    const {container} = render(
+      <TreeMultiSelect
+        data={getTreeNodeData([4], [1, 2], [2])}
+        withSelectAll
+        onSelectAllChange={handleSelectAllChange}
+      />
+    );
+
+    await user.click(getField(container));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+
+    await user.click(getListItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'selected'},
+      {index: 5, state: 'selected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 3, 3);
+
+    await user.click(getListItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+
+    await user.click(getListItem(container, 1));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+
+    await user.click(getListItem(container, 2));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+
+    await user.click(getListItem(container, 3));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+
+    await user.click(getStickyItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'selected'},
+      {index: 5, state: 'selected'},
+      {index: 6, state: 'selected'},
+      {index: 7, state: 'selected'},
+      {index: 8, state: 'selected'},
+      {index: 9, state: 'selected'},
+      {index: 10, state: 'selected'},
+      {index: 11, state: 'selected'},
+      {index: 12, state: 'selected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 10, 10, handleSelectAllChange);
+    handleSelectAllChange.mockClear();
+
+    await user.click(getStickyItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1, handleSelectAllChange);
+    handleSelectAllChange.mockClear();
+
+    await user.click(getStickyItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'selected'},
+      {index: 5, state: 'selected'},
+      {index: 6, state: 'selected'},
+      {index: 7, state: 'selected'},
+      {index: 8, state: 'selected'},
+      {index: 9, state: 'selected'},
+      {index: 10, state: 'selected'},
+      {index: 11, state: 'selected'},
+      {index: 12, state: 'selected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 10, 10, handleSelectAllChange);
+    handleSelectAllChange.mockClear();
+
+    await user.click(getListItem(container, 4));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'selected'},
+      {index: 6, state: 'selected'},
+      {index: 7, state: 'selected'},
+      {index: 8, state: 'selected'},
+      {index: 9, state: 'selected'},
+      {index: 10, state: 'selected'},
+      {index: 11, state: 'selected'},
+      {index: 12, state: 'selected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 9, 9);
+
+    await user.click(getStickyItem(container, 0));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'selected'},
+      {index: 5, state: 'selected'},
+      {index: 6, state: 'selected'},
+      {index: 7, state: 'selected'},
+      {index: 8, state: 'selected'},
+      {index: 9, state: 'selected'},
+      {index: 10, state: 'selected'},
+      {index: 11, state: 'selected'},
+      {index: 12, state: 'selected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 10, 10, handleSelectAllChange);
+    handleSelectAllChange.mockClear();
+
+    await user.click(getFieldClear(container));
+    itemsStateMatcher(container, [
+      {index: 0, state: 'partial'},
+      {index: 1, state: 'partial'},
+      {index: 2, state: 'unselected'},
+      {index: 3, state: 'selected'},
+      {index: 4, state: 'unselected'},
+      {index: 5, state: 'unselected'},
+      {index: 6, state: 'unselected'},
+      {index: 7, state: 'unselected'},
+      {index: 8, state: 'unselected'},
+      {index: 9, state: 'unselected'},
+      {index: 10, state: 'unselected'},
+      {index: 11, state: 'unselected'},
+      {index: 12, state: 'unselected'}
+    ]);
+    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
   });
 });

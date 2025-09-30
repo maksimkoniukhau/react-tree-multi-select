@@ -10,6 +10,7 @@ export class Node {
   private _disabled: boolean;
   private _selected: boolean;
   private _partiallySelected: boolean;
+  private _allNotDisabledChildrenSelected: boolean;
   private _expanded: boolean;
   private _searchExpanded: boolean;
   private _matched: boolean;
@@ -31,6 +32,7 @@ export class Node {
     this._disabled = false;
     this._selected = false;
     this._partiallySelected = false;
+    this._allNotDisabledChildrenSelected = false;
     this._expanded = expanded || false;
     this._searchExpanded = false;
     this._matched = false;
@@ -102,6 +104,14 @@ export class Node {
 
   set partiallySelected(value: boolean) {
     this._partiallySelected = value || false;
+  }
+
+  get allNotDisabledChildrenSelected(): boolean {
+    return this._allNotDisabledChildrenSelected;
+  }
+
+  set allNotDisabledChildrenSelected(value: boolean) {
+    this._allNotDisabledChildrenSelected = value || false;
   }
 
   get expanded(): boolean {
@@ -192,26 +202,26 @@ export class Node {
 
   public handleSelect = (type: Type): void => {
     if (!this.disabled) {
-      this.selected = true;
-      this.partiallySelected = false;
       if (type === Type.TREE_SELECT) {
-        this.selectDescendants(this);
-        const allDescendantsSelected = this.areAllDescendantsSelected(this);
-        this.selected = allDescendantsSelected;
-        this.partiallySelected = !allDescendantsSelected;
+        this.selectTreeNode(this);
         this.selectAncestors(this);
+      } else {
+        this.selected = true;
+        this.partiallySelected = false;
+        this.allNotDisabledChildrenSelected = false;
       }
     }
   };
 
   public handleUnselect = (type: Type): void => {
     if (!this.disabled) {
-      this.selected = false;
-      this.partiallySelected = false;
       if (type === Type.TREE_SELECT) {
-        this.unselectDescendants(this);
+        this.unselectTreeNode(this);
         this.unselectAncestors(this);
-        this.partiallySelected = this.areAnyDescendantsSelected(this);
+      } else {
+        this.selected = false;
+        this.partiallySelected = false;
+        this.allNotDisabledChildrenSelected = false;
       }
     }
   };
@@ -226,13 +236,8 @@ export class Node {
     }
   };
 
-  public handleCheckAndSetPartiallySelected = (type: Type): void => {
-    if (!this.disabled) {
-      this.partiallySelected = false;
-      if (type === Type.TREE_SELECT) {
-        this.partiallySelected = this.areAnyDescendantsSelected(this);
-      }
-    }
+  public shouldBeUnselected = (type: Type): boolean => {
+    return this.selected || (type === Type.TREE_SELECT && this.allNotDisabledChildrenSelected);
   };
 
   public handleSearch = (searchValue: string): void => {
@@ -272,12 +277,6 @@ export class Node {
       : !ancestor.expanded);
   };
 
-  private shouldBeUnselected = (type: Type): boolean => {
-    return this.selected
-      || (type === Type.TREE_SELECT
-        && Boolean(this.descendants.length && this.areAllExcludingDisabledDescendantsSelected(this)));
-  };
-
   private getAllAncestors = (): Node[] => {
     const ancestors: Node[] = [];
     this.addAncestors(this.parent, ancestors);
@@ -303,62 +302,66 @@ export class Node {
     if (add) {
       descendants.push(node);
     }
-    if (node?.hasChildren()) {
+    if (node.hasChildren()) {
       node.children.forEach(child => this.addDescendants(child, descendants, true));
     }
   };
 
-  private areAllExcludingDisabledDescendantsSelected = (node: Node): boolean => {
-    return node.descendants
-      .filter(descendant => !descendant.disabled)
-      .every(descendant => descendant.selected);
+  private selectTreeNode = (node: Node): void => {
+    if (node.disabled) {
+      return;
+    }
+    if (node.hasChildren()) {
+      node.children.forEach(child => this.selectTreeNode(child));
+    }
+    this.updateTreeNodeSelectedState(node, true);
   };
 
-  private areAllDescendantsSelected = (node: Node): boolean => {
-    return node.descendants.every(descendant => descendant.selected);
-  };
-
-  private areAnyDescendantsSelected = (node: Node): boolean => {
-    return node.descendants.some(descendant => descendant.selected);
+  private unselectTreeNode = (node: Node): void => {
+    if (node.disabled) {
+      return;
+    }
+    if (node.hasChildren()) {
+      node.children.forEach(child => this.unselectTreeNode(child));
+    }
+    this.updateTreeNodeSelectedState(node, false);
   };
 
   private selectAncestors = (node: Node): void => {
     const parentNode = node.parent;
     if (parentNode) {
-      if (this.areAllDescendantsSelected(parentNode)) {
-        parentNode.selected = true;
-        parentNode.partiallySelected = false;
-      } else {
-        parentNode.partiallySelected = true;
-      }
+      this.updateTreeNodeSelectedState(parentNode, true);
       this.selectAncestors(parentNode);
     }
   };
 
   private unselectAncestors = (node: Node): void => {
-    node.ancestors.forEach(ancestor => {
-      if (!ancestor.disabled) {
-        ancestor.selected = false;
-        ancestor.partiallySelected = this.areAnyDescendantsSelected(ancestor);
-      }
-    });
+    const parentNode = node.parent;
+    if (parentNode) {
+      this.updateTreeNodeSelectedState(parentNode, false);
+      this.unselectAncestors(parentNode);
+    }
   };
 
-  private selectDescendants = (node: Node): void => {
-    node.descendants.forEach(descendant => {
-      if (!descendant.disabled) {
-        descendant.selected = true;
-        descendant.partiallySelected = false;
-      }
-    });
+  private updateTreeNodeSelectedState = (node: Node, select: boolean): void => {
+    const allChildrenSelected = !node.hasChildren() || this.areAllChildrenSelected(node);
+    const anyChildSelected = node.hasChildren() && this.isAnyChildSelectedOrPartiallySelected(node);
+    node.selected = select ? allChildrenSelected : false;
+    node.partiallySelected = !allChildrenSelected && anyChildSelected;
+    node.allNotDisabledChildrenSelected = node.hasChildren() && this.areAllExcludingDisabledChildrenSelected(node);
   };
 
-  private unselectDescendants = (node: Node): void => {
-    node.descendants.forEach(descendant => {
-      if (!descendant.disabled) {
-        descendant.selected = false;
-        descendant.partiallySelected = false;
-      }
-    });
+  private areAllChildrenSelected = (node: Node): boolean => {
+    return node.children.every(child => child.selected);
+  };
+
+  private isAnyChildSelectedOrPartiallySelected = (node: Node): boolean => {
+    return node.children.some(child => child.selected || child.partiallySelected);
+  };
+
+  private areAllExcludingDisabledChildrenSelected = (node: Node): boolean => {
+    return node.children
+      .filter(child => !child.disabled)
+      .every(child => child.selected || child.allNotDisabledChildrenSelected);
   };
 }
