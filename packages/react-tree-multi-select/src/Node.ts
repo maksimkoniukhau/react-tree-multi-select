@@ -16,10 +16,6 @@ export class Node {
   private _matched: boolean;
   private _filtered: boolean;
 
-  // flat ordered array of this node ancestors
-  private _ancestors: Node[];
-  // flat ordered array of this node descendants
-  private _descendants: Node[];
   // shallow copy of original TreeNode with actual selected/expanded/disabled props
   private _initTreeNode: TreeNode;
 
@@ -147,30 +143,6 @@ export class Node {
     this._filtered = value || false;
   }
 
-  get ancestors(): Node[] {
-    if (this._ancestors) {
-      return this._ancestors;
-    }
-    this.ancestors = this.getAllAncestors();
-    return this._ancestors;
-  }
-
-  set ancestors(value: Node[]) {
-    this._ancestors = value || [];
-  }
-
-  get descendants(): Node[] {
-    if (this._descendants) {
-      return this._descendants;
-    }
-    this.descendants = this.getAllDescendants();
-    return this._descendants;
-  }
-
-  set descendants(value: Node[]) {
-    this._descendants = value || [];
-  }
-
   get initTreeNode(): TreeNode {
     return this._initTreeNode;
   }
@@ -194,17 +166,18 @@ export class Node {
   };
 
   public handleDisable = (type: Type): void => {
-    this.disabled = true;
     if (type === Type.TREE_SELECT) {
-      this.descendants.forEach(descendant => descendant.disabled = true);
+      this.disableTreeNode(this);
+    } else {
+      this.disabled = true;
     }
   };
 
   public handleSelect = (type: Type): void => {
     if (!this.disabled) {
       if (type === Type.TREE_SELECT) {
-        this.selectTreeNode(this);
-        this.selectAncestors(this);
+        this.changeTreeNode(this, true);
+        this.changeAncestors(this, true);
       } else {
         this.selected = true;
         this.partiallySelected = false;
@@ -216,14 +189,18 @@ export class Node {
   public handleUnselect = (type: Type): void => {
     if (!this.disabled) {
       if (type === Type.TREE_SELECT) {
-        this.unselectTreeNode(this);
-        this.unselectAncestors(this);
+        this.changeTreeNode(this, false);
+        this.changeAncestors(this, false);
       } else {
         this.selected = false;
         this.partiallySelected = false;
         this.allNotDisabledChildrenSelected = false;
       }
     }
+  };
+
+  public shouldBeUnselected = (type: Type): boolean => {
+    return this.selected || (type === Type.TREE_SELECT && this.allNotDisabledChildrenSelected);
   };
 
   public handleChange = (type: Type): void => {
@@ -236,10 +213,6 @@ export class Node {
     }
   };
 
-  public shouldBeUnselected = (type: Type): boolean => {
-    return this.selected || (type === Type.TREE_SELECT && this.allNotDisabledChildrenSelected);
-  };
-
   public handleSearch = (searchValue: string): void => {
     if (searchValue) {
       if (this.name?.toLowerCase().includes(searchValue.toLowerCase())) {
@@ -247,9 +220,9 @@ export class Node {
         if (this.hasChildren()) {
           this.searchExpanded = true;
         }
-        this.ancestors.forEach(node => {
-          node.filtered = true;
-          node.searchExpanded = true;
+        this.forEachAncestor(this, ancestor => {
+          ancestor.filtered = true;
+          ancestor.searchExpanded = true;
         });
         this.matched = true;
       } else {
@@ -272,74 +245,31 @@ export class Node {
     if (!this.parent) {
       return true;
     }
-    return !this.ancestors.some(ancestor => isSearchMode
-      ? !ancestor.searchExpanded
-      : !ancestor.expanded);
+    return this.everyAncestor(this, ancestor => isSearchMode ? ancestor.searchExpanded : ancestor.expanded);
   };
 
-  private getAllAncestors = (): Node[] => {
-    const ancestors: Node[] = [];
-    this.addAncestors(this.parent, ancestors);
-    return ancestors;
-  };
-
-  private addAncestors = (node: Node | null, ancestors: Node[]): void => {
-    if (node) {
-      ancestors.push(node);
-      if (node.parent) {
-        this.addAncestors(node.parent, ancestors);
-      }
-    }
-  };
-
-  private getAllDescendants = (): Node[] => {
-    const descendants: Node[] = [];
-    this.addDescendants(this, descendants, false);
-    return descendants;
-  };
-
-  private addDescendants = (node: Node, descendants: Node[], add: boolean): void => {
-    if (add) {
-      descendants.push(node);
-    }
+  private disableTreeNode = (node: Node): void => {
+    node.disabled = true;
     if (node.hasChildren()) {
-      node.children.forEach(child => this.addDescendants(child, descendants, true));
+      node.children.forEach(child => this.disableTreeNode(child));
     }
   };
 
-  private selectTreeNode = (node: Node): void => {
+  private changeTreeNode = (node: Node, select: boolean): void => {
     if (node.disabled) {
       return;
     }
     if (node.hasChildren()) {
-      node.children.forEach(child => this.selectTreeNode(child));
+      node.children.forEach(child => this.changeTreeNode(child, select));
     }
-    this.updateTreeNodeSelectedState(node, true);
+    this.updateTreeNodeSelectedState(node, select);
   };
 
-  private unselectTreeNode = (node: Node): void => {
-    if (node.disabled) {
-      return;
-    }
-    if (node.hasChildren()) {
-      node.children.forEach(child => this.unselectTreeNode(child));
-    }
-    this.updateTreeNodeSelectedState(node, false);
-  };
-
-  private selectAncestors = (node: Node): void => {
+  private changeAncestors = (node: Node, select: boolean): void => {
     const parentNode = node.parent;
     if (parentNode) {
-      this.updateTreeNodeSelectedState(parentNode, true);
-      this.selectAncestors(parentNode);
-    }
-  };
-
-  private unselectAncestors = (node: Node): void => {
-    const parentNode = node.parent;
-    if (parentNode) {
-      this.updateTreeNodeSelectedState(parentNode, false);
-      this.unselectAncestors(parentNode);
+      this.updateTreeNodeSelectedState(parentNode, select);
+      this.changeAncestors(parentNode, select);
     }
   };
 
@@ -363,5 +293,21 @@ export class Node {
     return node.children
       .filter(child => !child.disabled)
       .every(child => child.selected || child.allNotDisabledChildrenSelected);
+  };
+
+  private forEachAncestor = (node: Node, callback: (ancestor: Node) => void): void => {
+    const parentNode = node.parent;
+    if (parentNode) {
+      callback(parentNode);
+      this.forEachAncestor(parentNode, callback);
+    }
+  };
+
+  private everyAncestor = (node: Node, predicate: (ancestor: Node) => boolean): boolean => {
+    const parentNode = node.parent;
+    if (!parentNode) {
+      return true;
+    }
+    return predicate(parentNode) && this.everyAncestor(parentNode, predicate);
   };
 }
