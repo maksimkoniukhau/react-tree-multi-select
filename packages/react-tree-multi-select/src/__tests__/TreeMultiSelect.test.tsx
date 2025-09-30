@@ -260,8 +260,7 @@ describe('TreeMultiSelect component: isDisabled prop', () => {
 
   it.each([[true, true], [false, true], [true, false], [false, false]])(
     'tests component when isDisabled=true and withDropdownInput={%s} and openDropdown={%s}',
-    async (withDropdownInput, openDropdown
-    ) => {
+    async (withDropdownInput, openDropdown) => {
       const user: UserEvent = userEvent.setup();
 
       const handleFocus = jest.fn();
@@ -358,8 +357,7 @@ describe('TreeMultiSelect component: isSearchable prop', () => {
 
   it.each([[true, false], [true, true], [false, false], [false, true]])(
     'tests component when isSearchable={%s} and withDropdownInput={%s}',
-    async (isSearchable, withDropdownInput
-    ) => {
+    async (isSearchable, withDropdownInput) => {
       const user: UserEvent = userEvent.setup();
 
       const {container} = render(
@@ -659,8 +657,7 @@ describe('TreeMultiSelect component: closeDropdownOnNodeChange prop', () => {
 
   it.each([[false, false], [true, false], [false, true], [true, true]])(
     'tests component when closeDropdownOnNodeChange={%s} and withDropdownInput={%s}',
-    async (closeDropdownOnNodeChange, withDropdownInput
-    ) => {
+    async (closeDropdownOnNodeChange, withDropdownInput) => {
       const user: UserEvent = userEvent.setup();
 
       const handleFocus = jest.fn();
@@ -777,59 +774,108 @@ describe('TreeMultiSelect component: dropdownHeight prop', () => {
   });
 });
 
-describe('TreeMultiSelect component: isVirtualized prop', () => {
-  const isVirtualizedMatcher = (
+describe('TreeMultiSelect component: overscan prop', () => {
+  const overscanMatcher = (
     container: HTMLElement,
-    isVirtualized: boolean,
-    listItemsAmount: number
+    overscan: number,
+    amounts: number[]
   ): void => {
-    if (isVirtualized) {
-      expect(getListItems(container).length).toBe(listItemsAmount);
-    } else {
-      expect(getListItems(container).length).toBe(listItemsAmount);
-    }
+    expect(getListItems(container).length).toBe(amounts[overscan]);
   };
 
+  it.each([[0], [1], [2]])('tests component when overscan={%s}', async (overscan) => {
+    const user: UserEvent = userEvent.setup();
+
+    const {container} = render(
+      <TreeMultiSelect data={treeNodeData} overscan={overscan === 1 ? undefined : overscan}/>
+    );
+
+    await user.click(getField(container));
+    overscanMatcher(container, overscan, [15, 16, 17]);
+
+    await user.click(getNodeToggle(container, 6));
+    overscanMatcher(container, overscan, [15, 16, 17]);
+
+    await user.click(getNodeToggle(container, 12));
+    overscanMatcher(container, overscan, [15, 16, 17]);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 20}});
+    overscanMatcher(container, overscan, [15, 17, 18]);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 40}});
+    overscanMatcher(container, overscan, [15, 17, 19]);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 220}});
+    overscanMatcher(container, overscan, [15, 16, 17]);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 0}});
+    overscanMatcher(container, overscan, [15, 16, 17]);
+
+    await user.click(getNodeToggle(container, 12));
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 160}});
+    overscanMatcher(container, overscan, [15, 16, 17]);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 80}});
+    overscanMatcher(container, overscan, [15, 17, 19]);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 81}});
+    overscanMatcher(container, overscan, [16, 18, 20]);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 79}});
+    overscanMatcher(container, overscan, [16, 18, 20]);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 0}});
+    overscanMatcher(container, overscan, [15, 16, 17]);
+
+    await user.click(getNodeToggle(container, 0));
+    overscanMatcher(container, overscan, [15, 16, 17]);
+  });
+});
+
+describe('TreeMultiSelect component: isVirtualized prop', () => {
   it.each([[true], [false]])('tests component when isVirtualized={%s}', async (isVirtualized) => {
     const user: UserEvent = userEvent.setup();
 
     const {container} = render(
-      <TreeMultiSelect data={treeNodeData} isVirtualized={isVirtualized}/>
+      <TreeMultiSelect data={treeNodeData} isVirtualized={isVirtualized ? undefined : isVirtualized}/>
     );
 
     await user.click(getField(container));
-    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 16 : 21);
+    expect(getListItems(container).length).toBe(isVirtualized ? 16 : 21);
 
     await user.click(getNodeToggle(container, 6));
-    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 16 : 23);
+    expect(getListItems(container).length).toBe(isVirtualized ? 16 : 23);
 
     await user.click(getNodeToggle(container, 12));
-    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 16 : 26);
+    expect(getListItems(container).length).toBe(isVirtualized ? 16 : 26);
 
     fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 20}});
-    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 17 : 26);
+    expect(getListItems(container).length).toBe(isVirtualized ? 17 : 26);
 
     fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 220}});
-    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 16 : 26);
+    expect(getListItems(container).length).toBe(isVirtualized ? 16 : 26);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 0}});
+    expect(getListItems(container).length).toBe(isVirtualized ? 16 : 26);
 
     await user.click(getNodeToggle(container, 12));
     fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 160}});
-    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 16 : 23);
+    expect(getListItems(container).length).toBe(isVirtualized ? 16 : 23);
 
     fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 80}});
-    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 17 : 23);
+    expect(getListItems(container).length).toBe(isVirtualized ? 17 : 23);
 
     fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 81}});
-    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 18 : 23);
+    expect(getListItems(container).length).toBe(isVirtualized ? 18 : 23);
 
     fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 79}});
-    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 18 : 23);
+    expect(getListItems(container).length).toBe(isVirtualized ? 18 : 23);
 
     fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 0}});
-    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 16 : 23);
+    expect(getListItems(container).length).toBe(isVirtualized ? 16 : 23);
 
     await user.click(getNodeToggle(container, 0));
-    isVirtualizedMatcher(container, isVirtualized, isVirtualized ? 16 : 18);
+    expect(getListItems(container).length).toBe(isVirtualized ? 16 : 18);
   });
 });
 
