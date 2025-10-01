@@ -176,8 +176,8 @@ export class Node {
   public handleSelect = (type: Type): void => {
     if (!this.disabled) {
       if (type === Type.TREE_SELECT) {
-        this.changeTreeNode(this, true);
-        this.changeAncestors(this, true);
+        this.changeTreeNode(this, true, type);
+        this.changeAncestors(this, true, type);
       } else {
         this.selected = true;
         this.partiallySelected = false;
@@ -189,8 +189,8 @@ export class Node {
   public handleUnselect = (type: Type): void => {
     if (!this.disabled) {
       if (type === Type.TREE_SELECT) {
-        this.changeTreeNode(this, false);
-        this.changeAncestors(this, false);
+        this.changeTreeNode(this, false, type);
+        this.changeAncestors(this, false, type);
       } else {
         this.selected = false;
         this.partiallySelected = false;
@@ -200,7 +200,7 @@ export class Node {
   };
 
   public shouldBeUnselected = (type: Type): boolean => {
-    return this.selected || (type === Type.TREE_SELECT && this.allNotDisabledChildrenSelected);
+    return this.isSelected(this, type);
   };
 
   public handleChange = (type: Type): void => {
@@ -255,21 +255,30 @@ export class Node {
     }
   };
 
-  private changeTreeNode = (node: Node, select: boolean): void => {
+  private isSelected = (node: Node, type: Type): boolean => {
+    return node.selected || (type === Type.TREE_SELECT && node.allNotDisabledChildrenSelected);
+  };
+
+  private changeTreeNode = (node: Node, select: boolean, type: Type): void => {
     if (node.disabled) {
       return;
     }
+    if (this.isSelected(node, type) === select) {
+      return;
+    }
     if (node.hasChildren()) {
-      node.children.forEach(child => this.changeTreeNode(child, select));
+      node.children.forEach(child => this.changeTreeNode(child, select, type));
     }
     this.updateTreeNodeSelectedState(node, select);
   };
 
-  private changeAncestors = (node: Node, select: boolean): void => {
+  private changeAncestors = (node: Node, select: boolean, type: Type): void => {
     const parentNode = node.parent;
     if (parentNode) {
-      this.updateTreeNodeSelectedState(parentNode, select);
-      this.changeAncestors(parentNode, select);
+      if (this.isSelected(parentNode, type) !== select) {
+        this.updateTreeNodeSelectedState(parentNode, select);
+      }
+      this.changeAncestors(parentNode, select, type);
     }
   };
 
