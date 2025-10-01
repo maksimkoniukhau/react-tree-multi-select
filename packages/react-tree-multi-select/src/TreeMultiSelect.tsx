@@ -228,11 +228,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       return;
     }
     if (showDropdown || isSearchMode || focusedElement) {
-      nodes.forEach(node => {
-        node.searchExpanded = false;
-        node.matched = false;
-        node.filtered = true;
-      });
+      nodes.forEach(node => node.resetSearch());
       const newDisplayedNodes = nodes
         .filter(node => node.isDisplayed(false));
       setDisplayedNodes(newDisplayedNodes);

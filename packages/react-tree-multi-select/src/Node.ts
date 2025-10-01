@@ -2,11 +2,11 @@ import {TreeNode, Type} from './types';
 
 export class Node {
 
-  private _path: string;
-  private _name: string;
-  private _parent: Node | null;
+  private readonly _path: string;
+  private readonly _name: string;
+  private readonly _parent: Node | null;
   private _children: Node[];
-  private _depth: number;
+  private readonly _depth: number;
   private _disabled: boolean;
   private _selected: boolean;
   private _partiallySelected: boolean;
@@ -17,7 +17,7 @@ export class Node {
   private _filtered: boolean;
 
   // shallow copy of original TreeNode with actual selected/expanded/disabled props
-  private _initTreeNode: TreeNode;
+  private readonly _initTreeNode: TreeNode;
 
   constructor(path: string, name: string, parent: Node | null, depth: number, expanded: boolean, initTreeNode: TreeNode) {
     this._path = path || '';
@@ -40,24 +40,12 @@ export class Node {
     return this._path;
   }
 
-  set path(value: string) {
-    this._path = value || '';
-  }
-
   get name(): string {
     return this._name;
   }
 
-  set name(value: string) {
-    this._name = value || '';
-  }
-
   get parent(): Node | null {
     return this._parent;
-  }
-
-  set parent(value: Node | null) {
-    this._parent = value;
   }
 
   get children(): Node[] {
@@ -72,15 +60,11 @@ export class Node {
     return this._depth;
   }
 
-  set depth(value: number) {
-    this._depth = value || 0;
-  }
-
   get disabled(): boolean {
     return this._disabled;
   }
 
-  set disabled(value: boolean) {
+  private set disabled(value: boolean) {
     this._disabled = value || false;
     this._initTreeNode.disabled = value || false;
   }
@@ -89,7 +73,7 @@ export class Node {
     return this._selected;
   }
 
-  set selected(value: boolean) {
+  private set selected(value: boolean) {
     this._selected = value || false;
     this._initTreeNode.selected = value || false;
   }
@@ -98,7 +82,7 @@ export class Node {
     return this._partiallySelected;
   }
 
-  set partiallySelected(value: boolean) {
+  private set partiallySelected(value: boolean) {
     this._partiallySelected = value || false;
   }
 
@@ -106,7 +90,7 @@ export class Node {
     return this._allNotDisabledChildrenSelected;
   }
 
-  set allNotDisabledChildrenSelected(value: boolean) {
+  private set allNotDisabledChildrenSelected(value: boolean) {
     this._allNotDisabledChildrenSelected = value || false;
   }
 
@@ -114,7 +98,7 @@ export class Node {
     return this._expanded;
   }
 
-  set expanded(value: boolean) {
+  private set expanded(value: boolean) {
     this._expanded = value || false;
     this._initTreeNode.expanded = value || false;
   }
@@ -123,7 +107,7 @@ export class Node {
     return this._searchExpanded;
   }
 
-  set searchExpanded(value: boolean) {
+  private set searchExpanded(value: boolean) {
     this._searchExpanded = value || false;
   }
 
@@ -131,7 +115,7 @@ export class Node {
     return this._matched;
   }
 
-  set matched(value: boolean) {
+  private set matched(value: boolean) {
     this._matched = value || false;
   }
 
@@ -139,16 +123,12 @@ export class Node {
     return this._filtered;
   }
 
-  set filtered(value: boolean) {
+  private set filtered(value: boolean) {
     this._filtered = value || false;
   }
 
   get initTreeNode(): TreeNode {
     return this._initTreeNode;
-  }
-
-  set initTreeNode(value: TreeNode) {
-    this._initTreeNode = value;
   }
 
   public hasChildren = (): boolean => {
@@ -231,10 +211,14 @@ export class Node {
         this.filtered = false;
       }
     } else {
-      this.searchExpanded = false;
-      this.matched = false;
-      this.filtered = true;
+      this.resetSearch();
     }
+  };
+
+  public resetSearch = (): void => {
+    this.searchExpanded = false;
+    this.matched = false;
+    this.filtered = true;
   };
 
   public isDisplayed = (isSearchMode: boolean): boolean => {
