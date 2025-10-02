@@ -28,7 +28,11 @@ export const getTreeNodeData = (selected?: boolean, expanded?: boolean, disabled
   const selectedIndexes = selected ? [3, 6, 7, 18, 23, 28, 29, 41] : [];
   const expandedIndexes = expanded ? [1, 2, 11, 12, 40] : [];
   const disabledIndexes = disabled ? [2, 7, 18, 34, 35, 40] : [];
-  return mapOptionsToTreeNodes(options, selectedIndexes, expandedIndexes, disabledIndexes);
+  return getTreeNodeDataNum(selectedIndexes, expandedIndexes, disabledIndexes);
+};
+
+export const getTreeNodeDataNum = (selected?: number[], expanded?: number[], disabled?: number[]): OptionTreeNode[] => {
+  return mapOptionsToTreeNodes(options, selected, expanded, disabled);
 };
 
 export const randomNumber = (min: number, max: number): number => {
