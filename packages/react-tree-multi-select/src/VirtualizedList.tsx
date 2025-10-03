@@ -2,7 +2,6 @@ import React, {
   CSSProperties,
   FC,
   forwardRef,
-  memo,
   ReactNode,
   UIEvent,
   useCallback,
@@ -30,14 +29,14 @@ interface ItemProps {
   index: number;
   top: number;
   updateHeight: (index: number, height: number) => void;
-  renderItem: (index: number) => ReactNode;
+  children: ReactNode;
   isSticky?: boolean;
   isVirtualized?: boolean;
 }
 
-const Item: FC<ItemProps> = memo((props) => {
+const Item: FC<ItemProps> = (props) => {
 
-  const {index, top, updateHeight, renderItem, isSticky, isVirtualized} = props;
+  const {index, top, updateHeight, children, isSticky, isVirtualized} = props;
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -64,10 +63,10 @@ const Item: FC<ItemProps> = memo((props) => {
 
   return (
     <div ref={ref} style={style}>
-      {renderItem(index)}
+      {children}
     </div>
   );
-});
+};
 
 export interface VirtualizedListHandle {
   scrollIntoView: (index: number) => void;
@@ -231,9 +230,10 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
             index={index}
             top={positions[index].top}
             updateHeight={updateHeight}
-            renderItem={renderItem}
             isSticky
-          />
+          >
+            {renderItem(index)}
+          </Item>
         ))}
         {positions.slice(start, end).map((pos: ItemPosition, idx: number) => {
           const index = start + idx;
@@ -243,9 +243,10 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
               index={index}
               top={pos.top}
               updateHeight={updateHeight}
-              renderItem={renderItem}
               isVirtualized={isVirtualized}
-            />
+            >
+              {renderItem(index)}
+            </Item>
           );
         })}
       </div>
