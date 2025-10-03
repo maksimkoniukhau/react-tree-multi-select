@@ -630,23 +630,22 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         }
         break;
       case 'ArrowUp':
-        event.preventDefault();
         if (showDropdown && isFocusedElementInDropdown(focusedElement)) {
           setFocusedElement(getPrevFocusedDropdownElement(focusedElement));
         } else {
           handleShowDropdown(!showDropdown, true);
         }
+        event.preventDefault();
         break;
       case 'ArrowDown':
-        event.preventDefault();
         if (showDropdown) {
           setFocusedElement(getNextFocusedDropdownElement(focusedElement));
         } else {
           handleShowDropdown(!showDropdown, true);
         }
+        event.preventDefault();
         break;
       case 'Enter':
-        event.preventDefault();
         if (!focusedElement || isFocusedElementInField(focusedElement)) {
           const chipPath = filterChips(selectedNodes, type)
             ?.find(node => isFocused(node.path, FIELD, focusedElement))
@@ -663,21 +662,22 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
             handleNodeChange(extractPathFromFocusedElement(focusedElement))(event);
           }
         }
+        event.preventDefault();
         break;
       case 'Backspace':
         if (!isSearchMode && isFocusedElementInField(focusedElement) && !isFocused(INPUT, FIELD, focusedElement)) {
-          event.preventDefault();
           if (isFocused(CLEAR_ALL, FIELD, focusedElement)) {
             handleDeleteAll(event);
           } else {
             handleNodeDelete(extractPathFromFocusedElement(focusedElement))(event);
           }
+          event.preventDefault();
         }
         break;
       case 'Escape':
         if (showDropdown) {
-          event.preventDefault();
           handleShowDropdown(false, true);
+          event.preventDefault();
         }
         break;
       case 'Tab':
