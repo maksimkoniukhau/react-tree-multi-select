@@ -37,7 +37,7 @@ import {
 import {useOnClickOutside} from './hooks/useOnClickOutside';
 import {Node} from './Node';
 import {FieldContainer} from './components/Field';
-import {Dropdown} from './Dropdown';
+import {DropdownContainer} from './DropdownContainer';
 
 export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const {
@@ -788,7 +788,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         onDeleteAll={handleDeleteAll}
       />
       {showDropdown ? (
-        <Dropdown
+        <DropdownContainer
           type={type}
           nodeMap={nodeMapRef.current}
           nodesAmount={nodes.length}

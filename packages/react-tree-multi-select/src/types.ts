@@ -380,6 +380,10 @@ export interface FieldToggleOwnProps {
   componentDisabled: boolean;
 }
 
+export interface DropdownOwnProps {
+  componentDisabled: boolean;
+}
+
 export interface SelectAllContainerOwnProps {
   label: string;
   checkedState: CheckedState;
@@ -446,6 +450,7 @@ export type ChipClearProps<CustomProps = unknown> = ComponentProps<HTMLDivElemen
 export type InputProps<CustomProps = unknown> = ComponentProps<HTMLInputElement, InputOwnProps, CustomProps>;
 export type FieldClearProps<CustomProps = unknown> = ComponentProps<HTMLDivElement, FieldClearOwnProps, CustomProps>;
 export type FieldToggleProps<CustomProps = unknown> = ComponentProps<HTMLDivElement, FieldToggleOwnProps, CustomProps>;
+export type DropdownProps<CustomProps = unknown> = ComponentProps<HTMLDivElement, DropdownOwnProps, CustomProps>;
 export type SelectAllContainerProps<CustomProps = unknown> = ComponentProps<HTMLDivElement, SelectAllContainerOwnProps, CustomProps>;
 export type SelectAllCheckboxProps<CustomProps = unknown> = ComponentProps<HTMLDivElement, SelectAllCheckboxOwnProps, CustomProps>;
 export type SelectAllLabelProps<CustomProps = unknown> = ComponentProps<HTMLDivElement, SelectAllLabelOwnProps, CustomProps>;
@@ -463,6 +468,7 @@ export type ChipClearType<CustomProps = unknown> = Component<ChipClearProps<Cust
 export type InputType<CustomProps = unknown> = Component<InputProps<CustomProps>, CustomProps>;
 export type FieldClearType<CustomProps = unknown> = Component<FieldClearProps<CustomProps>, CustomProps>;
 export type FieldToggleType<CustomProps = unknown> = Component<FieldToggleProps<CustomProps>, CustomProps>;
+export type DropdownType<CustomProps = unknown> = Component<DropdownProps<CustomProps>, CustomProps>;
 export type SelectAllContainerType<CustomProps = unknown> = Component<SelectAllContainerProps<CustomProps>, CustomProps>;
 export type SelectAllCheckboxType<CustomProps = unknown> = Component<SelectAllCheckboxProps<CustomProps>, CustomProps>;
 export type SelectAllLabelType<CustomProps = unknown> = Component<SelectAllLabelProps<CustomProps>, CustomProps>;
@@ -482,6 +488,7 @@ export type ComponentTypes = {
   Input: InputType<any>;
   FieldClear: FieldClearType<any>;
   FieldToggle: FieldToggleType<any>;
+  Dropdown: DropdownType<any>;
   SelectAllContainer: SelectAllContainerType<any>;
   SelectAllCheckbox: SelectAllCheckboxType<any>;
   SelectAllLabel: SelectAllLabelType<any>;

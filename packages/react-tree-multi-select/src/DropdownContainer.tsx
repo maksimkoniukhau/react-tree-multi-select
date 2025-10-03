@@ -1,5 +1,5 @@
 import React, {FC, JSX, memo, RefObject, useEffect, useRef} from 'react';
-import {CheckedState, Type} from './types';
+import {CheckedState, DropdownProps, Type} from './types';
 import {InnerComponents} from './innerTypes';
 import {DROPDOWN, FOOTER, SELECT_ALL} from './constants';
 import {buildFocusedElement, extractPathFromFocusedElement, isFocusedElementInDropdown} from './utils/focusUtils';
@@ -8,7 +8,15 @@ import {ListItem} from './ListItem';
 import {VirtualizedList, VirtualizedListHandle} from './VirtualizedList';
 import {InputWrapper} from './components/Input';
 
-export interface DropdownProps {
+export const Dropdown: FC<DropdownProps> = memo((props) => {
+  return (
+    <div {...props.attributes}>
+      {props.children}
+    </div>
+  );
+});
+
+interface DropdownContainerProps {
   type: Type;
   nodeMap: Map<string, Node>;
   nodesAmount: number;
@@ -41,7 +49,7 @@ export interface DropdownProps {
   onUnmount: () => void;
 }
 
-export const Dropdown: FC<DropdownProps> = memo((props) => {
+export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
   const {
     type,
     nodeMap,
@@ -151,7 +159,14 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
   };
 
   return (
-    <div className={`rtms-dropdown${componentDisabled ? ' disabled' : ''}`} onMouseDown={handleMouseDown}>
+    <components.Dropdown.component
+      attributes={{
+        className: `rtms-dropdown${componentDisabled ? ' disabled' : ''}`,
+        onMouseDown: handleMouseDown
+      }}
+      ownProps={{componentDisabled}}
+      customProps={components.Dropdown.props}
+    >
       <VirtualizedList
         ref={virtualizedListRef}
         height={dropdownHeight}
@@ -162,6 +177,6 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
         overscan={overscan}
         isVirtualized={isVirtualized}
       />
-    </div>
+    </components.Dropdown.component>
   );
 });

@@ -8,6 +8,7 @@ import {ChipClear} from '../components/ChipClear';
 import {Input} from '../components/Input';
 import {FieldClear} from '../components/FieldClear';
 import {FieldToggle} from '../components/FieldToggle';
+import {Dropdown} from '../DropdownContainer';
 import {SelectAllContainer} from '../components/SelectAllContainer';
 import {SelectAllCheckbox} from '../components/SelectAllCheckbox';
 import {SelectAllLabel} from '../components/SelectAllLabel';
@@ -39,6 +40,9 @@ const components: InnerComponents = {
   },
   FieldToggle: {
     component: FieldToggle
+  },
+  Dropdown: {
+    component: Dropdown
   },
   SelectAllContainer: {
     component: SelectAllContainer
