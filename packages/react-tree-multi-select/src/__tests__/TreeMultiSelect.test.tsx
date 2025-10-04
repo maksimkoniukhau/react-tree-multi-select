@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom';
 
-import React from 'react';
+import React, {FC} from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
 import userEvent, {UserEvent} from '@testing-library/user-event';
-import {CheckedState, TreeMultiSelect, TreeNode, Type} from '../index';
+import {CheckedState, FooterProps, TreeMultiSelect, TreeNode, Type} from '../index';
 import {getBaseTreeNodeData, getTreeNodeData} from './testutils/dataUtils';
 import {
   getChipClear,
@@ -728,7 +728,7 @@ describe('TreeMultiSelect component: openDropdown and onDropdownToggle props', (
   };
 
   it('tests controlled component', async () => {
-    const user: UserEvent = userEvent.setup();
+    let user: UserEvent = userEvent.setup();
 
     const handleDropdownToggle = jest.fn();
 
@@ -744,6 +744,7 @@ describe('TreeMultiSelect component: openDropdown and onDropdownToggle props', (
     handleDropdownToggle.mockClear();
 
     rerender(<TreeMultiSelect data={treeNodeData} openDropdown={false} onDropdownToggle={handleDropdownToggle}/>);
+    user = userEvent.setup();
     openDropdownMatcher(container, false, handleDropdownToggle, null);
     handleDropdownToggle.mockClear();
 
@@ -883,6 +884,162 @@ describe('TreeMultiSelect component: isVirtualized prop', () => {
 
     await user.click(getNodeToggle(container, 0));
     expect(getListItems(container).length).toBe(isVirtualized ? 16 : 18);
+  });
+});
+
+describe('TreeMultiSelect component: footerConfig prop', () => {
+  const footerText = 'Custom Footer';
+  const CustomFooter: FC<FooterProps> = (props) => {
+    return (
+      <div {...props.attributes}>
+        <label>{footerText}</label>
+      </div>
+    );
+  };
+
+  it('tests component when custom Footer component is rendered', async () => {
+    let user: UserEvent = userEvent.setup();
+
+    const {container, rerender} = render(
+      <TreeMultiSelect data={getTreeNodeData([], [], [])}/>
+    );
+
+    await user.click(getField(container));
+    expect(screen.queryByText(footerText)).not.toBeInTheDocument();
+
+    await user.keyboard('java');
+    expect(screen.queryByText(footerText)).not.toBeInTheDocument();
+
+    await user.keyboard('no items');
+    expect(screen.queryByText(footerText)).not.toBeInTheDocument();
+
+    await user.keyboard('{Control>}a{Backspace}');
+    expect(screen.queryByText(footerText)).not.toBeInTheDocument();
+
+    rerender(
+      <TreeMultiSelect data={getTreeNodeData([], [], [])} components={{Footer: {component: CustomFooter}}}/>
+    );
+    user = userEvent.setup();
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+
+    await user.keyboard('java');
+    expect(screen.queryByText(footerText)).not.toBeInTheDocument();
+
+    await user.keyboard('no items');
+    expect(screen.queryByText(footerText)).not.toBeInTheDocument();
+
+    await user.keyboard('{Control>}a{Backspace}');
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+
+    rerender(
+      <TreeMultiSelect data={[]} components={{Footer: {component: CustomFooter}}}/>
+    );
+    user = userEvent.setup();
+    expect(screen.queryByText(footerText)).not.toBeInTheDocument();
+
+    await user.keyboard('java');
+    expect(screen.queryByText(footerText)).not.toBeInTheDocument();
+
+    await user.keyboard('no items');
+    expect(screen.queryByText(footerText)).not.toBeInTheDocument();
+
+    await user.keyboard('{Control>}a{Backspace}');
+    expect(screen.queryByText(footerText)).not.toBeInTheDocument();
+
+    rerender(
+      <TreeMultiSelect
+        data={[]}
+        footerConfig={{showWhenSearching: true}}
+        components={{Footer: {component: CustomFooter}}}
+      />
+    );
+    user = userEvent.setup();
+    expect(screen.queryByText(footerText)).not.toBeInTheDocument();
+
+    await user.keyboard('java');
+    expect(screen.queryByText(footerText)).not.toBeInTheDocument();
+
+    await user.keyboard('no items');
+    expect(screen.queryByText(footerText)).not.toBeInTheDocument();
+
+    await user.keyboard('{Control>}a{Backspace}');
+    expect(screen.queryByText(footerText)).not.toBeInTheDocument();
+
+    rerender(
+      <TreeMultiSelect
+        data={[]}
+        footerConfig={{showWhenNoItems: true}}
+        components={{Footer: {component: CustomFooter}}}
+      />
+    );
+    user = userEvent.setup();
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+
+    await user.keyboard('java');
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+
+    await user.keyboard('no items');
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+
+    await user.keyboard('{Control>}a{Backspace}');
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+
+    rerender(
+      <TreeMultiSelect
+        data={getTreeNodeData([], [], [])}
+        footerConfig={{showWhenNoItems: true}}
+        components={{Footer: {component: CustomFooter}}}
+      />
+    );
+    user = userEvent.setup();
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+
+    await user.keyboard('java');
+    expect(screen.queryByText(footerText)).not.toBeInTheDocument();
+
+    await user.keyboard('no items');
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+
+    await user.keyboard('{Control>}a{Backspace}');
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+
+    rerender(
+      <TreeMultiSelect
+        data={getTreeNodeData([], [], [])}
+        footerConfig={{showWhenSearching: true}}
+        components={{Footer: {component: CustomFooter}}}
+      />
+    );
+    user = userEvent.setup();
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+
+    await user.keyboard('java');
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+
+    await user.keyboard('no items');
+    expect(screen.queryByText(footerText)).not.toBeInTheDocument();
+
+    await user.keyboard('{Control>}a{Backspace}');
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+
+    rerender(
+      <TreeMultiSelect
+        data={getTreeNodeData([], [], [])}
+        footerConfig={{showWhenSearching: true, showWhenNoItems: true}}
+        components={{Footer: {component: CustomFooter}}}
+      />
+    );
+    user = userEvent.setup();
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+
+    await user.keyboard('java');
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+
+    await user.keyboard('no items');
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+
+    await user.keyboard('{Control>}a{Backspace}');
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
   });
 });
 

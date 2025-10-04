@@ -127,8 +127,14 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [footerConfig]);
 
   const showFooter = useMemo(() => {
-    return hasCustomFooter
-      && (isAnyNodeDisplayed || showFooterWhenNoItems) && (!isSearchMode || showFooterWhenSearching);
+    if (!hasCustomFooter) {
+      return false;
+    }
+    if (isAnyNodeDisplayed) {
+      return !isSearchMode || showFooterWhenSearching;
+    } else {
+      return showFooterWhenNoItems;
+    }
   }, [showFooterWhenSearching, showFooterWhenNoItems, hasCustomFooter, isAnyNodeDisplayed, isSearchMode]);
 
   const keyboardConfig = getKeyboardConfig(propsKeyboardConfig);
