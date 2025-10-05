@@ -9,6 +9,7 @@ import {
   customComponentCommonPattern,
   customComponentMergeClassname,
   customProps,
+  dropdownExample,
   fieldClearExample,
   fieldExample,
   fieldToggleExample,
@@ -35,6 +36,7 @@ import {CustomChipClearExample} from '@/examples/components/CustomChipClearExamp
 import {CustomInputExample} from '@/examples/components/CustomInputExample';
 import {CustomFieldClearExample} from '@/examples/components/CustomFieldClearExample';
 import {CustomFieldToggleExample} from '@/examples/components/CustomFieldToggleExample';
+import {CustomDropdownExample} from '@/examples/components/CustomDropdownExample';
 import {CustomSelectAllContainerExample} from '@/examples/components/CustomSelectAllContainerExample';
 import {CustomSelectAllCheckboxExample} from '@/examples/components/CustomSelectAllCheckboxExample';
 import {CustomSelectAllLabelExample} from '@/examples/components/CustomSelectAllLabelExample';
@@ -193,6 +195,16 @@ const ComponentsPage: FC = memo(() => {
             <CustomFieldToggleExample/>
           </div>
         </Section>
+        <Section id="dropdown">
+          <div className="paragraph">
+            <h3 className="title">{'Dropdown'}</h3>
+            {`Custom Dropdown component example.`}
+          </div>
+          <div className="example-container">
+            <CodeBlock code={dropdownExample}/>
+            <CustomDropdownExample/>
+          </div>
+        </Section>
         <Section id="select-all-container">
           <div className="paragraph">
             <h3 className="title">{'SelectAllContainer'}</h3>
@@ -303,6 +315,7 @@ const ComponentsPage: FC = memo(() => {
           {link: '#input', label: 'Input'},
           {link: '#field-clear', label: 'FieldClear'},
           {link: '#field-toggle', label: 'FieldToggle'},
+          {link: '#dropdown', label: 'Dropdown'},
           {link: '#select-all-container', label: 'SelectAllContainer'},
           {link: '#select-all-checkbox', label: 'SelectAllCheckbox'},
           {link: '#select-all-label', label: 'SelectAllLabel'},
