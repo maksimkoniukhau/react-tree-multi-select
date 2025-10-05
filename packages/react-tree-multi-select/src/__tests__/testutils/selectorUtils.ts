@@ -74,3 +74,7 @@ export const getListItem = (container: HTMLElement, index: number): HTMLElement 
 export const getNodeToggle = (container: HTMLElement, index: number): HTMLElement => {
   return getListItems(container)[index].querySelector('.rtms-node-toggle') as HTMLElement;
 };
+
+export const getFooter = (container: HTMLElement): HTMLElement => {
+  return container.querySelector('.rtms-footer') as HTMLElement;
+};

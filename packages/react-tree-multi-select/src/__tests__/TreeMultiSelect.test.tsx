@@ -18,6 +18,7 @@ import {
   getFieldClear,
   getFieldInput,
   getFieldToggle,
+  getFooter,
   getHiddenInput,
   getListItem,
   getListItems,
@@ -29,6 +30,15 @@ import {
 import {INPUT_PLACEHOLDER, NO_DATA, NO_MATCHES} from '../constants';
 
 const treeNodeData = getBaseTreeNodeData();
+
+const footerText = 'Custom Footer';
+const CustomFooter: FC<FooterProps> = (props) => {
+  return (
+    <div {...props.attributes}>
+      <label>{footerText}</label>
+    </div>
+  );
+};
 
 const selectAllMatcher = (
   container: HTMLElement,
@@ -484,6 +494,194 @@ describe('TreeMultiSelect component: withChipClear prop', () => {
   });
 });
 
+describe('TreeMultiSelect component: withClearAll prop', () => {
+  const withClearAllPresentsMatcher = (
+    container: HTMLElement,
+    withClearAll: boolean,
+    presents: boolean,
+  ): void => {
+    if (!withClearAll) {
+      expect(getFieldClear(container)).not.toBeInTheDocument();
+    } else {
+      if (presents) {
+        expect(getFieldClear(container)).toBeInTheDocument();
+      } else {
+        expect(getFieldClear(container)).not.toBeInTheDocument();
+      }
+    }
+  };
+
+  const withClearAllMatcher = (
+    container: HTMLElement,
+    withClearAll: boolean,
+    chipsAmount: number,
+    selectedNodesAmount: number,
+    handleClearAll?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState | undefined, data: TreeNode[]) => void
+  ): void => {
+    if (withClearAll) {
+      expect(getFieldClear(container)).toBeInTheDocument();
+    } else {
+      expect(getFieldClear(container)).not.toBeInTheDocument();
+    }
+    expect(getChipContainers(container).length).toBe(chipsAmount);
+    const selectedNodes = getListItems(container).filter(el => el.classList.contains('selected'));
+    expect(selectedNodes.length).toBe(selectedNodesAmount);
+    if (handleClearAll) {
+      expect(handleClearAll).toHaveBeenCalledTimes(1);
+    }
+  };
+
+  it.each([[true, true], [false, true], [true, false], [false, false]])(
+    'tests component when withClearAll={%s} and data presents={%s}',
+    async (withClearAll, presents) => {
+      const {container, rerender} = render(
+        <TreeMultiSelect
+          data={presents ? getTreeNodeData([1], [], []) : []}
+          withClearAll={withClearAll ? undefined : withClearAll}
+        />
+      );
+      withClearAllPresentsMatcher(container, withClearAll, presents);
+
+      rerender(
+        <TreeMultiSelect
+          data={presents ? getTreeNodeData([1], [], []) : []}
+          withClearAll={withClearAll ? undefined : withClearAll}
+          type={Type.TREE_SELECT_FLAT}
+        />
+      );
+      withClearAllPresentsMatcher(container, withClearAll, presents);
+
+      rerender(
+        <TreeMultiSelect
+          data={presents ? getTreeNodeData([1], [], []) : []}
+          withClearAll={withClearAll ? undefined : withClearAll}
+          type={Type.MULTI_SELECT}
+        />
+      );
+      withClearAllPresentsMatcher(container, withClearAll, presents);
+
+      rerender(
+        <TreeMultiSelect
+          data={presents ? getTreeNodeData([1], [], []) : []}
+          withClearAll={withClearAll ? undefined : withClearAll}
+          type={Type.SELECT}
+        />
+      );
+      withClearAllPresentsMatcher(container, withClearAll, presents);
+
+      rerender(
+        <TreeMultiSelect
+          data={getTreeNodeData([], [], [])}
+          withClearAll={withClearAll ? undefined : withClearAll}
+        />
+      );
+      withClearAllPresentsMatcher(container, withClearAll, false);
+    });
+
+  it('tests component when withClearAll=true, some selected and disabled items', async () => {
+    let user: UserEvent = userEvent.setup();
+
+    const handleClearAll = jest.fn();
+
+    const {container, rerender} = render(
+      <TreeMultiSelect
+        data={getTreeNodeData([8], [7], [8])}
+        withSelectAll
+        onClearAll={handleClearAll}
+      />
+    );
+
+    await user.click(getField(container));
+    withClearAllMatcher(container, false, 1, 1);
+
+    await user.click(getListItem(container, 1));
+    withClearAllMatcher(container, true, 1, 3);
+
+    await user.click(getStickyItem(container, 0));
+    withClearAllMatcher(container, true, 8, 10);
+
+    await user.click(getFieldClear(container));
+    withClearAllMatcher(container, false, 1, 1, handleClearAll);
+    handleClearAll.mockClear();
+
+    await user.click(getListItem(container, 0));
+    withClearAllMatcher(container, true, 2, 2);
+
+    await user.click(getField(container));
+    await user.keyboard('{enter}');
+    await user.keyboard('{arrowright}');
+    await user.keyboard('{Backspace}');
+    withClearAllMatcher(container, false, 1, 1);
+    handleClearAll.mockClear();
+
+    rerender(
+      <TreeMultiSelect
+        data={getTreeNodeData([8], [7], [])}
+        withSelectAll
+        onClearAll={handleClearAll}
+      />
+    );
+    user = userEvent.setup();
+    withClearAllMatcher(container, true, 1, 1);
+
+    await user.click(getListItem(container, 2));
+    withClearAllMatcher(container, false, 0, 0);
+
+    await user.click(getListItem(container, 2));
+    withClearAllMatcher(container, true, 1, 1);
+
+    await user.click(getListItem(container, 4));
+    withClearAllMatcher(container, true, 2, 2);
+
+    await user.click(getFieldClear(container));
+    withClearAllMatcher(container, false, 0, 0, handleClearAll);
+    handleClearAll.mockClear();
+
+    await user.click(getStickyItem(container, 0));
+    withClearAllMatcher(container, true, 8, 10);
+
+    await user.click(getFieldClear(container));
+    withClearAllMatcher(container, false, 0, 0, handleClearAll);
+    handleClearAll.mockClear();
+
+    rerender(
+      <TreeMultiSelect
+        data={getTreeNodeData([], [7], [8])}
+        withSelectAll
+        onClearAll={handleClearAll}
+      />
+    );
+    user = userEvent.setup();
+    withClearAllMatcher(container, false, 0, 0);
+
+    await user.click(getListItem(container, 2));
+    withClearAllMatcher(container, false, 0, 0);
+
+    await user.click(getListItem(container, 5));
+    withClearAllMatcher(container, true, 1, 1);
+
+    await user.click(getListItem(container, 0));
+    withClearAllMatcher(container, true, 2, 2);
+
+    await user.click(getFieldClear(container));
+    withClearAllMatcher(container, false, 0, 0, handleClearAll);
+    handleClearAll.mockClear();
+
+    await user.click(getStickyItem(container, 0));
+    withClearAllMatcher(container, true, 8, 8);
+
+    await user.click(getFieldClear(container));
+    withClearAllMatcher(container, false, 0, 0, handleClearAll);
+    handleClearAll.mockClear();
+
+    await user.click(getListItem(container, 0));
+    withClearAllMatcher(container, true, 1, 1);
+
+    await user.click(getChipClear(container, 0));
+    withClearAllMatcher(container, false, 0, 0);
+  });
+});
+
 describe('TreeMultiSelect component: withSelectAll prop', () => {
   it('tests component when withSelectAll=false as a default', async () => {
     const user: UserEvent = userEvent.setup();
@@ -888,15 +1086,6 @@ describe('TreeMultiSelect component: isVirtualized prop', () => {
 });
 
 describe('TreeMultiSelect component: footerConfig prop', () => {
-  const footerText = 'Custom Footer';
-  const CustomFooter: FC<FooterProps> = (props) => {
-    return (
-      <div {...props.attributes}>
-        <label>{footerText}</label>
-      </div>
-    );
-  };
-
   it('tests component when custom Footer component is rendered', async () => {
     let user: UserEvent = userEvent.setup();
 
@@ -1041,7 +1230,424 @@ describe('TreeMultiSelect component: footerConfig prop', () => {
     await user.keyboard('{Control>}a{Backspace}');
     expect(screen.queryByText(footerText)).toBeInTheDocument();
   });
+
+  it('tests Footer click', async () => {
+    const user: UserEvent = userEvent.setup();
+
+    const {container} = render(
+      <TreeMultiSelect data={getTreeNodeData([], [], [])} components={{Footer: {component: CustomFooter}}}/>
+    );
+
+    await user.click(getField(container));
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+    expect(getFooter(container)).not.toHaveClass('focused');
+
+    await user.click(getFooter(container));
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+    expect(getFooter(container)).toHaveClass('focused');
+
+    await user.keyboard('{arrowup}');
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+    expect(getFooter(container)).not.toHaveClass('focused');
+
+    await user.keyboard('{arrowdown}');
+    expect(screen.queryByText(footerText)).toBeInTheDocument();
+    expect(getFooter(container)).toHaveClass('focused');
+  });
 });
+
+describe('TreeMultiSelect component: keyboardConfig prop', () => {
+  const fieldKeyboardConfigMatcher = (
+    container: HTMLElement,
+    focused: number | null
+  ): void => {
+    if (focused !== null) {
+      if (focused === -1) {
+        expect(getChipContainers(container).filter(chip => chip.classList.contains('focused'))).toHaveLength(0);
+        expect(getFieldClear(container)).toHaveClass('focused');
+      } else {
+        expect(getChipContainers(container).filter(chip => chip.classList.contains('focused'))).toHaveLength(1);
+        expect(getChipContainer(container, focused)).toHaveClass('focused');
+        expect(getFieldClear(container)).not.toHaveClass('focused');
+      }
+    } else {
+      expect(getChipContainers(container).filter(chip => chip.classList.contains('focused'))).toHaveLength(0);
+      expect(getFieldClear(container)).not.toHaveClass('focused');
+    }
+  };
+
+  const dropdownKeyboardConfigMatcher = (
+    container: HTMLElement,
+    focused: number | null
+  ): void => {
+    if (focused !== null) {
+      if (focused === -1) {
+        expect(getListItems(container).filter(item => item.classList.contains('focused'))).toHaveLength(0);
+        expect(getFooter(container)).not.toHaveClass('focused');
+        expect(getStickyItem(container, 0)).toHaveClass('focused');
+      } else if (focused === -2) {
+        expect(getListItems(container).filter(item => item.classList.contains('focused'))).toHaveLength(0);
+        expect(getStickyItem(container, 0)).not.toHaveClass('focused');
+        expect(getFooter(container)).toHaveClass('focused');
+      } else {
+        expect(getListItems(container).filter(item => item.classList.contains('focused'))).toHaveLength(1);
+        expect(getListItem(container, focused)).toHaveClass('focused');
+        expect(getStickyItem(container, 0)).not.toHaveClass('focused');
+        expect(getFooter(container)).not.toHaveClass('focused');
+      }
+    } else {
+      expect(getListItems(container).filter(item => item.classList.contains('focused'))).toHaveLength(0);
+      expect(getStickyItem(container, 0)).not.toHaveClass('focused');
+      expect(getFooter(container)).not.toHaveClass('focused');
+    }
+  };
+
+  it('tests component with different field keyboard options', async () => {
+    let user: UserEvent = userEvent.setup();
+
+    const {container, rerender} = render(
+      <TreeMultiSelect data={getTreeNodeData([1, 7, 10], [], [])}/>
+    );
+
+    fieldKeyboardConfigMatcher(container, null);
+
+    await user.click(getField(container));
+    fieldKeyboardConfigMatcher(container, null);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, null);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, 2);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, 1);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, 0);
+
+    rerender(
+      <TreeMultiSelect data={getTreeNodeData([1, 7, 10], [], [])} keyboardConfig={{field: {loopLeft: true}}}/>
+    );
+    user = userEvent.setup();
+    fieldKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, null);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, 2);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, 1);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, -1);
+
+    rerender(
+      <TreeMultiSelect data={getTreeNodeData([1, 7, 10], [], [])} keyboardConfig={{field: {loopRight: true}}}/>
+    );
+    user = userEvent.setup();
+    fieldKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, 1);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, 2);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, null);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, 0);
+
+    rerender(
+      <TreeMultiSelect
+        data={getTreeNodeData([7, 10, 11], [], [])}
+        keyboardConfig={{field: {loopLeft: true, loopRight: true}}}
+      />
+    );
+    user = userEvent.setup();
+    fieldKeyboardConfigMatcher(container, null);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, 1);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, 2);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, null);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, null);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, 2);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, 1);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, null);
+
+    rerender(
+      <TreeMultiSelect
+        data={getTreeNodeData([7, 10, 11], [], [])}
+        keyboardConfig={{field: {loopLeft: true, loopRight: true}}}
+      />
+    );
+    user = userEvent.setup();
+    fieldKeyboardConfigMatcher(container, null);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowright}');
+    fieldKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowleft}');
+    fieldKeyboardConfigMatcher(container, -1);
+  });
+
+  it('tests component with different dropdown keyboard options', async () => {
+    let user: UserEvent = userEvent.setup();
+
+    const {container, rerender} = render(
+      <TreeMultiSelect
+        data={[{label: '1'}, {label: '2'}]}
+        withSelectAll
+        components={{Footer: {component: CustomFooter}}}
+      />
+    );
+
+    await user.click(getField(container));
+    dropdownKeyboardConfigMatcher(container, null);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, 1);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, -2);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, -2);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, 1);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, -2);
+
+    rerender(
+      <TreeMultiSelect
+        data={[{label: '1'}, {label: '2'}]}
+        withSelectAll
+        keyboardConfig={{dropdown: {loopDown: false}}}
+        components={{Footer: {component: CustomFooter}}}
+      />
+    );
+    user = userEvent.setup();
+    dropdownKeyboardConfigMatcher(container, -2);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, -2);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, -2);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, 1);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, -2);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, 1);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, -1);
+
+    rerender(
+      <TreeMultiSelect
+        data={[{label: '1'}, {label: '2'}]}
+        withSelectAll
+        keyboardConfig={{dropdown: {loopUp: false}}}
+        components={{Footer: {component: CustomFooter}}}
+      />
+    );
+    user = userEvent.setup();
+    dropdownKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, 1);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, -2);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, 0);
+
+    rerender(
+      <TreeMultiSelect
+        data={[{label: '1'}, {label: '2'}]}
+        withSelectAll
+        keyboardConfig={{dropdown: {loopUp: false, loopDown: false}}}
+        components={{Footer: {component: CustomFooter}}}
+      />
+    );
+    user = userEvent.setup();
+    dropdownKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, 1);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, -2);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, -2);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, -2);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, 1);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowup}');
+    dropdownKeyboardConfigMatcher(container, -1);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, 0);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, 1);
+
+    rerender(
+      <TreeMultiSelect
+        data={[{label: '1'}]}
+        withSelectAll
+        keyboardConfig={{dropdown: {loopUp: false, loopDown: false}}}
+        components={{Footer: {component: CustomFooter}}}
+      />
+    );
+    user = userEvent.setup();
+    dropdownKeyboardConfigMatcher(container, null);
+
+    await user.keyboard('{arrowdown}');
+    dropdownKeyboardConfigMatcher(container, -1);
+  });
+});
+
 
 describe('TreeMultiSelect component: focus/blur component and open/close dropdown', () => {
   const focusBlurMatcher = (
