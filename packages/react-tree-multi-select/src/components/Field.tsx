@@ -35,7 +35,6 @@ interface FieldContainerProps {
   dropdownMounted: boolean;
   components: InnerComponents;
   componentDisabled: boolean;
-  onMouseDown: (event: React.MouseEvent) => void;
   onClick: (event: React.MouseEvent) => void;
   onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onChipClick: (path: string) => (event: React.MouseEvent) => void;
@@ -61,7 +60,6 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
     dropdownMounted,
     components,
     componentDisabled,
-    onMouseDown,
     onClick,
     onInputChange,
     onChipClick,
@@ -74,8 +72,7 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
       attributes={{
         ref: fieldRef,
         className: `rtms-field${componentDisabled ? ' disabled' : ''}`,
-        onClick,
-        onMouseDown
+        onClick
       }}
       ownProps={{type, showDropdown, withClearAll, componentDisabled}}
       customProps={components.Field.props}

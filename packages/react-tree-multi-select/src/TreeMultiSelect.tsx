@@ -721,18 +721,10 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }, 0);
   };
 
-  const handleComponentMouseDown = useCallback((event: React.MouseEvent) => {
-    if (isDisabled) {
-      event.preventDefault();
-    }
-  }, [isDisabled]);
-
-  const handleFieldMouseDown = useCallback((event: React.MouseEvent) => {
-    if (event.target !== fieldInputRef?.current) {
-      // needed for staying focus on input
-      event.preventDefault();
-    }
-  }, [fieldInputRef]);
+  const handleComponentMouseDown = (event: React.MouseEvent) => {
+    // needed for staying focus on input
+    event.preventDefault();
+  };
 
   const handleDropdownLastItemReached = useCallback(() => {
     onDropdownLastItemReached?.(searchValue, displayedNodes.map(node => node.initTreeNode));
@@ -786,7 +778,6 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         dropdownMounted={dropdownMounted}
         components={components}
         componentDisabled={isDisabled}
-        onMouseDown={handleFieldMouseDown}
         onClick={handleFieldClick}
         onInputChange={handleInputChange}
         onChipClick={handleChipClick}

@@ -1,8 +1,4 @@
-import React, {RefObject} from 'react';
-
-export const preventDefaultOnMouseEvent = (e: React.MouseEvent): void => {
-  e.preventDefault();
-};
+import {RefObject} from 'react';
 
 export const getFieldFocusableElement = (fieldRef: RefObject<HTMLDivElement | null>): HTMLElement | null => {
   const focusableElements = getKeyboardFocusableElements(fieldRef?.current);

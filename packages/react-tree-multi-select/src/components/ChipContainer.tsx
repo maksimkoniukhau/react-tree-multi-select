@@ -1,6 +1,5 @@
 import React, {FC, memo, ReactNode} from 'react';
 import {ChipContainerProps, ChipContainerType} from '../types';
-import {preventDefaultOnMouseEvent} from '../utils/commonUtils';
 
 export const ChipContainer: FC<ChipContainerProps> = memo((props) => {
   return (
@@ -29,9 +28,7 @@ export const ChipContainerWrapper: FC<ChipContainerWrapperProps> = memo((props) 
     <chipContainer.component
       attributes={{
         className: `rtms-chip${disabled ? ' disabled' : ''}${focused ? ' focused' : ''}`,
-        onClick: onClick(path),
-        // needed for staying focus on input
-        onMouseDown: preventDefaultOnMouseEvent
+        onClick: onClick(path)
       }}
       ownProps={{label, focused, disabled, componentDisabled, withChipClear}}
       customProps={chipContainer.props}

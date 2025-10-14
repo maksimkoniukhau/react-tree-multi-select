@@ -1,6 +1,5 @@
 import React, {FC, memo} from 'react';
 import {FieldClearProps, FieldClearType} from '../types';
-import {preventDefaultOnMouseEvent} from '../utils/commonUtils';
 
 export const FieldClear: FC<FieldClearProps> = memo((props) => {
   return (
@@ -28,9 +27,7 @@ export const FieldClearWrapper: FC<FieldClearWrapperProps> = memo((props) => {
     <fieldClear.component
       attributes={{
         className: `rtms-field-clear${focused ? ' focused' : ''}${componentDisabled ? ' disabled' : ''}`,
-        onClick,
-        // needed for staying focus on input
-        onMouseDown: preventDefaultOnMouseEvent
+        onClick
       }}
       ownProps={{focused, componentDisabled}}
       customProps={fieldClear.props}

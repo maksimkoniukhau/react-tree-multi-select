@@ -151,19 +151,9 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
     );
   };
 
-  const handleMouseDown = (event: React.MouseEvent): void => {
-    if (event.target !== inputRef?.current) {
-      // needed for staying focus on input
-      event.preventDefault();
-    }
-  };
-
   return (
     <components.Dropdown.component
-      attributes={{
-        className: `rtms-dropdown${componentDisabled ? ' disabled' : ''}`,
-        onMouseDown: handleMouseDown
-      }}
+      attributes={{className: `rtms-dropdown${componentDisabled ? ' disabled' : ''}`}}
       ownProps={{componentDisabled}}
       customProps={components.Dropdown.props}
     >
