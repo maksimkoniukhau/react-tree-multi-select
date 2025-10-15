@@ -34,7 +34,6 @@ import {
   isFocusedElementInDropdown,
   isFocusedElementInField
 } from './utils/focusUtils';
-import {useOnClickOutside} from './hooks/useOnClickOutside';
 import {Node} from './Node';
 import {FieldContainer} from './components/Field';
 import {DropdownContainer} from './DropdownContainer';
@@ -243,13 +242,6 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       setSearchValue('');
     }
   }, [isDisabled, showDropdown, isSearchMode, focusedElement, nodes, handleShowDropdown]);
-
-  const handleOutsideEvent = useCallback(() => {
-    if (isDisabled) {
-      return;
-    }
-    resetState();
-  }, [isDisabled, resetState]);
 
   const focusComponentElement = (): void => {
     if (dropdownInputRef.current) {
@@ -686,12 +678,6 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           event.preventDefault();
         }
         break;
-      case 'Tab':
-        // If the component is the last focusable element in the DOM, pressing Tab won’t shift focus,
-        // and `focusin` won’t fire — so useOnClickOutside won’t trigger the reset handler.
-        // Manually reset the state in this case.
-        resetState();
-        break;
       default:
         break;
     }
@@ -716,6 +702,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       if (!treeMultiSelectRef.current?.contains(document.activeElement) && isComponentFocused.current) {
         isComponentFocused.current = false;
         treeMultiSelectRef?.current?.classList?.remove('focused');
+        resetState();
         onBlur?.(event);
       }
     }, 0);
@@ -747,8 +734,6 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const typeClassName = useMemo(() => typeToClassName(type), [type]);
   const rootClasses = `rtms-tree-multi-select ${typeClassName}${isDisabled ? ' disabled' : ''}`
     + (className ? ` ${className}` : '');
-
-  useOnClickOutside(treeMultiSelectRef, handleOutsideEvent);
 
   return (
     <div
