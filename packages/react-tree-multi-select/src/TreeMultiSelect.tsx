@@ -263,6 +263,22 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     return focusableElements;
   }, [displayedNodes, showSelectAll, showFooter]);
 
+  const getFirstFocusedDropdownElement = useCallback((): string => {
+    const dropdownFocusableElements = getDropdownFocusableElements();
+    if (dropdownFocusableElements.length === 0) {
+      return '';
+    }
+    return dropdownFocusableElements[0];
+  }, [getDropdownFocusableElements]);
+
+  const getLastFocusedDropdownElement = useCallback((): string => {
+    const dropdownFocusableElements = getDropdownFocusableElements();
+    if (dropdownFocusableElements.length === 0) {
+      return '';
+    }
+    return dropdownFocusableElements[dropdownFocusableElements.length - 1];
+  }, [getDropdownFocusableElements]);
+
   const getNextFocusedDropdownElement = useCallback((focusedElement: string): string => {
     const dropdownFocusableElements = getDropdownFocusableElements();
     if (dropdownFocusableElements.length === 0) {
@@ -305,6 +321,22 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
     return focusableElements;
   }, [selectedNodes, type, showClearAll]);
+
+  const getFirstFocusedFieldElement = useCallback((): string => {
+    const fieldFocusableElements = getFieldFocusableElements();
+    if (fieldFocusableElements.length === 0) {
+      return '';
+    }
+    return fieldFocusableElements[0];
+  }, [getFieldFocusableElements]);
+
+  const getLastFocusedFieldElement = useCallback((): string => {
+    const fieldFocusableElements = getFieldFocusableElements();
+    if (fieldFocusableElements.length === 0) {
+      return '';
+    }
+    return fieldFocusableElements[fieldFocusableElements.length - 1];
+  }, [getFieldFocusableElements]);
 
   const getNextFocusedFieldElement = useCallback((focusedFieldElement: string): string => {
     const fieldFocusableElements = getFieldFocusableElements();
@@ -642,6 +674,30 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           handleShowDropdown(!showDropdown, true);
         }
         event.preventDefault();
+        break;
+      case 'Home':
+        if (isFocusedElementInDropdown(focusedElement)) {
+          setFocusedElement(getFirstFocusedDropdownElement());
+          event.preventDefault();
+        }
+        if (isFocusedElementInField(focusedElement)) {
+          if (!isSearchMode) {
+            setFocusedElement(getFirstFocusedFieldElement());
+            event.preventDefault();
+          }
+        }
+        break;
+      case 'End':
+        if (isFocusedElementInDropdown(focusedElement)) {
+          setFocusedElement(getLastFocusedDropdownElement());
+          event.preventDefault();
+        }
+        if (isFocusedElementInField(focusedElement)) {
+          if (!isSearchMode) {
+            setFocusedElement(getLastFocusedFieldElement());
+            event.preventDefault();
+          }
+        }
         break;
       case 'Enter':
         if (!focusedElement || isFocusedElementInField(focusedElement)) {
