@@ -637,24 +637,24 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     switch (event.key) {
       case 'ArrowLeft':
         if (isFocusedElementInDropdown(focusedElement)) {
+          handleNodeToggleOnKeyDown(false);
           if (isSearchMode) {
             event.preventDefault(); // Prevent the caret from moving inside the input.
           }
-          handleNodeToggleOnKeyDown(false);
         } else {
-          if (!isSearchMode) {
+          if (!isSearchMode || (withDropdownInput && !showDropdown)) {
             setFocusedElement(getPrevFocusedFieldElement(focusedElement));
           }
         }
         break;
       case 'ArrowRight':
         if (isFocusedElementInDropdown(focusedElement)) {
+          handleNodeToggleOnKeyDown(true);
           if (isSearchMode) {
             event.preventDefault(); // Prevent the caret from moving inside the input.
           }
-          handleNodeToggleOnKeyDown(true);
         } else {
-          if (!isSearchMode) {
+          if (!isSearchMode || (withDropdownInput && !showDropdown)) {
             setFocusedElement(getNextFocusedFieldElement(focusedElement));
           }
         }
@@ -679,9 +679,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         if (isFocusedElementInDropdown(focusedElement)) {
           setFocusedElement(getFirstFocusedDropdownElement());
           event.preventDefault();
-        }
-        if (isFocusedElementInField(focusedElement)) {
-          if (!isSearchMode) {
+        } else {
+          if (!isSearchMode || (withDropdownInput && !showDropdown)) {
             setFocusedElement(getFirstFocusedFieldElement());
             event.preventDefault();
           }
@@ -691,9 +690,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         if (isFocusedElementInDropdown(focusedElement)) {
           setFocusedElement(getLastFocusedDropdownElement());
           event.preventDefault();
-        }
-        if (isFocusedElementInField(focusedElement)) {
-          if (!isSearchMode) {
+        } else {
+          if (!isSearchMode || (withDropdownInput && !showDropdown)) {
             setFocusedElement(getLastFocusedFieldElement());
             event.preventDefault();
           }
