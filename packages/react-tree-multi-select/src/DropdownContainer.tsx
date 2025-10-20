@@ -1,7 +1,7 @@
 import React, {FC, JSX, memo, RefObject, useEffect, useRef} from 'react';
-import {CheckedState, DropdownProps, Type, VirtualFocusId} from './types';
+import {CheckedState, DROPDOWN_PREFIX, DropdownProps, Type, VirtualFocusId} from './types';
 import {InnerComponents} from './innerTypes';
-import {DROPDOWN, FOOTER, SELECT_ALL} from './constants';
+import {FOOTER, SELECT_ALL} from './constants';
 import {buildVirtualFocusId, extractPathFromVirtualFocusId, isVirtualFocusInDropdown} from './utils/focusUtils';
 import {Node} from './Node';
 import {ListItem} from './ListItem';
@@ -98,9 +98,9 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
   useEffect(() => {
     if (isVirtualFocusInDropdown(virtualFocusId) && virtualizedListRef.current && displayedNodes.length) {
       let elementIndex = -1;
-      if (virtualFocusId === buildVirtualFocusId(SELECT_ALL, DROPDOWN)) {
+      if (virtualFocusId === buildVirtualFocusId(SELECT_ALL, DROPDOWN_PREFIX)) {
         elementIndex = 0;
-      } else if (virtualFocusId === buildVirtualFocusId(FOOTER, DROPDOWN)) {
+      } else if (virtualFocusId === buildVirtualFocusId(FOOTER, DROPDOWN_PREFIX)) {
         elementIndex = displayedNodes.length + (showSelectAll ? 1 : 0) + (withInput ? 1 : 0);
       } else {
         const node = nodeMap.get(extractPathFromVirtualFocusId(virtualFocusId));

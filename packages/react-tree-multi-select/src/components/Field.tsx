@@ -1,7 +1,7 @@
 import React, {FC, memo, RefObject} from 'react';
-import {FieldProps, Type, VirtualFocusId} from '../types';
+import {FIELD_PREFIX, FieldProps, Type, VirtualFocusId} from '../types';
 import {InnerComponents} from '../innerTypes';
-import {CLEAR_ALL, FIELD} from '../constants';
+import {CLEAR_ALL} from '../constants';
 import {filterChips} from '../utils/nodesUtils';
 import {isFocused} from '../utils/focusUtils';
 import {Node} from '../Node';
@@ -85,7 +85,7 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
               components={components}
               path={node.path}
               label={node.name}
-              focused={isFocused(node.path, FIELD, virtualFocusId)}
+              focused={isFocused(node.path, FIELD_PREFIX, virtualFocusId)}
               disabled={node.disabled}
               withChipClear={withChipClear}
               onChipClick={onChipClick}
@@ -115,7 +115,7 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
         {showClearAll && (
           <FieldClearWrapper
             fieldClear={components.FieldClear}
-            focused={isFocused(CLEAR_ALL, FIELD, virtualFocusId)}
+            focused={isFocused(CLEAR_ALL, FIELD_PREFIX, virtualFocusId)}
             onClick={onDeleteAll}
             componentDisabled={componentDisabled}
           />

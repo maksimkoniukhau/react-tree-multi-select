@@ -1,5 +1,4 @@
 import React from 'react';
-import {DROPDOWN, FIELD} from './constants';
 
 /**
  * Enum representing the different types of the component.
@@ -132,13 +131,31 @@ export type FooterConfig = {
 }
 
 /**
+ * String prefix used to identify virtual focus elements within the field area.
+ * Combined with an element-specific suffix to form a unique focus identifier.
+ */
+export const FIELD_PREFIX = 'field:';
+
+/**
+ * String prefix used to identify virtual focus elements within the dropdown area.
+ * Combined with an element-specific suffix to form a unique focus identifier.
+ */
+export const DROPDOWN_PREFIX = 'dropdown:';
+
+/**
  * Represents the identifier of a virtually focused element within the component.
  *
  * The value is a string prefixed with either `FIELD` or `DROPDOWN` constants,
  * followed by an element-specific suffix.
  */
-export type VirtualFocusId = `${typeof FIELD}${string}` | `${typeof DROPDOWN}${string}`;
+export type VirtualFocusId = `${typeof FIELD_PREFIX}${string}` | `${typeof DROPDOWN_PREFIX}${string}`;
 
+/**
+ * Props for the `TreeMultiSelect` component.
+ *
+ * Defines all configuration options, event callbacks, and customization points
+ * for controlling the behavior, appearance, and data handling of the component.
+ */
 export interface TreeMultiSelectProps {
   /**
    * The data to be rendered in the component.

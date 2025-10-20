@@ -1,7 +1,7 @@
 import React, {FC, memo, ReactNode} from 'react';
-import {DROPDOWN, FOOTER, SELECT_ALL} from './constants';
+import {FOOTER, SELECT_ALL} from './constants';
 import {buildVirtualFocusId} from './utils/focusUtils';
-import {CheckedState, Type, VirtualFocusId} from './types';
+import {CheckedState, DROPDOWN_PREFIX, Type, VirtualFocusId} from './types';
 import {InnerComponents} from './innerTypes';
 import {Node} from './Node';
 import {NoDataWrapper} from './components/NoData';
@@ -70,14 +70,14 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
         components={components}
         label={SELECT_ALL}
         checkedState={selectAllCheckedState}
-        focused={virtualFocusId === buildVirtualFocusId(SELECT_ALL, DROPDOWN)}
+        focused={virtualFocusId === buildVirtualFocusId(SELECT_ALL, DROPDOWN_PREFIX)}
         onClick={onSelectAllChange}
       />
     );
   }
 
   if (showFooter && index === displayedItemCount - 1) {
-    const isFooterFocused = virtualFocusId === buildVirtualFocusId(FOOTER, DROPDOWN);
+    const isFooterFocused = virtualFocusId === buildVirtualFocusId(FOOTER, DROPDOWN_PREFIX);
     return (
       <components.Footer.component
         attributes={{className: `rtms-footer${isFooterFocused ? ' focused' : ''}`, onClick: onFooterClick}}
@@ -101,7 +101,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     nodeIndex = showSelectAll && Boolean(input) ? index - 2 : index - 1;
   }
   const node = displayedNodes[nodeIndex];
-  const focused = virtualFocusId === buildVirtualFocusId(node.path, DROPDOWN);
+  const focused = virtualFocusId === buildVirtualFocusId(node.path, DROPDOWN_PREFIX);
   const expanded = searchValue ? node.searchExpanded : node.expanded;
   const hasChildren = node.hasChildren();
   const indentation = !(type === Type.MULTI_SELECT || type === Type.SELECT) && isAnyHasChildren && !hasChildren;
