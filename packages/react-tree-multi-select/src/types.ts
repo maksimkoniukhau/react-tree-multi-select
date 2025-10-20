@@ -1,4 +1,5 @@
 import React from 'react';
+import {DROPDOWN, FIELD} from './constants';
 
 /**
  * Enum representing the different types of the component.
@@ -129,6 +130,14 @@ export type FooterConfig = {
    */
   showWhenNoItems?: boolean;
 }
+
+/**
+ * Represents the identifier of a virtually focused element within the component.
+ *
+ * The value is a string prefixed with either `FIELD` or `DROPDOWN` constants,
+ * followed by an element-specific suffix.
+ */
+export type VirtualFocusId = `${typeof FIELD}${string}` | `${typeof DROPDOWN}${string}`;
 
 export interface TreeMultiSelectProps {
   /**

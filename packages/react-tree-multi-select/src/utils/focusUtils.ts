@@ -1,21 +1,26 @@
+import {VirtualFocusId} from '../types';
 import {DROPDOWN, FIELD} from '../constants';
 
-export const buildFocusedElement = (element: string, location: typeof FIELD | typeof DROPDOWN): string => {
+export const buildVirtualFocusId = (element: string, location: typeof FIELD | typeof DROPDOWN): VirtualFocusId => {
   return `${location}${element}`;
 };
 
-export const extractPathFromFocusedElement = (focusedElement: string): string => {
-  return focusedElement.replace(FIELD, '').replace(DROPDOWN, '');
+export const extractPathFromVirtualFocusId = (virtualFocusId: VirtualFocusId | null): string => {
+  return virtualFocusId?.replace(FIELD, '').replace(DROPDOWN, '') ?? '';
 };
 
-export const isFocusedElementInField = (focusedElement: string): boolean => {
-  return focusedElement?.startsWith(FIELD);
+export const isVirtualFocusInField = (virtualFocusId: VirtualFocusId | null): boolean => {
+  return virtualFocusId?.startsWith(FIELD) ?? false;
 };
 
-export const isFocusedElementInDropdown = (focusedElement: string): boolean => {
-  return focusedElement?.startsWith(DROPDOWN);
+export const isVirtualFocusInDropdown = (virtualFocusId: VirtualFocusId | null): boolean => {
+  return virtualFocusId?.startsWith(DROPDOWN) ?? false;
 };
 
-export const isFocused = (element: string, location: typeof FIELD | typeof DROPDOWN, focusedElement: string): boolean => {
-  return focusedElement === `${location}${element}`;
+export const isFocused = (
+  element: string,
+  location: typeof FIELD | typeof DROPDOWN,
+  virtualFocusId: VirtualFocusId | null
+): boolean => {
+  return virtualFocusId === buildVirtualFocusId(element, location);
 };

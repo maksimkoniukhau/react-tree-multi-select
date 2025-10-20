@@ -1,8 +1,8 @@
 import React, {FC, JSX, memo, RefObject, useEffect, useRef} from 'react';
-import {CheckedState, DropdownProps, Type} from './types';
+import {CheckedState, DropdownProps, Type, VirtualFocusId} from './types';
 import {InnerComponents} from './innerTypes';
 import {DROPDOWN, FOOTER, SELECT_ALL} from './constants';
-import {buildFocusedElement, extractPathFromFocusedElement, isFocusedElementInDropdown} from './utils/focusUtils';
+import {buildVirtualFocusId, extractPathFromVirtualFocusId, isVirtualFocusInDropdown} from './utils/focusUtils';
 import {Node} from './Node';
 import {ListItem} from './ListItem';
 import {VirtualizedList, VirtualizedListHandle} from './VirtualizedList';
@@ -29,7 +29,7 @@ interface DropdownContainerProps {
   searchValue: string;
   showSelectAll: boolean;
   selectAllCheckedState: CheckedState;
-  focusedElement: string;
+  virtualFocusId: VirtualFocusId | null;
   noDataText: string;
   noMatchesText: string;
   dropdownHeight: number;
@@ -63,7 +63,7 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
     searchValue,
     showSelectAll,
     selectAllCheckedState,
-    focusedElement,
+    virtualFocusId,
     noDataText,
     noMatchesText,
     dropdownHeight,
@@ -96,14 +96,14 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
   }, []);
 
   useEffect(() => {
-    if (isFocusedElementInDropdown(focusedElement) && virtualizedListRef.current && displayedNodes.length) {
+    if (isVirtualFocusInDropdown(virtualFocusId) && virtualizedListRef.current && displayedNodes.length) {
       let elementIndex = -1;
-      if (focusedElement === buildFocusedElement(SELECT_ALL, DROPDOWN)) {
+      if (virtualFocusId === buildVirtualFocusId(SELECT_ALL, DROPDOWN)) {
         elementIndex = 0;
-      } else if (focusedElement === buildFocusedElement(FOOTER, DROPDOWN)) {
+      } else if (virtualFocusId === buildVirtualFocusId(FOOTER, DROPDOWN)) {
         elementIndex = displayedNodes.length + (showSelectAll ? 1 : 0) + (withInput ? 1 : 0);
       } else {
-        const node = nodeMap.get(extractPathFromFocusedElement(focusedElement));
+        const node = nodeMap.get(extractPathFromVirtualFocusId(virtualFocusId));
         if (node) {
           elementIndex = displayedNodes.indexOf(node) + (showSelectAll ? 1 : 0) + (withInput ? 1 : 0);
         }
@@ -113,7 +113,7 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [focusedElement, showSelectAll, withInput]);
+  }, [virtualFocusId, showSelectAll, withInput]);
 
   const renderItem = (index: number): JSX.Element => {
     return (
@@ -128,7 +128,7 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
         searchValue={searchValue}
         showSelectAll={showSelectAll}
         selectAllCheckedState={selectAllCheckedState}
-        focusedElement={focusedElement}
+        virtualFocusId={virtualFocusId}
         noDataText={noDataText}
         noMatchesText={noMatchesText}
         showFooter={showFooter}
