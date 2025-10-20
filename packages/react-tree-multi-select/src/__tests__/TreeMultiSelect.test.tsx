@@ -27,7 +27,7 @@ import {
   getStickyItem,
   getStickyItems
 } from './testutils/selectorUtils';
-import {INPUT_PLACEHOLDER, NO_DATA, NO_MATCHES} from '../constants';
+import {INPUT_PLACEHOLDER, NO_DATA_TEXT, NO_MATCHES_TEXT} from '../constants';
 
 const treeNodeData = getBaseTreeNodeData();
 
@@ -183,16 +183,16 @@ describe('TreeMultiSelect component: noDataText, noMatchesText props', () => {
     );
 
     await user.click(getField(container));
-    noMatchesTextMatcher(container, NO_DATA, true);
+    noMatchesTextMatcher(container, NO_DATA_TEXT, true);
 
     await user.keyboard('qwerty');
-    noMatchesTextMatcher(container, NO_DATA, true);
+    noMatchesTextMatcher(container, NO_DATA_TEXT, true);
 
     await user.keyboard('{Control>}a{Backspace}');
-    noMatchesTextMatcher(container, NO_DATA, true);
+    noMatchesTextMatcher(container, NO_DATA_TEXT, true);
 
     await user.keyboard('java');
-    noMatchesTextMatcher(container, NO_DATA, true);
+    noMatchesTextMatcher(container, NO_DATA_TEXT, true);
   });
 
   it.each([['no options'], ['no items']])('tests component when noDataText={%s}',
@@ -224,16 +224,16 @@ describe('TreeMultiSelect component: noDataText, noMatchesText props', () => {
     );
 
     await user.click(getField(container));
-    noMatchesTextMatcher(container, NO_MATCHES, false);
+    noMatchesTextMatcher(container, NO_MATCHES_TEXT, false);
 
     await user.keyboard('qwerty');
-    noMatchesTextMatcher(container, NO_MATCHES, true);
+    noMatchesTextMatcher(container, NO_MATCHES_TEXT, true);
 
     await user.keyboard('{Control>}a{Backspace}');
-    noMatchesTextMatcher(container, NO_MATCHES, false);
+    noMatchesTextMatcher(container, NO_MATCHES_TEXT, false);
 
     await user.keyboard('java');
-    noMatchesTextMatcher(container, NO_MATCHES, false);
+    noMatchesTextMatcher(container, NO_MATCHES_TEXT, false);
   });
 
   it.each([['not found'], ['no items found']])('tests component when noMatchesText={%s}',

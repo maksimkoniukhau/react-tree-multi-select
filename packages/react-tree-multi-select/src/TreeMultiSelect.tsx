@@ -2,8 +2,12 @@ import './styles/tree-multi-select.scss';
 import React, {FC, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   CheckedState,
+  CLEAR_ALL_SUFFIX,
   DROPDOWN_PREFIX,
   FIELD_PREFIX,
+  FOOTER_SUFFIX,
+  INPUT_SUFFIX,
+  SELECT_ALL_SUFFIX,
   TreeMultiSelectProps,
   TreeNode,
   Type,
@@ -11,15 +15,11 @@ import {
 } from './types';
 import {InnerComponents} from './innerTypes';
 import {
-  CLEAR_ALL,
   DEFAULT_OPTIONS_CONTAINER_HEIGHT,
-  FOOTER,
-  INPUT,
   INPUT_PLACEHOLDER,
-  NO_DATA,
-  NO_MATCHES,
-  OVERSCAN,
-  SELECT_ALL
+  NO_DATA_TEXT,
+  NO_MATCHES_TEXT,
+  OVERSCAN
 } from './constants';
 import {getFieldFocusableElement} from './utils/commonUtils';
 import {
@@ -51,8 +51,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     id = '',
     className = '',
     inputPlaceholder = INPUT_PLACEHOLDER,
-    noDataText = NO_DATA,
-    noMatchesText = NO_MATCHES,
+    noDataText = NO_DATA_TEXT,
+    noMatchesText = NO_MATCHES_TEXT,
     isDisabled = false,
     isSearchable = true,
     withChipClear = true,
@@ -205,8 +205,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     const newSelectedNodes = newNodes.filter(node => node.selected);
     let newVirtualFocusId: VirtualFocusId | null = null;
     if (isVirtualFocusInField(virtualFocusId)) {
-      if (isFocused(INPUT, FIELD_PREFIX, virtualFocusId)
-        || (isFocused(CLEAR_ALL, FIELD_PREFIX, virtualFocusId) && showClearAll)) {
+      if (isFocused(INPUT_SUFFIX, FIELD_PREFIX, virtualFocusId)
+        || (isFocused(CLEAR_ALL_SUFFIX, FIELD_PREFIX, virtualFocusId) && showClearAll)) {
         newVirtualFocusId = virtualFocusId;
       } else {
         const chipNodes = filterChips(newSelectedNodes, type);
@@ -215,9 +215,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       }
     }
     if (isVirtualFocusInDropdown(virtualFocusId)) {
-      if ((isFocused(SELECT_ALL, DROPDOWN_PREFIX, virtualFocusId)
+      if ((isFocused(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX, virtualFocusId)
           && shouldRenderSelectAll(type, newDisplayedNodes, isSearchMode, withSelectAll))
-        || (isFocused(FOOTER, DROPDOWN_PREFIX, virtualFocusId) && showFooter)) {
+        || (isFocused(FOOTER_SUFFIX, DROPDOWN_PREFIX, virtualFocusId) && showFooter)) {
         newVirtualFocusId = virtualFocusId;
       } else {
         const current = newDisplayedNodes.find(node => isFocused(node.path, DROPDOWN_PREFIX, virtualFocusId));
@@ -260,11 +260,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const getDropdownVirtualFocusIds = useCallback((): VirtualFocusId[] => {
     const focusableElements: VirtualFocusId[] = [];
     if (showSelectAll) {
-      focusableElements.push(buildVirtualFocusId(SELECT_ALL, DROPDOWN_PREFIX));
+      focusableElements.push(buildVirtualFocusId(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX));
     }
     focusableElements.push(...displayedNodes.map(node => buildVirtualFocusId(node.path, DROPDOWN_PREFIX)));
     if (showFooter) {
-      focusableElements.push(buildVirtualFocusId(FOOTER, DROPDOWN_PREFIX));
+      focusableElements.push(buildVirtualFocusId(FOOTER_SUFFIX, DROPDOWN_PREFIX));
     }
     return focusableElements;
   }, [displayedNodes, showSelectAll, showFooter]);
@@ -321,9 +321,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const getFieldVirtualFocusIds = useCallback((): VirtualFocusId[] => {
     const focusableElements: VirtualFocusId[] = [];
     focusableElements.push(...filterChips(selectedNodes, type).map(node => buildVirtualFocusId(node.path, FIELD_PREFIX)));
-    focusableElements.push(buildVirtualFocusId(INPUT, FIELD_PREFIX));
+    focusableElements.push(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX));
     if (showClearAll) {
-      focusableElements.push(buildVirtualFocusId(CLEAR_ALL, FIELD_PREFIX));
+      focusableElements.push(buildVirtualFocusId(CLEAR_ALL_SUFFIX, FIELD_PREFIX));
     }
     return focusableElements;
   }, [selectedNodes, type, showClearAll]);
@@ -363,8 +363,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     const fieldVirtualFocusIds = getFieldVirtualFocusIds();
     if (!virtualFocusId || !isVirtualFocusInField(virtualFocusId)) {
       return fieldVirtualFocusIds.length > 1
-        ? fieldVirtualFocusIds[fieldVirtualFocusIds.indexOf(buildVirtualFocusId(INPUT, FIELD_PREFIX)) - 1]
-        : buildVirtualFocusId(INPUT, FIELD_PREFIX);
+        ? fieldVirtualFocusIds[fieldVirtualFocusIds.indexOf(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX)) - 1]
+        : buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX);
     }
     const currentIndex = fieldVirtualFocusIds.indexOf(virtualFocusId);
     if (currentIndex === 0) {
@@ -383,7 +383,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     // defaultPrevented is on click field clear icon or chip (or in custom field)
     if (!event.defaultPrevented) {
       handleShowDropdown(!showDropdown, false);
-      setVirtualFocusId(buildVirtualFocusId(INPUT, FIELD_PREFIX));
+      setVirtualFocusId(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX));
     }
   }, [showDropdown, isDisabled, handleShowDropdown]);
 
@@ -405,7 +405,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodes);
 
     setSelectedNodes(newSelectedNodes);
-    setVirtualFocusId(buildVirtualFocusId(INPUT, FIELD_PREFIX));
+    setVirtualFocusId(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX));
     setSelectAllCheckedState(newSelectAllCheckedState);
 
     callClearAllHandler(newSelectAllCheckedState, newSelectedNodes);
@@ -430,7 +430,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
     setDisplayedNodes(newDisplayedNodes);
     setSearchValue(value);
-    setVirtualFocusId(buildVirtualFocusId(INPUT, FIELD_PREFIX));
+    setVirtualFocusId(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX));
   }, [nodes, isDisabled]);
 
   const callSelectAllChangeHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
@@ -459,7 +459,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodes);
 
     setSelectedNodes(newSelectedNodes);
-    setVirtualFocusId(buildVirtualFocusId(SELECT_ALL, DROPDOWN_PREFIX));
+    setVirtualFocusId(buildVirtualFocusId(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX));
     setSelectAllCheckedState(newSelectAllCheckedState);
 
     callSelectAllChangeHandler(newSelectAllCheckedState, newSelectedNodes);
@@ -519,7 +519,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     if (!node.disabled) {
       const prevFieldVirtualFocusId = getPrevFieldVirtualFocusId(virtualFocusId);
       const newFieldVirtualFocusId = (prevFieldVirtualFocusId === virtualFocusId) || (event.type === 'click')
-        ? buildVirtualFocusId(INPUT, FIELD_PREFIX)
+        ? buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX)
         : prevFieldVirtualFocusId;
       node.handleUnselect(type);
       const newSelectedNodes = nodes.filter(node => node.selected);
@@ -562,7 +562,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         setSelectedNodes(newSelectedNodes);
         handleShowDropdown(closeDropdownOnNodeChange ? false : showDropdown, false);
         setVirtualFocusId(closeDropdownOnNodeChange
-          ? buildVirtualFocusId(INPUT, FIELD_PREFIX)
+          ? buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX)
           : buildVirtualFocusId(node.path, DROPDOWN_PREFIX));
         setSelectAllCheckedState(newSelectAllCheckedState);
 
@@ -627,7 +627,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       return;
     }
     event.preventDefault();
-    setVirtualFocusId(buildVirtualFocusId(FOOTER, DROPDOWN_PREFIX));
+    setVirtualFocusId(buildVirtualFocusId(FOOTER_SUFFIX, DROPDOWN_PREFIX));
   }, [isDisabled]);
 
   const handleComponentClick = (): void => {
@@ -714,7 +714,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
             handleShowDropdown(!showDropdown, true);
           }
         } else {
-          if (isFocused(SELECT_ALL, DROPDOWN_PREFIX, virtualFocusId)) {
+          if (isFocused(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX, virtualFocusId)) {
             handleSelectAllChange();
           } else {
             handleNodeChange(extractPathFromVirtualFocusId(virtualFocusId))(event);
@@ -723,8 +723,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         event.preventDefault();
         break;
       case 'Backspace':
-        if (!isSearchMode && isVirtualFocusInField(virtualFocusId) && !isFocused(INPUT, FIELD_PREFIX, virtualFocusId)) {
-          if (isFocused(CLEAR_ALL, FIELD_PREFIX, virtualFocusId)) {
+        if (!isSearchMode && isVirtualFocusInField(virtualFocusId) && !isFocused(INPUT_SUFFIX, FIELD_PREFIX, virtualFocusId)) {
+          if (isFocused(CLEAR_ALL_SUFFIX, FIELD_PREFIX, virtualFocusId)) {
             handleDeleteAll(event);
           } else {
             handleNodeDelete(extractPathFromVirtualFocusId(virtualFocusId))(event);

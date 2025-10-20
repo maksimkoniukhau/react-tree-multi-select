@@ -1,7 +1,7 @@
 import React, {FC, memo, ReactNode} from 'react';
-import {FOOTER, SELECT_ALL} from './constants';
+import {SELECT_ALL_LABEL} from './constants';
 import {buildVirtualFocusId} from './utils/focusUtils';
-import {CheckedState, DROPDOWN_PREFIX, Type, VirtualFocusId} from './types';
+import {CheckedState, DROPDOWN_PREFIX, FOOTER_SUFFIX, SELECT_ALL_SUFFIX, Type, VirtualFocusId} from './types';
 import {InnerComponents} from './innerTypes';
 import {Node} from './Node';
 import {NoDataWrapper} from './components/NoData';
@@ -68,16 +68,16 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     return (
       <SelectAllWrapper
         components={components}
-        label={SELECT_ALL}
+        label={SELECT_ALL_LABEL}
         checkedState={selectAllCheckedState}
-        focused={virtualFocusId === buildVirtualFocusId(SELECT_ALL, DROPDOWN_PREFIX)}
+        focused={virtualFocusId === buildVirtualFocusId(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX)}
         onClick={onSelectAllChange}
       />
     );
   }
 
   if (showFooter && index === displayedItemCount - 1) {
-    const isFooterFocused = virtualFocusId === buildVirtualFocusId(FOOTER, DROPDOWN_PREFIX);
+    const isFooterFocused = virtualFocusId === buildVirtualFocusId(FOOTER_SUFFIX, DROPDOWN_PREFIX);
     return (
       <components.Footer.component
         attributes={{className: `rtms-footer${isFooterFocused ? ' focused' : ''}`, onClick: onFooterClick}}

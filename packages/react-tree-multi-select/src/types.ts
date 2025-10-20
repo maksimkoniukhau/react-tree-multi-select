@@ -132,15 +132,39 @@ export type FooterConfig = {
 
 /**
  * String prefix used to identify virtual focus elements within the field area.
- * Combined with an element-specific suffix to form a unique focus identifier.
+ * Combined with an element-specific suffix to form a unique virtual focus identifier.
  */
 export const FIELD_PREFIX = 'field:';
 
 /**
  * String prefix used to identify virtual focus elements within the dropdown area.
- * Combined with an element-specific suffix to form a unique focus identifier.
+ * Combined with an element-specific suffix to form a unique virtual focus identifier.
  */
 export const DROPDOWN_PREFIX = 'dropdown:';
+
+/**
+ * String suffix used to identify the virtual focus element
+ * associated with the input field.
+ */
+export const INPUT_SUFFIX = 'input';
+
+/**
+ * String suffix used to identify the virtual focus element
+ * associated with the `SelectAllContainer` component.
+ */
+export const SELECT_ALL_SUFFIX = 'select-all';
+
+/**
+ * String suffix used to identify the virtual focus element
+ * associated with the `FieldClear` component.
+ */
+export const CLEAR_ALL_SUFFIX = 'clear-all';
+
+/**
+ * String suffix used to identify the virtual focus element
+ * associated with the `Footer` component.
+ */
+export const FOOTER_SUFFIX = 'footer';
 
 /**
  * Represents the identifier of a virtually focused element within the component.
