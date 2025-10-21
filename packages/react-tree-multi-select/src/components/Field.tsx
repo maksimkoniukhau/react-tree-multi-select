@@ -22,7 +22,7 @@ interface FieldContainerProps {
   fieldInputRef: RefObject<HTMLInputElement | null>;
   type: Type;
   selectedNodes: Node[];
-  showDropdown: boolean;
+  isDropdownOpen: boolean;
   withClearAll: boolean;
   showClearAll: boolean;
   withChipClear: boolean;
@@ -47,7 +47,7 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
     fieldInputRef,
     type,
     selectedNodes,
-    showDropdown,
+    isDropdownOpen,
     withClearAll,
     showClearAll,
     withChipClear,
@@ -73,7 +73,7 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
         className: `rtms-field${componentDisabled ? ' disabled' : ''}`,
         onClick
       }}
-      ownProps={{type, showDropdown, withClearAll, componentDisabled}}
+      ownProps={{type, showDropdown: isDropdownOpen, withClearAll, componentDisabled}}
       customProps={components.Field.props}
     >
       <div className="rtms-field-content">
@@ -94,7 +94,7 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
           ))}
         {withDropdownInput || !isSearchable ? (
           <input
-            tabIndex={withDropdownInput && showDropdown && dropdownMounted ? -1 : 0}
+            tabIndex={withDropdownInput && isDropdownOpen && dropdownMounted ? -1 : 0}
             className="rtms-input-hidden"
             disabled={componentDisabled}
             readOnly
@@ -121,7 +121,7 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
         )}
         <FieldToggleWrapper
           fieldToggle={components.FieldToggle}
-          expanded={showDropdown}
+          expanded={isDropdownOpen}
           componentDisabled={componentDisabled}
         />
       </div>
