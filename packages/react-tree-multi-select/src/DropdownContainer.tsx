@@ -1,14 +1,6 @@
 import React, {FC, JSX, memo, RefObject, useEffect, useRef} from 'react';
-import {
-  CheckedState,
-  DROPDOWN_PREFIX,
-  DropdownProps,
-  FOOTER_SUFFIX,
-  SELECT_ALL_SUFFIX,
-  Type,
-  VirtualFocusId
-} from './types';
-import {InnerComponents} from './innerTypes';
+import {CheckedState, DROPDOWN_PREFIX, DropdownProps, FOOTER_SUFFIX, SELECT_ALL_SUFFIX, Type} from './types';
+import {InnerComponents, NullableVirtualFocusId} from './innerTypes';
 import {buildVirtualFocusId, extractPathFromVirtualFocusId, isVirtualFocusInDropdown} from './utils/focusUtils';
 import {Node} from './Node';
 import {ListItem} from './ListItem';
@@ -36,7 +28,7 @@ interface DropdownContainerProps {
   searchValue: string;
   showSelectAll: boolean;
   selectAllCheckedState: CheckedState;
-  virtualFocusId: VirtualFocusId | null;
+  virtualFocusId: NullableVirtualFocusId;
   noDataText: string;
   noMatchesText: string;
   dropdownHeight: number;

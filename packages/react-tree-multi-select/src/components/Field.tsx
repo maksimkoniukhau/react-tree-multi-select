@@ -1,6 +1,6 @@
 import React, {FC, memo, RefObject} from 'react';
-import {CLEAR_ALL_SUFFIX, FIELD_PREFIX, FieldProps, Type, VirtualFocusId} from '../types';
-import {InnerComponents} from '../innerTypes';
+import {CLEAR_ALL_SUFFIX, FIELD_PREFIX, FieldProps, Type} from '../types';
+import {InnerComponents, NullableVirtualFocusId} from '../innerTypes';
 import {filterChips} from '../utils/nodesUtils';
 import {isFocused} from '../utils/focusUtils';
 import {Node} from '../Node';
@@ -26,7 +26,7 @@ interface FieldContainerProps {
   withClearAll: boolean;
   showClearAll: boolean;
   withChipClear: boolean;
-  virtualFocusId: VirtualFocusId | null;
+  virtualFocusId: NullableVirtualFocusId;
   isSearchable: boolean;
   inputPlaceholder: string;
   searchValue: string;

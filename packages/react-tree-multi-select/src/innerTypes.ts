@@ -1,4 +1,4 @@
-import {Components, KeyboardConfig} from './types';
+import {Components, KeyboardConfig, VirtualFocusId} from './types';
 
 type Required<T> = {
   [K in keyof T]-?: T[K] extends object
@@ -11,3 +11,5 @@ type Required<T> = {
 export type InnerKeyboardConfig = Required<KeyboardConfig>;
 
 export type InnerComponents = Required<Components>;
+
+export type NullableVirtualFocusId = VirtualFocusId | null;

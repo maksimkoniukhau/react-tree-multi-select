@@ -13,7 +13,7 @@ import {
   Type,
   VirtualFocusId
 } from './types';
-import {InnerComponents} from './innerTypes';
+import {InnerComponents, NullableVirtualFocusId} from './innerTypes';
 import {
   DEFAULT_OPTIONS_CONTAINER_HEIGHT,
   INPUT_PLACEHOLDER,
@@ -94,7 +94,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
-  const [virtualFocusId, setVirtualFocusId] = useState<VirtualFocusId | null>(null);
+  const [virtualFocusId, setVirtualFocusId] = useState<NullableVirtualFocusId>(null);
   const [selectAllCheckedState, setSelectAllCheckedState] = useState<CheckedState>(CheckedState.UNSELECTED);
   // Store components in state to avoid async rendering issues (e.g., flickering)
   // when both data and the Footer (e.g., its text) component update simultaneously during infinite scroll or pagination.
@@ -203,7 +203,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
     const newDisplayedNodes = newNodes.filter(node => node.isDisplayed(isSearchMode));
     const newSelectedNodes = newNodes.filter(node => node.selected);
-    let newVirtualFocusId: VirtualFocusId | null = null;
+    let newVirtualFocusId: NullableVirtualFocusId = null;
     if (isVirtualFocusInField(virtualFocusId)) {
       if (isFocused(INPUT_SUFFIX, FIELD_PREFIX, virtualFocusId)
         || (isFocused(CLEAR_ALL_SUFFIX, FIELD_PREFIX, virtualFocusId) && showClearAll)) {
@@ -269,7 +269,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     return focusableElements;
   }, [displayedNodes, showSelectAll, showFooter]);
 
-  const getFirstDropdownVirtualFocusId = useCallback((): VirtualFocusId | null => {
+  const getFirstDropdownVirtualFocusId = useCallback((): NullableVirtualFocusId => {
     const dropdownVirtualFocusIds = getDropdownVirtualFocusIds();
     if (dropdownVirtualFocusIds.length === 0) {
       return null;
@@ -277,7 +277,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     return dropdownVirtualFocusIds[0];
   }, [getDropdownVirtualFocusIds]);
 
-  const getLastDropdownVirtualFocusId = useCallback((): VirtualFocusId | null => {
+  const getLastDropdownVirtualFocusId = useCallback((): NullableVirtualFocusId => {
     const dropdownVirtualFocusIds = getDropdownVirtualFocusIds();
     if (dropdownVirtualFocusIds.length === 0) {
       return null;
@@ -285,7 +285,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     return dropdownVirtualFocusIds[dropdownVirtualFocusIds.length - 1];
   }, [getDropdownVirtualFocusIds]);
 
-  const getNextDropdownVirtualFocusId = useCallback((virtualFocusId: VirtualFocusId | null): VirtualFocusId | null => {
+  const getNextDropdownVirtualFocusId = useCallback((virtualFocusId: NullableVirtualFocusId): NullableVirtualFocusId => {
     const dropdownVirtualFocusIds = getDropdownVirtualFocusIds();
     if (dropdownVirtualFocusIds.length === 0) {
       return null;
@@ -303,7 +303,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   }, [getDropdownVirtualFocusIds, keyboardConfig.dropdown.loopDown]);
 
-  const getPrevDropdownVirtualFocusId = useCallback((virtualFocusId: VirtualFocusId | null): VirtualFocusId | null => {
+  const getPrevDropdownVirtualFocusId = useCallback((virtualFocusId: NullableVirtualFocusId): NullableVirtualFocusId => {
     const dropdownVirtualFocusIds = getDropdownVirtualFocusIds();
     if (dropdownVirtualFocusIds.length === 0 || !virtualFocusId || !isVirtualFocusInDropdown(virtualFocusId)) {
       return null;
@@ -328,7 +328,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     return focusableElements;
   }, [selectedNodes, type, showClearAll]);
 
-  const getFirstFieldVirtualFocusId = useCallback((): VirtualFocusId | null => {
+  const getFirstFieldVirtualFocusId = useCallback((): NullableVirtualFocusId => {
     const fieldVirtualFocusIds = getFieldVirtualFocusIds();
     if (fieldVirtualFocusIds.length === 0) {
       return null;
@@ -336,7 +336,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     return fieldVirtualFocusIds[0];
   }, [getFieldVirtualFocusIds]);
 
-  const getLastFieldVirtualFocusId = useCallback((): VirtualFocusId | null => {
+  const getLastFieldVirtualFocusId = useCallback((): NullableVirtualFocusId => {
     const fieldVirtualFocusIds = getFieldVirtualFocusIds();
     if (fieldVirtualFocusIds.length === 0) {
       return null;
@@ -344,7 +344,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     return fieldVirtualFocusIds[fieldVirtualFocusIds.length - 1];
   }, [getFieldVirtualFocusIds]);
 
-  const getNextFieldVirtualFocusId = useCallback((virtualFocusId: VirtualFocusId | null): VirtualFocusId => {
+  const getNextFieldVirtualFocusId = useCallback((virtualFocusId: NullableVirtualFocusId): VirtualFocusId => {
     const fieldVirtualFocusIds = getFieldVirtualFocusIds();
     if (!virtualFocusId || !isVirtualFocusInField(virtualFocusId)) {
       return fieldVirtualFocusIds[fieldVirtualFocusIds.length - 1];
@@ -359,7 +359,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   }, [getFieldVirtualFocusIds, keyboardConfig.field.loopRight]);
 
-  const getPrevFieldVirtualFocusId = useCallback((virtualFocusId: VirtualFocusId | null): VirtualFocusId => {
+  const getPrevFieldVirtualFocusId = useCallback((virtualFocusId: NullableVirtualFocusId): VirtualFocusId => {
     const fieldVirtualFocusIds = getFieldVirtualFocusIds();
     if (!virtualFocusId || !isVirtualFocusInField(virtualFocusId)) {
       return fieldVirtualFocusIds.length > 1

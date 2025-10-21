@@ -1,8 +1,8 @@
 import React, {FC, memo, ReactNode} from 'react';
 import {SELECT_ALL_LABEL} from './constants';
 import {buildVirtualFocusId} from './utils/focusUtils';
-import {CheckedState, DROPDOWN_PREFIX, FOOTER_SUFFIX, SELECT_ALL_SUFFIX, Type, VirtualFocusId} from './types';
-import {InnerComponents} from './innerTypes';
+import {CheckedState, DROPDOWN_PREFIX, FOOTER_SUFFIX, SELECT_ALL_SUFFIX, Type} from './types';
+import {InnerComponents, NullableVirtualFocusId} from './innerTypes';
 import {Node} from './Node';
 import {NoDataWrapper} from './components/NoData';
 import {SelectAllWrapper} from './components/SelectAllWrapper';
@@ -19,7 +19,7 @@ export interface ListItemProps {
   searchValue: string;
   showSelectAll: boolean;
   selectAllCheckedState: CheckedState;
-  virtualFocusId: VirtualFocusId | null;
+  virtualFocusId: NullableVirtualFocusId;
   noDataText: string;
   noMatchesText: string;
   showFooter: boolean;
