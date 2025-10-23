@@ -144,23 +144,23 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
   const keyboardConfig = getKeyboardConfig(propsKeyboardConfig);
 
-  const updateDropdownOpen = useCallback((open: boolean, updateVirtualFocusId: boolean): void => {
+  const updateDropdownOpen = useCallback((open: boolean): void => {
     if (openDropdown !== undefined) {
       onDropdownToggle?.(open);
     } else {
       setIsDropdownOpen(open);
-      if (updateVirtualFocusId) {
-        setVirtualFocusId(virtualFocusId => !open && isVirtualFocusInDropdown(virtualFocusId) ? null : virtualFocusId);
-      }
     }
   }, [openDropdown, onDropdownToggle]);
 
   useEffect(() => {
     if (openDropdown !== undefined) {
       setIsDropdownOpen(openDropdown);
-      setVirtualFocusId(virtualFocusId => !openDropdown && isVirtualFocusInDropdown(virtualFocusId) ? null : virtualFocusId);
     }
   }, [openDropdown]);
+
+  useEffect(() => {
+    setVirtualFocusId(virtualFocusId => !isDropdownOpen && isVirtualFocusInDropdown(virtualFocusId) ? null : virtualFocusId);
+  }, [isDropdownOpen]);
 
   useEffect(() => {
     nodeMapRef.current = new Map<string, Node>();
@@ -243,7 +243,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       const newDisplayedNodes = nodes
         .filter(node => node.isDisplayed(false));
       setDisplayedNodes(newDisplayedNodes);
-      updateDropdownOpen(false, false);
+      updateDropdownOpen(false);
       setVirtualFocusId(null);
       setSearchValue('');
     }
@@ -382,7 +382,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
     // defaultPrevented is on click field clear icon or chip (or in custom field)
     if (!event.defaultPrevented) {
-      updateDropdownOpen(!isDropdownOpen, false);
+      updateDropdownOpen(!isDropdownOpen);
       setVirtualFocusId(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX));
     }
   }, [isDropdownOpen, isDisabled, updateDropdownOpen]);
@@ -497,7 +497,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         return;
       }
       event.preventDefault();
-      updateDropdownOpen(!isDropdownOpen, false);
+      updateDropdownOpen(!isDropdownOpen);
       setVirtualFocusId(buildVirtualFocusId(node.path, FIELD_PREFIX));
     }
   };
@@ -560,7 +560,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodes);
 
         setSelectedNodes(newSelectedNodes);
-        updateDropdownOpen(closeDropdownOnNodeChange ? false : isDropdownOpen, false);
+        updateDropdownOpen(closeDropdownOnNodeChange ? false : isDropdownOpen);
         setVirtualFocusId(closeDropdownOnNodeChange
           ? buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX)
           : buildVirtualFocusId(node.path, DROPDOWN_PREFIX));
@@ -669,7 +669,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         if (isDropdownOpen && isVirtualFocusInDropdown(virtualFocusId)) {
           setVirtualFocusId(getPrevDropdownVirtualFocusId(virtualFocusId));
         } else {
-          updateDropdownOpen(!isDropdownOpen, true);
+          updateDropdownOpen(!isDropdownOpen);
         }
         event.preventDefault();
         break;
@@ -677,7 +677,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         if (isDropdownOpen) {
           setVirtualFocusId(getNextDropdownVirtualFocusId(virtualFocusId));
         } else {
-          updateDropdownOpen(!isDropdownOpen, true);
+          updateDropdownOpen(!isDropdownOpen);
         }
         event.preventDefault();
         break;
@@ -711,7 +711,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           if (chipPath) {
             handleChipClick(chipPath)(event);
           } else {
-            updateDropdownOpen(!isDropdownOpen, true);
+            updateDropdownOpen(!isDropdownOpen);
           }
         } else {
           if (isFocused(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX, virtualFocusId)) {
@@ -734,7 +734,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         break;
       case 'Escape':
         if (isDropdownOpen) {
-          updateDropdownOpen(false, true);
+          updateDropdownOpen(false);
           event.preventDefault();
         }
         break;
