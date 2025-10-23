@@ -144,11 +144,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
   const keyboardConfig = getKeyboardConfig(propsKeyboardConfig);
 
-  const updateDropdownOpen = useCallback((open: boolean): void => {
+  const toggleDropdown = useCallback((isOpen: boolean): void => {
     if (openDropdown !== undefined) {
-      onDropdownToggle?.(open);
+      onDropdownToggle?.(isOpen);
     } else {
-      setIsDropdownOpen(open);
+      setIsDropdownOpen(isOpen);
     }
   }, [openDropdown, onDropdownToggle]);
 
@@ -243,11 +243,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       const newDisplayedNodes = nodes
         .filter(node => node.isDisplayed(false));
       setDisplayedNodes(newDisplayedNodes);
-      updateDropdownOpen(false);
+      toggleDropdown(false);
       setVirtualFocusId(null);
       setSearchValue('');
     }
-  }, [isDisabled, isDropdownOpen, isSearchMode, virtualFocusId, nodes, updateDropdownOpen]);
+  }, [isDisabled, isDropdownOpen, isSearchMode, virtualFocusId, nodes, toggleDropdown]);
 
   const focusComponentElement = (): void => {
     if (dropdownInputRef.current) {
@@ -382,10 +382,10 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
     // defaultPrevented is on click field clear icon or chip (or in custom field)
     if (!event.defaultPrevented) {
-      updateDropdownOpen(!isDropdownOpen);
+      toggleDropdown(!isDropdownOpen);
       setVirtualFocusId(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX));
     }
-  }, [isDropdownOpen, isDisabled, updateDropdownOpen]);
+  }, [isDropdownOpen, isDisabled, toggleDropdown]);
 
   const callClearAllHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onClearAll) {
@@ -497,7 +497,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         return;
       }
       event.preventDefault();
-      updateDropdownOpen(!isDropdownOpen);
+      toggleDropdown(!isDropdownOpen);
       setVirtualFocusId(buildVirtualFocusId(node.path, FIELD_PREFIX));
     }
   };
@@ -560,7 +560,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodes);
 
         setSelectedNodes(newSelectedNodes);
-        updateDropdownOpen(closeDropdownOnNodeChange ? false : isDropdownOpen);
+        toggleDropdown(closeDropdownOnNodeChange ? false : isDropdownOpen);
         setVirtualFocusId(closeDropdownOnNodeChange
           ? buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX)
           : buildVirtualFocusId(node.path, DROPDOWN_PREFIX));
@@ -669,7 +669,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         if (isDropdownOpen && isVirtualFocusInDropdown(virtualFocusId)) {
           setVirtualFocusId(getPrevDropdownVirtualFocusId(virtualFocusId));
         } else {
-          updateDropdownOpen(!isDropdownOpen);
+          toggleDropdown(!isDropdownOpen);
         }
         event.preventDefault();
         break;
@@ -677,7 +677,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         if (isDropdownOpen) {
           setVirtualFocusId(getNextDropdownVirtualFocusId(virtualFocusId));
         } else {
-          updateDropdownOpen(!isDropdownOpen);
+          toggleDropdown(!isDropdownOpen);
         }
         event.preventDefault();
         break;
@@ -711,7 +711,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           if (chipPath) {
             handleChipClick(chipPath)(event);
           } else {
-            updateDropdownOpen(!isDropdownOpen);
+            toggleDropdown(!isDropdownOpen);
           }
         } else {
           if (isFocused(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX, virtualFocusId)) {
@@ -734,7 +734,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         break;
       case 'Escape':
         if (isDropdownOpen) {
-          updateDropdownOpen(false);
+          toggleDropdown(false);
           event.preventDefault();
         }
         break;
