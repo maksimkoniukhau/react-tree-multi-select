@@ -22,15 +22,15 @@ interface NodeToggleWrapperProps {
   nodeToggle: NodeToggleType;
   path: string;
   expanded: boolean;
-  onNodeToggle: (path: string) => (event: React.MouseEvent) => void;
+  onClick: (path: string) => (event: React.MouseEvent) => void;
 }
 
-export const NodeToggleWrapper: FC<NodeToggleWrapperProps> = memo(({nodeToggle, path, expanded, onNodeToggle}) => {
+export const NodeToggleWrapper: FC<NodeToggleWrapperProps> = memo(({nodeToggle, path, expanded, onClick}) => {
   return (
     <nodeToggle.component
       attributes={{
         className: `rtms-node-toggle${expanded ? ' expanded' : ''}`,
-        onClick: onNodeToggle(path)
+        onClick: onClick(path)
       }}
       ownProps={{expanded}}
       customProps={nodeToggle.props}

@@ -55,14 +55,14 @@ export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
       focused={focused}
       matched={matched}
       indentation={indentation}
-      onNodeChange={onNodeChange}
+      onClick={onNodeChange}
     >
       {withToggle && (
         <NodeToggleWrapper
           nodeToggle={components.NodeToggle}
           path={path}
           expanded={expanded}
-          onNodeToggle={onNodeToggle}
+          onClick={onNodeToggle}
         />
       )}
       {withCheckbox && (

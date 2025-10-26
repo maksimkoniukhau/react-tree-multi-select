@@ -21,7 +21,7 @@ interface NodeContainerWrapperProps {
   focused: boolean;
   matched: boolean;
   indentation: boolean;
-  onNodeChange: (path: string) => (event: React.MouseEvent) => void;
+  onClick: (path: string) => (event: React.MouseEvent) => void;
   children: ReactNode;
 }
 
@@ -38,7 +38,7 @@ export const NodeContainerWrapper: FC<NodeContainerWrapperProps> = memo((props) 
     focused,
     matched,
     indentation,
-    onNodeChange,
+    onClick,
     children
   } = props;
 
@@ -57,7 +57,7 @@ export const NodeContainerWrapper: FC<NodeContainerWrapperProps> = memo((props) 
           '--rtms-list-item-indentation': indentation ? 1 : 0
         } as CSSProperties,
         className,
-        onClick: onNodeChange(path)
+        onClick: onClick(path)
       }}
       ownProps={{label, disabled, selected, partial, expanded, focused, matched}}
       customProps={nodeContainer.props}

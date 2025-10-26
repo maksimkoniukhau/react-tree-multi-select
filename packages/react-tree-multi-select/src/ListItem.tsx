@@ -23,10 +23,10 @@ export interface ListItemProps {
   noDataText: string;
   noMatchesText: string;
   showFooter: boolean;
-  onSelectAllChange: (e: React.MouseEvent) => void;
-  onNodeChange: (path: string) => (e: React.MouseEvent) => void;
-  onNodeToggle: (path: string) => (e: React.MouseEvent) => void;
-  onFooterClick: (e: React.MouseEvent) => void;
+  onSelectAllChange: (event: React.MouseEvent) => void;
+  onNodeChange: (path: string) => (event: React.MouseEvent) => void;
+  onNodeToggle: (path: string) => (event: React.MouseEvent) => void;
+  onFooterClick: (event: React.MouseEvent) => void;
   input: ReactNode;
   components: InnerComponents;
 }

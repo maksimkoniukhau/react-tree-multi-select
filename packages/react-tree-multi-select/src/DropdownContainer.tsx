@@ -39,10 +39,10 @@ interface DropdownContainerProps {
   componentDisabled: boolean;
   inputRef: RefObject<HTMLInputElement | null>;
   onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onSelectAllChange: (e: React.MouseEvent) => void;
-  onNodeChange: (path: string) => (e: React.MouseEvent) => void;
-  onNodeToggle: (path: string) => (e: React.MouseEvent) => void;
-  onFooterClick: (e: React.MouseEvent) => void;
+  onSelectAllChange: (event: React.MouseEvent) => void;
+  onNodeChange: (path: string) => (event: React.MouseEvent) => void;
+  onNodeToggle: (path: string) => (event: React.MouseEvent) => void;
+  onFooterClick: (event: React.MouseEvent) => void;
   onLastItemReached: () => void;
   onMount: () => void;
   onUnmount: () => void;
