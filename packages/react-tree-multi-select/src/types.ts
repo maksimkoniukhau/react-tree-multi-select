@@ -121,6 +121,7 @@ export type FooterConfig = {
    * @default false
    */
   showWhenSearching?: boolean;
+
   /**
    * Renders the Footer when no items are available in the dropdown
    * (takes precedence over `showWhenSearching` if both apply).
@@ -175,6 +176,120 @@ export const FOOTER_SUFFIX = 'footer';
 export type VirtualFocusId = `${typeof FIELD_PREFIX}${string}` | `${typeof DROPDOWN_PREFIX}${string}`;
 
 /**
+ * Represents a set of actions that can be used to change the component's state and behavior.
+ */
+export type KeyboardActions = {
+  /**
+   * Moves virtual focus to the next virtually focusable element.
+   */
+  focusNextItem: () => void;
+
+  /**
+   * Moves virtual focus to the previous virtually focusable element.
+   */
+  focusPrevItem: () => void;
+
+  /**
+   * Moves virtual focus to the first virtually focusable element
+   * within the same area (field or dropdown) as the current focus.
+   *
+   * Does nothing if `virtualFocusId` is `null`.
+   */
+  focusFirstItem: () => void;
+
+  /**
+   * Moves virtual focus to the last virtually focusable element
+   * within the same area (field or dropdown) as the current focus.
+   *
+   * Does nothing if `virtualFocusId` is `null`.
+   */
+  focusLastItem: () => void;
+
+  /**
+   * Moves virtual focus to the first virtually focusable element in the dropdown.
+   */
+  focusDropdown: () => void;
+
+  /**
+   * Moves virtual focus to the input element in the field.
+   */
+  focusField: () => void;
+
+  /**
+   * Opens (renders) the dropdown.
+   */
+  openDropdown: () => void;
+
+  /**
+   * Closes (hides) the dropdown.
+   */
+  closeDropdown: () => void;
+
+  /**
+   * Programmatically triggers the same behavior as interacting with the `SelectAll` component,
+   * such as a mouse click or pressing a key.
+   */
+  changeSelectAll: () => void;
+
+  /**
+   * Expands the currently virtually focused node (if it can be expanded).
+   * Does nothing if the node is already expanded or not expandable.
+   */
+  expandNode: () => void;
+
+  /**
+   * Collapses the currently virtually focused node (if it is expanded).
+   * Does nothing if the node is already collapsed or not collapsible.
+   */
+  collapseNode: () => void;
+
+  /**
+   * Programmatically triggers the same behavior as interacting with the currently virtually focused `Node` component,
+   * such as a mouse click or pressing a key.
+   */
+  changeNode: () => void;
+
+  /**
+   * Programmatically triggers the same behavior as interacting with the currently virtually focused `ChipClear` component,
+   * such as a mouse click or pressing a key.
+   */
+  clearNode: () => void;
+
+  /**
+   * Programmatically triggers the same behavior as interacting with the `FieldClear` component,
+   * such as a mouse click or pressing a key.
+   */
+  clearAll: () => void;
+};
+
+/**
+ * Provides contextual information about the current component state
+ * and available actions that can be performed within the component.
+ *
+ * This context is passed to the `onKeyDown` callback, allowing external handlers
+ * to inspect and manipulate component state through available actions.
+ */
+export interface KeyboardHandlerContext {
+  /**
+   * The current search input value.
+   */
+  inputValue: string;
+  /**
+   * Indicates whether the dropdown is currently open (rendered).
+   */
+  isDropdownOpen: boolean;
+  /**
+   * The identifier of the currently virtually focused element,
+   * or `null` if no element is virtually focused.
+   */
+  virtualFocusId: VirtualFocusId | null;
+  /**
+   * A set of actions that can be used to manipulate the component state.
+   */
+  actions: KeyboardActions;
+}
+
+/**
  * Props for the `TreeMultiSelect` component.
  *
  * Defines all configuration options, event callbacks, and customization points
@@ -185,44 +300,52 @@ export interface TreeMultiSelectProps {
    * The data to be rendered in the component.
    */
   data: TreeNode[];
+
   /**
    * Specifies the type of the component, determining its behavior and rendering.
    *
    * @default Type.TREE_SELECT
    */
   type?: Type;
+
   /**
    * The `id` attribute to apply to the root `<div>` of the component.
    */
   id?: string;
+
   /**
    * The `className` to apply to the root `<div>` of the component.
    */
   className?: string;
+
   /**
    * Placeholder text displayed in the search input field.
    *
    * @default "search..."
    */
   inputPlaceholder?: string;
+
   /**
    * Text displayed when there is no data to show in the dropdown.
    *
    * @default "No data"
    */
   noDataText?: string;
+
   /**
    * Text displayed when no matching results are found during a search.
    *
    * @default "No matches"
    */
   noMatchesText?: string;
+
   /**
    * Disables the entire component, preventing user interaction.
    *
    * @default false
    */
   isDisabled?: boolean;
+
   /**
    * Controls whether the search input is rendered.
    * When `true`, a search input is shown either in the field or in the dropdown (if `withDropdownInput` is also `true`).
@@ -230,18 +353,21 @@ export interface TreeMultiSelectProps {
    * @default true
    */
   isSearchable?: boolean;
+
   /**
    * Controls whether the chip-level clear button (`ChipClear`) is displayed for each selected item.
    *
    * @default true
    */
   withChipClear?: boolean;
+
   /**
    * Controls whether the field-level clear button (`FieldClear`) is displayed to clear all selected items at once.
    *
    * @default true
    */
   withClearAll?: boolean;
+
   /**
    * Controls whether a sticky "SelectAll" component is rendered at the top of the dropdown.
    *
@@ -253,6 +379,7 @@ export interface TreeMultiSelectProps {
    * @default false
    */
   withSelectAll?: boolean;
+
   /**
    * Controls whether a sticky search input is rendered at the top of the dropdown.
    * A hidden input is rendered in the field to preserve focus behavior.
@@ -260,6 +387,7 @@ export interface TreeMultiSelectProps {
    * @default false
    */
   withDropdownInput?: boolean;
+
   /**
    * Closes the dropdown automatically after a node is changed (selected/unselected in dropdown).
    * Useful when `type` is `Type.SELECT`.
@@ -267,6 +395,7 @@ export interface TreeMultiSelectProps {
    * @default false
    */
   closeDropdownOnNodeChange?: boolean;
+
   /**
    * Controls whether the dropdown is rendered (open) or hidden (closed).
    * This enables external control over the dropdown's rendering state.
@@ -278,6 +407,7 @@ export interface TreeMultiSelectProps {
    * For full control, use this prop in conjunction with the `onDropdownToggle` callback.
    */
   openDropdown?: boolean;
+
   /**
    * Dropdown height in pixels. If the content height is smaller than this value,
    * the dropdown height is automatically reduced to fit the content.
@@ -285,6 +415,7 @@ export interface TreeMultiSelectProps {
    * @default 300
    */
   dropdownHeight?: number;
+
   /**
    * The number of items to render outside the visible viewport (above and below)
    * to improve scroll performance and reduce flickering during fast scrolling.
@@ -292,6 +423,7 @@ export interface TreeMultiSelectProps {
    * @default 1
    */
   overscan?: number;
+
   /**
    * Determines whether the dropdown list is rendered using virtualization.
    * When enabled, only the visible portion of the list (plus overscan items)
@@ -300,20 +432,24 @@ export interface TreeMultiSelectProps {
    * @default true
    */
   isVirtualized?: boolean;
+
   /**
    * Controls when the Footer component is rendered in the dropdown.
    */
   footerConfig?: FooterConfig;
+
   /**
    * Controls keyboard navigation behavior for the component.
    */
   keyboardConfig?: KeyboardConfig;
+
   /**
    * Custom components used to override the default UI elements of the TreeMultiSelect.
    *
    * Allows you to replace built-in components with your own implementations to match your design and behavior requirements.
    */
   components?: Components;
+
   /**
    * Callback triggered when the dropdown is opened or closed by user interaction.
    * This is used to synchronize external state with the dropdown’s rendering state.
@@ -325,6 +461,7 @@ export interface TreeMultiSelectProps {
    * @param open - `true` if the dropdown was opened, `false` if it was closed.
    */
   onDropdownToggle?: (open: boolean) => void;
+
   /**
    * Callback triggered when a node is selected or unselected.
    * This includes interactions from the dropdown as well as chip removal in the field.
@@ -334,6 +471,7 @@ export interface TreeMultiSelectProps {
    * @param data - The full tree data reflecting the updated state.
    */
   onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[], data: TreeNode[]) => void;
+
   /**
    * Callback triggered when a node is toggled (expanded or collapsed).
    *
@@ -342,6 +480,7 @@ export interface TreeMultiSelectProps {
    * @param data - The full tree data reflecting the updated state.
    */
   onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[], data: TreeNode[]) => void;
+
   /**
    * Callback triggered when the `FieldClear` component is activated by user interaction,
    * such as a mouse click or pressing the Backspace key.
@@ -354,6 +493,7 @@ export interface TreeMultiSelectProps {
    * @param data - The full tree data reflecting the updated state.
    */
   onClearAll?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState | undefined, data: TreeNode[]) => void;
+
   /**
    * Callback triggered when the `SelectAll` component is activated by user interaction,
    * such as a mouse click or pressing the Enter key.
@@ -365,18 +505,36 @@ export interface TreeMultiSelectProps {
    * @param data - The full tree data reflecting the updated state.
    */
   onSelectAllChange?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState, data: TreeNode[]) => void;
+
   /**
    * Callback triggered when the component receives focus.
    *
    * @param event - The React focus event.
    */
   onFocus?: (event: React.FocusEvent) => void;
+
   /**
    * Callback triggered when the component loses focus.
    *
    * @param event - The React blur event.
    */
   onBlur?: (event: React.FocusEvent) => void;
+
+  /**
+   * Callback triggered on keyboard interaction within the component.
+   *
+   * This allows interception or customization of built-in keyboard behavior.
+   * The callback receives the keyboard event and a `KeyboardHandlerContext`.
+   *
+   * Returning `true` from this callback prevents the component’s default
+   * keyboard handling for the event.
+   *
+   * @param event - The original keyboard event.
+   * @param context - The current keyboard handler context.
+   * @returns `true` to stop the default keyboard handling; otherwise `false`.
+   */
+  onKeyDown?: (event: React.KeyboardEvent, context: Readonly<KeyboardHandlerContext>) => boolean;
+
   /**
    * Callback triggered when the last item in the dropdown is rendered.
    * This is useful for implementing infinite scrolling or lazy loading.

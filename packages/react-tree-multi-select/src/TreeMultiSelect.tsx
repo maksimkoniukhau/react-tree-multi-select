@@ -7,6 +7,7 @@ import {
   FIELD_PREFIX,
   FOOTER_SUFFIX,
   INPUT_SUFFIX,
+  KeyboardActions,
   SELECT_ALL_SUFFIX,
   TreeMultiSelectProps,
   TreeNode,
@@ -74,6 +75,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     onSelectAllChange,
     onFocus,
     onBlur,
+    onKeyDown,
     onDropdownLastItemReached
   } = props;
 
@@ -159,7 +161,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [openDropdown]);
 
   useEffect(() => {
-    setVirtualFocusId(virtualFocusId => !isDropdownOpen && isVirtualFocusInDropdown(virtualFocusId) ? null : virtualFocusId);
+    setVirtualFocusId(prev => !isDropdownOpen && isVirtualFocusInDropdown(prev)
+      ? buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX)
+      : prev);
   }, [isDropdownOpen]);
 
   useEffect(() => {
@@ -240,8 +244,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
     if (isDropdownOpen || isSearchMode || virtualFocusId) {
       nodes.forEach(node => node.resetSearch());
-      const newDisplayedNodes = nodes
-        .filter(node => node.isDisplayed(false));
+      const newDisplayedNodes = nodes.filter(node => node.isDisplayed(false));
       setDisplayedNodes(newDisplayedNodes);
       toggleDropdown(false);
       setVirtualFocusId(null);
@@ -636,8 +639,91 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   };
 
+  const getActions = (): KeyboardActions => {
+    return {
+      focusNextItem: () => {
+        if (isVirtualFocusInDropdown(virtualFocusId)) {
+          setVirtualFocusId(prev => getNextDropdownVirtualFocusId(prev));
+        }
+        if (isVirtualFocusInField(virtualFocusId)) {
+          setVirtualFocusId(prev => getNextFieldVirtualFocusId(prev));
+        }
+      },
+      focusPrevItem: () => {
+        if (isVirtualFocusInDropdown(virtualFocusId)) {
+          setVirtualFocusId(prev => getPrevDropdownVirtualFocusId(prev));
+        }
+        if (isVirtualFocusInField(virtualFocusId)) {
+          setVirtualFocusId(prev => getPrevFieldVirtualFocusId(prev));
+        }
+      },
+      focusFirstItem: () => {
+        if (isVirtualFocusInDropdown(virtualFocusId)) {
+          const firstDropdownVirtualFocusId = getFirstDropdownVirtualFocusId();
+          if (firstDropdownVirtualFocusId !== null) {
+            setVirtualFocusId(firstDropdownVirtualFocusId);
+          }
+        }
+        if (isVirtualFocusInField(virtualFocusId)) {
+          const firstFieldVirtualFocusId = getFirstFieldVirtualFocusId();
+          if (firstFieldVirtualFocusId !== null) {
+            setVirtualFocusId(firstFieldVirtualFocusId);
+          }
+        }
+      },
+      focusLastItem: () => {
+        if (isVirtualFocusInDropdown(virtualFocusId)) {
+          const lastDropdownVirtualFocusId = getLastDropdownVirtualFocusId();
+          if (lastDropdownVirtualFocusId !== null) {
+            setVirtualFocusId(lastDropdownVirtualFocusId);
+          }
+        }
+        if (isVirtualFocusInField(virtualFocusId)) {
+          const lastFieldVirtualFocusId = getLastFieldVirtualFocusId();
+          if (lastFieldVirtualFocusId !== null) {
+            setVirtualFocusId(lastFieldVirtualFocusId);
+          }
+        }
+      },
+      focusDropdown: () => {
+        setVirtualFocusId(prev => getFirstDropdownVirtualFocusId() ?? prev);
+      },
+      focusField: () => {
+        setVirtualFocusId(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX));
+      },
+      openDropdown: () => {
+        toggleDropdown(true);
+      },
+      closeDropdown: () => {
+        toggleDropdown(false);
+      },
+      changeSelectAll: () => {
+        handleSelectAllChange();
+      },
+      expandNode: () => {
+        handleNodeToggleOnKeyDown(true);
+      },
+      collapseNode: () => {
+        handleNodeToggleOnKeyDown(false);
+      },
+      changeNode: () => {
+        handleNodeChange(extractPathFromVirtualFocusId(virtualFocusId))({} as React.KeyboardEvent);
+      },
+      clearNode: () => {
+        handleNodeDelete(extractPathFromVirtualFocusId(virtualFocusId))({} as React.KeyboardEvent);
+      },
+      clearAll: () => {
+        handleDeleteAll({} as React.KeyboardEvent);
+      }
+    };
+  };
+
   const handleComponentKeyDown = (event: React.KeyboardEvent): void => {
     if (isDisabled) {
+      return;
+    }
+    if (onKeyDown
+      && onKeyDown(event, {inputValue: searchValue, isDropdownOpen, virtualFocusId, actions: getActions()})) {
       return;
     }
     switch (event.key) {
