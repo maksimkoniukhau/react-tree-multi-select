@@ -827,6 +827,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     if (!isComponentFocused.current) {
       isComponentFocused.current = true;
       treeMultiSelectRef?.current?.classList?.add('focused');
+      setTimeout(() => {
+        setVirtualFocusId(prev => prev || buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX));
+      }, 0);
       onFocus?.(event);
     }
   };
