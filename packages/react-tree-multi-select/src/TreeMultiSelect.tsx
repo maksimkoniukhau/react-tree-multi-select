@@ -290,11 +290,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
   const getNextDropdownVirtualFocusId = useCallback((virtualFocusId: NullableVirtualFocusId): NullableVirtualFocusId => {
     const dropdownVirtualFocusIds = getDropdownVirtualFocusIds();
-    if (dropdownVirtualFocusIds.length === 0) {
+    if (dropdownVirtualFocusIds.length === 0 || !virtualFocusId || !isVirtualFocusInDropdown(virtualFocusId)) {
       return null;
-    }
-    if (!virtualFocusId || !isVirtualFocusInDropdown(virtualFocusId)) {
-      return dropdownVirtualFocusIds[0];
     }
     const currentIndex = dropdownVirtualFocusIds.indexOf(virtualFocusId);
     if (currentIndex === dropdownVirtualFocusIds.length - 1) {
@@ -516,11 +513,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     if (!withChipClear || isDisabled) {
       return;
     }
-    event.preventDefault();
     const node = nodeMapRef.current.get(path);
     if (!node) {
       return;
     }
+    event.preventDefault();
     if (!node.disabled) {
       const prevFieldVirtualFocusId = getPrevFieldVirtualFocusId(virtualFocusId);
       const newFieldVirtualFocusId = (prevFieldVirtualFocusId === virtualFocusId) || (event.type === 'click')
@@ -661,30 +658,18 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       },
       focusFirstItem: () => {
         if (isVirtualFocusInDropdown(virtualFocusId)) {
-          const firstDropdownVirtualFocusId = getFirstDropdownVirtualFocusId();
-          if (firstDropdownVirtualFocusId !== null) {
-            setVirtualFocusId(firstDropdownVirtualFocusId);
-          }
+          setVirtualFocusId(prev => getFirstDropdownVirtualFocusId() ?? prev);
         }
         if (isVirtualFocusInField(virtualFocusId)) {
-          const firstFieldVirtualFocusId = getFirstFieldVirtualFocusId();
-          if (firstFieldVirtualFocusId !== null) {
-            setVirtualFocusId(firstFieldVirtualFocusId);
-          }
+          setVirtualFocusId(prev => getFirstFieldVirtualFocusId() ?? prev);
         }
       },
       focusLastItem: () => {
         if (isVirtualFocusInDropdown(virtualFocusId)) {
-          const lastDropdownVirtualFocusId = getLastDropdownVirtualFocusId();
-          if (lastDropdownVirtualFocusId !== null) {
-            setVirtualFocusId(lastDropdownVirtualFocusId);
-          }
+          setVirtualFocusId(prev => getLastDropdownVirtualFocusId() ?? prev);
         }
         if (isVirtualFocusInField(virtualFocusId)) {
-          const lastFieldVirtualFocusId = getLastFieldVirtualFocusId();
-          if (lastFieldVirtualFocusId !== null) {
-            setVirtualFocusId(lastFieldVirtualFocusId);
-          }
+          setVirtualFocusId(prev => getLastFieldVirtualFocusId() ?? prev);
         }
       },
       focusDropdown: () => {
@@ -763,7 +748,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         break;
       case 'ArrowDown':
         if (isDropdownOpen) {
-          setVirtualFocusId(getNextDropdownVirtualFocusId(virtualFocusId));
+          if (isVirtualFocusInDropdown(virtualFocusId)) {
+            setVirtualFocusId(getNextDropdownVirtualFocusId(virtualFocusId));
+          } else {
+            setVirtualFocusId(getFirstDropdownVirtualFocusId());
+          }
         } else {
           toggleDropdown(!isDropdownOpen);
         }

@@ -181,18 +181,19 @@ export type VirtualFocusId = `${typeof FIELD_PREFIX}${string}` | `${typeof DROPD
 export type KeyboardActions = {
   /**
    * Moves virtual focus to the next virtually focusable element.
+   * Does nothing if `virtualFocusId` is `null`.
    */
   focusNextItem: () => void;
 
   /**
    * Moves virtual focus to the previous virtually focusable element.
+   * Does nothing if `virtualFocusId` is `null`.
    */
   focusPrevItem: () => void;
 
   /**
    * Moves virtual focus to the first virtually focusable element
    * within the same area (field or dropdown) as the current focus.
-   *
    * Does nothing if `virtualFocusId` is `null`.
    */
   focusFirstItem: () => void;
@@ -200,7 +201,6 @@ export type KeyboardActions = {
   /**
    * Moves virtual focus to the last virtually focusable element
    * within the same area (field or dropdown) as the current focus.
-   *
    * Does nothing if `virtualFocusId` is `null`.
    */
   focusLastItem: () => void;
@@ -232,13 +232,15 @@ export type KeyboardActions = {
   changeSelectAll: () => void;
 
   /**
-   * Expands the currently virtually focused node (if it can be expanded).
+   * Programmatically triggers the same behavior as interacting with the currently virtually focused `NodeToggle` component,
+   * such as pressing a key.
    * Does nothing if the node is already expanded or not expandable.
    */
   expandNode: () => void;
 
   /**
-   * Collapses the currently virtually focused node (if it is expanded).
+   * Programmatically triggers the same behavior as interacting with the currently virtually focused `NodeToggle` component,
+   * such as pressing a key.
    * Does nothing if the node is already collapsed or not collapsible.
    */
   collapseNode: () => void;
