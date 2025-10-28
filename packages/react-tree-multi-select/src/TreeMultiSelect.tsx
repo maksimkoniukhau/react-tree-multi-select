@@ -207,7 +207,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
     const newDisplayedNodes = newNodes.filter(node => node.isDisplayed(isSearchMode));
     const newSelectedNodes = newNodes.filter(node => node.selected);
-    let newVirtualFocusId: NullableVirtualFocusId = null;
+    let newVirtualFocusId = virtualFocusId;
     if (isVirtualFocusInField(virtualFocusId)) {
       if (isFocused(INPUT_SUFFIX, FIELD_PREFIX, virtualFocusId)
         || (isFocused(CLEAR_ALL_SUFFIX, FIELD_PREFIX, virtualFocusId) && showClearAll)) {
@@ -215,7 +215,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       } else {
         const chipNodes = filterChips(newSelectedNodes, type);
         const current = chipNodes.find(node => isFocused(node.path, FIELD_PREFIX, virtualFocusId));
-        newVirtualFocusId = current ? virtualFocusId : null;
+        newVirtualFocusId = current ? virtualFocusId : buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX);
       }
     }
     if (isVirtualFocusInDropdown(virtualFocusId)) {
@@ -225,7 +225,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         newVirtualFocusId = virtualFocusId;
       } else {
         const current = newDisplayedNodes.find(node => isFocused(node.path, DROPDOWN_PREFIX, virtualFocusId));
-        newVirtualFocusId = current ? virtualFocusId : null;
+        newVirtualFocusId = current ? virtualFocusId : buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX);
       }
     }
     const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, newNodes);
@@ -344,10 +344,10 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     return fieldVirtualFocusIds[fieldVirtualFocusIds.length - 1];
   }, [getFieldVirtualFocusIds]);
 
-  const getNextFieldVirtualFocusId = useCallback((virtualFocusId: NullableVirtualFocusId): VirtualFocusId => {
+  const getNextFieldVirtualFocusId = useCallback((virtualFocusId: NullableVirtualFocusId): NullableVirtualFocusId => {
     const fieldVirtualFocusIds = getFieldVirtualFocusIds();
-    if (!virtualFocusId || !isVirtualFocusInField(virtualFocusId)) {
-      return fieldVirtualFocusIds[fieldVirtualFocusIds.length - 1];
+    if (fieldVirtualFocusIds.length === 0 || !virtualFocusId || !isVirtualFocusInField(virtualFocusId)) {
+      return null;
     }
     const currentIndex = fieldVirtualFocusIds.indexOf(virtualFocusId);
     if (currentIndex === fieldVirtualFocusIds.length - 1) {
@@ -359,12 +359,10 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   }, [getFieldVirtualFocusIds, keyboardConfig.field.loopRight]);
 
-  const getPrevFieldVirtualFocusId = useCallback((virtualFocusId: NullableVirtualFocusId): VirtualFocusId => {
+  const getPrevFieldVirtualFocusId = useCallback((virtualFocusId: NullableVirtualFocusId): NullableVirtualFocusId => {
     const fieldVirtualFocusIds = getFieldVirtualFocusIds();
-    if (!virtualFocusId || !isVirtualFocusInField(virtualFocusId)) {
-      return fieldVirtualFocusIds.length > 1
-        ? fieldVirtualFocusIds[fieldVirtualFocusIds.indexOf(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX)) - 1]
-        : buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX);
+    if (fieldVirtualFocusIds.length === 0 || !virtualFocusId || !isVirtualFocusInField(virtualFocusId)) {
+      return null;
     }
     const currentIndex = fieldVirtualFocusIds.indexOf(virtualFocusId);
     if (currentIndex === 0) {
@@ -895,7 +893,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         withClearAll={withClearAll}
         showClearAll={showClearAll}
         withChipClear={withChipClear}
-        virtualFocusId={isVirtualFocusInField(virtualFocusId) ? virtualFocusId : null}
+        virtualFocusId={virtualFocusId}
         isSearchable={isSearchable}
         inputPlaceholder={isAnyNodeSelected ? '' : inputPlaceholder}
         searchValue={searchValue}
@@ -923,7 +921,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           searchValue={searchValue}
           showSelectAll={showSelectAll}
           selectAllCheckedState={selectAllCheckedState}
-          virtualFocusId={isVirtualFocusInDropdown(virtualFocusId) ? virtualFocusId : null}
+          virtualFocusId={virtualFocusId}
           noDataText={noDataText}
           noMatchesText={noMatchesText}
           dropdownHeight={dropdownHeight}
