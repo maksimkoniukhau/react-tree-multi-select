@@ -640,18 +640,18 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     return {
       focusNextItem: () => {
         if (isVirtualFocusInDropdown(virtualFocusId)) {
-          setVirtualFocusId(prev => getNextDropdownVirtualFocusId(prev));
+          setVirtualFocusId(prev => getNextDropdownVirtualFocusId(prev) ?? prev);
         }
         if (isVirtualFocusInField(virtualFocusId)) {
-          setVirtualFocusId(prev => getNextFieldVirtualFocusId(prev));
+          setVirtualFocusId(prev => getNextFieldVirtualFocusId(prev) ?? prev);
         }
       },
       focusPrevItem: () => {
         if (isVirtualFocusInDropdown(virtualFocusId)) {
-          setVirtualFocusId(prev => getPrevDropdownVirtualFocusId(prev));
+          setVirtualFocusId(prev => getPrevDropdownVirtualFocusId(prev) ?? prev);
         }
         if (isVirtualFocusInField(virtualFocusId)) {
-          setVirtualFocusId(prev => getPrevFieldVirtualFocusId(prev));
+          setVirtualFocusId(prev => getPrevFieldVirtualFocusId(prev) ?? prev);
         }
       },
       focusFirstItem: () => {
@@ -720,7 +720,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           }
         } else {
           if (!isSearchMode || (withDropdownInput && !isDropdownOpen)) {
-            setVirtualFocusId(getPrevFieldVirtualFocusId(virtualFocusId));
+            setVirtualFocusId(prev => getPrevFieldVirtualFocusId(virtualFocusId) ?? prev);
           }
         }
         break;
@@ -732,13 +732,13 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
           }
         } else {
           if (!isSearchMode || (withDropdownInput && !isDropdownOpen)) {
-            setVirtualFocusId(getNextFieldVirtualFocusId(virtualFocusId));
+            setVirtualFocusId(prev => getNextFieldVirtualFocusId(virtualFocusId) ?? prev);
           }
         }
         break;
       case 'ArrowUp':
         if (isDropdownOpen && isVirtualFocusInDropdown(virtualFocusId)) {
-          setVirtualFocusId(getPrevDropdownVirtualFocusId(virtualFocusId));
+          setVirtualFocusId(prev => getPrevDropdownVirtualFocusId(virtualFocusId) ?? prev);
         } else {
           toggleDropdown(!isDropdownOpen);
         }
@@ -747,9 +747,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       case 'ArrowDown':
         if (isDropdownOpen) {
           if (isVirtualFocusInDropdown(virtualFocusId)) {
-            setVirtualFocusId(getNextDropdownVirtualFocusId(virtualFocusId));
+            setVirtualFocusId(prev => getNextDropdownVirtualFocusId(virtualFocusId) ?? prev);
           } else {
-            setVirtualFocusId(getFirstDropdownVirtualFocusId());
+            setVirtualFocusId(prev => getFirstDropdownVirtualFocusId() ?? prev);
           }
         } else {
           toggleDropdown(!isDropdownOpen);
@@ -758,22 +758,22 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         break;
       case 'Home':
         if (isVirtualFocusInDropdown(virtualFocusId)) {
-          setVirtualFocusId(getFirstDropdownVirtualFocusId());
+          setVirtualFocusId(prev => getFirstDropdownVirtualFocusId() ?? prev);
           event.preventDefault();
         } else {
           if (!isSearchMode || (withDropdownInput && !isDropdownOpen)) {
-            setVirtualFocusId(getFirstFieldVirtualFocusId());
+            setVirtualFocusId(prev => getFirstFieldVirtualFocusId() ?? prev);
             event.preventDefault();
           }
         }
         break;
       case 'End':
         if (isVirtualFocusInDropdown(virtualFocusId)) {
-          setVirtualFocusId(getLastDropdownVirtualFocusId());
+          setVirtualFocusId(prev => getLastDropdownVirtualFocusId() ?? prev);
           event.preventDefault();
         } else {
           if (!isSearchMode || (withDropdownInput && !isDropdownOpen)) {
-            setVirtualFocusId(getLastFieldVirtualFocusId());
+            setVirtualFocusId(prev => getLastFieldVirtualFocusId() ?? prev);
             event.preventDefault();
           }
         }
@@ -826,7 +826,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       isComponentFocused.current = true;
       treeMultiSelectRef?.current?.classList?.add('focused');
       setTimeout(() => {
-        setVirtualFocusId(prev => prev || buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX));
+        setVirtualFocusId(prev => prev ?? buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX));
       }, 0);
       onFocus?.(event);
     }
