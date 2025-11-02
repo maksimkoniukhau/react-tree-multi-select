@@ -1,5 +1,6 @@
-import React, {CSSProperties, FC, memo, ReactNode} from 'react';
-import {NodeContainerProps, NodeContainerType} from '../types';
+import React, {CSSProperties, FC, HTMLProps, memo, ReactNode} from 'react';
+import {DROPDOWN_PREFIX, NodeContainerProps, NodeContainerType} from '../types';
+import {buildVirtualFocusId} from '../utils/focusUtils';
 
 export const NodeContainer: FC<NodeContainerProps> = memo((props) => {
   return (
@@ -52,13 +53,14 @@ export const NodeContainerWrapper: FC<NodeContainerWrapperProps> = memo((props) 
   return (
     <nodeContainer.component
       attributes={{
+        'data-rtms-virtual-focus-id': label === 'Micronaut' ? 'skip' : buildVirtualFocusId(path, DROPDOWN_PREFIX),
         style: {
           '--rtms-list-item-depth': depth,
           '--rtms-list-item-indentation': indentation ? 1 : 0
         } as CSSProperties,
         className,
         onClick: onClick(path)
-      }}
+      } as HTMLProps<HTMLDivElement>}
       ownProps={{label, disabled, selected, partial, expanded, focused, matched}}
       customProps={nodeContainer.props}
     >

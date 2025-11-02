@@ -1,5 +1,12 @@
-import React, {FC, memo, ReactNode} from 'react';
-import {CheckedState, SelectAllContainerProps, SelectAllContainerType} from '../types';
+import React, {FC, HTMLProps, memo, ReactNode} from 'react';
+import {
+  CheckedState,
+  DROPDOWN_PREFIX,
+  SELECT_ALL_SUFFIX,
+  SelectAllContainerProps,
+  SelectAllContainerType
+} from '../types';
+import {buildVirtualFocusId} from '../utils/focusUtils';
 
 export const SelectAllContainer: FC<SelectAllContainerProps> = memo((props) => {
   return (
@@ -30,7 +37,11 @@ export const SelectAllContainerWrapper: FC<SelectAllContainerWrapperProps> = mem
 
   return (
     <selectAllContainer.component
-      attributes={{className: containerClasses, onClick}}
+      attributes={{
+        'data-rtms-virtual-focus-id': buildVirtualFocusId(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX),
+        className: containerClasses,
+        onClick
+      } as HTMLProps<HTMLDivElement>}
       ownProps={{label, checkedState, focused}}
       customProps={selectAllContainer.props}
     >

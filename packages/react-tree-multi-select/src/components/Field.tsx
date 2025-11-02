@@ -1,8 +1,8 @@
 import React, {FC, memo, RefObject} from 'react';
-import {CLEAR_ALL_SUFFIX, FIELD_PREFIX, FieldProps, Type} from '../types';
+import {CLEAR_ALL_SUFFIX, FIELD_PREFIX, FieldProps, INPUT_SUFFIX, Type} from '../types';
 import {InnerComponents, NullableVirtualFocusId} from '../innerTypes';
 import {filterChips} from '../utils/nodesUtils';
-import {isFocused} from '../utils/focusUtils';
+import {buildVirtualFocusId, isFocused} from '../utils/focusUtils';
 import {Node} from '../Node';
 import {ChipWrapper} from './ChipWrapper';
 import {InputWrapper} from './Input';
@@ -94,6 +94,7 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
           ))}
         {withDropdownInput || !isSearchable ? (
           <input
+            data-rtms-virtual-focus-id={buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX)}
             tabIndex={withDropdownInput && isDropdownOpen && dropdownMounted ? -1 : 0}
             className="rtms-input-hidden"
             disabled={componentDisabled}
@@ -107,6 +108,7 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
             value={searchValue}
             onChange={onInputChange}
             componentDisabled={componentDisabled}
+            location="FIELD"
           />
         )}
       </div>

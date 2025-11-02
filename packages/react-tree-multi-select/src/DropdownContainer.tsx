@@ -143,6 +143,7 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
             value={searchValue}
             onChange={onInputChange}
             componentDisabled={componentDisabled}
+            location="DROPDOWN"
           />
         ) : null}
         components={components}
