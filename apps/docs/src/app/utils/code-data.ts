@@ -192,20 +192,22 @@ export const CustomFieldExample: FC = () => {
 };`;
 
 export const chipContainerExample = `import React, {FC} from 'react';
-import Tooltip from '@atlaskit/tooltip';
-import {
-  ChipContainerProps,
-  ChipContainerType,
-  Components,
-  components,
-  TreeMultiSelect
-} from 'react-tree-multi-select';
-import {getTreeNodeData} from '../../utils';
+import {Tooltip} from 'react-tooltip';
+import {ChipContainerProps, ChipContainerType, Components, components, TreeMultiSelect} from 'react-tree-multi-select';
+import {getTreeNodeData} from '@/utils/utils';
 
 const CustomChipContainer: FC<ChipContainerProps> = (props) => (
-  <Tooltip content={\`Tooltip for the \${props.ownProps.label}\`}>
-    <components.ChipContainer {...props}/>
-  </Tooltip>
+  <>
+    <Tooltip id="chip-tooltip" render={({content}) => (<span>{content}</span>)}/>
+    <components.ChipContainer
+      {...props}
+      attributes={{
+        ...props.attributes,
+        "data-tooltip-id": "chip-tooltip",
+        "data-tooltip-content": \`Tooltip for the \${props.ownProps.label}\`,
+        "data-tooltip-place": "top"
+      }}/>
+  </>
 );
 
 const ChipContainer: ChipContainerType = {component: CustomChipContainer};
@@ -424,16 +426,22 @@ export const CustomDropdownExample: FC = () => {
 };`;
 
 export const selectAllContainerExample = `import React, {FC} from 'react';
-import Tooltip from '@atlaskit/tooltip';
+import {Tooltip} from 'react-tooltip';
 import {Components, SelectAllContainerProps, SelectAllContainerType, TreeMultiSelect} from 'react-tree-multi-select';
-import {getTreeNodeData} from '../../utils';
+import {getTreeNodeData} from '@/utils/utils';
 
 const CustomSelectAllContainer: FC<SelectAllContainerProps> = (props) => (
-  <Tooltip content={\`Tooltip for the \${props.ownProps.label}\`}>
-    <div {...props.aAttributes}>
+  <>
+    <Tooltip id="select-all-tooltip" render={({content}) => (<span>{content}</span>)}/>
+    <div
+      {...props.attributes}
+      data-tooltip-id="select-all-tooltip"
+      data-tooltip-content={\`Tooltip for the \${props.ownProps.label}\`}
+      data-tooltip-place="top"
+    >
       {props.children}
     </div>
-  </Tooltip>
+  </>
 );
 
 const SelectAllContainer: SelectAllContainerType = {component: CustomSelectAllContainer};
@@ -514,20 +522,22 @@ export const CustomSelectAllLabelExample: FC = () => {
 };`;
 
 export const nodeContainerExample = `import React, {FC} from 'react';
-import Tooltip from '@atlaskit/tooltip';
-import {
-  Components,
-  components,
-  NodeContainerProps,
-  NodeContainerType,
-  TreeMultiSelect
-} from 'react-tree-multi-select';
-import {getTreeNodeData} from '../../utils';
+import {Tooltip} from 'react-tooltip';
+import {Components, components, NodeContainerProps, NodeContainerType, TreeMultiSelect} from 'react-tree-multi-select';
+import {getTreeNodeData} from '@/utils/utils';
 
 const CustomNodeContainer: FC<NodeContainerProps> = (props) => (
-  <Tooltip content={\`Tooltip for the \${props.ownProps.label}\`}>
-    <components.NodeContainer {...props}/>
-  </Tooltip>
+  <>
+    <Tooltip id="node-tooltip" render={({content}) => (<span>{content}</span>)}/>
+    <components.NodeContainer
+      {...props}
+      attributes={{
+        ...props.attributes,
+        "data-tooltip-id": "node-tooltip",
+        "data-tooltip-content": \`Tooltip for the \${props.ownProps.label}\`,
+        "data-tooltip-place": "top"
+      }}/>
+  </>
 );
 
 const NodeContainer: NodeContainerType = {component: CustomNodeContainer};

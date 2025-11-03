@@ -53,7 +53,7 @@ export const NodeContainerWrapper: FC<NodeContainerWrapperProps> = memo((props) 
   return (
     <nodeContainer.component
       attributes={{
-        'data-rtms-virtual-focus-id': label === 'Micronaut' ? 'skip' : buildVirtualFocusId(path, DROPDOWN_PREFIX),
+        'data-rtms-virtual-focus-id': buildVirtualFocusId(path, DROPDOWN_PREFIX),
         style: {
           '--rtms-list-item-depth': depth,
           '--rtms-list-item-indentation': indentation ? 1 : 0
