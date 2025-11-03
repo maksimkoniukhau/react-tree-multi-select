@@ -161,10 +161,40 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [openDropdown]);
 
   useEffect(() => {
-    setVirtualFocusId(prev => !isDropdownOpen && isVirtualFocusInDropdown(prev)
-      ? buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX)
-      : prev);
+    // when data is changed and previously virtually focused chip is not present in the new data
+    setVirtualFocusId(prev => {
+      if (isVirtualFocusInField(prev)) {
+        const fieldVirtualFocusIds = getFieldVirtualFocusIds();
+        return fieldVirtualFocusIds.find(id => id === prev)
+          ?? fieldVirtualFocusIds.find(id => id === buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX))
+          ?? null
+      }
+      return prev;
+    });
+  }, [selectedNodes]);
+
+  useEffect(() => {
+    // when dropdown was closed and previously virtually focused element was in the dropdown
+    setVirtualFocusId(prev => {
+      if (!isDropdownOpen && isVirtualFocusInDropdown(prev)) {
+        const fieldVirtualFocusIds = getFieldVirtualFocusIds();
+        return fieldVirtualFocusIds.find(id => id === buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX))
+          ?? fieldVirtualFocusIds[0]
+          ?? null;
+      } else {
+        return prev;
+      }
+    });
   }, [isDropdownOpen]);
+
+  useEffect(() => {
+    const virtualFocusElement = treeMultiSelectRef.current?.querySelector(`[data-rtms-virtual-focus-id='${virtualFocusId}']`);
+    if (!virtualFocusElement) {
+      return;
+    }
+    virtualFocusElement.classList.add('focused');
+    return () => virtualFocusElement.classList.remove('focused');
+  }, [virtualFocusId]);
 
   useEffect(() => {
     nodeMapRef.current = new Map<string, Node>();
@@ -208,16 +238,6 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     const newDisplayedNodes = newNodes.filter(node => node.isDisplayed(isSearchMode));
     const newSelectedNodes = newNodes.filter(node => node.selected);
     let newVirtualFocusId = virtualFocusId;
-    if (isVirtualFocusInField(virtualFocusId)) {
-      if (isFocused(INPUT_SUFFIX, FIELD_PREFIX, virtualFocusId)
-        || (isFocused(CLEAR_ALL_SUFFIX, FIELD_PREFIX, virtualFocusId) && showClearAll)) {
-        newVirtualFocusId = virtualFocusId;
-      } else {
-        const chipNodes = filterChips(newSelectedNodes, type);
-        const current = chipNodes.find(node => isFocused(node.path, FIELD_PREFIX, virtualFocusId));
-        newVirtualFocusId = current ? virtualFocusId : buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX);
-      }
-    }
     if (isVirtualFocusInDropdown(virtualFocusId)) {
       if ((isFocused(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX, virtualFocusId)
           && shouldRenderSelectAll(type, newDisplayedNodes, isSearchMode, withSelectAll))
@@ -318,33 +338,32 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   }, [getDropdownVirtualFocusIds, keyboardConfig.dropdown.loopUp]);
 
-  const getFieldVirtualFocusIds = useCallback((): VirtualFocusId[] => {
-    const focusableElements: VirtualFocusId[] = [];
-    focusableElements.push(...filterChips(selectedNodes, type).map(node => buildVirtualFocusId(node.path, FIELD_PREFIX)));
-    focusableElements.push(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX));
-    if (showClearAll) {
-      focusableElements.push(buildVirtualFocusId(CLEAR_ALL_SUFFIX, FIELD_PREFIX));
-    }
-    return focusableElements;
-  }, [selectedNodes, type, showClearAll]);
+  const getFieldVirtualFocusIds = (): VirtualFocusId[] => {
+    const virtualFocusableElements = Array.from(
+      fieldRef.current?.querySelectorAll('[data-rtms-virtual-focus-id]') ?? []
+    );
+    return virtualFocusableElements
+      .map(element => element.getAttribute('data-rtms-virtual-focus-id') as VirtualFocusId)
+      .filter(id => id.startsWith(FIELD_PREFIX));
+  };
 
-  const getFirstFieldVirtualFocusId = useCallback((): NullableVirtualFocusId => {
+  const getFirstFieldVirtualFocusId = (): NullableVirtualFocusId => {
     const fieldVirtualFocusIds = getFieldVirtualFocusIds();
     if (fieldVirtualFocusIds.length === 0) {
       return null;
     }
     return fieldVirtualFocusIds[0];
-  }, [getFieldVirtualFocusIds]);
+  };
 
-  const getLastFieldVirtualFocusId = useCallback((): NullableVirtualFocusId => {
+  const getLastFieldVirtualFocusId = (): NullableVirtualFocusId => {
     const fieldVirtualFocusIds = getFieldVirtualFocusIds();
     if (fieldVirtualFocusIds.length === 0) {
       return null;
     }
     return fieldVirtualFocusIds[fieldVirtualFocusIds.length - 1];
-  }, [getFieldVirtualFocusIds]);
+  };
 
-  const getNextFieldVirtualFocusId = useCallback((virtualFocusId: NullableVirtualFocusId): NullableVirtualFocusId => {
+  const getNextFieldVirtualFocusId = (virtualFocusId: NullableVirtualFocusId): NullableVirtualFocusId => {
     const fieldVirtualFocusIds = getFieldVirtualFocusIds();
     if (fieldVirtualFocusIds.length === 0 || !virtualFocusId || !isVirtualFocusInField(virtualFocusId)) {
       return null;
@@ -357,9 +376,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     } else {
       return fieldVirtualFocusIds[currentIndex + 1];
     }
-  }, [getFieldVirtualFocusIds, keyboardConfig.field.loopRight]);
+  };
 
-  const getPrevFieldVirtualFocusId = useCallback((virtualFocusId: NullableVirtualFocusId): NullableVirtualFocusId => {
+  const getPrevFieldVirtualFocusId = (virtualFocusId: NullableVirtualFocusId): NullableVirtualFocusId => {
     const fieldVirtualFocusIds = getFieldVirtualFocusIds();
     if (fieldVirtualFocusIds.length === 0 || !virtualFocusId || !isVirtualFocusInField(virtualFocusId)) {
       return null;
@@ -372,9 +391,14 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     } else {
       return fieldVirtualFocusIds[currentIndex - 1];
     }
-  }, [getFieldVirtualFocusIds, keyboardConfig.field.loopLeft]);
+  };
 
-  const handleFieldClick = useCallback((event: React.MouseEvent): void => {
+  const getFieldInputVirtualFocusId = (): NullableVirtualFocusId => {
+    return getFieldVirtualFocusIds().find(id => id === buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX)) ?? null;
+  };
+
+  const handleFieldClickRef = useRef<(event: React.MouseEvent) => void>(null);
+  handleFieldClickRef.current = (event: React.MouseEvent): void => {
     if (isDisabled) {
       return;
     }
@@ -383,8 +407,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       return;
     }
     toggleDropdown(!isDropdownOpen);
-    setVirtualFocusId(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX));
-  }, [isDropdownOpen, isDisabled, toggleDropdown]);
+    setVirtualFocusId(getFieldInputVirtualFocusId());
+  };
+
+  const handleFieldClick = useCallback((event: React.MouseEvent): void => {
+    handleFieldClickRef.current?.(event);
+  }, []);
 
   const callClearAllHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onClearAll) {
@@ -404,7 +432,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodes);
 
     setSelectedNodes(newSelectedNodes);
-    setVirtualFocusId(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX));
+    setVirtualFocusId(getFieldInputVirtualFocusId());
     setSelectAllCheckedState(newSelectAllCheckedState);
 
     callClearAllHandler(newSelectAllCheckedState, newSelectedNodes);
@@ -414,7 +442,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     handleDeleteAllRef.current?.(event);
   }, []);
 
-  const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleInputChangeRef = useRef<(event: React.ChangeEvent<HTMLInputElement>) => void>(null);
+  handleInputChangeRef.current = (event: React.ChangeEvent<HTMLInputElement>): void => {
     if (isDisabled) {
       return;
     }
@@ -429,8 +458,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
     setDisplayedNodes(newDisplayedNodes);
     setSearchValue(value);
-    setVirtualFocusId(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX));
-  }, [nodes, isDisabled]);
+    setVirtualFocusId(getFieldInputVirtualFocusId());
+  };
+
+  const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>): void => {
+    handleInputChangeRef.current?.(event);
+  }, []);
 
   const callSelectAllChangeHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onSelectAllChange) {
@@ -519,7 +552,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     if (!node.disabled) {
       const prevFieldVirtualFocusId = getPrevFieldVirtualFocusId(virtualFocusId);
       const newFieldVirtualFocusId = (prevFieldVirtualFocusId === virtualFocusId) || (event.type === 'click')
-        ? buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX)
+        ? getFieldInputVirtualFocusId()
         : prevFieldVirtualFocusId;
       node.handleUnselect(type);
       const newSelectedNodes = nodes.filter(node => node.selected);
@@ -564,7 +597,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       setSelectedNodes(newSelectedNodes);
       toggleDropdown(closeDropdownOnNodeChange ? false : isDropdownOpen);
       setVirtualFocusId(closeDropdownOnNodeChange
-        ? buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX)
+        ? getFieldInputVirtualFocusId()
         : buildVirtualFocusId(node.path, DROPDOWN_PREFIX));
       setSelectAllCheckedState(newSelectAllCheckedState);
 
@@ -674,7 +707,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         setVirtualFocusId(prev => getFirstDropdownVirtualFocusId() ?? prev);
       },
       focusField: () => {
-        setVirtualFocusId(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX));
+        setVirtualFocusId(getFieldInputVirtualFocusId());
       },
       openDropdown: () => {
         toggleDropdown(true);
@@ -826,7 +859,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       isComponentFocused.current = true;
       treeMultiSelectRef?.current?.classList?.add('focused');
       setTimeout(() => {
-        setVirtualFocusId(prev => prev ?? buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX));
+        setVirtualFocusId(prev => prev ?? getFieldInputVirtualFocusId());
       }, 0);
       onFocus?.(event);
     }
