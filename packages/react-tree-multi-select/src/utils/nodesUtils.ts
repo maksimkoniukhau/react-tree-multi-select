@@ -8,11 +8,12 @@ export const mapTreeNodeToNode = (
   parent: Node | null,
   nodeMap: Map<string, Node>
 ): Node => {
-  const parentPath = parent?.path || '';
+  const parentPath = parent?.path ?? '';
   const delimiter = parentPath ? PATH_DELIMITER : '';
   const nodePath = parentPath + delimiter + path;
   const id = treeNode.id ?? nodePath;
-  const children: TreeNode[] = treeNode.children || [];
+  const skipDropdownVirtualFocus = treeNode.skipDropdownVirtualFocus ?? false;
+  const children: TreeNode[] = treeNode.children ?? [];
   const expanded = Boolean(children.length && treeNode.expanded);
 
   const initTreeNode: TreeNode = Object.assign(Object.create(Object.getPrototypeOf(treeNode)), treeNode);
@@ -21,6 +22,7 @@ export const mapTreeNodeToNode = (
     nodePath,
     id,
     treeNode.label,
+    skipDropdownVirtualFocus,
     parent,
     nodePath.split(PATH_DELIMITER).length - 1,
     expanded,

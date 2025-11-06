@@ -33,7 +33,13 @@ export interface TreeNode {
    * - If omitted, the component automatically generates an ID based on the node’s path,
    *   which represents the node’s hierarchical position within the tree data
    *   (e.g., `"0"`, `"1.0.3"`).
-   * - The assigned ID is used internally for tracking, selection, expansion and virtual focus management.
+   * - The assigned ID is used internally for tracking, selection, expansion, and virtual focus management.
+   *
+   * ### Important
+   * Node IDs provided by the user **MUST NOT conflict** with any predefined virtual focus
+   * identifier suffixes (e.g., `INPUT_SUFFIX`, `CLEAR_ALL_SUFFIX`, `SELECT_ALL_SUFFIX`, `FOOTER_SUFFIX`),
+   * as these are reserved for internal components and may cause unexpected behavior.
+   * See `VirtualFocusId` type for more details.
    */
   id?: string;
 
@@ -56,6 +62,14 @@ export interface TreeNode {
    * Whether the node is disabled.
    */
   disabled?: boolean;
+
+  /**
+   * When `true`, this node is excluded from the dropdown's virtual focus system.
+   * It will not be focusable via keyboard navigation or mouse interaction within the dropdown.
+   *
+   * @default false
+   */
+  skipDropdownVirtualFocus?: boolean;
 
   /**
    * Additional properties can be added as needed.
@@ -170,28 +184,28 @@ export const DROPDOWN_PREFIX = 'dropdown:';
  * String suffix used to identify the virtual focus element
  * associated with the input field.
  */
-export const INPUT_SUFFIX = 'input';
+export const INPUT_SUFFIX = 'rtms-input';
 
 /**
  * String suffix used to identify the virtual focus element
  * associated with the `SelectAllContainer` component.
  */
-export const SELECT_ALL_SUFFIX = 'select-all';
+export const SELECT_ALL_SUFFIX = 'rtms-select-all';
 
 /**
  * String suffix used to identify the virtual focus element
  * associated with the `FieldClear` component.
  */
-export const CLEAR_ALL_SUFFIX = 'clear-all';
+export const CLEAR_ALL_SUFFIX = 'rtms-clear-all';
 
 /**
  * String suffix used to identify the virtual focus element
  * associated with the `Footer` component.
  */
-export const FOOTER_SUFFIX = 'footer';
+export const FOOTER_SUFFIX = 'rtms-footer';
 
 /**
- * Represents the identifier of a virtually focusable element within a component.
+ * Represents the identifier of a virtually focusable element within the component.
  *
  * The value is a string prefixed with either `FIELD` or `DROPDOWN` constants,
  * followed by an element-specific suffix.
@@ -219,6 +233,9 @@ export const FOOTER_SUFFIX = 'footer';
  * - `${FIELD_PREFIX}${CLEAR_ALL_SUFFIX}` — **FieldClear** component in a **Field**
  * - `${DROPDOWN_PREFIX}${SELECT_ALL_SUFFIX}` — **SelectAll** component in a **Dropdown**
  * - `${DROPDOWN_PREFIX}${FOOTER_SUFFIX}` — **Footer** component in a **Dropdown**
+ *
+ * See associated constants (`FIELD_PREFIX`, `DROPDOWN_PREFIX`, `INPUT_SUFFIX`, `SELECT_ALL_SUFFIX`, etc.)
+ * for more details.
  */
 export type VirtualFocusId = `${typeof FIELD_PREFIX}${string}` | `${typeof DROPDOWN_PREFIX}${string}`;
 

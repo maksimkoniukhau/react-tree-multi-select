@@ -5,6 +5,7 @@ export class Node {
   private readonly _path: string;
   private readonly _id: string;
   private readonly _name: string;
+  private readonly _skipDropdownVirtualFocus: boolean;
   private readonly _parent: Node | null;
   private _children: Node[];
   private readonly _depth: number;
@@ -24,14 +25,16 @@ export class Node {
     path: string,
     id: string,
     name: string,
+    skipDropdownVirtualFocus: boolean,
     parent: Node | null,
     depth: number,
     expanded: boolean,
     initTreeNode: TreeNode
   ) {
-    this._path = path || '';
+    this._path = path ?? '';
     this._id = id;
-    this._name = name || '';
+    this._name = name ?? '';
+    this._skipDropdownVirtualFocus = skipDropdownVirtualFocus;
     this._parent = parent;
     this._children = [];
     this._depth = depth || 0;
@@ -39,11 +42,12 @@ export class Node {
     this._selected = false;
     this._partiallySelected = false;
     this._allNotDisabledChildrenSelected = false;
-    this._expanded = expanded || false;
+    this._expanded = expanded;
     this._searchExpanded = false;
     this._matched = false;
     this._filtered = true;
     this._initTreeNode = initTreeNode;
+    this._initTreeNode.id = id;
   }
 
   get path(): string {
@@ -56,6 +60,10 @@ export class Node {
 
   get name(): string {
     return this._name;
+  }
+
+  get skipDropdownVirtualFocus(): boolean {
+    return this._skipDropdownVirtualFocus;
   }
 
   get parent(): Node | null {
