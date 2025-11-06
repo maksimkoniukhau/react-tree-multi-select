@@ -15,15 +15,15 @@ export const ChipClear: FC<ChipClearProps> = memo((props) => {
 
 interface ChipClearWrapperProps {
   chipClear: ChipClearType;
-  path: string;
-  onClick: (path: string) => (event: React.MouseEvent) => void;
+  id: string;
+  onClick: (id: string) => (event: React.MouseEvent) => void;
   componentDisabled: boolean;
 }
 
-export const ChipClearWrapper: FC<ChipClearWrapperProps> = memo(({chipClear, path, onClick, componentDisabled}) => {
+export const ChipClearWrapper: FC<ChipClearWrapperProps> = memo(({chipClear, id, onClick, componentDisabled}) => {
   return (
     <chipClear.component
-      attributes={{className: 'rtms-chip-clear', onClick: onClick(path)}}
+      attributes={{className: 'rtms-chip-clear', onClick: onClick(id)}}
       ownProps={{componentDisabled}}
       customProps={chipClear.props}
     />

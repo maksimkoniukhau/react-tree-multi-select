@@ -3,6 +3,7 @@ import {TreeNode, Type} from './types';
 export class Node {
 
   private readonly _path: string;
+  private readonly _id: string;
   private readonly _name: string;
   private readonly _parent: Node | null;
   private _children: Node[];
@@ -19,10 +20,19 @@ export class Node {
   // shallow copy of original TreeNode with actual selected/expanded/disabled props
   private readonly _initTreeNode: TreeNode;
 
-  constructor(path: string, name: string, parent: Node | null, depth: number, expanded: boolean, initTreeNode: TreeNode) {
+  constructor(
+    path: string,
+    id: string,
+    name: string,
+    parent: Node | null,
+    depth: number,
+    expanded: boolean,
+    initTreeNode: TreeNode
+  ) {
     this._path = path || '';
+    this._id = id;
     this._name = name || '';
-    this._parent = parent || null;
+    this._parent = parent;
     this._children = [];
     this._depth = depth || 0;
     this._disabled = false;
@@ -38,6 +48,10 @@ export class Node {
 
   get path(): string {
     return this._path;
+  }
+
+  get id(): string {
+    return this._id;
   }
 
   get name(): string {

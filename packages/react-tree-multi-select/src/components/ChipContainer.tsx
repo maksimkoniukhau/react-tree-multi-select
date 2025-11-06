@@ -12,25 +12,25 @@ export const ChipContainer: FC<ChipContainerProps> = memo((props) => {
 
 interface ChipContainerWrapperProps {
   chipContainer: ChipContainerType;
-  path: string
+  id: string
   label: string;
   focused: boolean;
   disabled: boolean;
-  onClick: (path: string) => (event: React.MouseEvent) => void;
+  onClick: (id: string) => (event: React.MouseEvent) => void;
   componentDisabled: boolean;
   withChipClear: boolean;
   children: ReactNode;
 }
 
 export const ChipContainerWrapper: FC<ChipContainerWrapperProps> = memo((props) => {
-  const {chipContainer, path, label, focused, disabled, onClick, componentDisabled, withChipClear, children} = props;
+  const {chipContainer, id, label, focused, disabled, onClick, componentDisabled, withChipClear, children} = props;
 
   return (
     <chipContainer.component
       attributes={{
-        'data-rtms-virtual-focus-id': buildVirtualFocusId(path, FIELD_PREFIX),
+        'data-rtms-virtual-focus-id': buildVirtualFocusId(id, FIELD_PREFIX),
         className: `rtms-chip${disabled ? ' disabled' : ''}${focused ? ' focused' : ''}`,
-        onClick: onClick(path)
+        onClick: onClick(id)
       } as HTMLProps<HTMLDivElement>}
       ownProps={{label, focused, disabled, componentDisabled, withChipClear}}
       customProps={chipContainer.props}

@@ -24,8 +24,8 @@ export interface ListItemProps {
   noMatchesText: string;
   showFooter: boolean;
   onSelectAllChange: (event: React.MouseEvent) => void;
-  onNodeChange: (path: string) => (event: React.MouseEvent) => void;
-  onNodeToggle: (path: string) => (event: React.MouseEvent) => void;
+  onNodeChange: (id: string) => (event: React.MouseEvent) => void;
+  onNodeToggle: (id: string) => (event: React.MouseEvent) => void;
   onFooterClick: (event: React.MouseEvent) => void;
   input: ReactNode;
   components: InnerComponents;
@@ -105,7 +105,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     nodeIndex = showSelectAll && Boolean(input) ? index - 2 : index - 1;
   }
   const node = displayedNodes[nodeIndex];
-  const focused = virtualFocusId === buildVirtualFocusId(node.path, DROPDOWN_PREFIX);
+  const focused = virtualFocusId === buildVirtualFocusId(node.id, DROPDOWN_PREFIX);
   const expanded = searchValue ? node.searchExpanded : node.expanded;
   const hasChildren = node.hasChildren();
   const indentation = !(type === Type.MULTI_SELECT || type === Type.SELECT) && isAnyHasChildren && !hasChildren;
@@ -113,7 +113,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
   return (
     <NodeWrapper
       components={components}
-      path={node.path}
+      id={node.id}
       depth={node.depth}
       label={node.name}
       disabled={node.disabled}

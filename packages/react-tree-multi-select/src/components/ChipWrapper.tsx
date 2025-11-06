@@ -6,20 +6,20 @@ import {ChipClearWrapper} from './ChipClear';
 
 interface ChipWrapperProps {
   components: InnerComponents;
-  path: string;
+  id: string;
   label: string;
   focused: boolean;
   disabled: boolean;
   withChipClear: boolean;
-  onChipClick: (path: string) => (event: React.MouseEvent) => void;
-  onChipDelete: (path: string) => (event: React.MouseEvent) => void;
+  onChipClick: (id: string) => (event: React.MouseEvent) => void;
+  onChipDelete: (id: string) => (event: React.MouseEvent) => void;
   componentDisabled: boolean;
 }
 
 export const ChipWrapper: FC<ChipWrapperProps> = memo((props) => {
   const {
     components,
-    path,
+    id,
     label,
     focused,
     disabled,
@@ -32,7 +32,7 @@ export const ChipWrapper: FC<ChipWrapperProps> = memo((props) => {
   return (
     <ChipContainerWrapper
       chipContainer={components.ChipContainer}
-      path={path}
+      id={id}
       label={label}
       focused={focused}
       disabled={disabled}
@@ -44,7 +44,7 @@ export const ChipWrapper: FC<ChipWrapperProps> = memo((props) => {
       {withChipClear && !disabled && (
         <ChipClearWrapper
           chipClear={components.ChipClear}
-          path={path}
+          id={id}
           onClick={onChipDelete}
           componentDisabled={componentDisabled}
         />

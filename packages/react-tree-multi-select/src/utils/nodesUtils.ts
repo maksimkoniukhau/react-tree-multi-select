@@ -11,13 +11,15 @@ export const mapTreeNodeToNode = (
   const parentPath = parent?.path || '';
   const delimiter = parentPath ? PATH_DELIMITER : '';
   const nodePath = parentPath + delimiter + path;
+  const id = treeNode.id ?? nodePath;
   const children: TreeNode[] = treeNode.children || [];
   const expanded = Boolean(children.length && treeNode.expanded);
 
-  const initTreeNode = Object.assign(Object.create(Object.getPrototypeOf(treeNode)), treeNode);
+  const initTreeNode: TreeNode = Object.assign(Object.create(Object.getPrototypeOf(treeNode)), treeNode);
 
   const node: Node = new Node(
     nodePath,
+    id,
     treeNode.label,
     parent,
     nodePath.split(PATH_DELIMITER).length - 1,
@@ -28,7 +30,7 @@ export const mapTreeNodeToNode = (
   node.children = children.map((child, index) => mapTreeNodeToNode(child, index.toString(), node, nodeMap));
   node.initTreeNode.children = treeNode.children && node.children.map(child => child.initTreeNode);
 
-  nodeMap.set(nodePath, node);
+  nodeMap.set(id, node);
 
   return node;
 };

@@ -36,8 +36,8 @@ interface FieldContainerProps {
   componentDisabled: boolean;
   onClick: (event: React.MouseEvent) => void;
   onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onChipClick: (path: string) => (event: React.MouseEvent) => void;
-  onChipDelete: (path: string) => (event: React.MouseEvent) => void;
+  onChipClick: (id: string) => (event: React.MouseEvent) => void;
+  onChipDelete: (id: string) => (event: React.MouseEvent) => void;
   onDeleteAll: (event: React.MouseEvent) => void;
 }
 
@@ -80,11 +80,11 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
         {filterChips(selectedNodes, type)
           .map(node => (
             <ChipWrapper
-              key={node.path}
+              key={node.id}
               components={components}
-              path={node.path}
+              id={node.id}
               label={node.name}
-              focused={isFocused(node.path, FIELD_PREFIX, virtualFocusId)}
+              focused={isFocused(node.id, FIELD_PREFIX, virtualFocusId)}
               disabled={node.disabled}
               withChipClear={withChipClear}
               onChipClick={onChipClick}

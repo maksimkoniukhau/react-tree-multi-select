@@ -1,7 +1,7 @@
 import React, {FC, JSX, memo, RefObject, useEffect, useRef} from 'react';
 import {CheckedState, DROPDOWN_PREFIX, DropdownProps, FOOTER_SUFFIX, SELECT_ALL_SUFFIX, Type} from './types';
 import {InnerComponents, NullableVirtualFocusId} from './innerTypes';
-import {buildVirtualFocusId, extractPathFromVirtualFocusId, isVirtualFocusInDropdown} from './utils/focusUtils';
+import {buildVirtualFocusId, extractElementId, isVirtualFocusInDropdown} from './utils/focusUtils';
 import {Node} from './Node';
 import {ListItem} from './ListItem';
 import {VirtualizedList, VirtualizedListHandle} from './VirtualizedList';
@@ -40,8 +40,8 @@ interface DropdownContainerProps {
   inputRef: RefObject<HTMLInputElement | null>;
   onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onSelectAllChange: (event: React.MouseEvent) => void;
-  onNodeChange: (path: string) => (event: React.MouseEvent) => void;
-  onNodeToggle: (path: string) => (event: React.MouseEvent) => void;
+  onNodeChange: (id: string) => (event: React.MouseEvent) => void;
+  onNodeToggle: (id: string) => (event: React.MouseEvent) => void;
   onFooterClick: (event: React.MouseEvent) => void;
   onLastItemReached: () => void;
   onMount: () => void;
@@ -102,7 +102,7 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
       } else if (virtualFocusId === buildVirtualFocusId(FOOTER_SUFFIX, DROPDOWN_PREFIX)) {
         elementIndex = displayedNodes.length + (showSelectAll ? 1 : 0) + (withInput ? 1 : 0);
       } else {
-        const node = nodeMap.get(extractPathFromVirtualFocusId(virtualFocusId));
+        const node = nodeMap.get(extractElementId(virtualFocusId));
         if (node) {
           elementIndex = displayedNodes.indexOf(node) + (showSelectAll ? 1 : 0) + (withInput ? 1 : 0);
         }

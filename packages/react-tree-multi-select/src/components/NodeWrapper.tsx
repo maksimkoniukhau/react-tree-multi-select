@@ -7,7 +7,7 @@ import {NodeLabelWrapper} from './NodeLabel';
 
 export interface NodeWrapperProps {
   components: InnerComponents;
-  path: string;
+  id: string;
   depth: number;
   label: string;
   disabled: boolean;
@@ -19,14 +19,14 @@ export interface NodeWrapperProps {
   indentation: boolean;
   withToggle: boolean;
   withCheckbox: boolean;
-  onNodeChange: (path: string) => (event: React.MouseEvent) => void;
-  onNodeToggle: (path: string) => (event: React.MouseEvent) => void;
+  onNodeChange: (id: string) => (event: React.MouseEvent) => void;
+  onNodeToggle: (id: string) => (event: React.MouseEvent) => void;
 }
 
 export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
   const {
     components,
-    path,
+    id,
     depth,
     label,
     disabled,
@@ -45,7 +45,7 @@ export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
   return (
     <NodeContainerWrapper
       nodeContainer={components.NodeContainer}
-      path={path}
+      id={id}
       depth={depth}
       label={label}
       disabled={disabled}
@@ -60,7 +60,7 @@ export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
       {withToggle && (
         <NodeToggleWrapper
           nodeToggle={components.NodeToggle}
-          path={path}
+          id={id}
           expanded={expanded}
           onClick={onNodeToggle}
         />

@@ -12,7 +12,7 @@ export const NodeContainer: FC<NodeContainerProps> = memo((props) => {
 
 interface NodeContainerWrapperProps {
   nodeContainer: NodeContainerType;
-  path: string;
+  id: string;
   depth: number;
   label: string;
   disabled: boolean;
@@ -22,14 +22,14 @@ interface NodeContainerWrapperProps {
   focused: boolean;
   matched: boolean;
   indentation: boolean;
-  onClick: (path: string) => (event: React.MouseEvent) => void;
+  onClick: (id: string) => (event: React.MouseEvent) => void;
   children: ReactNode;
 }
 
 export const NodeContainerWrapper: FC<NodeContainerWrapperProps> = memo((props) => {
   const {
     nodeContainer,
-    path,
+    id,
     depth,
     label,
     disabled,
@@ -53,13 +53,13 @@ export const NodeContainerWrapper: FC<NodeContainerWrapperProps> = memo((props) 
   return (
     <nodeContainer.component
       attributes={{
-        'data-rtms-virtual-focus-id': buildVirtualFocusId(path, DROPDOWN_PREFIX),
+        'data-rtms-virtual-focus-id': buildVirtualFocusId(id, DROPDOWN_PREFIX),
         style: {
           '--rtms-list-item-depth': depth,
           '--rtms-list-item-indentation': indentation ? 1 : 0
         } as CSSProperties,
         className,
-        onClick: onClick(path)
+        onClick: onClick(id)
       } as HTMLProps<HTMLDivElement>}
       ownProps={{label, disabled, selected, partial, expanded, focused, matched}}
       customProps={nodeContainer.props}
