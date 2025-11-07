@@ -10,12 +10,6 @@ body {
   }
 }
 
-ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
@@ -140,6 +134,14 @@ code {
     padding: 70px 20px 0;
     min-height: calc(100vh - 140px);
 
+    .menu-navigation, .page-navigation {
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+    }
+
     .section-heading {
       scroll-margin-top: 70px;
     }
@@ -147,6 +149,7 @@ code {
     .page-content {
       padding: 0 10px 10px;
       overflow-x: clip;
+      line-height: 1.5;
 
       &.api-page {
         .code-container {
@@ -202,6 +205,29 @@ code {
       .checkbox-container {
         label {
           margin-left: 5px;
+        }
+      }
+
+      .demo-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        button {
+          color: #12bef3;
+          margin-left: auto;
+          padding: 5px;
+          border: 1px solid #dfdfdf;
+          border-radius: 10px;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #efefef;
+          }
+        }
+
+        .code-container {
+          margin: 0;
         }
       }
 
