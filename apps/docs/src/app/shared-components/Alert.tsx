@@ -2,15 +2,15 @@ import React, {FC, memo, ReactNode} from 'react';
 
 export interface AlertProps {
   type: 'important' | 'note';
-  text: ReactNode;
+  children: ReactNode;
 }
 
-export const Alert: FC<AlertProps> = memo(({type, text}) => {
+export const Alert: FC<AlertProps> = memo(({type, children}) => {
 
   return (
     <div className={`alert ${type}`}>
       <b>{type.toUpperCase()}</b>
-      <span>{text}</span>
+      <span>{children}</span>
     </div>
   );
 });

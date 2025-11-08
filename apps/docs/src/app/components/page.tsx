@@ -60,10 +60,9 @@ const ComponentsPage: FC = memo(() => {
             {'The general pattern for implementing a custom component involves creating a component and passing the attributes prop to the root element. Here\'s a simple implementation:'}
           </div>
           <CodeBlock code={customComponentCommonPattern}/>
-          <Alert
-            type={'important'}
-            text={'You must pass attributes prop to the root element in order for component to work properly.'}
-          />
+          <Alert type={'important'}>
+            {'You must pass attributes prop to the root element in order for component to work properly.'}
+          </Alert>
           <div className="paragraph">
             {'If you would like to add custom CSS class to component, you can merge component classname with your own like in the example below:'}
           </div>
@@ -81,15 +80,12 @@ const ComponentsPage: FC = memo(() => {
               {'You can pass your own properties to the component through the props object. When creating a custom component, ' +
                 'you can access these properties and use them in your implementation.'}
             </div>
-            <Alert
-              type={'important'}
-              text={
-                <span>
+            <Alert type={'important'}>
+              <span>
                   {'To improve performance, make sure to memoize '}<i>components</i>{' prop (and other props like objects, arrays, or callbacks). ' +
-                  'This helps prevent unnecessary re-renders by ensuring prop references remain stable between renders.'}
+                'This helps prevent unnecessary re-renders by ensuring prop references remain stable between renders.'}
                 </span>
-              }
-            />
+            </Alert>
           </div>
           <CodeBlock code={customProps}/>
           <div className="paragraph">
@@ -100,18 +96,15 @@ const ComponentsPage: FC = memo(() => {
             <div className="paragraph">
               {'You can use generic parameters to strongly type each component, ensuring type safety and preventing accidental misuse.'}
             </div>
-            <Alert
-              type={'note'}
-              text={
-                <span>
+            <Alert type={'note'}>
+              <span>
                   {`- Component type entries can be listed in any order. The order of keys in the generic argument does not matter — TypeScript will correctly match each one by name.
                   - Only known component keys (Field, Footer, NodeContainer, etc.) are allowed.
                   - Each component’s props are strongly typed according to the generics you specify.
                   - Extra or unknown keys (like WrongComponent) or mismatched types will result in a TypeScript error.
                   - Extra or unknown fields inside the component config (like wrongProp) are disallowed.`}
                 </span>
-              }
-            />
+            </Alert>
           </div>
           <CodeBlock code={tsSupport}/>
           <div className="paragraph">
@@ -125,10 +118,9 @@ const ComponentsPage: FC = memo(() => {
               {`Let's say you have filters on a page that, when clicked, open a dropdown with a range of filter options.\n`}
               {'It can be achieved by providing custom Field component like in the example below.\n'}
             </div>
-            <Alert
-              type={'important'}
-              text={'Your custom Field component must either be focusable itself or contain exactly one focusable child to ensure proper keyboard navigation.'}
-            />
+            <Alert type={'important'}>
+              {'Your custom Field component must either be focusable itself or contain exactly one focusable child to ensure proper keyboard navigation.'}
+            </Alert>
           </div>
           <div className="example-container">
             <CodeBlock code={fieldExample}/>
@@ -283,11 +275,10 @@ const ComponentsPage: FC = memo(() => {
             The default implementation is null, so the Footer is not rendered unless explicitly provided.
             You can use the Footer to implement features like pagination.`}
             </div>
-            <Alert
-              type={'note'}
-              text={'By default, the Footer is not shown during search (when the input has a value) or when there are no items in the dropdown. ' +
+            <Alert type={'note'}>
+              {'By default, the Footer is not shown during search (when the input has a value) or when there are no items in the dropdown. ' +
                 'This behavior can be customized using the footerConfig prop.'}
-            />
+            </Alert>
           </div>
           <div className="example-container">
             <CodeBlock code={footerExample}/>

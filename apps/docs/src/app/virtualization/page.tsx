@@ -30,10 +30,9 @@ const VirtualizationPage: FC = memo(() => {
         1. Pass isVirtualized={false} to your component.
         2. Add width: auto; to the .rtms-dropdown class in your styles.`}
       </div>
-      <Alert
-        type={'important'}
-        text={'Only disable virtualization if you have a relatively small number of items, since rendering all items at once can reduce performance.'}
-      />
+      <Alert type={'important'}>
+        {'Only disable virtualization if you have a relatively small number of items, since rendering all items at once can reduce performance.'}
+      </Alert>
       <div className="paragraph">
         {`This example demonstrates the component when virtualization is disabled, allowing the dropdown to resize automatically.`}
       </div>
