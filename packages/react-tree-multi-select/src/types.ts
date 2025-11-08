@@ -705,8 +705,12 @@ export interface NoDataOwnProps {
   label: string;
 }
 
+export interface Attributes<ComponentType> extends React.HTMLProps<ComponentType> {
+  'data-rtms-virtual-focus-id'?: string;
+}
+
 export interface ComponentProps<ComponentType, OwnProps, CustomProps = unknown> {
-  attributes: React.HTMLProps<ComponentType>;
+  attributes: Attributes<ComponentType>;
   ownProps: OwnProps;
   customProps: CustomProps;
   children?: React.ReactNode;
