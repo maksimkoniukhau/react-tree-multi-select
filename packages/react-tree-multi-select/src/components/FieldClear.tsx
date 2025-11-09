@@ -1,4 +1,4 @@
-import React, {FC, HTMLProps, memo} from 'react';
+import React, {FC, memo} from 'react';
 import {CLEAR_ALL_SUFFIX, FIELD_PREFIX, FieldClearProps, FieldClearType} from '../types';
 import {buildVirtualFocusId} from '../utils/focusUtils';
 
@@ -30,7 +30,7 @@ export const FieldClearWrapper: FC<FieldClearWrapperProps> = memo((props) => {
         'data-rtms-virtual-focus-id': buildVirtualFocusId(CLEAR_ALL_SUFFIX, FIELD_PREFIX),
         className: `rtms-field-clear${focused ? ' focused' : ''}${componentDisabled ? ' disabled' : ''}`,
         onClick
-      } as HTMLProps<HTMLDivElement>}
+      }}
       ownProps={{focused, componentDisabled}}
       customProps={fieldClear.props}
     />

@@ -1,4 +1,4 @@
-import React, {CSSProperties, FC, HTMLProps, memo, ReactNode} from 'react';
+import React, {CSSProperties, FC, memo, ReactNode} from 'react';
 import {DROPDOWN_PREFIX, NodeContainerProps, NodeContainerType} from '../types';
 import {buildVirtualFocusId} from '../utils/focusUtils';
 
@@ -21,6 +21,7 @@ interface NodeContainerWrapperProps {
   expanded: boolean;
   focused: boolean;
   matched: boolean;
+  skipDropdownVirtualFocus: boolean;
   indentation: boolean;
   onClick: (id: string) => (event: React.MouseEvent) => void;
   children: ReactNode;
@@ -38,10 +39,15 @@ export const NodeContainerWrapper: FC<NodeContainerWrapperProps> = memo((props) 
     expanded,
     focused,
     matched,
+    skipDropdownVirtualFocus,
     indentation,
     onClick,
     children
   } = props;
+
+  const skipVirtualFocus = skipDropdownVirtualFocus
+    ? {}
+    : {'data-rtms-virtual-focus-id': buildVirtualFocusId(id, DROPDOWN_PREFIX)};
 
   const disabledClass = disabled ? ' disabled' : '';
   const selectedClass = selected ? ' selected' : partial ? ' partial' : '';
@@ -53,14 +59,14 @@ export const NodeContainerWrapper: FC<NodeContainerWrapperProps> = memo((props) 
   return (
     <nodeContainer.component
       attributes={{
-        'data-rtms-virtual-focus-id': buildVirtualFocusId(id, DROPDOWN_PREFIX),
         style: {
           '--rtms-list-item-depth': depth,
           '--rtms-list-item-indentation': indentation ? 1 : 0
         } as CSSProperties,
         className,
+        ...skipVirtualFocus,
         onClick: onClick(id)
-      } as HTMLProps<HTMLDivElement>}
+      }}
       ownProps={{label, disabled, selected, partial, expanded, focused, matched}}
       customProps={nodeContainer.props}
     >

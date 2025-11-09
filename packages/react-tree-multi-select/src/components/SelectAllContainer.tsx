@@ -1,4 +1,4 @@
-import React, {FC, HTMLProps, memo, ReactNode} from 'react';
+import React, {FC, memo, ReactNode} from 'react';
 import {
   CheckedState,
   DROPDOWN_PREFIX,
@@ -41,7 +41,7 @@ export const SelectAllContainerWrapper: FC<SelectAllContainerWrapperProps> = mem
         'data-rtms-virtual-focus-id': buildVirtualFocusId(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX),
         className: containerClasses,
         onClick
-      } as HTMLProps<HTMLDivElement>}
+      }}
       ownProps={{label, checkedState, focused}}
       customProps={selectAllContainer.props}
     >

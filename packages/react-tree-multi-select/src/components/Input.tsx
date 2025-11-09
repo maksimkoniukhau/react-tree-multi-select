@@ -1,4 +1,4 @@
-import React, {FC, HTMLProps, memo, RefObject} from 'react';
+import React, {FC, memo, RefObject} from 'react';
 import {FIELD_PREFIX, INPUT_SUFFIX, InputProps, InputType} from '../types';
 import {buildVirtualFocusId} from '../utils/focusUtils';
 
@@ -31,7 +31,7 @@ export const InputWrapper: FC<InputWrapperProps> = memo((props) => {
         value,
         onChange,
         disabled: componentDisabled,
-      } as HTMLProps<HTMLInputElement>}
+      }}
       ownProps={{placeholder, value, disabled: componentDisabled}}
       customProps={input.props}
     />

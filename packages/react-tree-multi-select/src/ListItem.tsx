@@ -1,4 +1,4 @@
-import React, {FC, HTMLProps, memo, ReactNode} from 'react';
+import React, {FC, memo, ReactNode} from 'react';
 import {SELECT_ALL_LABEL} from './constants';
 import {buildVirtualFocusId} from './utils/focusUtils';
 import {CheckedState, DROPDOWN_PREFIX, FOOTER_SUFFIX, SELECT_ALL_SUFFIX, Type} from './types';
@@ -84,7 +84,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
           'data-rtms-virtual-focus-id': buildVirtualFocusId(FOOTER_SUFFIX, DROPDOWN_PREFIX),
           className: `rtms-footer${isFooterFocused ? ' focused' : ''}`,
           onClick: onFooterClick
-        } as HTMLProps<HTMLDivElement>}
+        }}
         ownProps={{focused: isFooterFocused}}
         customProps={components.Footer.props}
       />
@@ -122,6 +122,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
       expanded={expanded}
       focused={focused}
       matched={node.matched}
+      skipDropdownVirtualFocus={node.skipDropdownVirtualFocus}
       indentation={indentation}
       withToggle={type !== Type.MULTI_SELECT && type !== Type.SELECT && hasChildren}
       withCheckbox={type !== Type.MULTI_SELECT && type !== Type.SELECT}
