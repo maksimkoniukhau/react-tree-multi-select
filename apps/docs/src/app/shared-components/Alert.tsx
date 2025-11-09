@@ -10,7 +10,7 @@ export const Alert: FC<AlertProps> = memo(({type, children}) => {
   return (
     <div className={`alert ${type}`}>
       <b>{type.toUpperCase()}</b>
-      <span>{children}</span>
+      {children}
     </div>
   );
 });

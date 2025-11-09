@@ -13,8 +13,6 @@ export const CodeBlock: FC<CodeBlockProps> = ({code}) => {
   const html = highlighter.codeToHtml(code, {lang: 'typescript', theme: 'light-plus'});
 
   return (
-    <div className="code-container">
-      <code className="language-ts" dangerouslySetInnerHTML={{__html: html}}/>
-    </div>
+    <div className="code-container" dangerouslySetInnerHTML={{__html: html}}/>
   );
 };

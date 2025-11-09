@@ -161,6 +161,12 @@ code {
         margin: 10px 0;
       }
 
+      :not(pre) > code {
+        background-color: #f2f2f2;
+        padding: 1px 3px;
+        border-radius: 4px;
+      }
+
       .paragraph {
         white-space: pre-line;
         padding: 5px 0;
@@ -170,16 +176,18 @@ code {
       .alert {
         display: flex;
         flex-direction: column;
-        white-space: pre-line;
+        margin: 1em 0;
         padding: 5px 10px;
         line-height: 1.5;
+        border: 1px solid lightgray;
+        border-radius: 4px;
 
         &.important {
           background-color: lightyellow;
         }
 
         &.note {
-          background-color: #f5f5f5;
+          background-color: #effcff;
         }
       }
 
@@ -211,18 +219,28 @@ code {
       .demo-container {
         display: flex;
         flex-direction: column;
+        margin: 1em 0;
         gap: 10px;
 
-        button {
-          color: #12bef3;
-          margin-left: auto;
-          padding: 5px;
-          border: 1px solid #dfdfdf;
-          border-radius: 10px;
-          cursor: pointer;
+        .demo-header {
+          display: flex;
+          justify-content: space-between;
 
-          &:hover {
-            background-color: #efefef;
+          .demo-title {
+            font-weight: 600;
+          }
+
+          button {
+            color: #12bef3;
+            margin-left: auto;
+            padding: 1px 5px;
+            border: 1px solid #dfdfdf;
+            border-radius: 10px;
+            cursor: pointer;
+
+            &:hover {
+              background-color: #efefef;
+            }
           }
         }
 
