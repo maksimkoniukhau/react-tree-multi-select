@@ -24,12 +24,12 @@ import {
 } from './constants';
 import {getFieldFocusableElement} from './utils/commonUtils';
 import {
-  areAllExcludingDisabledSelected,
+  areAllSelectedExcludingDisabled,
   convertTreeArrayToFlatArray,
   filterChips,
   getSelectAllCheckedState,
-  isAnyExcludingDisabledSelected,
   isAnyHasChildren,
+  isAnySelectedExcludingDisabled,
   mapTreeNodeToNode
 } from './utils/nodesUtils';
 import {getKeyboardConfig, shouldRenderSelectAll, typeToClassName} from './utils/componentUtils';
@@ -118,7 +118,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
 
   const isSearchMode = Boolean(searchValue);
 
-  const showClearAll = withClearAll && isAnyExcludingDisabledSelected(nodes);
+  const showClearAll = withClearAll && isAnySelectedExcludingDisabled(nodes);
 
   const showSelectAll = shouldRenderSelectAll(type, displayedNodes, isSearchMode, withSelectAll);
 
@@ -473,18 +473,15 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   }, [onSelectAllChange]);
 
-  const handleSelectAllChangeRef = useRef<() => void>(null);
-  handleSelectAllChangeRef.current = (): void => {
+  const setAllSelected = (selectAll: boolean): void => {
     if (isDisabled) {
       return;
     }
-    const shouldBeUnselected = selectAllCheckedState === CheckedState.SELECTED
-      || (selectAllCheckedState === CheckedState.PARTIAL && areAllExcludingDisabledSelected(nodes, type));
     nodes.forEach(node => {
-      if (shouldBeUnselected) {
-        node.handleUnselect(type);
-      } else {
+      if (selectAll) {
         node.handleSelect(type);
+      } else {
+        node.handleUnselect(type);
       }
     });
 
@@ -492,10 +489,20 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodes);
 
     setSelectedNodes(newSelectedNodes);
-    setVirtualFocusId(buildVirtualFocusId(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX));
     setSelectAllCheckedState(newSelectAllCheckedState);
 
     callSelectAllChangeHandler(newSelectAllCheckedState, newSelectedNodes);
+  };
+
+  const handleSelectAllChangeRef = useRef<() => void>(null);
+  handleSelectAllChangeRef.current = (): void => {
+    if (isDisabled) {
+      return;
+    }
+    const shouldBeUnselected = selectAllCheckedState === CheckedState.SELECTED
+      || (selectAllCheckedState === CheckedState.PARTIAL && areAllSelectedExcludingDisabled(nodes, type));
+    setVirtualFocusId(prev => findDropdownVirtualFocusId(buildVirtualFocusId(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX)) ?? prev);
+    setAllSelected(!shouldBeUnselected);
   };
 
   const handleSelectAllChange = useCallback((): void => {

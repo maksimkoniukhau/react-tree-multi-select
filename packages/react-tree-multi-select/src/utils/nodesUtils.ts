@@ -52,13 +52,13 @@ export const convertTreeArrayToFlatArray = (treeArray: Node[]): Node[] => {
   return nodeArray;
 };
 
-export const areAllExcludingDisabledSelected = (nodes: Node[], type: Type): boolean => {
+export const areAllSelectedExcludingDisabled = (nodes: Node[], type: Type): boolean => {
   return nodes
     .filter(node => !node.disabled)
     .every(node => node.shouldBeUnselected(type));
 };
 
-export const isAnyExcludingDisabledSelected = (nodes: Node[]): boolean => {
+export const isAnySelectedExcludingDisabled = (nodes: Node[]): boolean => {
   return nodes
     .filter(node => !node.disabled)
     .some(node => node.selected);
