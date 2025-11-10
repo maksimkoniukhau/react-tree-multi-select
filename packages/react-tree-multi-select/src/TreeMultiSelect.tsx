@@ -164,7 +164,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     return getFieldVirtualFocusIds().find(id => id === virtualFocusId) ?? null;
   };
 
-  const getDropdownVirtualFocusIds = useCallback((): VirtualFocusId[] => {
+  const dropdownVirtualFocusIds: VirtualFocusId[] = useMemo(() => {
     const focusableElements: VirtualFocusId[] = [];
     if (showSelectAll) {
       focusableElements.push(buildVirtualFocusId(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX));
@@ -178,9 +178,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     return focusableElements;
   }, [displayedNodes, showSelectAll, showFooter]);
 
-  const findDropdownVirtualFocusId = (virtualFocusId: VirtualFocusId): NullableVirtualFocusId => {
-    return getDropdownVirtualFocusIds().find(id => id === virtualFocusId) ?? null;
-  };
+  const findDropdownVirtualFocusId = useCallback((virtualFocusId: VirtualFocusId): NullableVirtualFocusId => {
+    return dropdownVirtualFocusIds.find(id => id === virtualFocusId) ?? null;
+  }, [dropdownVirtualFocusIds]);
 
   const toggleDropdown = useCallback((isOpen: boolean): void => {
     if (openDropdown !== undefined) {
@@ -191,13 +191,14 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [openDropdown, onDropdownToggle]);
 
   useEffect(() => {
+    // when dropdownVirtualFocusIds were changed and previously virtually focused element is not present there
     setVirtualFocusId(prev => {
       if (isVirtualFocusInDropdown(prev)) {
-        return getDropdownVirtualFocusIds().find(id => id === prev) ?? null;
+        return dropdownVirtualFocusIds.find(id => id === prev) ?? null;
       }
       return prev;
     });
-  }, [getDropdownVirtualFocusIds]);
+  }, [dropdownVirtualFocusIds]);
 
   useEffect(() => {
     // when data was changed and previously virtually focused chip is not present in the field
@@ -307,23 +308,20 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   };
 
   const getFirstDropdownVirtualFocusId = useCallback((): NullableVirtualFocusId => {
-    const dropdownVirtualFocusIds = getDropdownVirtualFocusIds();
     if (dropdownVirtualFocusIds.length === 0) {
       return null;
     }
     return dropdownVirtualFocusIds[0];
-  }, [getDropdownVirtualFocusIds]);
+  }, [dropdownVirtualFocusIds]);
 
   const getLastDropdownVirtualFocusId = useCallback((): NullableVirtualFocusId => {
-    const dropdownVirtualFocusIds = getDropdownVirtualFocusIds();
     if (dropdownVirtualFocusIds.length === 0) {
       return null;
     }
     return dropdownVirtualFocusIds[dropdownVirtualFocusIds.length - 1];
-  }, [getDropdownVirtualFocusIds]);
+  }, [dropdownVirtualFocusIds]);
 
   const getNextDropdownVirtualFocusId = useCallback((virtualFocusId: NullableVirtualFocusId): NullableVirtualFocusId => {
-    const dropdownVirtualFocusIds = getDropdownVirtualFocusIds();
     if (dropdownVirtualFocusIds.length === 0 || !virtualFocusId || !isVirtualFocusInDropdown(virtualFocusId)) {
       return null;
     }
@@ -335,10 +333,9 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     } else {
       return dropdownVirtualFocusIds[currentIndex + 1];
     }
-  }, [getDropdownVirtualFocusIds, keyboardConfig.dropdown.loopDown]);
+  }, [dropdownVirtualFocusIds, keyboardConfig.dropdown.loopDown]);
 
   const getPrevDropdownVirtualFocusId = useCallback((virtualFocusId: NullableVirtualFocusId): NullableVirtualFocusId => {
-    const dropdownVirtualFocusIds = getDropdownVirtualFocusIds();
     if (dropdownVirtualFocusIds.length === 0 || !virtualFocusId || !isVirtualFocusInDropdown(virtualFocusId)) {
       return null;
     }
@@ -350,7 +347,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     } else {
       return dropdownVirtualFocusIds[currentIndex - 1];
     }
-  }, [getDropdownVirtualFocusIds, keyboardConfig.dropdown.loopUp]);
+  }, [dropdownVirtualFocusIds, keyboardConfig.dropdown.loopUp]);
 
   const getFirstFieldVirtualFocusId = (): NullableVirtualFocusId => {
     const fieldVirtualFocusIds = getFieldVirtualFocusIds();
