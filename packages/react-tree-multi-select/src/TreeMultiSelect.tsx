@@ -616,7 +616,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     handleNodeChangeRef.current?.(id, event);
   }, []);
 
-  const handleNodeToggle = useCallback((node: Node, expand: boolean): void => {
+  const handleNodeToggle = useCallback((id: string, expand: boolean): void => {
+    const node = nodeMapRef.current.get(id);
+    if (!node) {
+      return;
+    }
+
     node.handleExpand(isSearchMode, expand);
 
     const newDisplayedNodes = nodes.filter(node => node.isDisplayed(isSearchMode));
@@ -639,7 +644,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       ? !node.searchExpanded
       : !node.expanded;
     setVirtualFocusId(prev => findDropdownVirtualFocusId(buildVirtualFocusId(node.id, DROPDOWN_PREFIX)) ?? prev);
-    handleNodeToggle(node, expand);
+    handleNodeToggle(node.id, expand);
   };
 
   const handleNodeToggleOnClick = useCallback((id: string) => (event: React.MouseEvent): void => {
@@ -652,9 +657,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
     if (isDropdownOpen && isVirtualFocusInDropdown(virtualFocusId)) {
       const node = nodeMapRef.current.get(extractElementId(virtualFocusId));
-      if (node?.hasChildren()
-        && !((isSearchMode && node?.searchExpanded === expand) || (!isSearchMode && node?.expanded === expand))) {
-        handleNodeToggle(node, expand);
+      if (!node) {
+        return;
+      }
+      if (node.hasChildren()
+        && !((isSearchMode && node.searchExpanded === expand) || (!isSearchMode && node.expanded === expand))) {
+        handleNodeToggle(node.id, expand);
       }
     }
   };
