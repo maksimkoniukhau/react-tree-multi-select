@@ -183,11 +183,10 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [dropdownVirtualFocusIds]);
 
   const toggleDropdown = useCallback((isOpen: boolean): void => {
-    if (openDropdown !== undefined) {
-      onDropdownToggle?.(isOpen);
-    } else {
+    if (openDropdown === undefined) {
       setIsDropdownOpen(isOpen);
     }
+    onDropdownToggle?.(isOpen);
   }, [openDropdown, onDropdownToggle]);
 
   useEffect(() => {

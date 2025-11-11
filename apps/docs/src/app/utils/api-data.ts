@@ -438,16 +438,11 @@ export const rtmsProps = `export interface TreeMultiSelectProps {
    */
   components?: Components;
   /**
-   * Callback triggered when the dropdown is opened or closed by user interaction.
-   * This is used to synchronize external state with the dropdown’s rendering state.
+   * Callback triggered when the dropdown is opened or closed.
    *
-   * Note: This callback is only invoked when the \`openDropdown\` prop is provided.
-   * If \`openDropdown\` is undefined, the component manages its own state and
-   * \`onDropdownToggle\` will not be called.
-   *
-   * @param open - \`true\` if the dropdown was opened, \`false\` if it was closed.
+   * @param isOpen - \`true\` if the dropdown was opened, \`false\` if it was closed.
    */
-  onDropdownToggle?: (open: boolean) => void;
+  onDropdownToggle?: (isOpen: boolean) => void;
   /**
    * Callback triggered when a node is selected or unselected.
    * This includes interactions from the dropdown as well as chip removal in the field.

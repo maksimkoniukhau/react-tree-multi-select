@@ -925,6 +925,49 @@ describe('TreeMultiSelect component: openDropdown and onDropdownToggle props', (
     }
   };
 
+  it('tests uncontrolled component', async () => {
+    const user: UserEvent = userEvent.setup();
+
+    const handleDropdownToggle = jest.fn();
+
+    const {container} = render(<TreeMultiSelect data={treeNodeData} onDropdownToggle={handleDropdownToggle}/>);
+
+    openDropdownMatcher(container, false, handleDropdownToggle, null);
+    handleDropdownToggle.mockClear();
+
+    await user.click(getField(container));
+    openDropdownMatcher(container, true, handleDropdownToggle, true);
+    handleDropdownToggle.mockClear();
+
+    await user.keyboard('{arrowup}');
+    openDropdownMatcher(container, false, handleDropdownToggle, false);
+    handleDropdownToggle.mockClear();
+
+    await user.keyboard('{arrowdown}');
+    openDropdownMatcher(container, true, handleDropdownToggle, true);
+    handleDropdownToggle.mockClear();
+
+    await user.keyboard('{escape}');
+    openDropdownMatcher(container, false, handleDropdownToggle, false);
+    handleDropdownToggle.mockClear();
+
+    await user.click(getFieldToggle(container));
+    openDropdownMatcher(container, true, handleDropdownToggle, true);
+    handleDropdownToggle.mockClear();
+
+    await user.click(getFieldToggle(container));
+    openDropdownMatcher(container, false, handleDropdownToggle, false);
+    handleDropdownToggle.mockClear();
+
+    await user.click(getChipContainer(container, 0));
+    openDropdownMatcher(container, true, handleDropdownToggle, true);
+    handleDropdownToggle.mockClear();
+
+    await user.click(getFieldInput(container));
+    openDropdownMatcher(container, false, handleDropdownToggle, false);
+    handleDropdownToggle.mockClear();
+  });
+
   it('tests controlled component', async () => {
     let user: UserEvent = userEvent.setup();
 
