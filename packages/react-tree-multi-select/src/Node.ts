@@ -201,13 +201,9 @@ export class Node {
     }
   };
 
-  public shouldBeUnselected = (type: Type): boolean => {
-    return this.isEffectivelySelected(this, type);
-  };
-
   public handleChange = (type: Type): void => {
     if (!this.disabled) {
-      if (this.shouldBeUnselected(type)) {
+      if (this.isEffectivelySelected(type)) {
         this.handleUnselect(type);
       } else {
         this.handleSelect(type);
@@ -254,7 +250,11 @@ export class Node {
     return this.everyAncestor(this, ancestor => isSearchMode ? ancestor.searchExpanded : ancestor.expanded);
   };
 
-  private isEffectivelySelected = (node: Node, type: Type): boolean => {
+  public isEffectivelySelected = (type: Type): boolean => {
+    return this.isNodeEffectivelySelected(this, type);
+  };
+
+  private isNodeEffectivelySelected = (node: Node, type: Type): boolean => {
     return node.selected || (type === Type.TREE_SELECT && node.allNotDisabledChildrenSelected);
   };
 
@@ -273,7 +273,7 @@ export class Node {
     if (node.disabled) {
       return;
     }
-    if ((select && this.isEffectivelySelected(node, type)) || (!select && this.isUnselected(node))) {
+    if ((select && this.isNodeEffectivelySelected(node, type)) || (!select && this.isUnselected(node))) {
       return;
     }
     if (node.hasChildren()) {

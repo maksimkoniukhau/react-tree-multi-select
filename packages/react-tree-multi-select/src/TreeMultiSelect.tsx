@@ -571,7 +571,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       return;
     }
     const node = nodeMapRef.current.get(id);
-    if (!node || node.disabled || node.shouldBeUnselected(type) === select) {
+    if (!node || node.disabled || node.isEffectivelySelected(type) === select) {
       return;
     }
 
@@ -606,7 +606,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       return;
     }
 
-    if (node.shouldBeUnselected(type)) {
+    if (node.isEffectivelySelected(type)) {
       setNodeSelected(node.id, false);
     } else {
       setNodeSelected(node.id, true);
