@@ -23,5 +23,7 @@ export const getKeyboardConfig = (propsKeyboardConfig: KeyboardConfig = {}): Inn
 export const shouldRenderSelectAll = (
   type: Type, displayedNodes: Node[], isSearchMode: boolean, withSelectAll: boolean
 ): boolean => {
-  return type !== Type.SELECT && displayedNodes?.length > 0 && !isSearchMode && withSelectAll;
+  return (type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT || type === Type.MULTI_SELECT)
+    && displayedNodes?.length > 0
+    && !isSearchMode && withSelectAll;
 };

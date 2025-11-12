@@ -183,11 +183,14 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
   }, [dropdownVirtualFocusIds]);
 
   const toggleDropdown = useCallback((isOpen: boolean): void => {
+    if (isDisabled) {
+      return;
+    }
     if (openDropdown === undefined) {
       setIsDropdownOpen(isOpen);
     }
     onDropdownToggle?.(isOpen);
-  }, [openDropdown, onDropdownToggle]);
+  }, [isDisabled, openDropdown, onDropdownToggle]);
 
   useEffect(() => {
     // when dropdownVirtualFocusIds were changed and previously virtually focused element is not present there
@@ -468,8 +471,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   }, [onSelectAllChange]);
 
-  const setAllSelected = (selectAll: boolean): void => {
+  const setAllSelectedRef = useRef<(selectAll: boolean) => void>(null);
+  setAllSelectedRef.current = (selectAll: boolean): void => {
     if (isDisabled) {
+      return;
+    }
+    if (!(type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT || type === Type.MULTI_SELECT)) {
       return;
     }
     nodes.forEach(node => {
@@ -489,15 +496,31 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     callSelectAllChangeHandler(newSelectAllCheckedState, newSelectedNodes);
   };
 
-  const handleSelectAllChangeRef = useRef<() => void>(null);
-  handleSelectAllChangeRef.current = (): void => {
+  const setAllSelected = useCallback((selectAll: boolean): void => {
+    setAllSelectedRef.current?.(selectAll);
+  }, []);
+
+  const toggleAllSelectionRef = useRef<() => void>(null);
+  toggleAllSelectionRef.current = (): void => {
     if (isDisabled) {
       return;
     }
     const shouldBeUnselected = selectAllCheckedState === CheckedState.SELECTED
       || (selectAllCheckedState === CheckedState.PARTIAL && areAllSelectedExcludingDisabled(nodes, type));
-    setVirtualFocusId(prev => findDropdownVirtualFocusId(buildVirtualFocusId(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX)) ?? prev);
     setAllSelected(!shouldBeUnselected);
+  };
+
+  const toggleAllSelection = useCallback((): void => {
+    toggleAllSelectionRef.current?.();
+  }, []);
+
+  const handleSelectAllChangeRef = useRef<() => void>(null);
+  handleSelectAllChangeRef.current = (): void => {
+    if (isDisabled) {
+      return;
+    }
+    setVirtualFocusId(prev => findDropdownVirtualFocusId(buildVirtualFocusId(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX)) ?? prev);
+    toggleAllSelection();
   };
 
   const handleSelectAllChange = useCallback((): void => {
@@ -542,31 +565,74 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     handleChipClickRef.current?.(id, event);
   }, []);
 
-  const handleNodeDeleteRef = useRef<(id: string, event: React.MouseEvent | React.KeyboardEvent) => void>(null);
-  handleNodeDeleteRef.current = (id: string, event: React.MouseEvent | React.KeyboardEvent): void => {
-    if (!withChipClear || isDisabled) {
+  const setNodeSelectedRef = useRef<(id: string, select: boolean) => void>(null);
+  setNodeSelectedRef.current = (id: string, select: boolean): void => {
+    if (isDisabled) {
       return;
     }
     const node = nodeMapRef.current.get(id);
-    if (!node) {
+    if (!node || node.disabled || node.shouldBeUnselected(type) === select) {
+      return;
+    }
+
+    if (type === Type.SELECT) {
+      selectedNodes.forEach(node => node.handleUnselect(type));
+    }
+    if (select) {
+      node.handleSelect(type);
+    } else {
+      node.handleUnselect(type);
+    }
+
+    const newSelectedNodes = nodes.filter(node => node.selected);
+    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodes);
+    setSelectedNodes(newSelectedNodes);
+    setSelectAllCheckedState(newSelectAllCheckedState);
+
+    callNodeChangeHandler(node, newSelectedNodes);
+  };
+
+  const setNodeSelected = useCallback((id: string, select: boolean): void => {
+    setNodeSelectedRef.current?.(id, select);
+  }, []);
+
+  const toggleNodeSelectionRef = useRef<(id: string) => void>(null);
+  toggleNodeSelectionRef.current = (id: string): void => {
+    if (isDisabled) {
+      return;
+    }
+    const node = nodeMapRef.current.get(id);
+    if (!node || node.disabled) {
+      return;
+    }
+
+    if (node.shouldBeUnselected(type)) {
+      setNodeSelected(node.id, false);
+    } else {
+      setNodeSelected(node.id, true);
+    }
+  };
+
+  const toggleNodeSelection = useCallback((id: string): void => {
+    toggleNodeSelectionRef.current?.(id);
+  }, []);
+
+  const handleNodeDeleteRef = useRef<(id: string, event: React.MouseEvent | React.KeyboardEvent) => void>(null);
+  handleNodeDeleteRef.current = (id: string, event: React.MouseEvent | React.KeyboardEvent): void => {
+    if (isDisabled || !withChipClear) {
+      return;
+    }
+    const node = nodeMapRef.current.get(id);
+    if (!node || node.disabled) {
       return;
     }
     event.preventDefault();
-    if (!node.disabled) {
-      const prevFieldVirtualFocusId = getPrevFieldVirtualFocusId(virtualFocusId);
-      const newFieldVirtualFocusId = (prevFieldVirtualFocusId === virtualFocusId) || (event.type === 'click')
-        ? findFieldVirtualFocusId(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX))
-        : prevFieldVirtualFocusId;
-      node.handleUnselect(type);
-      const newSelectedNodes = nodes.filter(node => node.selected);
-      const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodes);
-
-      setSelectedNodes(newSelectedNodes);
-      setSelectAllCheckedState(newSelectAllCheckedState);
-      setVirtualFocusId(newFieldVirtualFocusId);
-
-      callNodeChangeHandler(node, newSelectedNodes);
-    }
+    const prevFieldVirtualFocusId = getPrevFieldVirtualFocusId(virtualFocusId);
+    const newFieldVirtualFocusId = (prevFieldVirtualFocusId === virtualFocusId) || (event.type === 'click')
+      ? findFieldVirtualFocusId(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX))
+      : prevFieldVirtualFocusId;
+    setVirtualFocusId(newFieldVirtualFocusId);
+    setNodeSelected(node.id, false);
   };
 
   const handleNodeDelete = useCallback((id: string) => (event: React.MouseEvent | React.KeyboardEvent): void => {
@@ -586,27 +652,10 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     if (!node) {
       return;
     }
+    setVirtualFocusId(prev => findDropdownVirtualFocusId(buildVirtualFocusId(node.id, DROPDOWN_PREFIX)) ?? prev);
     if (!node.disabled) {
-      if (type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT || type === Type.MULTI_SELECT) {
-        node.handleChange(type);
-      }
-      if (type === Type.SELECT) {
-        selectedNodes.forEach(node => node.handleUnselect(type));
-        node.handleSelect(type);
-      }
-      const newSelectedNodes = nodes.filter(node => node.selected);
-      const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodes);
-
-      setSelectedNodes(newSelectedNodes);
-      setSelectAllCheckedState(newSelectAllCheckedState);
+      toggleNodeSelection(node.id);
       toggleDropdown(closeDropdownOnNodeChange ? false : isDropdownOpen);
-      setVirtualFocusId(prev => closeDropdownOnNodeChange
-        ? findFieldVirtualFocusId(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX))
-        : findDropdownVirtualFocusId(buildVirtualFocusId(node.id, DROPDOWN_PREFIX)) ?? prev);
-
-      callNodeChangeHandler(node, newSelectedNodes);
-    } else {
-      setVirtualFocusId(prev => findDropdownVirtualFocusId(buildVirtualFocusId(node.id, DROPDOWN_PREFIX)) ?? prev);
     }
   };
 
@@ -614,9 +663,14 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     handleNodeChangeRef.current?.(id, event);
   }, []);
 
-  const handleNodeToggle = useCallback((id: string, expand: boolean): void => {
+  const toggleNodeRef = useRef<(id: string, expand: boolean) => void>(null);
+  toggleNodeRef.current = (id: string, expand: boolean): void => {
+    if (isDisabled) {
+      return;
+    }
     const node = nodeMapRef.current.get(id);
-    if (!node) {
+    if (!(type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT) || !node || !node.hasChildren()
+      || ((isSearchMode && node.searchExpanded === expand) || (!isSearchMode && node.expanded === expand))) {
       return;
     }
 
@@ -626,7 +680,11 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     setDisplayedNodes(newDisplayedNodes);
 
     callNodeToggleHandler(node, nodes.filter(node => node.expanded));
-  }, [nodes, isSearchMode, callNodeToggleHandler]);
+  };
+
+  const toggleNode = useCallback((id: string, expand: boolean): void => {
+    toggleNodeRef.current?.(id, expand);
+  }, []);
 
   const handleNodeToggleOnClickRef = useRef<(id: string, event: React.MouseEvent) => void>(null);
   handleNodeToggleOnClickRef.current = (id: string, event: React.MouseEvent): void => {
@@ -642,28 +700,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       ? !node.searchExpanded
       : !node.expanded;
     setVirtualFocusId(prev => findDropdownVirtualFocusId(buildVirtualFocusId(node.id, DROPDOWN_PREFIX)) ?? prev);
-    handleNodeToggle(node.id, expand);
+    toggleNode(node.id, expand);
   };
 
   const handleNodeToggleOnClick = useCallback((id: string) => (event: React.MouseEvent): void => {
     handleNodeToggleOnClickRef.current?.(id, event);
   }, []);
-
-  const handleNodeToggleOnKeyDown = (expand: boolean): void => {
-    if (isDisabled) {
-      return;
-    }
-    if (isDropdownOpen && isVirtualFocusInDropdown(virtualFocusId)) {
-      const node = nodeMapRef.current.get(extractElementId(virtualFocusId));
-      if (!node) {
-        return;
-      }
-      if (node.hasChildren()
-        && !((isSearchMode && node.searchExpanded === expand) || (!isSearchMode && node.expanded === expand))) {
-        handleNodeToggle(node.id, expand);
-      }
-    }
-  };
 
   const handleFooterClickRef = useRef<() => void>(null);
   handleFooterClickRef.current = (): void => {
@@ -733,10 +775,14 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         handleSelectAllChange();
       },
       expandNode: () => {
-        handleNodeToggleOnKeyDown(true);
+        if (isVirtualFocusInDropdown(virtualFocusId)) {
+          toggleNode(extractElementId(virtualFocusId), true);
+        }
       },
       collapseNode: () => {
-        handleNodeToggleOnKeyDown(false);
+        if (isVirtualFocusInDropdown(virtualFocusId)) {
+          toggleNode(extractElementId(virtualFocusId), false);
+        }
       },
       changeNode: () => {
         handleNodeChange(extractElementId(virtualFocusId))(event);
@@ -772,7 +818,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
             : inputIndex === 0 ? inputVirtualFocusId : fieldVirtualFocusIds[inputIndex - 1]);
         } else {
           if (isVirtualFocusInDropdown(virtualFocusId)) {
-            handleNodeToggleOnKeyDown(false);
+            toggleNode(extractElementId(virtualFocusId), false);
             if (isSearchMode) {
               event.preventDefault(); // Prevent the caret from moving inside the input.
             }
@@ -785,7 +831,7 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
         break;
       case 'ArrowRight':
         if (isVirtualFocusInDropdown(virtualFocusId)) {
-          handleNodeToggleOnKeyDown(true);
+          toggleNode(extractElementId(virtualFocusId), true);
           if (isSearchMode) {
             event.preventDefault(); // Prevent the caret from moving inside the input.
           }
