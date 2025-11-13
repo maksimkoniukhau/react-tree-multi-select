@@ -254,7 +254,6 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     if (type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT || type === Type.MULTI_SELECT) {
       newNodes.forEach(node => {
         if (node.initTreeNode.selected) {
-          // handleSelect (not handleChange) should be used!!!
           node.handleSelect(type);
         }
       });
@@ -262,7 +261,6 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     if (type === Type.SELECT) {
       const lastSelectedNode = newNodes.findLast(node => node.initTreeNode.selected);
       if (lastSelectedNode) {
-        // handleSelect (not handleChange) should be used!!!
         lastSelectedNode.handleSelect(type);
       }
     }

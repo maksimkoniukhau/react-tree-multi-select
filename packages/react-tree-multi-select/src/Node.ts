@@ -201,16 +201,6 @@ export class Node {
     }
   };
 
-  public handleChange = (type: Type): void => {
-    if (!this.disabled) {
-      if (this.isEffectivelySelected(type)) {
-        this.handleUnselect(type);
-      } else {
-        this.handleSelect(type);
-      }
-    }
-  };
-
   public handleSearch = (searchValue: string): void => {
     if (searchValue) {
       if (this.name?.toLowerCase().includes(searchValue.toLowerCase())) {
