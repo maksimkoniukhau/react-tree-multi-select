@@ -11,7 +11,8 @@ export enum MENU_ITEM {
   CONTROLLED = 'Controlled',
   VIRTUALIZATION = 'Virtualization',
   INFINITE_SCROLL = 'Infinite Scroll',
-  COMPONENTS = 'Components'
+  COMPONENTS = 'Components',
+  KEYBOARD_NAVIGATION = 'Keyboard Navigation',
 }
 
 const pathPageMap = new Map<string, MENU_ITEM>([
@@ -21,7 +22,8 @@ const pathPageMap = new Map<string, MENU_ITEM>([
   ['/controlled', MENU_ITEM.CONTROLLED],
   ['/virtualization', MENU_ITEM.VIRTUALIZATION],
   ['/infinite-scroll', MENU_ITEM.INFINITE_SCROLL],
-  ['/components', MENU_ITEM.COMPONENTS]
+  ['/components', MENU_ITEM.COMPONENTS],
+  ['/keyboard-navigation', MENU_ITEM.KEYBOARD_NAVIGATION]
 ]);
 
 export interface MenuProps {

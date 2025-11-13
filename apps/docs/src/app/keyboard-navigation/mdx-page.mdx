@@ -1,0 +1,92 @@
+import {
+    customVirtualFocusInFieldExample,
+    dropdownVirtualFocusIdsDefinition,
+    skipDropdownVirtualFocusExample,
+    virtualFocusIdDefinition
+} from '@/utils/code-data';
+import {Alert} from "@/shared-components/Alert";
+import {CodeBlock} from "@/shared-components/CodeBlock";
+import {DemoContainer} from "@/shared-components/DemoContainer";
+import {CustomVirtualFocusInFieldExample} from "@/examples/keyboard-navigation/CustomVirtualFocusInFieldExample";
+import {SkipDropdownVirtualFocusExample} from "@/examples/keyboard-navigation/SkipDropdownVirtualFocusExample";
+
+# Keyboard Navigation
+
+**react-tree-multi-select** provides a fully accessible and extensible virtual focus system,
+enabling smooth keyboard navigation across all interactive elements.<br/>
+Unlike traditional focus that depends on the browser’s active element, virtual focus is managed internally.
+This ensures predictable keyboard behavior, even when elements are hidden, virtualized, or dynamically added by users.
+
+The virtual keyboard navigation system supports moving focus between elements such as:
+- Chips, Input and FieldClear inside the Field.
+- SelectAll, Nodes and Footer inside the Dropdown (including virtualized content).
+- Custom user elements, if marked as virtually focusable.
+
+Navigation between these elements is controlled via arrow keys and custom `onKeyDown` handler.
+
+## Virtual Focus Design
+
+Every virtually focusable element is identified by an internal unique identifier — a `VirtualFocusId`.<br/>
+These IDs are namespaced by region (`field:` or `dropdown:`) to avoid collisions.
+
+<CodeBlock code={virtualFocusIdDefinition}/>
+
+This prefixing ensures IDs remain unique even when both regions contain elements with the same logical name.
+
+## Dual Focus Model
+
+### Field — DOM-based discovery
+
+The Field is always rendered, so virtual focusable elements are discovered dynamically from the DOM.
+- Each virtual focusable element inside the Field **must** have the attribute `data-rtms-virtual-focus-id`.
+- The component automatically collects these elements via `field.querySelectorAll('[data-rtms-virtual-focus-id]')`.
+
+This approach gives you complete flexibility:
+- Add your own virtual focusable elements by including the attribute.
+- Remove the attribute from built-in elements to exclude them from virtual keyboard navigation.
+
+Example — Adding custom and removing built-in virtual focusable elements in field:
+
+<DemoContainer code={customVirtualFocusInFieldExample} title="Custom virtual focus in Field">
+    <CustomVirtualFocusInFieldExample/>
+</DemoContainer>
+
+### Dropdown — Data-driven focus
+
+The Dropdown region can be virtualized or unmounted when closed.
+Because of this, virtual focus is managed by data, not by the DOM.
+
+**react-tree-multi-select** builds the list of virtual focusable elements from:
+
+- The list of rendered nodes (including those just outside the viewport).
+- Optional predefined elements ("SelectAll", "Footer").
+- User-supplied custom virtual focus IDs.
+
+Example internal logic:
+<CodeBlock code={dropdownVirtualFocusIdsDefinition}/>
+
+This deterministic model ensures stable keyboard navigation, even when not all elements are in the DOM.
+
+<Alert type={'note'}>
+    Custom dropdown virtual focusable elements should still include the attribute `data-rtms-virtual-focus-id`.
+    The component uses this internally to apply a `focused` CSS class when the element receives virtual focus, allowing
+    you to style it accordingly.
+</Alert>
+
+You can exclude a specific node from the dropdown's virtual focus system by setting the `skipDropdownVirtualFocus` prop on the corresponding TreeNode.
+
+Example — Skipping disabled nodes from dropdown virtual focus system:
+
+<DemoContainer code={skipDropdownVirtualFocusExample} title="Skip Dropdown virtual focus">
+    <SkipDropdownVirtualFocusExample/>
+</DemoContainer>
+
+## Unifying the Two Systems
+
+Although the Field and Dropdown regions use different internal mechanisms (DOM-based vs data-based), the external API is unified:
+
+- Both use the same `VirtualFocusId` format.
+- Both integrate with the same keyboard handler system.
+- Both can be controlled through the same `onKeyDown` callback and actions (e.g. `focusNext`, `focusPrev`, `focusDropdown`, `focusField`).
+
+From a developer’s perspective, it behaves like one continuous virtual focus system.

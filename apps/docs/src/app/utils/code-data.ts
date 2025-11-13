@@ -908,3 +908,104 @@ export const InfiniteScrollExample: FC = () => {
     </div>
   );
 };`;
+
+export const virtualFocusIdDefinition = `field:<elementId> 
+dropdown:<elementId>`;
+
+export const dropdownVirtualFocusIdsDefinition = `const getDropdownVirtualFocusIds = (): VirtualFocusId[] => {
+    const focusableElements: VirtualFocusId[] = [];
+    if (showSelectAll) {
+      focusableElements.push(\`\${DROPDOWN_PREFIX}\${SELECT_ALL_SUFFIX}\`);
+    }
+    focusableElements.push(...displayedNodes
+      .filter(node => !node.skipDropdownVirtualFocus)
+      .map(node => buildVirtualFocusId(\`\${DROPDOWN_PREFIX}\${node.id}\`));
+    if (showFooter) {
+      focusableElements.push(\`\${DROPDOWN_PREFIX}\${FOOTER_SUFFIX}\`);
+    }
+    return focusableElements;
+  };`;
+
+export const customVirtualFocusInFieldExample = `import React, {FC} from 'react';
+import {
+  Components,
+  components,
+  FieldProps,
+  FieldType,
+  InputProps,
+  InputType,
+  TreeMultiSelect
+} from 'react-tree-multi-select';
+import {getTreeNodeData} from '@/utils/utils';
+
+const CustomFieldInput: FC<InputProps> = (props) => {
+  const {['data-rtms-virtual-focus-id']: _omit, ...restAttributes} = props.attributes;
+  return (
+    <components.Input{...props} attributes={restAttributes}/>
+  );
+};
+
+const CustomField: FC<FieldProps> = (props) => (
+  <div {...props.attributes}>
+    <div data-rtms-virtual-focus-id="field:custom-id-2" className="field-virtual-focusable">
+      {\`I'm focusable\`}
+    </div>
+    {props.children}
+  </div>
+);
+
+const Input: InputType = {component: CustomFieldInput};
+const Field: FieldType = {component: CustomField};
+const customComponents: Components = {Field, Input};
+
+export const CustomVirtualFocusInFieldExample: FC = () => {
+
+  return (
+    <div className="component-example">
+      <TreeMultiSelect
+        data={getTreeNodeData(true)}
+        components={customComponents}
+      />
+    </div>
+  );
+};`;
+
+export const skipDropdownVirtualFocusExample = `import React, {FC} from 'react';
+import {TreeMultiSelect} from 'react-tree-multi-select';
+
+export const SkipDropdownVirtualFocusExample: FC = () => {
+
+  return (
+    <div className="component-example">
+      <TreeMultiSelect
+        data={[
+          {
+            label: 'node-1',
+            expanded: true,
+            children: [
+              {label: 'node-1-child-1', disabled: true, skipDropdownVirtualFocus: true},
+              {label: 'node-1-child-2'}
+            ]
+          },
+          {
+            label: 'node-2',
+            expanded: true,
+            children: [
+              {label: 'node-2-child-1'},
+              {label: 'node-2-child-2', disabled: true, skipDropdownVirtualFocus: true}
+            ]
+          },
+          {
+            label: 'node-3',
+            expanded: true,
+            selected: true,
+            children: [
+              {label: 'node-3-child-1', disabled: true, skipDropdownVirtualFocus: true},
+              {label: 'node-3-child-2'}
+            ]
+          }
+        ]}
+      />
+    </div>
+  );
+};`;

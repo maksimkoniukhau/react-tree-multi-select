@@ -167,6 +167,16 @@ code {
         border-radius: 4px;
       }
 
+      .field-virtual-focusable {
+        padding: 4px 6px;
+        background-color: #ebebeb;
+        cursor: default;
+
+        &:hover, &.focused {
+          box-shadow: 0 0 5px 1px #a1a1a1;
+        }
+      }
+
       .paragraph {
         white-space: pre-line;
         padding: 5px 0;
