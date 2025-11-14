@@ -659,15 +659,18 @@ export interface TreeMultiSelectProps {
   /**
    * Callback triggered on keyboard interaction within the component.
    *
-   * This allows interception or customization of built-in keyboard behavior.
+   * This allows interception or customization of the built-in keyboard behavior.
    *
-   * Returning `true` from this callback prevents the component’s default
-   * keyboard handling for the event.
+   * - Returning `true` prevents the component’s default keyboard handling for the event.
+   * - Returning `false` or `undefined` allows the component’s default handling to continue.
+   *
+   * This means the user can simply omit a return statement if they do not want
+   * to block the default behavior.
    *
    * @param event - The original keyboard event.
-   * @returns `true` to stop the default keyboard handling; otherwise `false`.
+   * @returns `true` to stop the default keyboard handling; otherwise `false` or `undefined`.
    */
-  onKeyDown?: (event: React.KeyboardEvent) => boolean;
+  onKeyDown?: (event: React.KeyboardEvent) => boolean | undefined;
 
   /**
    * Callback triggered when the last item in the dropdown is rendered.
