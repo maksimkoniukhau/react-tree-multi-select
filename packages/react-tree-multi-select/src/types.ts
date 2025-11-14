@@ -240,121 +240,8 @@ export const FOOTER_SUFFIX = 'rtms-footer';
 export type VirtualFocusId = `${typeof FIELD_PREFIX}${string}` | `${typeof DROPDOWN_PREFIX}${string}`;
 
 /**
- * Represents a set of actions that can be used to change the component's state and behavior.
+ * Represents the internal state of the component.
  */
-export type KeyboardActions = {
-  /**
-   * Moves virtual focus to the next virtually focusable element.
-   * Does nothing if `virtualFocusId` is `null`.
-   */
-  focusNextItem: () => void;
-
-  /**
-   * Moves virtual focus to the previous virtually focusable element.
-   * Does nothing if `virtualFocusId` is `null`.
-   */
-  focusPrevItem: () => void;
-
-  /**
-   * Moves virtual focus to the first virtually focusable element
-   * within the same area (field or dropdown) as the current virtual focus.
-   * Does nothing if `virtualFocusId` is `null`.
-   */
-  focusFirstItem: () => void;
-
-  /**
-   * Moves virtual focus to the last virtually focusable element
-   * within the same area (field or dropdown) as the current virtual focus.
-   * Does nothing if `virtualFocusId` is `null`.
-   */
-  focusLastItem: () => void;
-
-  /**
-   * Moves virtual focus to the first virtually focusable element in the dropdown.
-   */
-  focusDropdown: () => void;
-
-  /**
-   * Moves virtual focus to the input element in the field.
-   */
-  focusField: () => void;
-
-  /**
-   * Opens (renders) the dropdown.
-   */
-  openDropdown: () => void;
-
-  /**
-   * Closes (hides) the dropdown.
-   */
-  closeDropdown: () => void;
-
-  /**
-   * Programmatically triggers the same behavior as interacting with the `SelectAll` component,
-   * such as a mouse click or pressing a key.
-   */
-  changeSelectAll: () => void;
-
-  /**
-   * Programmatically triggers the same behavior as interacting with the currently virtually focused `NodeToggle` component,
-   * such as pressing a key.
-   * Does nothing if the node is already expanded or not expandable.
-   */
-  expandNode: () => void;
-
-  /**
-   * Programmatically triggers the same behavior as interacting with the currently virtually focused `NodeToggle` component,
-   * such as pressing a key.
-   * Does nothing if the node is already collapsed or not collapsible.
-   */
-  collapseNode: () => void;
-
-  /**
-   * Programmatically triggers the same behavior as interacting with the currently virtually focused `Node` component,
-   * such as a mouse click or pressing a key.
-   */
-  changeNode: () => void;
-
-  /**
-   * Programmatically triggers the same behavior as interacting with the currently virtually focused `ChipClear` component,
-   * such as a mouse click or pressing a key.
-   */
-  clearNode: () => void;
-
-  /**
-   * Programmatically triggers the same behavior as interacting with the `FieldClear` component,
-   * such as a mouse click or pressing a key.
-   */
-  clearAll: () => void;
-};
-
-/**
- * Provides contextual information about the current component state
- * and available actions that can be performed within the component.
- *
- * This context is passed to the `onKeyDown` callback, allowing external handlers
- * to inspect and manipulate component state through available actions.
- */
-export interface KeyboardHandlerContext {
-  /**
-   * The current search input value.
-   */
-  inputValue: string;
-  /**
-   * Indicates whether the dropdown is currently open (rendered).
-   */
-  isDropdownOpen: boolean;
-  /**
-   * The identifier of the currently virtually focused element,
-   * or `null` if no element is virtually focused.
-   */
-  virtualFocusId: VirtualFocusId | null;
-  /**
-   * A set of actions that can be used to manipulate the component state.
-   */
-  actions: KeyboardActions;
-}
-
 export interface State {
   /**
    * Represents the current overall selection state of all nodes in the tree.
@@ -380,7 +267,7 @@ export interface State {
 
 export interface TreeMultiSelectHandle {
   /**
-   * Returns the current internal component state.
+   * Returns a snapshot of the current internal component state.
    *
    * The returned object is always up-to-date at the moment of the call.
    */
@@ -773,16 +660,14 @@ export interface TreeMultiSelectProps {
    * Callback triggered on keyboard interaction within the component.
    *
    * This allows interception or customization of built-in keyboard behavior.
-   * The callback receives the keyboard event and a `KeyboardHandlerContext`.
    *
    * Returning `true` from this callback prevents the component’s default
    * keyboard handling for the event.
    *
    * @param event - The original keyboard event.
-   * @param context - The current keyboard handler context.
    * @returns `true` to stop the default keyboard handling; otherwise `false`.
    */
-  onKeyDown?: (event: React.KeyboardEvent, context: Readonly<KeyboardHandlerContext>) => boolean;
+  onKeyDown?: (event: React.KeyboardEvent) => boolean;
 
   /**
    * Callback triggered when the last item in the dropdown is rendered.

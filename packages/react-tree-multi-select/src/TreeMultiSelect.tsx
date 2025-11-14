@@ -7,7 +7,6 @@ import {
   FIELD_PREFIX,
   FOOTER_SUFFIX,
   INPUT_SUFFIX,
-  KeyboardActions,
   SELECT_ALL_SUFFIX,
   TreeMultiSelectHandle,
   TreeMultiSelectProps,
@@ -741,83 +740,11 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     }
   };
 
-  const getActions = (event: React.KeyboardEvent): KeyboardActions => {
-    return {
-      focusNextItem: () => {
-        if (isVirtualFocusInDropdown(virtualFocusId)) {
-          setVirtualFocusId(prev => getNextDropdownVirtualFocusId(prev) ?? prev);
-        }
-        if (isVirtualFocusInField(virtualFocusId)) {
-          setVirtualFocusId(prev => getNextFieldVirtualFocusId(prev) ?? prev);
-        }
-      },
-      focusPrevItem: () => {
-        if (isVirtualFocusInDropdown(virtualFocusId)) {
-          setVirtualFocusId(prev => getPrevDropdownVirtualFocusId(prev) ?? prev);
-        }
-        if (isVirtualFocusInField(virtualFocusId)) {
-          setVirtualFocusId(prev => getPrevFieldVirtualFocusId(prev) ?? prev);
-        }
-      },
-      focusFirstItem: () => {
-        if (isVirtualFocusInDropdown(virtualFocusId)) {
-          setVirtualFocusId(prev => getFirstDropdownVirtualFocusId() ?? prev);
-        }
-        if (isVirtualFocusInField(virtualFocusId)) {
-          setVirtualFocusId(prev => getFirstFieldVirtualFocusId() ?? prev);
-        }
-      },
-      focusLastItem: () => {
-        if (isVirtualFocusInDropdown(virtualFocusId)) {
-          setVirtualFocusId(prev => getLastDropdownVirtualFocusId() ?? prev);
-        }
-        if (isVirtualFocusInField(virtualFocusId)) {
-          setVirtualFocusId(prev => getLastFieldVirtualFocusId() ?? prev);
-        }
-      },
-      focusDropdown: () => {
-        setVirtualFocusId(prev => getFirstDropdownVirtualFocusId() ?? prev);
-      },
-      focusField: () => {
-        setVirtualFocusId(findFieldVirtualFocusId(buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX)));
-      },
-      openDropdown: () => {
-        toggleDropdown(true);
-      },
-      closeDropdown: () => {
-        toggleDropdown(false);
-      },
-      changeSelectAll: () => {
-        handleSelectAllChange();
-      },
-      expandNode: () => {
-        if (isVirtualFocusInDropdown(virtualFocusId)) {
-          setNodeExpanded(extractElementId(virtualFocusId), true);
-        }
-      },
-      collapseNode: () => {
-        if (isVirtualFocusInDropdown(virtualFocusId)) {
-          setNodeExpanded(extractElementId(virtualFocusId), false);
-        }
-      },
-      changeNode: () => {
-        handleNodeChange(extractElementId(virtualFocusId))(event);
-      },
-      clearNode: () => {
-        handleNodeDelete(extractElementId(virtualFocusId))(event);
-      },
-      clearAll: () => {
-        handleDeleteAll(event);
-      }
-    };
-  };
-
   const handleComponentKeyDown = (event: React.KeyboardEvent): void => {
     if (isDisabled) {
       return;
     }
-    if (onKeyDown
-      && onKeyDown(event, {inputValue: searchValue, isDropdownOpen, virtualFocusId, actions: getActions(event)})) {
+    if (onKeyDown?.(event)) {
       return;
     }
     switch (event.key) {
