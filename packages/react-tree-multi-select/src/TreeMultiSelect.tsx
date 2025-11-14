@@ -661,8 +661,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     handleNodeChangeRef.current?.(id, event);
   }, []);
 
-  const toggleNodeRef = useRef<(id: string, expand: boolean) => void>(null);
-  toggleNodeRef.current = (id: string, expand: boolean): void => {
+  const setNodeExpandedRef = useRef<(id: string, expand: boolean) => void>(null);
+  setNodeExpandedRef.current = (id: string, expand: boolean): void => {
     if (isDisabled) {
       return;
     }
@@ -680,8 +680,28 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     callNodeToggleHandler(node, nodes.filter(node => node.expanded));
   };
 
-  const toggleNode = useCallback((id: string, expand: boolean): void => {
-    toggleNodeRef.current?.(id, expand);
+  const setNodeExpanded = useCallback((id: string, expand: boolean): void => {
+    setNodeExpandedRef.current?.(id, expand);
+  }, []);
+
+  const toggleNodeExpansionRef = useRef<(id: string) => void>(null);
+  toggleNodeExpansionRef.current = (id: string): void => {
+    if (isDisabled) {
+      return;
+    }
+    const node = nodeMapRef.current.get(id);
+    if (!node) {
+      return;
+    }
+
+    const expand = isSearchMode
+      ? !node.searchExpanded
+      : !node.expanded;
+    setNodeExpanded(node.id, expand);
+  };
+
+  const toggleNodeExpansion = useCallback((id: string): void => {
+    toggleNodeExpansionRef.current?.(id);
   }, []);
 
   const handleNodeToggleOnClickRef = useRef<(id: string, event: React.MouseEvent) => void>(null);
@@ -694,11 +714,8 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       return;
     }
     event.preventDefault();
-    const expand = isSearchMode
-      ? !node.searchExpanded
-      : !node.expanded;
     setVirtualFocusId(prev => findDropdownVirtualFocusId(buildVirtualFocusId(node.id, DROPDOWN_PREFIX)) ?? prev);
-    toggleNode(node.id, expand);
+    toggleNodeExpansion(node.id);
   };
 
   const handleNodeToggleOnClick = useCallback((id: string) => (event: React.MouseEvent): void => {
@@ -774,12 +791,12 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       },
       expandNode: () => {
         if (isVirtualFocusInDropdown(virtualFocusId)) {
-          toggleNode(extractElementId(virtualFocusId), true);
+          setNodeExpanded(extractElementId(virtualFocusId), true);
         }
       },
       collapseNode: () => {
         if (isVirtualFocusInDropdown(virtualFocusId)) {
-          toggleNode(extractElementId(virtualFocusId), false);
+          setNodeExpanded(extractElementId(virtualFocusId), false);
         }
       },
       changeNode: () => {
@@ -804,32 +821,33 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
     switch (event.key) {
       case 'ArrowLeft':
-        if (!virtualFocusId) {
-          const fieldVirtualFocusIds = getFieldVirtualFocusIds();
-          if (fieldVirtualFocusIds.length === 0) {
-            return;
+        if (isVirtualFocusInDropdown(virtualFocusId)) {
+          setNodeExpanded(extractElementId(virtualFocusId), false);
+          if (isSearchMode) {
+            event.preventDefault(); // Prevent the caret from moving inside the input.
           }
-          const inputVirtualFocusId = buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX);
-          const inputIndex = fieldVirtualFocusIds.indexOf(inputVirtualFocusId);
-          setVirtualFocusId(inputIndex === -1
-            ? fieldVirtualFocusIds[fieldVirtualFocusIds.length - 1]
-            : inputIndex === 0 ? inputVirtualFocusId : fieldVirtualFocusIds[inputIndex - 1]);
         } else {
-          if (isVirtualFocusInDropdown(virtualFocusId)) {
-            toggleNode(extractElementId(virtualFocusId), false);
-            if (isSearchMode) {
-              event.preventDefault(); // Prevent the caret from moving inside the input.
-            }
-          } else {
-            if (!isSearchMode || (withDropdownInput && !isDropdownOpen)) {
-              setVirtualFocusId(prev => getPrevFieldVirtualFocusId(prev) ?? prev);
-            }
+          if (!isSearchMode || (withDropdownInput && !isDropdownOpen)) {
+            setVirtualFocusId(prev => {
+              if (!prev) {
+                const fieldVirtualFocusIds = getFieldVirtualFocusIds();
+                if (fieldVirtualFocusIds.length === 0) {
+                  return prev;
+                }
+                const inputVirtualFocusId = buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX);
+                const inputIndex = fieldVirtualFocusIds.indexOf(inputVirtualFocusId);
+                return inputIndex === -1
+                  ? fieldVirtualFocusIds[fieldVirtualFocusIds.length - 1]
+                  : inputIndex === 0 ? inputVirtualFocusId : fieldVirtualFocusIds[inputIndex - 1];
+              }
+              return getPrevFieldVirtualFocusId(prev) ?? prev;
+            });
           }
         }
         break;
       case 'ArrowRight':
         if (isVirtualFocusInDropdown(virtualFocusId)) {
-          toggleNode(extractElementId(virtualFocusId), true);
+          setNodeExpanded(extractElementId(virtualFocusId), true);
           if (isSearchMode) {
             event.preventDefault(); // Prevent the caret from moving inside the input.
           }
