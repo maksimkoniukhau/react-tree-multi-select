@@ -1,5 +1,5 @@
 import './styles/tree-multi-select.scss';
-import React, {FC, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 import {
   CheckedState,
   CLEAR_ALL_SUFFIX,
@@ -9,6 +9,7 @@ import {
   INPUT_SUFFIX,
   KeyboardActions,
   SELECT_ALL_SUFFIX,
+  TreeMultiSelectHandle,
   TreeMultiSelectProps,
   TreeNode,
   Type,
@@ -45,7 +46,7 @@ import {Node} from './Node';
 import {FieldContainer} from './components/Field';
 import {DropdownContainer} from './DropdownContainer';
 
-export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
+export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelectProps>((props, ref) => {
   const {
     data = [],
     type = Type.TREE_SELECT,
@@ -993,6 +994,80 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
     }
   }, []);
 
+  useImperativeHandle(ref, (): TreeMultiSelectHandle => ({
+    getState: () => ({
+      allNodesSelectionState: selectAllCheckedState,
+      inputValue: searchValue,
+      isDropdownOpen,
+      virtualFocusId
+    }),
+    openDropdown: () => toggleDropdown(true),
+    closeDropdown: () => toggleDropdown(false),
+    toggleDropdown: () => toggleDropdown(!isDropdownOpen),
+    selectAll: () => setAllSelected(true),
+    deselectAll: () => setAllSelected(false),
+    toggleAllSelection: () => toggleAllSelection(),
+    expandNode: (id?: string) => {
+      const nodeId = id ?? (isVirtualFocusInDropdown(virtualFocusId) ? extractElementId(virtualFocusId) : undefined);
+      if (nodeId) {
+        setNodeExpanded(nodeId, true);
+      }
+    },
+    collapseNode: (id?: string) => {
+      const nodeId = id ?? (isVirtualFocusInDropdown(virtualFocusId) ? extractElementId(virtualFocusId) : undefined);
+      if (nodeId) {
+        setNodeExpanded(nodeId, false);
+      }
+    },
+    toggleNodeExpansion: (id?: string) => {
+      const nodeId = id ?? (isVirtualFocusInDropdown(virtualFocusId) ? extractElementId(virtualFocusId) : undefined);
+      if (nodeId) {
+        toggleNodeExpansion(nodeId);
+      }
+    },
+    selectNode: (id?: string) => setNodeSelected(id ?? extractElementId(virtualFocusId), true),
+    deselectNode: (id?: string) => setNodeSelected(id ?? extractElementId(virtualFocusId), false),
+    toggleNodeSelection: (id?: string) => toggleNodeSelection(id ?? extractElementId(virtualFocusId)),
+    focusFirstItem: (region?: typeof FIELD_PREFIX | typeof DROPDOWN_PREFIX) => {
+      if (region) {
+        setVirtualFocusId(region === FIELD_PREFIX ? getFirstFieldVirtualFocusId() : getFirstDropdownVirtualFocusId());
+      } else {
+        setVirtualFocusId(prev => isVirtualFocusInField(prev)
+          ? getFirstFieldVirtualFocusId()
+          : isVirtualFocusInDropdown(prev) ? getFirstDropdownVirtualFocusId() : prev);
+      }
+    },
+    focusLastItem: (region?: typeof FIELD_PREFIX | typeof DROPDOWN_PREFIX) => {
+      if (region) {
+        setVirtualFocusId(region === FIELD_PREFIX ? getLastFieldVirtualFocusId() : getLastDropdownVirtualFocusId());
+      } else {
+        setVirtualFocusId(prev => isVirtualFocusInField(prev)
+          ? getLastFieldVirtualFocusId()
+          : isVirtualFocusInDropdown(prev) ? getLastDropdownVirtualFocusId() : prev);
+      }
+    },
+    focusPrevItem: (virtualFocusId?: VirtualFocusId) => {
+      setVirtualFocusId(prev => {
+        const focusId = virtualFocusId ?? prev;
+        return isVirtualFocusInField(focusId)
+          ? getPrevFieldVirtualFocusId(focusId)
+          : isVirtualFocusInDropdown(focusId)
+            ? getPrevDropdownVirtualFocusId(focusId)
+            : prev
+      });
+    },
+    focusNextItem: (virtualFocusId?: VirtualFocusId) => {
+      setVirtualFocusId(prev => {
+        const focusId = virtualFocusId ?? prev;
+        return isVirtualFocusInField(focusId)
+          ? getNextFieldVirtualFocusId(focusId)
+          : isVirtualFocusInDropdown(focusId)
+            ? getNextDropdownVirtualFocusId(focusId)
+            : prev
+      });
+    }
+  }));
+
   const typeClassName = useMemo(() => typeToClassName(type), [type]);
   const rootClasses = `rtms-tree-multi-select ${typeClassName}${isDisabled ? ' disabled' : ''}`
     + (className ? ` ${className}` : '');
@@ -1067,4 +1142,4 @@ export const TreeMultiSelect: FC<TreeMultiSelectProps> = (props) => {
       ) : null}
     </div>
   );
-};
+});

@@ -187,7 +187,7 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
     }
   }, [topItemCount, positions, scrollTop]);
 
-  useImperativeHandle(ref, () => ({scrollIntoView}));
+  useImperativeHandle(ref, (): VirtualizedListHandle => ({scrollIntoView}));
 
   useEffect(() => {
     if (pendingScrollIndex !== null && outerRef.current) {
