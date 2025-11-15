@@ -40,7 +40,7 @@ export const CustomFooterExample: FC = () => {
     setData(prevData => [...prevData, ...newData]);
     setPage(page + 1);
     setIsLoading(false);
-  }, [page, fetchFakeService]);
+  }, [page]);
 
   useEffect(() => {
     void loadData(0);

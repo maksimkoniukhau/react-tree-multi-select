@@ -1,7 +1,15 @@
-import React, {FC, HTMLProps} from 'react';
+import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
-import {Components, FieldProps, FieldType, InputProps, InputType, TreeMultiSelect} from 'react-tree-multi-select';
+import {
+  Attributes,
+  Components,
+  FieldProps,
+  FieldType,
+  InputProps,
+  InputType,
+  TreeMultiSelect
+} from 'react-tree-multi-select';
 import {getTreeNodeData} from '@/utils/utils';
 
 const CustomField: FC<FieldProps> = (props) => (
@@ -11,7 +19,7 @@ const CustomField: FC<FieldProps> = (props) => (
 );
 
 const CustomFieldInput: FC<InputProps> = (props) => (
-  <textarea {...props.attributes as unknown as HTMLProps<HTMLTextAreaElement>}/>
+  <textarea {...props.attributes as unknown as Attributes<'textarea'>}/>
 );
 
 const CustomDropdownInput: FC<InputProps> = (props) => (

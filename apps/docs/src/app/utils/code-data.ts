@@ -289,11 +289,19 @@ export const CustomChipClearExample: FC = () => {
   );
 };`;
 
-export const inputExample = `import React, {FC, HTMLProps} from 'react';
+export const inputExample = `import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
-import {Components, FieldProps, FieldType, InputProps, InputType, TreeMultiSelect} from 'react-tree-multi-select';
-import {getTreeNodeData} from '../../utils';
+import {
+  Attributes,
+  Components,
+  FieldProps,
+  FieldType,
+  InputProps,
+  InputType,
+  TreeMultiSelect
+} from 'react-tree-multi-select';
+import {getTreeNodeData} from '@/utils/utils';
 
 const CustomField: FC<FieldProps> = (props) => (
   <div {...props.attributes}>
@@ -302,7 +310,7 @@ const CustomField: FC<FieldProps> = (props) => (
 );
 
 const CustomFieldInput: FC<InputProps> = (props) => (
-  <textarea {...props.attributes as unknown as HTMLProps<HTMLTextAreaElement>}/>
+  <textarea {...props.attributes as unknown as Attributes<'textarea'>}/>
 );
 
 const CustomDropdownInput: FC<InputProps> = (props) => (
@@ -647,7 +655,7 @@ export const CustomNodeLabelExample: FC = () => {
 
 export const footerExample = `import React, {FC, useCallback, useEffect, useMemo, useState} from 'react';
 import {Components, FooterProps, TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
-import {fetchFakeService, RandomTreeNode} from '../../utils';
+import {fetchFakeService, RandomTreeNode} from '@/utils/utils';
 
 interface CustomFooterProps {
   isLoading: boolean;
@@ -687,7 +695,7 @@ export const CustomFooterExample: FC = () => {
     setData(prevData => [...prevData, ...newData]);
     setPage(page + 1);
     setIsLoading(false);
-  }, [page, fetchFakeService]);
+  }, [page]);
 
   useEffect(() => {
     void loadData(0);
