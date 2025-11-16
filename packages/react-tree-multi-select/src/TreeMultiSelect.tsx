@@ -10,7 +10,6 @@ import {
   SELECT_ALL_SUFFIX,
   TreeMultiSelectHandle,
   TreeMultiSelectProps,
-  TreeNode,
   Type,
   VirtualFocusId
 } from './types';
@@ -25,12 +24,10 @@ import {
 import {getFieldFocusableElement} from './utils/commonUtils';
 import {
   areAllSelectedExcludingDisabled,
-  convertTreeArrayToFlatArray,
   filterChips,
   getSelectAllCheckedState,
   isAnyHasChildren,
-  isAnySelectedExcludingDisabled,
-  mapTreeNodeToNode
+  isAnySelectedExcludingDisabled
 } from './utils/nodesUtils';
 import {getKeyboardConfig, shouldRenderSelectAll, typeToClassName} from './utils/componentUtils';
 import {getComponents, hasCustomFooterComponent} from './utils/componentsUtils';
@@ -40,6 +37,7 @@ import {
   isVirtualFocusInDropdown,
   isVirtualFocusInField
 } from './utils/focusUtils';
+import {NodesManager} from './NodesManager';
 import {Node} from './Node';
 import {FieldContainer} from './components/Field';
 import {DropdownContainer} from './DropdownContainer';
@@ -85,10 +83,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
 
   const isComponentFocused = useRef<boolean>(false);
 
-  const nodeMapRef = useRef<Map<string, Node>>(new Map<string, Node>());
-
-  // shallow copy of data with actual selected/expanded/disabled props
-  const copiedData = useRef<TreeNode[]>([]);
+  const nodesManager = useRef<NodesManager>(new NodesManager([], type, ''));
 
   const [nodes, setNodes] = useState<Node[]>([]);
   const [displayedNodes, setDisplayedNodes] = useState<Node[]>([]);
@@ -236,47 +231,13 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   }, [virtualFocusId]);
 
   useEffect(() => {
-    nodeMapRef.current = new Map<string, Node>();
-    const nodeTree: Node[] = [];
-    copiedData.current = [];
-    data.forEach((treeNode, index) => {
-      const node = mapTreeNodeToNode(treeNode, index.toString(), null, nodeMapRef.current);
-      nodeTree.push(node);
-      copiedData.current.push(node.initTreeNode);
-    });
+    nodesManager.current = new NodesManager(data, type, searchValue);
 
-    let newNodes = nodeTree;
+    const newDisplayedNodes = nodesManager.current.nodes.filter(node => node.isDisplayed(isSearchMode));
+    const newSelectedNodes = nodesManager.current.nodes.filter(node => node.selected);
+    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
 
-    if (type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT) {
-      newNodes = convertTreeArrayToFlatArray(nodeTree);
-    }
-    if (type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT || type === Type.MULTI_SELECT) {
-      newNodes.forEach(node => {
-        if (node.initTreeNode.selected) {
-          node.handleSelect(type);
-        }
-      });
-    }
-    if (type === Type.SELECT) {
-      const lastSelectedNode = newNodes.findLast(node => node.initTreeNode.selected);
-      if (lastSelectedNode) {
-        lastSelectedNode.handleSelect(type);
-      }
-    }
-    // disabled should be processed in separate cycle after selected,
-    // cause disabled node initially might be selected!!!
-    newNodes.forEach(node => {
-      if (node.initTreeNode.disabled) {
-        node.handleDisable(type);
-      }
-      node.handleSearch(searchValue);
-    });
-
-    const newDisplayedNodes = newNodes.filter(node => node.isDisplayed(isSearchMode));
-    const newSelectedNodes = newNodes.filter(node => node.selected);
-    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, newNodes);
-
-    setNodes(newNodes);
+    setNodes(nodesManager.current.nodes);
     setDisplayedNodes(newDisplayedNodes);
     setSelectedNodes(newSelectedNodes);
     setSelectAllCheckedState(newSelectAllCheckedState);
@@ -413,7 +374,9 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   const callClearAllHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onClearAll) {
       const selectedTreeNodes = selectedNodes.map(node => node.initTreeNode);
-      onClearAll(selectedTreeNodes, type !== Type.SELECT ? selectAllCheckedState : undefined, copiedData.current);
+      onClearAll(selectedTreeNodes,
+        type !== Type.SELECT ? selectAllCheckedState : undefined,
+        nodesManager.current.copiedData);
     }
   }, [onClearAll, type]);
 
@@ -464,7 +427,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   const callSelectAllChangeHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onSelectAllChange) {
       const selectedTreeNodes = selectedNodes.map(node => node.initTreeNode);
-      onSelectAllChange(selectedTreeNodes, selectAllCheckedState, copiedData.current);
+      onSelectAllChange(selectedTreeNodes, selectAllCheckedState, nodesManager.current.copiedData);
     }
   }, [onSelectAllChange]);
 
@@ -528,7 +491,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (onNodeToggle) {
       const toggledTreeNode = toggledNode.initTreeNode;
       const expandedTreeNodes = expandedNodes.map(node => node.initTreeNode);
-      onNodeToggle(toggledTreeNode, expandedTreeNodes, copiedData.current);
+      onNodeToggle(toggledTreeNode, expandedTreeNodes, nodesManager.current.copiedData);
     }
   }, [onNodeToggle]);
 
@@ -536,7 +499,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (onNodeChange && !changedNode.disabled) {
       const changedTreeNode = changedNode.initTreeNode;
       const selectedTreeNodes = selectedNodes.map(node => node.initTreeNode);
-      onNodeChange(changedTreeNode, selectedTreeNodes, copiedData.current);
+      onNodeChange(changedTreeNode, selectedTreeNodes, nodesManager.current.copiedData);
     }
   }, [onNodeChange]);
 
@@ -549,7 +512,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (event.defaultPrevented) {
       return;
     }
-    const node = nodeMapRef.current.get(id);
+    const node = nodesManager.current.nodeMap.get(id);
     if (!node) {
       return;
     }
@@ -567,7 +530,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (isDisabled) {
       return;
     }
-    const node = nodeMapRef.current.get(id);
+    const node = nodesManager.current.nodeMap.get(id);
     if (!node || node.disabled || node.isEffectivelySelected(type) === select) {
       return;
     }
@@ -598,7 +561,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (isDisabled) {
       return;
     }
-    const node = nodeMapRef.current.get(id);
+    const node = nodesManager.current.nodeMap.get(id);
     if (!node || node.disabled) {
       return;
     }
@@ -619,7 +582,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (isDisabled || !withChipClear) {
       return;
     }
-    const node = nodeMapRef.current.get(id);
+    const node = nodesManager.current.nodeMap.get(id);
     if (!node || node.disabled) {
       return;
     }
@@ -645,7 +608,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (event.defaultPrevented) {
       return;
     }
-    const node = nodeMapRef.current.get(id);
+    const node = nodesManager.current.nodeMap.get(id);
     if (!node) {
       return;
     }
@@ -665,7 +628,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (isDisabled) {
       return;
     }
-    const node = nodeMapRef.current.get(id);
+    const node = nodesManager.current.nodeMap.get(id);
     if (!(type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT) || !node || !node.hasChildren()
       || ((isSearchMode && node.searchExpanded === expand) || (!isSearchMode && node.expanded === expand))) {
       return;
@@ -688,7 +651,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (isDisabled) {
       return;
     }
-    const node = nodeMapRef.current.get(id);
+    const node = nodesManager.current.nodeMap.get(id);
     if (!node) {
       return;
     }
@@ -708,7 +671,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (isDisabled) {
       return;
     }
-    const node = nodeMapRef.current.get(id);
+    const node = nodesManager.current.nodeMap.get(id);
     if (!node) {
       return;
     }
@@ -1036,7 +999,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       {isDropdownOpen ? (
         <DropdownContainer
           type={type}
-          nodeMap={nodeMapRef.current}
+          nodeMap={nodesManager.current.nodeMap}
           nodesAmount={nodes.length}
           displayedNodes={displayedNodes}
           selectedNodes={selectedNodes}

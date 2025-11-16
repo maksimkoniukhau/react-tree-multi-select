@@ -40,7 +40,7 @@ export const mapTreeNodeToNode = (
 const fillArrayFromTreeArray = (treeArray: Node[], nodeArray: Node[]): void => {
   treeArray?.forEach(node => {
     nodeArray.push(node);
-    if (node.children.length) {
+    if (node.hasChildren()) {
       fillArrayFromTreeArray(node.children, nodeArray);
     }
   });
