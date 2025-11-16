@@ -27,7 +27,7 @@ export const FieldClearWrapper: FC<FieldClearWrapperProps> = memo((props) => {
   return (
     <fieldClear.component
       attributes={{
-        'data-rtms-virtual-focus-id': buildVirtualFocusId(CLEAR_ALL_SUFFIX, FIELD_PREFIX),
+        'data-rtms-virtual-focus-id': buildVirtualFocusId(FIELD_PREFIX, CLEAR_ALL_SUFFIX),
         className: `rtms-field-clear${focused ? ' focused' : ''}${componentDisabled ? ' disabled' : ''}`,
         onClick
       }}

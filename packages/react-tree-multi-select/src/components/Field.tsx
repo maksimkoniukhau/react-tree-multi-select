@@ -2,7 +2,7 @@ import React, {FC, memo, RefObject} from 'react';
 import {CLEAR_ALL_SUFFIX, FIELD_PREFIX, FieldProps, INPUT_SUFFIX, Type} from '../types';
 import {InnerComponents, NullableVirtualFocusId} from '../innerTypes';
 import {filterChips} from '../utils/nodesUtils';
-import {buildVirtualFocusId, isFocused} from '../utils/focusUtils';
+import {buildVirtualFocusId} from '../utils/focusUtils';
 import {Node} from '../Node';
 import {ChipWrapper} from './ChipWrapper';
 import {InputWrapper} from './Input';
@@ -84,7 +84,7 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
               components={components}
               id={node.id}
               label={node.name}
-              focused={isFocused(node.id, FIELD_PREFIX, virtualFocusId)}
+              focused={buildVirtualFocusId(FIELD_PREFIX, node.id) === virtualFocusId}
               disabled={node.disabled}
               withChipClear={withChipClear}
               onChipClick={onChipClick}
@@ -94,7 +94,7 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
           ))}
         {withDropdownInput || !isSearchable ? (
           <input
-            data-rtms-virtual-focus-id={buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX)}
+            data-rtms-virtual-focus-id={buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX)}
             tabIndex={withDropdownInput && isDropdownOpen && dropdownMounted ? -1 : 0}
             className="rtms-input-hidden"
             disabled={componentDisabled}
@@ -108,7 +108,7 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
             value={searchValue}
             onChange={onInputChange}
             componentDisabled={componentDisabled}
-            location="FIELD"
+            region={FIELD_PREFIX}
           />
         )}
       </div>
@@ -116,7 +116,7 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
         {showClearAll && (
           <FieldClearWrapper
             fieldClear={components.FieldClear}
-            focused={isFocused(CLEAR_ALL_SUFFIX, FIELD_PREFIX, virtualFocusId)}
+            focused={buildVirtualFocusId(FIELD_PREFIX, CLEAR_ALL_SUFFIX) === virtualFocusId}
             onClick={onDeleteAll}
             componentDisabled={componentDisabled}
           />

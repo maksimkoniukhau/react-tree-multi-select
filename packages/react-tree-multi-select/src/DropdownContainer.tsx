@@ -97,9 +97,9 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
   useEffect(() => {
     if (isVirtualFocusInDropdown(virtualFocusId) && virtualizedListRef.current && displayedNodes.length) {
       let elementIndex = -1;
-      if (virtualFocusId === buildVirtualFocusId(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX)) {
+      if (virtualFocusId === buildVirtualFocusId(DROPDOWN_PREFIX, SELECT_ALL_SUFFIX)) {
         elementIndex = 0;
-      } else if (virtualFocusId === buildVirtualFocusId(FOOTER_SUFFIX, DROPDOWN_PREFIX)) {
+      } else if (virtualFocusId === buildVirtualFocusId(DROPDOWN_PREFIX, FOOTER_SUFFIX)) {
         elementIndex = displayedNodes.length + (showSelectAll ? 1 : 0) + (withInput ? 1 : 0);
       } else {
         const node = nodeMap.get(extractElementId(virtualFocusId));
@@ -143,7 +143,7 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
             value={searchValue}
             onChange={onInputChange}
             componentDisabled={componentDisabled}
-            location="DROPDOWN"
+            region={DROPDOWN_PREFIX}
           />
         ) : null}
         components={components}

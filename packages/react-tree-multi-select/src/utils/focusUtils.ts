@@ -2,10 +2,10 @@ import {DROPDOWN_PREFIX, FIELD_PREFIX, VirtualFocusId} from '../types';
 import {NullableVirtualFocusId} from '../innerTypes';
 
 export const buildVirtualFocusId = (
-  elementId: string,
-  location: typeof FIELD_PREFIX | typeof DROPDOWN_PREFIX
+  region: typeof FIELD_PREFIX | typeof DROPDOWN_PREFIX,
+  elementId: string
 ): VirtualFocusId => {
-  return `${location}${elementId}`;
+  return `${region}${elementId}`;
 };
 
 export const extractElementId = (virtualFocusId: NullableVirtualFocusId): string => {
@@ -18,12 +18,4 @@ export const isVirtualFocusInField = (virtualFocusId: NullableVirtualFocusId): b
 
 export const isVirtualFocusInDropdown = (virtualFocusId: NullableVirtualFocusId): boolean => {
   return virtualFocusId?.startsWith(DROPDOWN_PREFIX) ?? false;
-};
-
-export const isFocused = (
-  elementId: string,
-  location: typeof FIELD_PREFIX | typeof DROPDOWN_PREFIX,
-  virtualFocusId: NullableVirtualFocusId
-): boolean => {
-  return virtualFocusId === buildVirtualFocusId(elementId, location);
 };

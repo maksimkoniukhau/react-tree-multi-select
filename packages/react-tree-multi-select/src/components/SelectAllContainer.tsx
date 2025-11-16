@@ -38,7 +38,7 @@ export const SelectAllContainerWrapper: FC<SelectAllContainerWrapperProps> = mem
   return (
     <selectAllContainer.component
       attributes={{
-        'data-rtms-virtual-focus-id': buildVirtualFocusId(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX),
+        'data-rtms-virtual-focus-id': buildVirtualFocusId(DROPDOWN_PREFIX, SELECT_ALL_SUFFIX),
         className: containerClasses,
         onClick
       }}

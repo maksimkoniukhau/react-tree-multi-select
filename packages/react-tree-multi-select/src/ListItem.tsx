@@ -70,18 +70,18 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
         components={components}
         label={SELECT_ALL_LABEL}
         checkedState={selectAllCheckedState}
-        focused={virtualFocusId === buildVirtualFocusId(SELECT_ALL_SUFFIX, DROPDOWN_PREFIX)}
+        focused={virtualFocusId === buildVirtualFocusId(DROPDOWN_PREFIX, SELECT_ALL_SUFFIX)}
         onClick={onSelectAllChange}
       />
     );
   }
 
   if (showFooter && index === displayedItemCount - 1) {
-    const isFooterFocused = virtualFocusId === buildVirtualFocusId(FOOTER_SUFFIX, DROPDOWN_PREFIX);
+    const isFooterFocused = virtualFocusId === buildVirtualFocusId(DROPDOWN_PREFIX, FOOTER_SUFFIX);
     return (
       <components.Footer.component
         attributes={{
-          'data-rtms-virtual-focus-id': buildVirtualFocusId(FOOTER_SUFFIX, DROPDOWN_PREFIX),
+          'data-rtms-virtual-focus-id': buildVirtualFocusId(DROPDOWN_PREFIX, FOOTER_SUFFIX),
           className: `rtms-footer${isFooterFocused ? ' focused' : ''}`,
           onClick: onFooterClick
         }}
@@ -105,7 +105,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     nodeIndex = showSelectAll && Boolean(input) ? index - 2 : index - 1;
   }
   const node = displayedNodes[nodeIndex];
-  const focused = virtualFocusId === buildVirtualFocusId(node.id, DROPDOWN_PREFIX);
+  const focused = virtualFocusId === buildVirtualFocusId(DROPDOWN_PREFIX, node.id);
   const expanded = searchValue ? node.searchExpanded : node.expanded;
   const hasChildren = node.hasChildren();
   const indentation = !(type === Type.MULTI_SELECT || type === Type.SELECT) && isAnyHasChildren && !hasChildren;

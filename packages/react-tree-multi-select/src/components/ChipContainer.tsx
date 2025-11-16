@@ -28,7 +28,7 @@ export const ChipContainerWrapper: FC<ChipContainerWrapperProps> = memo((props) 
   return (
     <chipContainer.component
       attributes={{
-        'data-rtms-virtual-focus-id': buildVirtualFocusId(id, FIELD_PREFIX),
+        'data-rtms-virtual-focus-id': buildVirtualFocusId(FIELD_PREFIX, id),
         className: `rtms-chip${disabled ? ' disabled' : ''}${focused ? ' focused' : ''}`,
         onClick: onClick(id)
       }}

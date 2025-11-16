@@ -1,5 +1,5 @@
 import React, {FC, memo, RefObject} from 'react';
-import {FIELD_PREFIX, INPUT_SUFFIX, InputProps, InputType} from '../types';
+import {DROPDOWN_PREFIX, FIELD_PREFIX, INPUT_SUFFIX, InputProps, InputType} from '../types';
 import {buildVirtualFocusId} from '../utils/focusUtils';
 
 export const Input: FC<InputProps> = memo((props) => {
@@ -15,16 +15,16 @@ interface InputWrapperProps {
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   componentDisabled: boolean;
-  location: 'FIELD' | 'DROPDOWN';
+  region: typeof FIELD_PREFIX | typeof DROPDOWN_PREFIX;
 }
 
 export const InputWrapper: FC<InputWrapperProps> = memo((props) => {
-  const {input, inputRef, placeholder, value, onChange, componentDisabled, location} = props;
+  const {input, inputRef, placeholder, value, onChange, componentDisabled, region} = props;
 
   return (
     <input.component
       attributes={{
-        ...(location === 'FIELD' && {'data-rtms-virtual-focus-id': buildVirtualFocusId(INPUT_SUFFIX, FIELD_PREFIX)}),
+        ...(region === FIELD_PREFIX && {'data-rtms-virtual-focus-id': buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX)}),
         ref: inputRef,
         className: "rtms-input",
         placeholder,

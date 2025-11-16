@@ -45,10 +45,6 @@ export const NodeContainerWrapper: FC<NodeContainerWrapperProps> = memo((props) 
     children
   } = props;
 
-  const skipVirtualFocus = skipDropdownVirtualFocus
-    ? {}
-    : {'data-rtms-virtual-focus-id': buildVirtualFocusId(id, DROPDOWN_PREFIX)};
-
   const disabledClass = disabled ? ' disabled' : '';
   const selectedClass = selected ? ' selected' : partial ? ' partial' : '';
   const expandedClass = expanded ? ' expanded' : '';
@@ -64,7 +60,7 @@ export const NodeContainerWrapper: FC<NodeContainerWrapperProps> = memo((props) 
           '--rtms-list-item-indentation': indentation ? 1 : 0
         } as CSSProperties,
         className,
-        ...skipVirtualFocus,
+        ...(!skipDropdownVirtualFocus && {'data-rtms-virtual-focus-id': buildVirtualFocusId(DROPDOWN_PREFIX, id)}),
         onClick: onClick(id)
       }}
       ownProps={{label, disabled, selected, partial, expanded, focused, matched}}
