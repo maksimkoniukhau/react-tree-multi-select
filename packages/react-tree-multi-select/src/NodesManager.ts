@@ -19,10 +19,6 @@ export class NodesManager {
     this.initialize(data, type, searchValue);
   }
 
-  get nodeMap(): Map<string, Node> {
-    return this._nodeMap;
-  }
-
   get copiedData(): TreeNode[] {
     return this._copiedData;
   }
@@ -68,5 +64,61 @@ export class NodesManager {
       }
       node.handleSearch(searchValue);
     });
+  };
+
+  public isEffectivelySelected = (type: Type): boolean => {
+    return this._roots.every(root => root.isEffectivelySelected(type));
+  };
+
+  public getSize = (): number => {
+    return this._nodes.length;
+  };
+
+  public getDisplayed = (isSearchMode: boolean): Node[] => {
+    return this._nodes.filter(node => node.isDisplayed(isSearchMode));
+  };
+
+  public getSelected = (): Node[] => {
+    return this._nodes.filter(node => node.selected);
+  };
+
+  public getExpanded = (): Node[] => {
+    return this._nodes.filter(node => node.expanded);
+  };
+
+  public isAnyHasChildren = (): boolean => {
+    return this._nodes.some(node => node.hasChildren());
+  };
+
+  public isAnySelectedExcludingDisabled = (): boolean => {
+    return this._nodes
+      .filter(node => !node.disabled)
+      .some(node => node.selected);
+  };
+
+  public handleDeselect = (type: Type): void => {
+    this._nodes.forEach(node => node.handleUnselect(type));
+  };
+
+  public handleSelection = (select: boolean, type: Type): void => {
+    this._nodes.forEach(node => {
+      if (select) {
+        node.handleSelect(type);
+      } else {
+        node.handleUnselect(type);
+      }
+    });
+  };
+
+  public handleSearch = (value: string): void => {
+    this._nodes.forEach(node => node.handleSearch(value));
+  };
+
+  public resetSearch = (): void => {
+    this._nodes.forEach(node => node.resetSearch());
+  };
+
+  public findById = (id: string): Node | undefined => {
+    return this._nodeMap.get(id);
   };
 }

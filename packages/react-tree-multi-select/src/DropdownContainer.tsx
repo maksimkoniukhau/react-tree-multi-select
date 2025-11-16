@@ -2,6 +2,7 @@ import React, {FC, JSX, memo, RefObject, useEffect, useRef} from 'react';
 import {CheckedState, DROPDOWN_PREFIX, DropdownProps, FOOTER_SUFFIX, SELECT_ALL_SUFFIX, Type} from './types';
 import {InnerComponents, NullableVirtualFocusId} from './innerTypes';
 import {buildVirtualFocusId, extractElementId, isVirtualFocusInDropdown} from './utils/focusUtils';
+import {NodesManager} from './NodesManager';
 import {Node} from './Node';
 import {ListItem} from './ListItem';
 import {VirtualizedList, VirtualizedListHandle} from './VirtualizedList';
@@ -17,7 +18,7 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
 
 interface DropdownContainerProps {
   type: Type;
-  nodeMap: Map<string, Node>;
+  nodesManager: NodesManager;
   nodesAmount: number;
   displayedNodes: Node[];
   selectedNodes: Node[];
@@ -51,7 +52,7 @@ interface DropdownContainerProps {
 export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
   const {
     type,
-    nodeMap,
+    nodesManager,
     nodesAmount,
     displayedNodes,
     selectedNodes,
@@ -102,7 +103,7 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
       } else if (virtualFocusId === buildVirtualFocusId(DROPDOWN_PREFIX, FOOTER_SUFFIX)) {
         elementIndex = displayedNodes.length + (showSelectAll ? 1 : 0) + (withInput ? 1 : 0);
       } else {
-        const node = nodeMap.get(extractElementId(virtualFocusId));
+        const node = nodesManager.findById(extractElementId(virtualFocusId));
         if (node) {
           elementIndex = displayedNodes.indexOf(node) + (showSelectAll ? 1 : 0) + (withInput ? 1 : 0);
         }

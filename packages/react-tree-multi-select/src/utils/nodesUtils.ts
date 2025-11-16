@@ -52,22 +52,6 @@ export const convertTreeArrayToFlatArray = (treeArray: Node[]): Node[] => {
   return nodeArray;
 };
 
-export const areAllSelectedExcludingDisabled = (nodes: Node[], type: Type): boolean => {
-  return nodes
-    .filter(node => !node.disabled)
-    .every(node => node.isEffectivelySelected(type));
-};
-
-export const isAnySelectedExcludingDisabled = (nodes: Node[]): boolean => {
-  return nodes
-    .filter(node => !node.disabled)
-    .some(node => node.selected);
-};
-
-export const isAnyHasChildren = (nodes: Node[]): boolean => {
-  return nodes.some(node => node.hasChildren());
-};
-
 export const filterChips = (nodes: Node[], type: Type): Node[] => {
   return type === Type.TREE_SELECT
     ? nodes.filter(node => node.selected && !node.parent?.selected)

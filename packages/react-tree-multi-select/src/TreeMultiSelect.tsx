@@ -22,13 +22,7 @@ import {
   OVERSCAN
 } from './constants';
 import {getFieldFocusableElement} from './utils/commonUtils';
-import {
-  areAllSelectedExcludingDisabled,
-  filterChips,
-  getSelectAllCheckedState,
-  isAnyHasChildren,
-  isAnySelectedExcludingDisabled
-} from './utils/nodesUtils';
+import {filterChips, getSelectAllCheckedState} from './utils/nodesUtils';
 import {getKeyboardConfig, shouldRenderSelectAll, typeToClassName} from './utils/componentUtils';
 import {getComponents, hasCustomFooterComponent} from './utils/componentsUtils';
 import {
@@ -85,7 +79,6 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
 
   const nodesManager = useRef<NodesManager>(new NodesManager([], type, ''));
 
-  const [nodes, setNodes] = useState<Node[]>([]);
   const [displayedNodes, setDisplayedNodes] = useState<Node[]>([]);
   const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
   const [selectAllCheckedState, setSelectAllCheckedState] = useState<CheckedState>(CheckedState.UNSELECTED);
@@ -112,7 +105,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
 
   const isSearchMode = Boolean(searchValue);
 
-  const showClearAll = withClearAll && isAnySelectedExcludingDisabled(nodes);
+  const showClearAll = withClearAll && nodesManager.current.isAnySelectedExcludingDisabled();
 
   const showSelectAll = shouldRenderSelectAll(type, displayedNodes, isSearchMode, withSelectAll);
 
@@ -233,11 +226,10 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   useEffect(() => {
     nodesManager.current = new NodesManager(data, type, searchValue);
 
-    const newDisplayedNodes = nodesManager.current.nodes.filter(node => node.isDisplayed(isSearchMode));
-    const newSelectedNodes = nodesManager.current.nodes.filter(node => node.selected);
+    const newDisplayedNodes = nodesManager.current.getDisplayed(isSearchMode);
+    const newSelectedNodes = nodesManager.current.getSelected();
     const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
 
-    setNodes(nodesManager.current.nodes);
     setDisplayedNodes(newDisplayedNodes);
     setSelectedNodes(newSelectedNodes);
     setSelectAllCheckedState(newSelectAllCheckedState);
@@ -249,14 +241,14 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       return;
     }
     if (isDropdownOpen || isSearchMode || virtualFocusId) {
-      nodes.forEach(node => node.resetSearch());
-      const newDisplayedNodes = nodes.filter(node => node.isDisplayed(false));
+      nodesManager.current.resetSearch();
+      const newDisplayedNodes = nodesManager.current.getDisplayed(false);
       setDisplayedNodes(newDisplayedNodes);
       toggleDropdown(false);
       setVirtualFocusId(null);
       setSearchValue('');
     }
-  }, [isDisabled, isDropdownOpen, isSearchMode, virtualFocusId, nodes, toggleDropdown]);
+  }, [isDisabled, isDropdownOpen, isSearchMode, virtualFocusId, toggleDropdown]);
 
   const focusComponentElement = (): void => {
     if (dropdownInputRef.current) {
@@ -386,9 +378,9 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       return;
     }
     event.preventDefault();
-    nodes.forEach(node => node.handleUnselect(type));
-    const newSelectedNodes = nodes.filter(node => node.selected);
-    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodes);
+    nodesManager.current.handleDeselect(type);
+    const newSelectedNodes = nodesManager.current.getSelected();
+    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
 
     setSelectedNodes(newSelectedNodes);
     setSelectAllCheckedState(newSelectAllCheckedState);
@@ -408,12 +400,9 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     }
     const value = event.currentTarget.value;
 
-    nodes.forEach(node => {
-      node.handleSearch(value);
-    });
+    nodesManager.current.handleSearch(value);
 
-    const newDisplayedNodes = nodes
-      .filter(node => node.isDisplayed(Boolean(value)));
+    const newDisplayedNodes = nodesManager.current.getDisplayed(Boolean(value));
 
     setDisplayedNodes(newDisplayedNodes);
     setSearchValue(value);
@@ -439,16 +428,10 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (!(type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT || type === Type.MULTI_SELECT)) {
       return;
     }
-    nodes.forEach(node => {
-      if (selectAll) {
-        node.handleSelect(type);
-      } else {
-        node.handleUnselect(type);
-      }
-    });
+    nodesManager.current.handleSelection(selectAll, type);
 
-    const newSelectedNodes = nodes.filter(node => node.selected);
-    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodes);
+    const newSelectedNodes = nodesManager.current.getSelected();
+    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
 
     setSelectedNodes(newSelectedNodes);
     setSelectAllCheckedState(newSelectAllCheckedState);
@@ -466,7 +449,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       return;
     }
     const shouldBeUnselected = selectAllCheckedState === CheckedState.SELECTED
-      || (selectAllCheckedState === CheckedState.PARTIAL && areAllSelectedExcludingDisabled(nodes, type));
+      || (selectAllCheckedState === CheckedState.PARTIAL && nodesManager.current.isEffectivelySelected(type));
     setAllSelected(!shouldBeUnselected);
   };
 
@@ -512,7 +495,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (event.defaultPrevented) {
       return;
     }
-    const node = nodesManager.current.nodeMap.get(id);
+    const node = nodesManager.current.findById(id);
     if (!node) {
       return;
     }
@@ -530,7 +513,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (isDisabled) {
       return;
     }
-    const node = nodesManager.current.nodeMap.get(id);
+    const node = nodesManager.current.findById(id);
     if (!node || node.disabled || node.isEffectivelySelected(type) === select) {
       return;
     }
@@ -544,8 +527,8 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       node.handleUnselect(type);
     }
 
-    const newSelectedNodes = nodes.filter(node => node.selected);
-    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodes);
+    const newSelectedNodes = nodesManager.current.getSelected();
+    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
     setSelectedNodes(newSelectedNodes);
     setSelectAllCheckedState(newSelectAllCheckedState);
 
@@ -561,7 +544,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (isDisabled) {
       return;
     }
-    const node = nodesManager.current.nodeMap.get(id);
+    const node = nodesManager.current.findById(id);
     if (!node || node.disabled) {
       return;
     }
@@ -582,7 +565,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (isDisabled || !withChipClear) {
       return;
     }
-    const node = nodesManager.current.nodeMap.get(id);
+    const node = nodesManager.current.findById(id);
     if (!node || node.disabled) {
       return;
     }
@@ -608,7 +591,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (event.defaultPrevented) {
       return;
     }
-    const node = nodesManager.current.nodeMap.get(id);
+    const node = nodesManager.current.findById(id);
     if (!node) {
       return;
     }
@@ -628,7 +611,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (isDisabled) {
       return;
     }
-    const node = nodesManager.current.nodeMap.get(id);
+    const node = nodesManager.current.findById(id);
     if (!(type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT) || !node || !node.hasChildren()
       || ((isSearchMode && node.searchExpanded === expand) || (!isSearchMode && node.expanded === expand))) {
       return;
@@ -636,10 +619,10 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
 
     node.handleExpand(isSearchMode, expand);
 
-    const newDisplayedNodes = nodes.filter(node => node.isDisplayed(isSearchMode));
+    const newDisplayedNodes = nodesManager.current.getDisplayed(isSearchMode);
     setDisplayedNodes(newDisplayedNodes);
 
-    callNodeToggleHandler(node, nodes.filter(node => node.expanded));
+    callNodeToggleHandler(node, nodesManager.current.getExpanded());
   };
 
   const setNodeExpanded = useCallback((id: string, expand: boolean): void => {
@@ -651,7 +634,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (isDisabled) {
       return;
     }
-    const node = nodesManager.current.nodeMap.get(id);
+    const node = nodesManager.current.findById(id);
     if (!node) {
       return;
     }
@@ -671,7 +654,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (isDisabled) {
       return;
     }
-    const node = nodesManager.current.nodeMap.get(id);
+    const node = nodesManager.current.findById(id);
     if (!node) {
       return;
     }
@@ -999,11 +982,11 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       {isDropdownOpen ? (
         <DropdownContainer
           type={type}
-          nodeMap={nodesManager.current.nodeMap}
-          nodesAmount={nodes.length}
+          nodesManager={nodesManager.current}
+          nodesAmount={nodesManager.current.getSize()}
           displayedNodes={displayedNodes}
           selectedNodes={selectedNodes}
-          isAnyHasChildren={isAnyHasChildren(nodes)}
+          isAnyHasChildren={nodesManager.current.isAnyHasChildren()}
           isSearchable={isSearchable}
           withDropdownInput={withDropdownInput}
           inputPlaceholder={inputPlaceholder}
