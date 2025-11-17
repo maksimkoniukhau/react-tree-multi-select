@@ -449,7 +449,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       return;
     }
     const shouldBeUnselected = selectAllCheckedState === CheckedState.SELECTED
-      || (selectAllCheckedState === CheckedState.PARTIAL && nodesManager.current.isEffectivelySelected(type));
+      || (selectAllCheckedState === CheckedState.PARTIAL && nodesManager.current.isEffectivelySelected());
     setAllSelected(!shouldBeUnselected);
   };
 
@@ -514,7 +514,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       return;
     }
     const node = nodesManager.current.findById(id);
-    if (!node || node.disabled || node.isEffectivelySelected(type) === select) {
+    if (!node || node.disabled || node.effectivelySelected === select) {
       return;
     }
 
@@ -549,7 +549,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       return;
     }
 
-    if (node.isEffectivelySelected(type)) {
+    if (node.effectivelySelected) {
       setNodeSelected(node.id, false);
     } else {
       setNodeSelected(node.id, true);

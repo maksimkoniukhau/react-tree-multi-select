@@ -57,17 +57,22 @@ export class NodesManager {
       }
     }
     // disabled should be processed in separate cycle after selected,
-    // cause disabled node initially might be selected!!!
+    // because disabled node initially might be selected!!!
     this._nodes.forEach(node => {
       if (node.initTreeNode.disabled) {
         node.handleDisable(type);
       }
       node.handleSearch(searchValue);
     });
+
+    // effectivelySelected should be processed in separate cycle after disabled
+    this._nodes.forEach(node => {
+      node.handleEffectivelySelected(type);
+    });
   };
 
-  public isEffectivelySelected = (type: Type): boolean => {
-    return this._roots.every(root => root.isEffectivelySelected(type));
+  public isEffectivelySelected = (): boolean => {
+    return this._roots.every(root => root.effectivelySelected);
   };
 
   public getSize = (): number => {
