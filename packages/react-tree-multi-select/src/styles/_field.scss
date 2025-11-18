@@ -1,6 +1,5 @@
 @mixin field-styles {
   .rtms-field {
-    line-height: var(--rtms-field-line-height);
     font-size: var(--rtms-field-font-size);
 
     &:has(> .rtms-field-content, > .rtms-actions) {
@@ -48,11 +47,13 @@
             fill: var(--rtms-field-clear-color-focus);
           }
         }
+
         &:hover {
           path {
             fill: var(--rtms-field-clear-color-hover);
           }
         }
+
         &.disabled {
           path {
             fill: var(--rtms-field-clear-color-disabled);

@@ -92,7 +92,7 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
     onLastItemReached,
     overscan: propOverscan,
     isVirtualized,
-    estimatedItemHeight = 20
+    estimatedItemHeight = 25
   } = props;
 
   const overscan = propOverscan > 0 ? propOverscan : 0;

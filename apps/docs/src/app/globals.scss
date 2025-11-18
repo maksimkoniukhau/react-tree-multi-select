@@ -149,7 +149,6 @@ code {
     .page-content {
       padding: 0 10px 10px;
       overflow-x: clip;
-      line-height: 1.5;
 
       &.api-page {
         .code-container {
@@ -180,7 +179,6 @@ code {
       .paragraph {
         white-space: pre-line;
         padding: 5px 0;
-        line-height: 1.5;
       }
 
       .alert {

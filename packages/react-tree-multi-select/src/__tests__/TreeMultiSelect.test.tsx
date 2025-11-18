@@ -734,6 +734,7 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
       <TreeMultiSelect
         data={getTreeNodeData([], [], [])}
         withSelectAll
+        isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
       />
     );
@@ -1036,48 +1037,50 @@ describe('TreeMultiSelect component: overscan prop', () => {
     const user: UserEvent = userEvent.setup();
 
     const {container} = render(
-      <TreeMultiSelect data={treeNodeData} overscan={overscan === 1 ? undefined : overscan}/>
+      <TreeMultiSelect data={getTreeNodeData([], [], [])} overscan={overscan === 1 ? undefined : overscan}/>
     );
 
     await user.click(getField(container));
-    overscanMatcher(container, overscan, [15, 16, 17]);
+    overscanMatcher(container, overscan, [8, 8, 8]);
 
-    await user.click(getNodeToggle(container, 6));
-    overscanMatcher(container, overscan, [15, 16, 17]);
+    await user.click(getNodeToggle(container, 3));
+    overscanMatcher(container, overscan, [10, 10, 10]);
 
-    await user.click(getNodeToggle(container, 12));
-    overscanMatcher(container, overscan, [15, 16, 17]);
-
-    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 20}});
-    overscanMatcher(container, overscan, [15, 17, 18]);
-
-    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 40}});
-    overscanMatcher(container, overscan, [15, 17, 19]);
-
-    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 220}});
-    overscanMatcher(container, overscan, [15, 16, 17]);
-
-    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 0}});
-    overscanMatcher(container, overscan, [15, 16, 17]);
-
-    await user.click(getNodeToggle(container, 12));
-    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 160}});
-    overscanMatcher(container, overscan, [15, 16, 17]);
-
-    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 80}});
-    overscanMatcher(container, overscan, [15, 17, 19]);
-
-    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 81}});
-    overscanMatcher(container, overscan, [16, 18, 20]);
-
-    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 79}});
-    overscanMatcher(container, overscan, [16, 18, 20]);
-
-    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 0}});
-    overscanMatcher(container, overscan, [15, 16, 17]);
+    await user.click(getNodeToggle(container, 4));
+    overscanMatcher(container, overscan, [12, 13, 13]);
 
     await user.click(getNodeToggle(container, 0));
-    overscanMatcher(container, overscan, [15, 16, 17]);
+    overscanMatcher(container, overscan, [12, 13, 14]);
+
+    await user.click(getNodeToggle(container, 1));
+    overscanMatcher(container, overscan, [12, 13, 14]);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 25}});
+    overscanMatcher(container, overscan, [12, 14, 15]);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 50}});
+    overscanMatcher(container, overscan, [12, 14, 16]);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 150}});
+    overscanMatcher(container, overscan, [12, 13, 14]);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 0}});
+    overscanMatcher(container, overscan, [12, 13, 14]);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 75}});
+    overscanMatcher(container, overscan, [12, 14, 16]);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 76}});
+    overscanMatcher(container, overscan, [13, 15, 17]);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 74}});
+    overscanMatcher(container, overscan, [13, 15, 17]);
+
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 0}});
+    overscanMatcher(container, overscan, [12, 13, 14]);
+
+    await user.click(getNodeToggle(container, 0));
+    overscanMatcher(container, overscan, [12, 13, 13]);
   });
 });
 
@@ -1090,41 +1093,41 @@ describe('TreeMultiSelect component: isVirtualized prop', () => {
     );
 
     await user.click(getField(container));
-    expect(getListItems(container).length).toBe(isVirtualized ? 16 : 21);
+    expect(getListItems(container).length).toBe(isVirtualized ? 13 : 21);
 
     await user.click(getNodeToggle(container, 6));
-    expect(getListItems(container).length).toBe(isVirtualized ? 16 : 23);
+    expect(getListItems(container).length).toBe(isVirtualized ? 13 : 23);
 
     await user.click(getNodeToggle(container, 12));
-    expect(getListItems(container).length).toBe(isVirtualized ? 16 : 26);
+    expect(getListItems(container).length).toBe(isVirtualized ? 13 : 26);
 
-    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 20}});
-    expect(getListItems(container).length).toBe(isVirtualized ? 17 : 26);
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 25}});
+    expect(getListItems(container).length).toBe(isVirtualized ? 14 : 26);
 
-    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 220}});
-    expect(getListItems(container).length).toBe(isVirtualized ? 16 : 26);
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 350}});
+    expect(getListItems(container).length).toBe(isVirtualized ? 13 : 26);
 
     fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 0}});
-    expect(getListItems(container).length).toBe(isVirtualized ? 16 : 26);
+    expect(getListItems(container).length).toBe(isVirtualized ? 13 : 26);
 
     await user.click(getNodeToggle(container, 12));
-    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 160}});
-    expect(getListItems(container).length).toBe(isVirtualized ? 16 : 23);
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 275}});
+    expect(getListItems(container).length).toBe(isVirtualized ? 13 : 23);
 
-    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 80}});
-    expect(getListItems(container).length).toBe(isVirtualized ? 17 : 23);
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 125}});
+    expect(getListItems(container).length).toBe(isVirtualized ? 14 : 23);
 
-    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 81}});
-    expect(getListItems(container).length).toBe(isVirtualized ? 18 : 23);
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 126}});
+    expect(getListItems(container).length).toBe(isVirtualized ? 15 : 23);
 
-    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 79}});
-    expect(getListItems(container).length).toBe(isVirtualized ? 18 : 23);
+    fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 124}});
+    expect(getListItems(container).length).toBe(isVirtualized ? 15 : 23);
 
     fireEvent.scroll(getDropdownListOuter(container), {target: {scrollTop: 0}});
-    expect(getListItems(container).length).toBe(isVirtualized ? 16 : 23);
+    expect(getListItems(container).length).toBe(isVirtualized ? 13 : 23);
 
     await user.click(getNodeToggle(container, 0));
-    expect(getListItems(container).length).toBe(isVirtualized ? 16 : 18);
+    expect(getListItems(container).length).toBe(isVirtualized ? 13 : 18);
   });
 });
 
@@ -2288,6 +2291,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       <TreeMultiSelect
         data={getTreeNodeData([], [1, 2], [4])}
         withSelectAll
+        isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
       />
     );
@@ -2411,6 +2415,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       <TreeMultiSelect
         data={getTreeNodeData([], [1, 2], [4, 10])}
         withSelectAll
+        isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
       />
     );
@@ -2534,6 +2539,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       <TreeMultiSelect
         data={getTreeNodeData([4], [1, 2], [4])}
         withSelectAll
+        isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
       />
     );
@@ -2675,6 +2681,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       <TreeMultiSelect
         data={getTreeNodeData([4], [1, 2], [2])}
         withSelectAll
+        isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
       />
     );
@@ -2908,7 +2915,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       <TreeMultiSelect
         data={getTreeNodeData([], [11, 12, 13], [])}
         withSelectAll
-        dropdownHeight={350}
+        isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
       />
     );
@@ -3241,6 +3248,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
         <TreeMultiSelect
           data={getTreeNodeData([4, 5, 6], [1, 2], [3])}
           withSelectAll
+          isVirtualized={false}
           onSelectAllChange={handleSelectAllChange}
         />
       );
