@@ -36,6 +36,12 @@
       }
     }
 
+    .rtms-top-item {
+      display: flex;
+      align-items: center;
+      padding: var(--rtms-list-item-tb-padding) var(--rtms-list-item-lr-padding);
+    }
+
     .rtms-dropdown-list-outer {
       border-radius: 4px;
     }

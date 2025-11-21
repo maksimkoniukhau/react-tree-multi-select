@@ -86,7 +86,7 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
   const virtualizedListRef = useRef<VirtualizedListHandle>(null);
 
   const withInput = withDropdownInput && isSearchable;
-  const topItemCount = (showSelectAll ? 1 : 0) + (withInput ? 1 : 0);
+  const topItemCount = showSelectAll ? 1 : 0;
   const displayedItemCount = (displayedNodes.length || 1) + topItemCount + (showFooter ? 1 : 0);
 
   useEffect(() => {
@@ -101,11 +101,11 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
       if (virtualFocusId === buildVirtualFocusId(DROPDOWN_PREFIX, SELECT_ALL_SUFFIX)) {
         elementIndex = 0;
       } else if (virtualFocusId === buildVirtualFocusId(DROPDOWN_PREFIX, FOOTER_SUFFIX)) {
-        elementIndex = displayedNodes.length + (showSelectAll ? 1 : 0) + (withInput ? 1 : 0);
+        elementIndex = displayedNodes.length + (showSelectAll ? 1 : 0);
       } else {
         const node = nodesManager.findById(extractElementId(virtualFocusId));
         if (node) {
-          elementIndex = displayedNodes.indexOf(node) + (showSelectAll ? 1 : 0) + (withInput ? 1 : 0);
+          elementIndex = displayedNodes.indexOf(node) + (showSelectAll ? 1 : 0);
         }
       }
       if (elementIndex >= 0) {
@@ -113,7 +113,7 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [virtualFocusId, showSelectAll, withInput]);
+  }, [virtualFocusId, showSelectAll]);
 
   const renderItem = (index: number): JSX.Element => {
     return (
@@ -136,17 +136,6 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
         onNodeChange={onNodeChange}
         onNodeToggle={onNodeToggle}
         onFooterClick={onFooterClick}
-        input={withInput ? (
-          <InputWrapper
-            input={components.Input}
-            inputRef={inputRef}
-            placeholder={inputPlaceholder}
-            value={searchValue}
-            onChange={onInputChange}
-            componentDisabled={componentDisabled}
-            region={DROPDOWN_PREFIX}
-          />
-        ) : null}
         components={components}
       />
     );
@@ -158,6 +147,21 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
       ownProps={{componentDisabled}}
       customProps={components.Dropdown.props}
     >
+      {withInput && (
+        <div className="rtms-top-item">
+          <div className="rtms-input-container">
+            <InputWrapper
+              input={components.Input}
+              inputRef={inputRef}
+              placeholder={inputPlaceholder}
+              value={searchValue}
+              onChange={onInputChange}
+              componentDisabled={componentDisabled}
+              region={DROPDOWN_PREFIX}
+            />
+          </div>
+        </div>
+      )}
       <VirtualizedList
         ref={virtualizedListRef}
         height={dropdownHeight}

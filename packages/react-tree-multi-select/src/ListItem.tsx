@@ -1,4 +1,4 @@
-import React, {FC, memo, ReactNode} from 'react';
+import React, {FC, memo} from 'react';
 import {SELECT_ALL_LABEL} from './constants';
 import {buildVirtualFocusId} from './utils/focusUtils';
 import {CheckedState, DROPDOWN_PREFIX, FOOTER_SUFFIX, SELECT_ALL_SUFFIX, Type} from './types';
@@ -27,7 +27,6 @@ export interface ListItemProps {
   onNodeChange: (id: string) => (event: React.MouseEvent) => void;
   onNodeToggle: (id: string) => (event: React.MouseEvent) => void;
   onFooterClick: (event: React.MouseEvent) => void;
-  input: ReactNode;
   components: InnerComponents;
 }
 
@@ -50,21 +49,10 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     onNodeChange,
     onNodeToggle,
     onFooterClick,
-    input,
     components
   } = props;
 
-  if (Boolean(input) && index === 0) {
-    return (
-      <div className="rtms-sticky-item">
-        <div className="rtms-input-container">
-          {input}
-        </div>
-      </div>
-    );
-  }
-
-  if ((showSelectAll && Boolean(input) && index === 1) || (showSelectAll && index === 0)) {
+  if (showSelectAll && index === 0) {
     return (
       <SelectAllWrapper
         components={components}
@@ -101,8 +89,8 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
   }
 
   let nodeIndex = index;
-  if ((showSelectAll || Boolean(input)) && nodesAmount > 0) {
-    nodeIndex = showSelectAll && Boolean(input) ? index - 2 : index - 1;
+  if (showSelectAll && nodesAmount > 0) {
+    nodeIndex = index - 1;
   }
   const node = displayedNodes[nodeIndex];
   const focused = virtualFocusId === buildVirtualFocusId(DROPDOWN_PREFIX, node.id);
