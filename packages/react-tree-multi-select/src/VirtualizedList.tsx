@@ -39,12 +39,6 @@ const Item: FC<ItemProps> = (props) => {
 
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (ref.current) {
-      updateHeight(index, ref.current.offsetHeight);
-    }
-  }, [index, updateHeight]);
-
   const updateHeightCallback = useCallback((size: { width: number; height: number }): void => {
     if (size.height === 0 && size.width === 0) {
       return;
