@@ -15,7 +15,7 @@ import {
 } from './types';
 import {InnerComponents, NullableVirtualFocusId} from './innerTypes';
 import {
-  DEFAULT_OPTIONS_CONTAINER_HEIGHT,
+  DEFAULT_DROPDOWN_MAX_HEIGHT,
   INPUT_PLACEHOLDER,
   NO_DATA_TEXT,
   NO_MATCHES_TEXT,
@@ -53,7 +53,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     withDropdownInput = false,
     closeDropdownOnNodeChange = false,
     openDropdown,
-    dropdownHeight = DEFAULT_OPTIONS_CONTAINER_HEIGHT,
+    dropdownHeight = DEFAULT_DROPDOWN_MAX_HEIGHT,
     overscan = OVERSCAN,
     isVirtualized = true,
     footerConfig,

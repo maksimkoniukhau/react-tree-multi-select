@@ -47,9 +47,8 @@ export const getDropdown = (container: HTMLElement): HTMLElement => {
 };
 
 export const getDropdownListOuter = (container: HTMLElement): HTMLElement => {
-  return container.querySelector('.rtms-dropdown-list-outer') as HTMLElement;
+  return container.querySelector('.rtms-list-outer') as HTMLElement;
 };
-
 
 export const getDropdownInput = (container: HTMLElement): HTMLElement => {
   return getDropdown(container).querySelector('.rtms-input') as HTMLElement;

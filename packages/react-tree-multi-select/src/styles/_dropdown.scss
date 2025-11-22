@@ -11,6 +11,8 @@
   .rtms-dropdown {
     position: absolute;
     width: 100%;
+    display: flex;
+    flex-direction: column;
     z-index: 1;
     font-size: var(--rtms-dropdown-font-size);
     margin-top: 7px;
@@ -42,8 +44,15 @@
       padding: var(--rtms-list-item-tb-padding) var(--rtms-list-item-lr-padding);
     }
 
-    .rtms-dropdown-list-outer {
+    .rtms-list-outer {
+      width: 100%;
+      flex: 1 1 auto;
+      overflow-y: auto;
       border-radius: 4px;
+    }
+
+    .rtms-list-inner {
+      position: relative;
     }
 
     .rtms-list-item, .rtms-sticky-item {

@@ -143,7 +143,10 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
 
   return (
     <components.Dropdown.component
-      attributes={{className: `rtms-dropdown${componentDisabled ? ' disabled' : ''}`}}
+      attributes={{
+        style: {maxHeight: dropdownHeight},
+        className: `rtms-dropdown${componentDisabled ? ' disabled' : ''}`
+      }}
       ownProps={{componentDisabled}}
       customProps={components.Dropdown.props}
     >

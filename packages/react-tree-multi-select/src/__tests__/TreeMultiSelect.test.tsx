@@ -1004,10 +1004,10 @@ describe('TreeMultiSelect component: dropdownHeight prop', () => {
 
     await user.click(getField(container));
 
-    const dropdownListOuter = getDropdownListOuter(container);
-    expect(dropdownListOuter).toBeInTheDocument();
-    const computedStyles = window.getComputedStyle(dropdownListOuter);
-    expect(computedStyles.height).toEqual('300px');
+    const dropdown = getDropdown(container);
+    expect(dropdown).toBeInTheDocument();
+    const computedStyles = window.getComputedStyle(dropdown);
+    expect(computedStyles.maxHeight).toEqual('300px');
   });
 
   it.each([[100], [200], [400]])('tests component when dropdownHeight={%s}', async (dropdownHeight) => {
@@ -1017,10 +1017,10 @@ describe('TreeMultiSelect component: dropdownHeight prop', () => {
 
     await user.click(getField(container));
 
-    const dropdownListOuter = getDropdownListOuter(container);
-    expect(dropdownListOuter).toBeInTheDocument();
-    const computedStyles = window.getComputedStyle(dropdownListOuter);
-    expect(computedStyles.height).toEqual(`${dropdownHeight}px`);
+    const dropdown = getDropdown(container);
+    expect(dropdown).toBeInTheDocument();
+    const computedStyles = window.getComputedStyle(dropdown);
+    expect(computedStyles.maxHeight).toEqual(`${dropdownHeight}px`);
   });
 });
 

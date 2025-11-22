@@ -11,7 +11,6 @@ import React, {
   useRef,
   useState
 } from 'react';
-import {DEFAULT_OPTIONS_CONTAINER_WIDTH} from './constants';
 import {useResizeObserver} from './hooks/useResizeObserver';
 import {
   binarySearchStartIndex,
@@ -114,7 +113,9 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
     }, 0);
   }, [totalCount, itemHeights, estimatedItemHeight]);
 
-  const height = Math.min(propHeight, totalHeight);
+  const height = useMemo(() => {
+    return Math.min(outerRef.current?.clientHeight || propHeight, totalHeight);
+  }, [propHeight, totalHeight]);
 
   const positions = useMemo((): ItemPosition[] => {
     const positions: ItemPosition[] = [];
@@ -208,22 +209,14 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [overscanEndIndex, totalCount]);
 
-  const outerStyle: CSSProperties = {
-    height,
-    width: DEFAULT_OPTIONS_CONTAINER_WIDTH,
-    overflowY: totalHeight > height ? "scroll" : "hidden",
-    position: 'relative'
-  };
-
   return (
     <div
       tabIndex={-1}
       ref={outerRef}
-      style={outerStyle}
-      className="rtms-dropdown-list-outer"
+      className="rtms-list-outer"
       onScroll={handleScroll}
     >
-      <div style={{height: totalHeight, position: 'relative'}}>
+      <div style={{height: totalHeight}} className="rtms-list-inner">
         {Array.from({length: topItemCount}).map((_, index: number) => (
           <Item
             key={index}
