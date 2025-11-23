@@ -936,6 +936,8 @@ export const dropdownVirtualFocusIdsDefinition = `const getDropdownVirtualFocusI
 
 export const customVirtualFocusInFieldExample = `import React, {FC} from 'react';
 import {
+  ChipContainerProps,
+  ChipContainerType,
   Components,
   components,
   FieldProps,
@@ -953,9 +955,16 @@ const CustomFieldInput: FC<InputProps> = (props) => {
   );
 };
 
+const CustomChipContainer: FC<ChipContainerProps> = (props) => {
+  const {['data-rtms-virtual-focus-id']: _omit, ...restAttributes} = props.attributes;
+  return (
+    <components.ChipContainer{...props} attributes={props.ownProps.disabled ? restAttributes : props.attributes}/>
+  );
+};
+
 const CustomField: FC<FieldProps> = (props) => (
   <div {...props.attributes}>
-    <div data-rtms-virtual-focus-id="field:custom-id-2" className="field-virtual-focusable">
+    <div data-rtms-virtual-focus-id="field:custom-id-1" className="field-virtual-focusable">
       {\`I'm focusable\`}
     </div>
     {props.children}
@@ -963,15 +972,16 @@ const CustomField: FC<FieldProps> = (props) => (
 );
 
 const Input: InputType = {component: CustomFieldInput};
+const ChipContainer: ChipContainerType = {component: CustomChipContainer};
 const Field: FieldType = {component: CustomField};
-const customComponents: Components = {Field, Input};
+const customComponents: Components = {Field, ChipContainer, Input};
 
 export const CustomVirtualFocusInFieldExample: FC = () => {
 
   return (
     <div className="component-example">
       <TreeMultiSelect
-        data={getTreeNodeData(true)}
+        data={getTreeNodeData(true, true, true)}
         components={customComponents}
       />
     </div>

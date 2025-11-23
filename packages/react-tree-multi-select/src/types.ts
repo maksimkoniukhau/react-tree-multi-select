@@ -265,6 +265,15 @@ export interface State {
   virtualFocusId: VirtualFocusId | null;
 }
 
+/**
+ * Imperative API for interacting with the TreeMultiSelect component.
+ *
+ * A `TreeMultiSelectHandle` instance can be obtained by passing a `ref`
+ * to the component (e.g., `useRef<TreeMultiSelectHandle>(null)`).
+ *
+ * All methods operate on the most recent internal state at the moment
+ * they are called.
+ */
 export interface TreeMultiSelectHandle {
   /**
    * Returns a snapshot of the current internal component state.
