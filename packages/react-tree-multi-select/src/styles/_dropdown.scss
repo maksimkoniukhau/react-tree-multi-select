@@ -55,6 +55,10 @@
       position: relative;
     }
 
+    .rtms-list-item-container {
+      width: 100%;
+    }
+
     .rtms-list-item, .rtms-sticky-item {
       display: flex;
       align-items: center;

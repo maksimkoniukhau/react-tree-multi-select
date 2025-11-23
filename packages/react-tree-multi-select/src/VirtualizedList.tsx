@@ -49,13 +49,12 @@ const Item: FC<ItemProps> = (props) => {
   }, []);
 
   const style: CSSProperties = {
-    width: '100%',
     ...(isSticky && {top, position: 'sticky', zIndex: 1}),
     ...(isVirtualized && {top, position: 'absolute'})
   };
 
   return (
-    <div ref={ref} style={style}>
+    <div ref={ref} style={style} className="rtms-list-item-container">
       {children}
     </div>
   );
