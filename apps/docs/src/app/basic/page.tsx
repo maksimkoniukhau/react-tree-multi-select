@@ -6,7 +6,6 @@ import {getTreeNodeData} from '@/utils/utils';
 import {Select} from '@/shared-components/Select';
 import {Checkbox} from '@/shared-components/Checkbox';
 import {Input} from '@/shared-components/Input';
-import {OptionTreeNode} from '@/utils/data';
 
 const INPUT_PLACEHOLDER = 'search...';
 const NO_DATA = 'No data';
@@ -16,7 +15,7 @@ const OVERSCAN = 1;
 
 const BasicPage: FC = memo(() => {
 
-  const [data, setData] = useState<OptionTreeNode[]>(getTreeNodeData(true, true, true));
+  const [data, setData] = useState<TreeNode[]>(getTreeNodeData(true, true, true));
   const [type, setType] = useState<Type>(Type.TREE_SELECT);
   const [inputPlaceholder, setInputPlaceholder] = useState<string>(INPUT_PLACEHOLDER);
   const [noDataText, setNoDataText] = useState<string>(NO_DATA);
@@ -239,11 +238,11 @@ const BasicPage: FC = memo(() => {
       <div className="tree-multi-select-wrapper">
         <TreeMultiSelect
           data={[
-            {label: 'label1'},
-            {label: 'label2'},
-            {label: 'label3'},
-            {label: 'label4'},
-            {label: 'label5'}
+            {id: '1', label: 'label1'},
+            {id: '2', label: 'label2'},
+            {id: '3', label: 'label3'},
+            {id: '4', label: 'label4'},
+            {id: '5', label: 'label5'}
           ]}
           id="rtms-multi-select"
           withClearAll

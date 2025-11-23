@@ -22,26 +22,23 @@ export enum Type {
  */
 export interface TreeNode {
   /**
-   * The display label of the node.
-   */
-  label: string;
-
-  /**
    * Unique identifier for the node.
    *
-   * - If provided by the user, it MUST be unique across the entire tree.
-   * - If omitted, the component automatically generates an ID based on the node’s path,
-   *   which represents the node’s hierarchical position within the tree data
-   *   (e.g., `"0"`, `"1.0.3"`).
-   * - The assigned ID is used internally for tracking, selection, expansion, and virtual focus management.
+   * - The ID MUST be unique across the entire tree.
+   * - The ID is used internally for tracking, selection, expansion, and virtual focus management.
    *
    * ### Important
-   * Node IDs provided by the user **MUST NOT conflict** with any predefined virtual focus
-   * identifier suffixes (e.g., `INPUT_SUFFIX`, `CLEAR_ALL_SUFFIX`, `SELECT_ALL_SUFFIX`, `FOOTER_SUFFIX`),
+   * Node IDs **MUST NOT conflict** with any predefined virtual focus
+   * identifier suffixes (e.g., `INPUT_SUFFIX`, `CLEAR_ALL_SUFFIX`, `SELECT_ALL_SUFFIX`, `FOOTER_SUFFIX` constants),
    * as these are reserved for internal components and may cause unexpected behavior.
    * See `VirtualFocusId` type for more details.
    */
-  id?: string;
+  id: string;
+
+  /**
+   * The display label of the node.
+   */
+  label: string;
 
   /**
    * Optional child nodes, enabling a nested tree structure.
@@ -207,7 +204,7 @@ export const FOOTER_SUFFIX = 'rtms-footer';
 /**
  * Represents the identifier of a virtually focusable element within the component.
  *
- * The value is a string prefixed with either `FIELD` or `DROPDOWN` constants,
+ * The value is a string prefixed with either `FIELD_PREFIX` or `DROPDOWN_PREFIX` constants,
  * followed by an element-specific suffix.
  *
  * ### Format
@@ -217,14 +214,9 @@ export const FOOTER_SUFFIX = 'rtms-footer';
  * ```
  * **Examples:**
  * ```
- * field:1.0.0
+ * field:1
  * dropdown:123
  * ```
- *
- * The **region prefix** (a region-specific constant such as `FIELD_PREFIX` or `DROPDOWN_PREFIX`)
- * identifies the focus region, while the **node-id** represents the node’s unique identifier —
- * either provided by the user or automatically generated from the node’s hierarchical path
- * (e.g., `"1.0.0"`).
  *
  * ### Predefined Virtual Focus IDs:
  * Some virtually focusable elements use predefined `virtualFocusId` values.

@@ -536,7 +536,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
     async (withClearAll, presents) => {
       const {container, rerender} = render(
         <TreeMultiSelect
-          data={presents ? getTreeNodeData([1], [], []) : []}
+          data={presents ? getTreeNodeData(['1'], [], []) : []}
           withClearAll={withClearAll ? undefined : withClearAll}
         />
       );
@@ -544,7 +544,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
 
       rerender(
         <TreeMultiSelect
-          data={presents ? getTreeNodeData([1], [], []) : []}
+          data={presents ? getTreeNodeData(['1'], [], []) : []}
           withClearAll={withClearAll ? undefined : withClearAll}
           type={Type.TREE_SELECT_FLAT}
         />
@@ -553,7 +553,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
 
       rerender(
         <TreeMultiSelect
-          data={presents ? getTreeNodeData([1], [], []) : []}
+          data={presents ? getTreeNodeData(['1'], [], []) : []}
           withClearAll={withClearAll ? undefined : withClearAll}
           type={Type.MULTI_SELECT}
         />
@@ -562,7 +562,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
 
       rerender(
         <TreeMultiSelect
-          data={presents ? getTreeNodeData([1], [], []) : []}
+          data={presents ? getTreeNodeData(['1'], [], []) : []}
           withClearAll={withClearAll ? undefined : withClearAll}
           type={Type.SELECT}
         />
@@ -585,7 +585,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
 
     const {container, rerender} = render(
       <TreeMultiSelect
-        data={getTreeNodeData([8], [7], [8])}
+        data={getTreeNodeData(['8'], ['7'], ['8'])}
         withSelectAll
         onClearAll={handleClearAll}
       />
@@ -616,7 +616,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
 
     rerender(
       <TreeMultiSelect
-        data={getTreeNodeData([8], [7], [])}
+        data={getTreeNodeData(['8'], ['7'], [])}
         withSelectAll
         onClearAll={handleClearAll}
       />
@@ -646,7 +646,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
 
     rerender(
       <TreeMultiSelect
-        data={getTreeNodeData([], [7], [8])}
+        data={getTreeNodeData([], ['7'], ['8'])}
         withSelectAll
         onClearAll={handleClearAll}
       />
@@ -1352,7 +1352,7 @@ describe('TreeMultiSelect component: keyboardConfig prop', () => {
     let user: UserEvent = userEvent.setup();
 
     const {container, rerender} = render(
-      <TreeMultiSelect data={getTreeNodeData([1, 7, 10], [], [])}/>
+      <TreeMultiSelect data={getTreeNodeData(['1', '7', '10'], [], [])}/>
     );
 
     fieldKeyboardConfigMatcher(container, null);
@@ -1388,7 +1388,7 @@ describe('TreeMultiSelect component: keyboardConfig prop', () => {
     fieldKeyboardConfigMatcher(container, 0);
 
     rerender(
-      <TreeMultiSelect data={getTreeNodeData([1, 7, 10], [], [])} keyboardConfig={{field: {loopLeft: true}}}/>
+      <TreeMultiSelect data={getTreeNodeData(['1', '7', '10'], [], [])} keyboardConfig={{field: {loopLeft: true}}}/>
     );
     user = userEvent.setup();
     fieldKeyboardConfigMatcher(container, 0);
@@ -1418,7 +1418,7 @@ describe('TreeMultiSelect component: keyboardConfig prop', () => {
     fieldKeyboardConfigMatcher(container, -1);
 
     rerender(
-      <TreeMultiSelect data={getTreeNodeData([1, 7, 10], [], [])} keyboardConfig={{field: {loopRight: true}}}/>
+      <TreeMultiSelect data={getTreeNodeData(['1', '7', '10'], [], [])} keyboardConfig={{field: {loopRight: true}}}/>
     );
     user = userEvent.setup();
     fieldKeyboardConfigMatcher(container, -1);
@@ -1452,7 +1452,7 @@ describe('TreeMultiSelect component: keyboardConfig prop', () => {
 
     rerender(
       <TreeMultiSelect
-        data={getTreeNodeData([7, 10, 11], [], [])}
+        data={getTreeNodeData(['7', '10', '11'], [], [])}
         keyboardConfig={{field: {loopLeft: true, loopRight: true}}}
       />
     );
@@ -1503,7 +1503,7 @@ describe('TreeMultiSelect component: keyboardConfig prop', () => {
 
     rerender(
       <TreeMultiSelect
-        data={getTreeNodeData([7, 10, 11], [], [])}
+        data={getTreeNodeData(['7', '10', '11'], [], [])}
         keyboardConfig={{field: {loopLeft: true, loopRight: true}}}
       />
     );
@@ -1525,7 +1525,7 @@ describe('TreeMultiSelect component: keyboardConfig prop', () => {
 
     const {container, rerender} = render(
       <TreeMultiSelect
-        data={[{label: '1'}, {label: '2'}]}
+        data={[{id: '1', label: '1'}, {id: '2', label: '2'}]}
         withSelectAll
         components={{Footer: {component: CustomFooter}}}
       />
@@ -1566,7 +1566,7 @@ describe('TreeMultiSelect component: keyboardConfig prop', () => {
 
     rerender(
       <TreeMultiSelect
-        data={[{label: '1'}, {label: '2'}]}
+        data={[{id: '1', label: '1'}, {id: '2', label: '2'}]}
         withSelectAll
         keyboardConfig={{dropdown: {loopDown: false}}}
         components={{Footer: {component: CustomFooter}}}
@@ -1604,7 +1604,7 @@ describe('TreeMultiSelect component: keyboardConfig prop', () => {
 
     rerender(
       <TreeMultiSelect
-        data={[{label: '1'}, {label: '2'}]}
+        data={[{id: '1', label: '1'}, {id: '2', label: '2'}]}
         withSelectAll
         keyboardConfig={{dropdown: {loopUp: false}}}
         components={{Footer: {component: CustomFooter}}}
@@ -1636,7 +1636,7 @@ describe('TreeMultiSelect component: keyboardConfig prop', () => {
 
     rerender(
       <TreeMultiSelect
-        data={[{label: '1'}, {label: '2'}]}
+        data={[{id: '1', label: '1'}, {id: '2', label: '2'}]}
         withSelectAll
         keyboardConfig={{dropdown: {loopUp: false, loopDown: false}}}
         components={{Footer: {component: CustomFooter}}}
@@ -1680,7 +1680,7 @@ describe('TreeMultiSelect component: keyboardConfig prop', () => {
 
     rerender(
       <TreeMultiSelect
-        data={[{label: '1'}]}
+        data={[{id: '1', label: '1'}]}
         withSelectAll
         keyboardConfig={{dropdown: {loopUp: false, loopDown: false}}}
         components={{Footer: {component: CustomFooter}}}
@@ -2289,7 +2289,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     const handleSelectAllChange = jest.fn();
     const {container} = render(
       <TreeMultiSelect
-        data={getTreeNodeData([], [1, 2], [4])}
+        data={getTreeNodeData([], ['1', '2'], ['4'])}
         withSelectAll
         isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
@@ -2413,7 +2413,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     const handleSelectAllChange = jest.fn();
     const {container} = render(
       <TreeMultiSelect
-        data={getTreeNodeData([], [1, 2], [4, 10])}
+        data={getTreeNodeData([], ['1', '2'], ['4', '10'])}
         withSelectAll
         isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
@@ -2537,7 +2537,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     const handleSelectAllChange = jest.fn();
     const {container} = render(
       <TreeMultiSelect
-        data={getTreeNodeData([4], [1, 2], [4])}
+        data={getTreeNodeData(['4'], ['1', '2'], ['4'])}
         withSelectAll
         isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
@@ -2679,7 +2679,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     const handleSelectAllChange = jest.fn();
     const {container} = render(
       <TreeMultiSelect
-        data={getTreeNodeData([4], [1, 2], [2])}
+        data={getTreeNodeData(['4'], ['1', '2'], ['2'])}
         withSelectAll
         isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
@@ -2913,7 +2913,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     const handleSelectAllChange = jest.fn();
     const {container} = render(
       <TreeMultiSelect
-        data={getTreeNodeData([], [11, 12, 13], [])}
+        data={getTreeNodeData([], ['11', '12', '13'], [])}
         withSelectAll
         isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
@@ -3246,7 +3246,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       const handleSelectAllChange = jest.fn();
       const {container} = render(
         <TreeMultiSelect
-          data={getTreeNodeData([4, 5, 6], [1, 2], [3])}
+          data={getTreeNodeData(['4', '5', '6'], ['1', '2'], ['3'])}
           withSelectAll
           isVirtualized={false}
           onSelectAllChange={handleSelectAllChange}

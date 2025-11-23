@@ -29,18 +29,21 @@ export const CustomFieldExample: FC = () => {
       <TreeMultiSelect
         data={[
           {
+            id: '1',
             label: 'Company1',
-            children: [{label: 'Company1Branch1'}, {label: 'Company1Branch2'}],
+            children: [{id: '1.1', label: 'Company1Branch1'}, {id: '1.2', label: 'Company1Branch2'}],
             expanded: true
           },
           {
+            id: '2',
             label: 'Company2',
-            children: [{label: 'Company2Branch1'}, {label: 'Company2Branch2', selected: true}],
+            children: [{id: '2.1', label: 'Company2Branch1'}, {id: '2.2', label: 'Company2Branch2', selected: true}],
             expanded: true
           },
           {
+            id: '3',
             label: 'Company3',
-            children: [{label: 'Company3Branch1', disabled: true}, {label: 'Company3Branch2'}],
+            children: [{id: '3.1', label: 'Company3Branch1', disabled: true}, {id: '3.2', label: 'Company3Branch2'}],
             expanded: true
           }
         ]}
@@ -50,11 +53,11 @@ export const CustomFieldExample: FC = () => {
       <TreeMultiSelect
         type={Type.MULTI_SELECT}
         data={[
-          {label: 'Brand1'},
-          {label: 'Brand2'},
-          {label: 'Brand3', selected: true},
-          {label: 'Brand4'},
-          {label: 'Brand5', selected: true}
+          {id: '1', label: 'Brand1'},
+          {id: '2', label: 'Brand2'},
+          {id: '3', label: 'Brand3', selected: true},
+          {id: '4', label: 'Brand4'},
+          {id: '5', label: 'Brand5', selected: true}
         ]}
         withSelectAll={true}
         components={brandComponents}
@@ -62,11 +65,11 @@ export const CustomFieldExample: FC = () => {
       <TreeMultiSelect
         type={Type.SELECT}
         data={[
-          {label: '100'},
-          {label: '200'},
-          {label: '300'},
-          {label: '400'},
-          {label: '500'}
+          {id: '1', label: '100'},
+          {id: '2', label: '200'},
+          {id: '3', label: '300'},
+          {id: '4', label: '400'},
+          {id: '5', label: '500'}
         ]}
         components={priceComponents}
       />

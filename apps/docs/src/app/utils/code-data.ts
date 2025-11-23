@@ -5,28 +5,35 @@ export const ReactTreeMultiSelectApp: FC = () => {
   
   const data: TreeNode[] = [
     {
+      id: '1',
       label: 'label1',
       children: [
         {
+          id: '1.1',
           label: 'child11-label'
         },
         {
+          id: '1.2',
           label: 'child12-label'
         }
       ]
     },
     {
+      id: '2',
       label: 'label2',
       children: [
         {
+          id: '2.1',
           label: 'child21-label'
         },
         {
+          id: '2.2',
           label: 'child22-label'
         }
       ]
     },
     {
+      id: '3',
       label: 'label3'
     }
   ];
@@ -146,18 +153,21 @@ export const CustomFieldExample: FC = () => {
       <TreeMultiSelect
         data={[
           {
+            id: '1',
             label: 'Company1',
-            children: [{label: 'Company1Branch1'}, {label: 'Company1Branch2'}],
+            children: [{id: '1.1', label: 'Company1Branch1'}, {id: '1.2', label: 'Company1Branch2'}],
             expanded: true
           },
           {
+            id: '2',
             label: 'Company2',
-            children: [{label: 'Company2Branch1'}, {label: 'Company2Branch2', selected: true}],
+            children: [{id: '2.1', label: 'Company2Branch1'}, {id: '2.2', label: 'Company2Branch2', selected: true}],
             expanded: true
           },
           {
+            id: '3',
             label: 'Company3',
-            children: [{label: 'Company3Branch1', disabled: true}, {label: 'Company3Branch2'}],
+            children: [{id: '3.1', label: 'Company3Branch1', disabled: true}, {id: '3.2', label: 'Company3Branch2'}],
             expanded: true
           }
         ]}
@@ -167,11 +177,11 @@ export const CustomFieldExample: FC = () => {
       <TreeMultiSelect
         type={Type.MULTI_SELECT}
         data={[
-          {label: 'Brand1'},
-          {label: 'Brand2'},
-          {label: 'Brand3', selected: true},
-          {label: 'Brand4'},
-          {label: 'Brand5', selected: true}
+          {id: '1', label: 'Brand1'},
+          {id: '2', label: 'Brand2'},
+          {id: '3', label: 'Brand3', selected: true},
+          {id: '4', label: 'Brand4'},
+          {id: '5', label: 'Brand5', selected: true}
         ]}
         withSelectAll={true}
         components={brandComponents}
@@ -179,11 +189,11 @@ export const CustomFieldExample: FC = () => {
       <TreeMultiSelect
         type={Type.SELECT}
         data={[
-          {label: '100'},
-          {label: '200'},
-          {label: '300'},
-          {label: '400'},
-          {label: '500'}
+          {id: '1', label: '100'},
+          {id: '2', label: '200'},
+          {id: '3', label: '300'},
+          {id: '4', label: '400'},
+          {id: '5', label: '500'}
         ]}
         components={priceComponents}
       />
@@ -768,11 +778,10 @@ export const CustomNoDataExample: FC = () => {
 export const controlledExample = `import React, {FC, memo, useState} from 'react';
 import {TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
 import {getTreeNodeData} from '@/utils/utils';
-import {OptionTreeNode} from '@/utils/data';
 
 export const ControlledExample: FC = memo(() => {
 
-  const [data, setData] = useState<OptionTreeNode[]>(getTreeNodeData(true, true, true));
+  const [data, setData] = useState<TreeNode[]>(getTreeNodeData(true, true, true));
   const [open, setOpen] = useState<boolean>(true);
 
   const handleDropdownToggle = (open: boolean): void => {
@@ -780,11 +789,11 @@ export const ControlledExample: FC = memo(() => {
   };
 
   const handleNodeChange = (_node: TreeNode, _selectedNodes: TreeNode[], data: TreeNode[]): void => {
-    setData(data as OptionTreeNode[]);
+    setData(data);
   };
 
   const handleNodeToggle = (_node: TreeNode, _expandedNodes: TreeNode[], data: TreeNode[]): void => {
-    setData(data as OptionTreeNode[]);
+    setData(data);
   };
 
   return (
@@ -998,28 +1007,31 @@ export const SkipDropdownVirtualFocusExample: FC = () => {
       <TreeMultiSelect
         data={[
           {
+            id: '1',
             label: 'node-1',
             expanded: true,
             children: [
-              {label: 'node-1-child-1', disabled: true, skipDropdownVirtualFocus: true},
-              {label: 'node-1-child-2'}
+              {id: '1.1', label: 'node-1-child-1', disabled: true, skipDropdownVirtualFocus: true},
+              {id: '1.2', label: 'node-1-child-2'}
             ]
           },
           {
+            id: '2',
             label: 'node-2',
             expanded: true,
             children: [
-              {label: 'node-2-child-1'},
-              {label: 'node-2-child-2', disabled: true, skipDropdownVirtualFocus: true}
+              {id: '2.1', label: 'node-2-child-1'},
+              {id: '2.2', label: 'node-2-child-2', disabled: true, skipDropdownVirtualFocus: true}
             ]
           },
           {
+            id: '3',
             label: 'node-3',
             expanded: true,
             selected: true,
             children: [
-              {label: 'node-3-child-1', disabled: true, skipDropdownVirtualFocus: true},
-              {label: 'node-3-child-2'}
+              {id: '3.1', label: 'node-3-child-1', disabled: true, skipDropdownVirtualFocus: true},
+              {id: '3.2', label: 'node-3-child-2'}
             ]
           }
         ]}

@@ -1,11 +1,10 @@
 import React, {FC, memo, useState} from 'react';
 import {TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
 import {getTreeNodeData} from '@/utils/utils';
-import {OptionTreeNode} from '@/utils/data';
 
 export const ControlledExample: FC = memo(() => {
 
-  const [data, setData] = useState<OptionTreeNode[]>(getTreeNodeData(true, true, true));
+  const [data, setData] = useState<TreeNode[]>(getTreeNodeData(true, true, true));
   const [open, setOpen] = useState<boolean>(true);
 
   const handleDropdownToggle = (open: boolean): void => {
@@ -13,11 +12,11 @@ export const ControlledExample: FC = memo(() => {
   };
 
   const handleNodeChange = (_node: TreeNode, _selectedNodes: TreeNode[], data: TreeNode[]): void => {
-    setData(data as OptionTreeNode[]);
+    setData(data);
   };
 
   const handleNodeToggle = (_node: TreeNode, _expandedNodes: TreeNode[], data: TreeNode[]): void => {
-    setData(data as OptionTreeNode[]);
+    setData(data);
   };
 
   return (

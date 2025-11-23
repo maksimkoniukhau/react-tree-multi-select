@@ -1,159 +1,135 @@
 import {TreeNode} from 'react-tree-multi-select';
 
-export interface OptionTreeNode extends TreeNode {
-  option: Option;
-}
-
-export interface Option {
-  id: number;
-  name: string;
-  children: Option[];
-}
-
-export const options: Option[] = [
+export const treeNodes: TreeNode[] = [
   {
-    id: 1,
-    name: 'JavaScript',
+    id: '1',
+    label: 'JavaScript',
     children: [
       {
-        id: 2,
-        name: 'React',
+        id: '2',
+        label: 'React',
         children: [
           {
-            id: 3,
-            name: 'React.js',
+            id: '3',
+            label: 'React.js',
             children: []
           },
           {
-            id: 4,
-            name: 'React Native',
+            id: '4',
+            label: 'React Native',
             children: []
           }
         ]
       },
       {
-        id: 5,
-        name: 'Vue',
+        id: '5',
+        label: 'Vue',
         children: []
       },
       {
-        id: 6,
-        name: 'Angular',
+        id: '6',
+        label: 'Angular',
         children: []
       }
     ]
   },
   {
-    id: 7,
-    name: 'HTML',
+    id: '7',
+    label: 'HTML',
     children: [
       {
-        id: 8,
-        name: 'HTML4',
+        id: '8',
+        label: 'HTML4',
         children: []
       },
       {
-        id: 9,
-        name: 'HTML5',
+        id: '9',
+        label: 'HTML5',
         children: []
       }
     ]
   },
   {
-    id: 10,
-    name: 'XML',
+    id: '10',
+    label: 'XML',
     children: []
   },
   {
-    id: 11,
-    name: 'Java',
+    id: '11',
+    label: 'Java',
     children: [
       {
-        id: 12,
-        name: 'Spring',
+        id: '12',
+        label: 'Spring',
         children: [
           {
-            id: 13,
-            name: 'Spring 4',
+            id: '13',
+            label: 'Spring 4',
             children: [
               {
-                id: 14,
-                name: 'Spring 4.0',
+                id: '14',
+                label: 'Spring 4.0',
                 children: []
               },
               {
-                id: 15,
-                name: 'Spring 4.1',
+                id: '15',
+                label: 'Spring 4.1',
                 children: []
               },
               {
-                id: 16,
-                name: 'Spring 4.2',
+                id: '16',
+                label: 'Spring 4.2',
                 children: []
               }
             ]
           },
           {
-            id: 17,
-            name: 'Spring 5',
+            id: '17',
+            label: 'Spring 5',
             children: [
               {
-                id: 18,
-                name: 'Spring 5.0',
+                id: '18',
+                label: 'Spring 5.0',
                 children: []
               },
               {
-                id: 19,
-                name: 'Spring 5.1',
+                id: '19',
+                label: 'Spring 5.1',
                 children: []
               },
               {
-                id: 20,
-                name: 'Spring 5.2',
+                id: '20',
+                label: 'Spring 5.2',
                 children: []
               }
             ]
           },
           {
-            id: 21,
-            name: 'Spring 6',
+            id: '21',
+            label: 'Spring 6',
             children: [
-              {
-                id: 22,
-                name: 'Spring 6.0',
-                children: []
-              },
-              {
-                id: 23,
-                name: 'Spring 6.1',
-                children: []
-              },
-              {
-                id: 24,
-                name: 'Spring 6.2',
-                children: []
-              }
+
             ]
           }
         ]
       },
       {
-        id: 25,
-        name: 'Micronaut',
+        id: '25',
+        label: 'Micronaut',
         children: [
           {
-            id: 26,
-            name: 'Micronaut 3.5.0',
+            id: '26',
+            label: 'Micronaut 3.5.0',
             children: []
           },
           {
-            id: 27,
-            name: 'Micronaut 4.0.0',
+            id: '27',
+            label: 'Micronaut 4.0.0',
             children: []
           },
           {
-            id: 28,
-            name: 'Micronaut 4.6.0',
+            id: '28',
+            label: 'Micronaut 4.6.0',
             children: []
           }
         ]
@@ -161,81 +137,81 @@ export const options: Option[] = [
     ]
   },
   {
-    id: 29,
-    name: 'Go',
+    id: '29',
+    label: 'Go',
     children: [
       {
-        id: 30,
-        name: 'Gin',
+        id: '30',
+        label: 'Gin',
         children: []
       },
       {
-        id: 31,
-        name: 'Echo',
+        id: '31',
+        label: 'Echo',
         children: []
       },
       {
-        id: 32,
-        name: 'Beego',
+        id: '32',
+        label: 'Beego',
         children: []
       }
     ]
   },
   {
-    id: 33,
-    name: 'SQL',
+    id: '33',
+    label: 'SQL',
     children: [
       {
-        id: 34,
-        name: 'MySQL',
+        id: '34',
+        label: 'MySQL',
         children: []
       },
       {
-        id: 35,
-        name: 'PostgreSQL',
+        id: '35',
+        label: 'PostgreSQL',
         children: []
       }
     ]
   },
   {
-    id: 36,
-    name: 'Python',
+    id: '36',
+    label: 'Python',
     children: [
       {
-        id: 37,
-        name: 'Django',
+        id: '37',
+        label: 'Django',
         children: []
       },
       {
-        id: 38,
-        name: 'Flask',
+        id: '38',
+        label: 'Flask',
         children: []
       },
       {
-        id: 39,
-        name: 'Web2py',
+        id: '39',
+        label: 'Web2py',
         children: []
       }
     ]
   }
   ,
   {
-    id: 40,
-    name: 'Rust',
+    id: '40',
+    label: 'Rust',
     children: [
       {
-        id: 41,
-        name: 'Actix Web',
+        id: '41',
+        label: 'Actix Web',
         children: []
       },
       {
-        id: 42,
-        name: 'Rocket',
+        id: '42',
+        label: 'Rocket',
         children: []
       },
       {
-        id: 43,
-        name: 'Warp',
+        id: '43',
+        label: 'Warp',
         children: []
       }
     ]

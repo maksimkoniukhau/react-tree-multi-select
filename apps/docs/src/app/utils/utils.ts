@@ -1,38 +1,36 @@
 import {TreeNode} from 'react-tree-multi-select';
-import {Option, options, OptionTreeNode} from './data';
+import {treeNodes} from './data';
 
 export interface RandomTreeNode extends TreeNode {
-  id: string;
   description?: string;
 }
 
-const mapOptionsToTreeNodes = (
-  opts: Option[], selected: number[] = [], expanded: number[] = [], disabled: number[] = []
-): OptionTreeNode[] => {
-  return opts.map(option => {
-    const treeNode: OptionTreeNode = {
-      option,
-      label: option.name,
-      selected: selected.some(v => v === option.id),
-      expanded: expanded.some(v => v === option.id),
-      disabled: disabled.some(v => v === option.id)
+const buildTreeNodes = (
+  treeNodes: TreeNode[], selected: string[] = [], expanded: string[] = [], disabled: string[] = []
+): TreeNode[] => {
+  return treeNodes.map(treeNode => {
+    const result: TreeNode = {
+      ...treeNode,
+      selected: selected.some(v => v === treeNode.id),
+      expanded: expanded.some(v => v === treeNode.id),
+      disabled: disabled.some(v => v === treeNode.id)
     };
-    if (option.children.length) {
-      treeNode.children = mapOptionsToTreeNodes(option.children, selected, expanded, disabled);
+    if (treeNode.children?.length) {
+      result.children = buildTreeNodes(treeNode.children, selected, expanded, disabled);
     }
-    return treeNode;
+    return result;
   });
 };
 
-export const getTreeNodeData = (selected?: boolean, expanded?: boolean, disabled?: boolean): OptionTreeNode[] => {
-  const selectedIndexes = selected ? [3, 6, 7, 18, 23, 28, 29, 41] : [];
-  const expandedIndexes = expanded ? [1, 2, 11, 12, 40] : [];
-  const disabledIndexes = disabled ? [2, 7, 18, 34, 35, 40] : [];
+export const getTreeNodeData = (selected?: boolean, expanded?: boolean, disabled?: boolean): TreeNode[] => {
+  const selectedIndexes = selected ? ['3', '6', '7', '18', '23', '28', '29', '41'] : [];
+  const expandedIndexes = expanded ? ['1', '2', '11', '12', '40'] : [];
+  const disabledIndexes = disabled ? ['2', '7', '18', '34', '35', '40'] : [];
   return getTreeNodeDataNum(selectedIndexes, expandedIndexes, disabledIndexes);
 };
 
-export const getTreeNodeDataNum = (selected?: number[], expanded?: number[], disabled?: number[]): OptionTreeNode[] => {
-  return mapOptionsToTreeNodes(options, selected, expanded, disabled);
+export const getTreeNodeDataNum = (selected?: string[], expanded?: string[], disabled?: string[]): TreeNode[] => {
+  return buildTreeNodes(treeNodes, selected, expanded, disabled);
 };
 
 export const randomNumber = (min: number, max: number): number => {
