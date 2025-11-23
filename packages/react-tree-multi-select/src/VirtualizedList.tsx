@@ -11,7 +11,7 @@ import React, {
   useRef,
   useState
 } from 'react';
-import {useResizeObserver} from './hooks/useResizeObserver';
+import {useItemsResizeObserver} from './hooks/useItemsResizeObserver';
 import {
   binarySearchStartIndex,
   calculateItemScrollMetrics,
@@ -27,7 +27,8 @@ export interface ItemPosition {
 interface ItemProps {
   index: number;
   top: number;
-  updateHeight: (index: number, height: number) => void;
+  observeItem: (element: HTMLElement | null, index: number) => void;
+  unobserveItem: (element: HTMLElement | null) => void;
   children: ReactNode;
   isSticky?: boolean;
   isVirtualized?: boolean;
@@ -35,18 +36,17 @@ interface ItemProps {
 
 const Item: FC<ItemProps> = (props) => {
 
-  const {index, top, updateHeight, children, isSticky, isVirtualized} = props;
+  const {index, top, observeItem, unobserveItem, children, isSticky, isVirtualized} = props;
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const updateHeightCallback = useCallback((size: { width: number; height: number }): void => {
-    if (size.height === 0 && size.width === 0) {
-      return;
-    }
-    updateHeight(index, size.height);
-  }, [index, updateHeight]);
+  useEffect(() => {
+    const element = ref.current;
+    observeItem(element, index);
 
-  useResizeObserver(ref.current, updateHeightCallback);
+    return () => unobserveItem(element);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const style: CSSProperties = {
     width: '100%',
@@ -149,17 +149,17 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
   const start = isVirtualized ? overscanStartIndex : topItemCount;
   const end = isVirtualized ? overscanEndIndex : positions.length;
 
-  const updateHeight = useCallback((index: number, height: number): void => {
+  const updateHeight = useCallback((index: number, size: { width: number; height: number }): void => {
     setItemHeights((prev: Map<number, number>) => {
-      if (prev.get(index) === height) {
+      if (prev.get(index) === size.height) {
         return prev;
       }
       const newMap = new Map<number, number>(prev);
       if (index === topItemCount) {
         Array.from({length: totalCount - topItemCount}, (_, i) => i + topItemCount)
-          .forEach(index => newMap.set(index, height));
+          .forEach(idx => newMap.set(idx, size.height));
       } else {
-        newMap.set(index, height);
+        newMap.set(index, size.height);
       }
       return newMap;
     });
@@ -203,6 +203,8 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [overscanEndIndex, totalCount]);
 
+  const {observeItem, unobserveItem} = useItemsResizeObserver(updateHeight);
+
   return (
     <div
       tabIndex={-1}
@@ -216,7 +218,8 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
             key={index}
             index={index}
             top={positions[index].top}
-            updateHeight={updateHeight}
+            observeItem={observeItem}
+            unobserveItem={unobserveItem}
             isSticky
           >
             {renderItem(index)}
@@ -229,7 +232,8 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
               key={index}
               index={index}
               top={pos.top}
-              updateHeight={updateHeight}
+              observeItem={observeItem}
+              unobserveItem={unobserveItem}
               isVirtualized={isVirtualized}
             >
               {renderItem(index)}
