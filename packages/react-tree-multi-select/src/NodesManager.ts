@@ -1,5 +1,6 @@
 import {TreeNode, Type} from './types';
-import {convertTreeArrayToFlatArray, mapTreeNodeToNode} from './utils/nodesUtils';
+import {PATH_DELIMITER} from './constants';
+import {convertTreeArrayToFlatArray} from './utils/nodesUtils';
 import {Node} from './Node';
 
 export class NodesManager {
@@ -29,52 +30,7 @@ export class NodesManager {
     return this._nodes;
   }
 
-  private initialize = (data: TreeNode[], type: Type, searchValue: string) => {
-    this._type = type;
-    this._nodeMap = new Map<string, Node>();
-    this._copiedData = [];
-    this._roots = [];
-    this._nodes = [];
-    data.forEach((treeNode, index) => {
-      const node = mapTreeNodeToNode(treeNode, index.toString(), null, this._nodeMap);
-      this._roots.push(node);
-      this._copiedData.push(node.initTreeNode);
-    });
-
-    this._nodes = this._roots;
-
-    if (this._type === Type.TREE_SELECT || this._type === Type.TREE_SELECT_FLAT) {
-      this._nodes = convertTreeArrayToFlatArray(this._roots);
-    }
-    if (this._type === Type.TREE_SELECT || this._type === Type.TREE_SELECT_FLAT || this._type === Type.MULTI_SELECT) {
-      this._nodes.forEach(node => {
-        if (node.initTreeNode.selected) {
-          node.handleSelect(this._type);
-        }
-      });
-    }
-    if (this._type === Type.SELECT) {
-      const lastSelectedNode = this._nodes.findLast(node => node.initTreeNode.selected);
-      if (lastSelectedNode) {
-        lastSelectedNode.handleSelect(this._type);
-      }
-    }
-    // disabled should be processed in separate cycle after selected,
-    // because disabled node initially might be selected!!!
-    this._nodes.forEach(node => {
-      if (node.initTreeNode.disabled) {
-        node.handleDisable(this._type);
-      }
-      node.handleSearch(searchValue);
-    });
-
-    // effectivelySelected should be processed in separate cycle after disabled
-    this._nodes.forEach(node => {
-      node.handleEffectivelySelected(this._type);
-    });
-  };
-
-  public isEffectivelySelected = (): boolean => {
+  public areAllEffectivelySelected = (): boolean => {
     return this._roots.every(root => root.effectivelySelected);
   };
 
@@ -128,5 +84,97 @@ export class NodesManager {
 
   public findById = (id: string): Node | undefined => {
     return this._nodeMap.get(id);
+  };
+
+  private initialize = (data: TreeNode[], type: Type, searchValue: string) => {
+    this._type = type;
+    this._nodeMap = new Map<string, Node>();
+    this._copiedData = [];
+    this._roots = [];
+    this._nodes = [];
+
+    data.forEach((treeNode, index) => {
+      const node = this.mapTreeNodeToNode(treeNode, index.toString(), null, this._nodeMap);
+      this._roots.push(node);
+      this._copiedData.push(node.initTreeNode);
+    });
+
+    this._nodes = this._roots;
+
+    if (this._type === Type.TREE_SELECT || this._type === Type.TREE_SELECT_FLAT) {
+      this._nodes = convertTreeArrayToFlatArray(this._roots);
+    }
+    if (this._type === Type.TREE_SELECT || this._type === Type.TREE_SELECT_FLAT || this._type === Type.MULTI_SELECT) {
+      this._nodes.forEach(node => {
+        if (node.initTreeNode.selected) {
+          node.handleSelect(this._type);
+        }
+      });
+    }
+    if (this._type === Type.SELECT) {
+      const lastSelectedNode = this._nodes.findLast(node => node.initTreeNode.selected);
+      if (lastSelectedNode) {
+        lastSelectedNode.handleSelect(this._type);
+      }
+    }
+    // disabled should be processed in separate cycle after selected,
+    // because disabled node initially might be selected!!!
+    this._nodes.forEach(node => {
+      if (node.initTreeNode.disabled) {
+        node.handleDisable(this._type);
+      }
+      node.handleSearch(searchValue);
+    });
+
+    // effectivelySelected should be processed in separate cycle after disabled
+    this._nodes.forEach(node => {
+      node.handleEffectivelySelected(this._type);
+    });
+  };
+
+  private mapTreeNodeToNode = (
+    treeNode: TreeNode,
+    path: string,
+    parentId: string | null,
+    nodeMap: Map<string, Node>
+  ): Node => {
+    // 1. Process deepest level first
+    const children = treeNode.children?.map((child, index) => {
+      return this.mapTreeNodeToNode(child, `${path}${PATH_DELIMITER}${index}`, null, nodeMap);
+    }) || [];
+
+    // 2. Build Node AFTER children are processed (bottom-up)
+    const id = treeNode.id;
+    const skipDropdownVirtualFocus = treeNode.skipDropdownVirtualFocus ?? false;
+    const expanded = Boolean(children.length && treeNode.expanded);
+    const childrenIds = children.map(child => child.id);
+    const initTreeNode: TreeNode = Object.assign(Object.create(Object.getPrototypeOf(treeNode)), treeNode);
+
+    const node: Node = new Node(
+      nodeMap,
+      path,
+      id,
+      treeNode.label,
+      skipDropdownVirtualFocus,
+      parentId,
+      childrenIds,
+      path.split(PATH_DELIMITER).length - 1,
+      expanded,
+      initTreeNode
+    );
+
+    // 3. After creating current Node, assign its parent to all children
+    children.forEach(child => child.parentId = node.id);
+
+    // 4. After creating the current Node, update its `initTreeNode.children`
+    // to point to the initTreeNodes of its mapped children,
+    // so changes in the children are reflected in the parent’s initTreeNode
+    if (treeNode.children) {
+      node.initTreeNode.children = children.map(child => child.initTreeNode);
+    }
+
+    nodeMap.set(id, node);
+
+    return node;
   };
 }

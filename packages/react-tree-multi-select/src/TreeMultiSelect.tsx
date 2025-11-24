@@ -443,7 +443,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       return;
     }
     const shouldBeUnselected = selectAllCheckedState === CheckedState.SELECTED
-      || (selectAllCheckedState === CheckedState.PARTIAL && nodesManager.current.isEffectivelySelected());
+      || (selectAllCheckedState === CheckedState.PARTIAL && nodesManager.current.areAllEffectivelySelected());
     setAllSelected(!shouldBeUnselected);
   };
 

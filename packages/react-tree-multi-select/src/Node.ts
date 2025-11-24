@@ -2,12 +2,14 @@ import {TreeNode, Type} from './types';
 
 export class Node {
 
+  private _nodeMap: Map<string, Node>;
+
   private readonly _path: string;
   private readonly _id: string;
   private readonly _name: string;
   private readonly _skipDropdownVirtualFocus: boolean;
-  private readonly _parent: Node | null;
-  private _children: Node[];
+  private _parentId: string | null;
+  private _childrenIds: string[];
   private readonly _depth: number;
   private _disabled: boolean;
   private _selected: boolean;
@@ -22,21 +24,24 @@ export class Node {
   private readonly _initTreeNode: TreeNode;
 
   constructor(
+    nodeMap: Map<string, Node>,
     path: string,
     id: string,
     name: string,
     skipDropdownVirtualFocus: boolean,
-    parent: Node | null,
+    parentId: string | null,
+    childrenIds: string[],
     depth: number,
     expanded: boolean,
     initTreeNode: TreeNode
   ) {
+    this._nodeMap = nodeMap;
     this._path = path ?? '';
     this._id = id;
     this._name = name ?? '';
     this._skipDropdownVirtualFocus = skipDropdownVirtualFocus;
-    this._parent = parent;
-    this._children = [];
+    this._parentId = parentId;
+    this._childrenIds = childrenIds;
     this._depth = depth || 0;
     this._disabled = false;
     this._selected = false;
@@ -47,7 +52,6 @@ export class Node {
     this._matched = false;
     this._filtered = true;
     this._initTreeNode = initTreeNode;
-    this._initTreeNode.id = id;
   }
 
   get path(): string {
@@ -67,15 +71,20 @@ export class Node {
   }
 
   get parent(): Node | null {
-    return this._parent;
+    if (!this._parentId) {
+      return null;
+    }
+    return this._nodeMap.get(this._parentId) ?? null;
+  }
+
+  set parentId(parentId: string | null) {
+    this._parentId = parentId;
   }
 
   get children(): Node[] {
-    return this._children;
-  }
-
-  set children(value: Node[]) {
-    this._children = value || [];
+    return this._childrenIds
+      .map(childId => this._nodeMap.get(childId))
+      .filter(node => node !== undefined);
   }
 
   get depth(): number {
