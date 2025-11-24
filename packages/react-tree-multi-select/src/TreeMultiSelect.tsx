@@ -14,13 +14,7 @@ import {
   VirtualFocusId
 } from './types';
 import {InnerComponents, NullableVirtualFocusId} from './innerTypes';
-import {
-  DEFAULT_DROPDOWN_MAX_HEIGHT,
-  INPUT_PLACEHOLDER,
-  NO_DATA_TEXT,
-  NO_MATCHES_TEXT,
-  OVERSCAN
-} from './constants';
+import {DEFAULT_DROPDOWN_MAX_HEIGHT, INPUT_PLACEHOLDER, NO_DATA_TEXT, NO_MATCHES_TEXT, OVERSCAN} from './constants';
 import {getFieldFocusableElement} from './utils/commonUtils';
 import {filterChips, getSelectAllCheckedState} from './utils/nodesUtils';
 import {getKeyboardConfig, shouldRenderSelectAll, typeToClassName} from './utils/componentUtils';
@@ -378,7 +372,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       return;
     }
     event.preventDefault();
-    nodesManager.current.handleDeselect(type);
+    nodesManager.current.deselectAll();
     const newSelectedNodes = nodesManager.current.getSelected();
     const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
 
@@ -428,7 +422,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (!(type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT || type === Type.MULTI_SELECT)) {
       return;
     }
-    nodesManager.current.handleSelection(selectAll, type);
+    nodesManager.current.setAllSelected(selectAll);
 
     const newSelectedNodes = nodesManager.current.getSelected();
     const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);

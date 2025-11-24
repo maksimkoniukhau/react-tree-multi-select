@@ -4,6 +4,8 @@ import {Node} from './Node';
 
 export class NodesManager {
 
+  private _type: Type;
+
   private _nodeMap: Map<string, Node>;
 
   // shallow copy of data with actual selected/expanded/disabled props
@@ -28,6 +30,7 @@ export class NodesManager {
   }
 
   private initialize = (data: TreeNode[], type: Type, searchValue: string) => {
+    this._type = type;
     this._nodeMap = new Map<string, Node>();
     this._copiedData = [];
     this._roots = [];
@@ -40,34 +43,34 @@ export class NodesManager {
 
     this._nodes = this._roots;
 
-    if (type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT) {
+    if (this._type === Type.TREE_SELECT || this._type === Type.TREE_SELECT_FLAT) {
       this._nodes = convertTreeArrayToFlatArray(this._roots);
     }
-    if (type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT || type === Type.MULTI_SELECT) {
+    if (this._type === Type.TREE_SELECT || this._type === Type.TREE_SELECT_FLAT || this._type === Type.MULTI_SELECT) {
       this._nodes.forEach(node => {
         if (node.initTreeNode.selected) {
-          node.handleSelect(type);
+          node.handleSelect(this._type);
         }
       });
     }
-    if (type === Type.SELECT) {
+    if (this._type === Type.SELECT) {
       const lastSelectedNode = this._nodes.findLast(node => node.initTreeNode.selected);
       if (lastSelectedNode) {
-        lastSelectedNode.handleSelect(type);
+        lastSelectedNode.handleSelect(this._type);
       }
     }
     // disabled should be processed in separate cycle after selected,
     // because disabled node initially might be selected!!!
     this._nodes.forEach(node => {
       if (node.initTreeNode.disabled) {
-        node.handleDisable(type);
+        node.handleDisable(this._type);
       }
       node.handleSearch(searchValue);
     });
 
     // effectivelySelected should be processed in separate cycle after disabled
     this._nodes.forEach(node => {
-      node.handleEffectivelySelected(type);
+      node.handleEffectivelySelected(this._type);
     });
   };
 
@@ -101,16 +104,16 @@ export class NodesManager {
       .some(node => node.selected);
   };
 
-  public handleDeselect = (type: Type): void => {
-    this._nodes.forEach(node => node.handleUnselect(type));
+  public deselectAll = (): void => {
+    this._nodes.forEach(node => node.handleUnselect(this._type));
   };
 
-  public handleSelection = (select: boolean, type: Type): void => {
+  public setAllSelected = (select: boolean): void => {
     this._nodes.forEach(node => {
       if (select) {
-        node.handleSelect(type);
+        node.handleSelect(this._type);
       } else {
-        node.handleUnselect(type);
+        node.handleUnselect(this._type);
       }
     });
   };
