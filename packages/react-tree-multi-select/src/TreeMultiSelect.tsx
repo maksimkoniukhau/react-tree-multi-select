@@ -71,7 +71,10 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
 
   const isComponentFocused = useRef<boolean>(false);
 
-  const nodesManager = useRef<NodesManager>(new NodesManager([], type, ''));
+  const nodesManager = useRef<NodesManager>(null!);
+  if (!nodesManager.current) {
+    nodesManager.current = new NodesManager([], type, '');
+  }
 
   const [displayedNodes, setDisplayedNodes] = useState<Node[]>([]);
   const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
