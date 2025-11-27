@@ -11,7 +11,7 @@ export class Node {
   private _parentId: string | null;
   private _childrenIds: string[];
   private readonly _depth: number;
-  private _disabled: boolean;
+  private readonly _disabled: boolean;
   private _selected: boolean;
   private _effectivelySelected: boolean;
   private _partiallySelected: boolean;
@@ -33,6 +33,7 @@ export class Node {
     childrenIds: string[],
     depth: number,
     expanded: boolean,
+    disabled: boolean,
     initTreeNode: TreeNode
   ) {
     this._nodeMap = nodeMap;
@@ -43,7 +44,7 @@ export class Node {
     this._parentId = parentId;
     this._childrenIds = childrenIds;
     this._depth = depth || 0;
-    this._disabled = false;
+    this._disabled = disabled;
     this._selected = false;
     this._effectivelySelected = false;
     this._partiallySelected = false;
@@ -93,11 +94,6 @@ export class Node {
 
   get disabled(): boolean {
     return this._disabled;
-  }
-
-  private set disabled(value: boolean) {
-    this._disabled = value || false;
-    this._initTreeNode.disabled = value || false;
   }
 
   get selected(): boolean {
@@ -173,14 +169,6 @@ export class Node {
       } else {
         this.expanded = expand;
       }
-    }
-  };
-
-  public handleDisable = (type: Type): void => {
-    if (type === Type.TREE_SELECT) {
-      this.disableTreeNode(this);
-    } else {
-      this.disabled = true;
     }
   };
 
@@ -270,13 +258,6 @@ export class Node {
       }
     }
     return true;
-  };
-
-  private disableTreeNode = (node: Node): void => {
-    node.disabled = true;
-    if (node.hasChildren()) {
-      node.children.forEach(child => this.disableTreeNode(child));
-    }
   };
 
   private changeTreeNode = (node: Node, select: boolean, type: Type): void => {

@@ -117,12 +117,7 @@ export class NodesManager {
         lastSelectedNode.handleSelect(this._type);
       }
     }
-    // disabled should be processed in separate cycle after selected,
-    // because disabled node initially might be selected!!!
     this._nodes.forEach(node => {
-      if (node.initTreeNode.disabled) {
-        node.handleDisable(this._type);
-      }
       node.handleSearch(searchValue);
     });
 
@@ -160,6 +155,7 @@ export class NodesManager {
       childrenIds,
       path.split(PATH_DELIMITER).length - 1,
       expanded,
+      treeNode.disabled ?? false,
       initTreeNode
     );
 

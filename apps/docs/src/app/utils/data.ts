@@ -108,7 +108,21 @@ export const treeNodes: TreeNode[] = [
             id: '21',
             label: 'Spring 6',
             children: [
-
+              {
+                id: '22',
+                label: 'Spring 6.0',
+                children: []
+              },
+              {
+                id: '23',
+                label: 'Spring 6.1',
+                children: []
+              },
+              {
+                id: '24',
+                label: 'Spring 6.2',
+                children: []
+              }
             ]
           }
         ]
