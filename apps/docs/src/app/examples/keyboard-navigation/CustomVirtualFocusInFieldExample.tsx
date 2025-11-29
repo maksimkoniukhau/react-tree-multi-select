@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import {
   ChipContainerProps,
   ChipContainerType,
@@ -8,9 +8,10 @@ import {
   FieldType,
   InputProps,
   InputType,
-  TreeMultiSelect
+  TreeMultiSelect,
+  TreeNode
 } from 'react-tree-multi-select';
-import {getTreeNodeData} from '@/utils/utils';
+import {getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
 
 const CustomFieldInput: FC<InputProps> = (props) => {
   const {['data-rtms-virtual-focus-id']: _omit, ...restAttributes} = props.attributes;
@@ -42,10 +43,14 @@ const customComponents: Components = {Field, ChipContainer, Input};
 
 export const CustomVirtualFocusInFieldExample: FC = () => {
 
+  const [data] = useState<TreeNode[]>(getTreeNodeData(true, true));
+  const [selectedIds] = useState<string[]>(getBaseSelectedIds());
+
   return (
     <div className="component-example">
       <TreeMultiSelect
-        data={getTreeNodeData(true, true, true)}
+        data={data}
+        selectedIds={selectedIds}
         components={customComponents}
       />
     </div>

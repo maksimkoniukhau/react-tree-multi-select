@@ -1,7 +1,13 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import {Tooltip} from 'react-tooltip';
-import {Components, SelectAllContainerProps, SelectAllContainerType, TreeMultiSelect} from 'react-tree-multi-select';
-import {getTreeNodeData} from '@/utils/utils';
+import {
+  Components,
+  SelectAllContainerProps,
+  SelectAllContainerType,
+  TreeMultiSelect,
+  TreeNode
+} from 'react-tree-multi-select';
+import {getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
 
 const CustomSelectAllContainer: FC<SelectAllContainerProps> = (props) => (
   <>
@@ -22,10 +28,14 @@ const components: Components = {SelectAllContainer};
 
 export const CustomSelectAllContainerExample: FC = () => {
 
+  const [data] = useState<TreeNode[]>(getTreeNodeData());
+  const [selectedIds] = useState<string[]>(getBaseSelectedIds());
+
   return (
     <div className="component-example">
       <TreeMultiSelect
-        data={getTreeNodeData(true)}
+        data={data}
+        selectedIds={selectedIds}
         withSelectAll
         components={components}
       />

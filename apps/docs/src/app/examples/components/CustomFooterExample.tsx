@@ -27,6 +27,7 @@ const CustomFooter: FC<FooterProps<CustomFooterProps>> = (props) => {
 export const CustomFooterExample: FC = () => {
 
   const [data, setData] = useState<RandomTreeNode[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [lastPageReached, setLastPageReached] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
@@ -46,8 +47,8 @@ export const CustomFooterExample: FC = () => {
     void loadData(0);
   }, []);
 
-  const handleNodeChange = (_node: TreeNode, _selectedNodes: TreeNode[], data: TreeNode[]): void => {
-    setData(data as RandomTreeNode[]);
+  const handleNodeChange = (_node: TreeNode, selectedNodes: TreeNode[]): void => {
+    setSelectedIds(selectedNodes.map(node => node.id));
   };
 
   const handleNodeToggle = (_node: TreeNode, _expandedNodes: TreeNode[], data: TreeNode[]): void => {
@@ -74,6 +75,7 @@ export const CustomFooterExample: FC = () => {
     <div className="component-example">
       <TreeMultiSelect
         data={data}
+        selectedIds={selectedIds}
         withClearAll={false}
         components={components}
         onNodeChange={handleNodeChange}

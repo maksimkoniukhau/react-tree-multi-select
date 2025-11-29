@@ -1,6 +1,6 @@
-import React, {FC, useMemo} from 'react';
-import {ChipLabelProps, Components, TreeMultiSelect} from 'react-tree-multi-select';
-import {getTreeNodeData} from '@/utils/utils';
+import React, {FC, useMemo, useState} from 'react';
+import {ChipLabelProps, Components, TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
+import {getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
 
 interface CustomChipLabelProps {
   suffix: string;
@@ -14,7 +14,8 @@ const CustomChipLabel: FC<ChipLabelProps<CustomChipLabelProps>> = (props) => (
 
 export const CustomChipLabelExample: FC = () => {
 
-  const data = useMemo(() => getTreeNodeData(true), []);
+  const [data] = useState<TreeNode[]>(getTreeNodeData());
+  const [selectedIds] = useState<string[]>(getBaseSelectedIds());
 
   const components: Components = useMemo(() => (
     {
@@ -29,6 +30,7 @@ export const CustomChipLabelExample: FC = () => {
     <div className="component-example">
       <TreeMultiSelect
         data={data}
+        selectedIds={selectedIds}
         components={components}
       />
     </div>

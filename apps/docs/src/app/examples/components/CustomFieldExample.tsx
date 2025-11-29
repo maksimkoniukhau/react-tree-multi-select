@@ -37,7 +37,7 @@ export const CustomFieldExample: FC = () => {
           {
             id: '2',
             label: 'Company2',
-            children: [{id: '2.1', label: 'Company2Branch1'}, {id: '2.2', label: 'Company2Branch2', selected: true}],
+            children: [{id: '2.1', label: 'Company2Branch1'}, {id: '2.2', label: 'Company2Branch2'}],
             expanded: true
           },
           {
@@ -47,6 +47,7 @@ export const CustomFieldExample: FC = () => {
             expanded: true
           }
         ]}
+        selectedIds={['2.2']}
         withDropdownInput={true}
         components={companyComponents}
       />
@@ -55,10 +56,11 @@ export const CustomFieldExample: FC = () => {
         data={[
           {id: '1', label: 'Brand1'},
           {id: '2', label: 'Brand2'},
-          {id: '3', label: 'Brand3', selected: true},
+          {id: '3', label: 'Brand3'},
           {id: '4', label: 'Brand4'},
-          {id: '5', label: 'Brand5', selected: true}
+          {id: '5', label: 'Brand5'}
         ]}
+        selectedIds={['3', '5']}
         withSelectAll={true}
         components={brandComponents}
       />

@@ -13,12 +13,13 @@ const Footer: FC<FooterProps<{ text: string }>> = (props) => {
 export const InfiniteScrollExample: FC = () => {
 
   const [data, setData] = useState<RandomTreeNode[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [lastPageReached, setLastPageReached] = useState<boolean>(false);
   const [keyboardConfig, setKeyboardConfig] = useState<KeyboardConfig>({dropdown: {loopUp: false, loopDown: false}});
   const [page, setPage] = useState<number>(0);
 
-  const handleNodeChange = (_node: TreeNode, _selectedNodes: TreeNode[], data: TreeNode[]): void => {
-    setData(data as RandomTreeNode[]);
+  const handleNodeChange = (_node: TreeNode, selectedNodes: TreeNode[]): void => {
+    setSelectedIds(selectedNodes.map(node => node.id));
   };
 
   const handleNodeToggle = (_node: TreeNode, _expandedNodes: TreeNode[], data: TreeNode[]): void => {
@@ -52,6 +53,7 @@ export const InfiniteScrollExample: FC = () => {
     <div className="component-example">
       <TreeMultiSelect
         data={data}
+        selectedIds={selectedIds}
         noDataText="Initial data loading..."
         withClearAll={false}
         keyboardConfig={keyboardConfig}

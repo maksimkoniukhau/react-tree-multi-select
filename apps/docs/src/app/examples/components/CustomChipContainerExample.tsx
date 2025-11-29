@@ -1,7 +1,14 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import {Tooltip} from 'react-tooltip';
-import {ChipContainerProps, ChipContainerType, Components, components, TreeMultiSelect} from 'react-tree-multi-select';
-import {getTreeNodeData} from '@/utils/utils';
+import {
+  ChipContainerProps,
+  ChipContainerType,
+  Components,
+  components,
+  TreeMultiSelect,
+  TreeNode
+} from 'react-tree-multi-select';
+import {getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
 
 const CustomChipContainer: FC<ChipContainerProps> = (props) => (
   <>
@@ -22,10 +29,14 @@ const customComponents: Components = {ChipContainer};
 
 export const CustomChipContainerExample: FC = () => {
 
+  const [data] = useState<TreeNode[]>(getTreeNodeData());
+  const [selectedIds] = useState<string[]>(getBaseSelectedIds());
+
   return (
     <div className="component-example">
       <TreeMultiSelect
-        data={getTreeNodeData(true)}
+        data={data}
+        selectedIds={selectedIds}
         components={customComponents}
       />
     </div>
