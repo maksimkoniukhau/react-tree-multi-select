@@ -15,8 +15,8 @@ import {
 } from './types';
 import {InnerComponents, NullableVirtualFocusId} from './innerTypes';
 import {DEFAULT_DROPDOWN_MAX_HEIGHT, INPUT_PLACEHOLDER, NO_DATA_TEXT, NO_MATCHES_TEXT, OVERSCAN} from './constants';
-import {getFieldFocusableElement} from './utils/commonUtils';
-import {filterChips, getSelectAllCheckedState} from './utils/nodesUtils';
+import {areSetsEqual, getFieldFocusableElement} from './utils/commonUtils';
+import {filterChips, getSelectAllCheckedState, normalizeSelectedIds} from './utils/nodesUtils';
 import {getKeyboardConfig, shouldRenderSelectAll, typeToClassName} from './utils/componentUtils';
 import {getComponents, hasCustomFooterComponent} from './utils/componentsUtils';
 import {
@@ -32,8 +32,9 @@ import {DropdownContainer} from './DropdownContainer';
 
 export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelectProps>((props, ref) => {
   const {
-    data = [],
+    data,
     type = Type.TREE_SELECT,
+    selectedIds: propsSelectedIds,
     id = '',
     className = '',
     inputPlaceholder = INPUT_PLACEHOLDER,
@@ -222,6 +223,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
 
   useEffect(() => {
     nodesManager.current = new NodesManager(data, type, searchValue);
+    nodesManager.current.syncSelectedIds(new Set<string>(normalizeSelectedIds(propsSelectedIds ?? [], type)));
 
     const newDisplayedNodes = nodesManager.current.getDisplayed(isSearchMode);
     const newSelectedNodes = nodesManager.current.getSelected();
@@ -232,6 +234,23 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     setSelectAllCheckedState(newSelectAllCheckedState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, type]);
+
+  useEffect(() => {
+    const prevSelectedIds = new Set<string>(selectedNodes.map(node => node.id));
+    const newSelectedIds = new Set<string>(normalizeSelectedIds(propsSelectedIds ?? [], type));
+    if (areSetsEqual(prevSelectedIds, newSelectedIds)) {
+      return;
+    }
+
+    nodesManager.current.syncSelectedIds(newSelectedIds);
+
+    const newSelectedNodes = nodesManager.current.getSelected();
+    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
+
+    setSelectedNodes(newSelectedNodes);
+    setSelectAllCheckedState(newSelectAllCheckedState);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [propsSelectedIds]);
 
   const resetState = useCallback(() => {
     if (isDisabled) {

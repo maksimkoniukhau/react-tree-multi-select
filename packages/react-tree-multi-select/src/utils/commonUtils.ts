@@ -22,3 +22,15 @@ export const getKeyboardFocusableElements = (htmlElement: HTMLElement | null): H
         && el.getAttribute('aria-hidden') !== 'true';
     });
 };
+
+export const areSetsEqual = (a: Set<string>, b: Set<string>): boolean => {
+  if (a.size !== b.size) {
+    return false;
+  }
+  for (const val of a) {
+    if (!b.has(val)) {
+      return false;
+    }
+  }
+  return true;
+};

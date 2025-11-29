@@ -74,6 +74,13 @@ export class NodesManager {
     });
   };
 
+  public syncSelectedIds = (selectedIds: Set<string>): void => {
+    this._nodes.forEach(node => {
+      node.setExplicitSelection(selectedIds.has(node.id));
+    });
+    this._roots.forEach(node => node.computeSelectionState(node, this._type));
+  };
+
   public handleSearch = (value: string): void => {
     this._nodes.forEach(node => node.handleSearch(value));
   };
@@ -104,26 +111,8 @@ export class NodesManager {
     if (this._type === Type.TREE_SELECT || this._type === Type.TREE_SELECT_FLAT) {
       this._nodes = convertTreeArrayToFlatArray(this._roots);
     }
-    if (this._type === Type.TREE_SELECT || this._type === Type.TREE_SELECT_FLAT || this._type === Type.MULTI_SELECT) {
-      this._nodes.forEach(node => {
-        if (node.initTreeNode.selected) {
-          node.handleSelect(this._type);
-        }
-      });
-    }
-    if (this._type === Type.SELECT) {
-      const lastSelectedNode = this._nodes.findLast(node => node.initTreeNode.selected);
-      if (lastSelectedNode) {
-        lastSelectedNode.handleSelect(this._type);
-      }
-    }
     this._nodes.forEach(node => {
       node.handleSearch(searchValue);
-    });
-
-    // effectivelySelected should be processed in separate cycle after disabled
-    this._nodes.forEach(node => {
-      node.handleEffectivelySelected(this._type);
     });
   };
 

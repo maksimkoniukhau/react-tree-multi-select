@@ -46,11 +46,6 @@ export interface TreeNode {
   children?: TreeNode[];
 
   /**
-   * Whether the node is selected.
-   */
-  selected?: boolean;
-
-  /**
    * Whether the node is expanded to show its children.
    */
   expanded?: boolean;
@@ -447,6 +442,16 @@ export interface TreeMultiSelectProps {
    * @default Type.TREE_SELECT
    */
   type?: Type;
+
+  /**
+   * The IDs of the nodes that should be selected.
+   *
+   * - For `Type.SELECT` type, exactly **one ID** should be passed;
+   *   if more than one ID is provided, only the **first ID** will be used.
+   * - For other types it can contain multiple IDs.
+   * - The component treats this as a **controlled prop**.
+   */
+  selectedIds?: string[];
 
   /**
    * The `id` attribute to apply to the root `<div>` of the component.

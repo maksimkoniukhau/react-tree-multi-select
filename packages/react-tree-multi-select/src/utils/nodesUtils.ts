@@ -29,3 +29,7 @@ export const getSelectAllCheckedState = (selectedNodes: Node[], allNodes: Node[]
       ? CheckedState.UNSELECTED
       : CheckedState.PARTIAL;
 };
+
+export const normalizeSelectedIds = (selectedIds: string[] = [], type: Type) => {
+  return type === Type.SELECT ? selectedIds.slice(0, 1) : selectedIds;
+};
