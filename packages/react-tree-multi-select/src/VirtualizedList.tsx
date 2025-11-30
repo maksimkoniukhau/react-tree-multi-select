@@ -106,9 +106,7 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
     }, 0);
   }, [totalCount, itemHeights, estimatedItemHeight]);
 
-  const height = useMemo(() => {
-    return Math.min(outerRef.current?.clientHeight || propHeight, totalHeight);
-  }, [propHeight, totalHeight]);
+  const height = Math.min(outerRef.current?.clientHeight || propHeight, totalHeight);
 
   const positions = useMemo((): ItemPosition[] => {
     const positions: ItemPosition[] = [];
