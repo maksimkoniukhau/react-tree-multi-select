@@ -223,7 +223,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
 
   useEffect(() => {
     nodesManager.current = new NodesManager(data, type, searchValue);
-    nodesManager.current.syncSelectedIds(new Set<string>(normalizeSelectedIds(propsSelectedIds ?? [], type)));
+    nodesManager.current.syncSelectedIds(new Set<string>(normalizeSelectedIds(propsSelectedIds, type)));
 
     const newDisplayedNodes = nodesManager.current.getDisplayed(isSearchMode);
     const newSelectedNodes = nodesManager.current.getSelected();
@@ -237,7 +237,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
 
   useEffect(() => {
     const prevSelectedIds = new Set<string>(selectedNodes.map(node => node.id));
-    const newSelectedIds = new Set<string>(normalizeSelectedIds(propsSelectedIds ?? [], type));
+    const newSelectedIds = new Set<string>(normalizeSelectedIds(propsSelectedIds, type));
     if (areSetsEqual(prevSelectedIds, newSelectedIds)) {
       return;
     }
@@ -534,14 +534,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       return;
     }
 
-    if (type === Type.SELECT) {
-      selectedNodes.forEach(node => node.handleUnselect(type));
-    }
-    if (select) {
-      node.handleSelect(type);
-    } else {
-      node.handleUnselect(type);
-    }
+    nodesManager.current.setSelected(node, select);
 
     const newSelectedNodes = nodesManager.current.getSelected();
     const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
@@ -633,7 +626,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       return;
     }
 
-    node.handleExpand(isSearchMode, expand);
+    nodesManager.current.handleExpand(node, isSearchMode, expand);
 
     const newDisplayedNodes = nodesManager.current.getDisplayed(isSearchMode);
     setDisplayedNodes(newDisplayedNodes);

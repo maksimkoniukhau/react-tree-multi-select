@@ -89,6 +89,25 @@ export class NodesManager {
     this._nodes.forEach(node => node.resetSearch());
   };
 
+  public setSelected = (node: Node, select: boolean): void => {
+    if (this._type === Type.SELECT) {
+      const selectedNodes = this.getSelected();
+      if (selectedNodes.every(selectedNode => selectedNode.disabled)) {
+        return;
+      }
+      selectedNodes.forEach(node => node.handleUnselect(this._type));
+    }
+    if (select) {
+      node.handleSelect(this._type);
+    } else {
+      node.handleUnselect(this._type);
+    }
+  };
+
+  public handleExpand = (node: Node, isSearchMode: boolean, expand: boolean): void => {
+    node.handleExpand(isSearchMode, expand);
+  };
+
   public findById = (id: string): Node | undefined => {
     return this._nodeMap.get(id);
   };
