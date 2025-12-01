@@ -44,16 +44,6 @@ export interface TreeNode {
   children?: TreeNode[];
 
   /**
-   * Whether the node is selected.
-   */
-  selected?: boolean;
-
-  /**
-   * Whether the node is expanded to show its children.
-   */
-  expanded?: boolean;
-
-  /**
    * Whether the node is disabled.
    */
   disabled?: boolean;
@@ -626,6 +616,27 @@ export interface TreeMultiSelectProps {
   type?: Type;
 
   /**
+   * The IDs of the nodes that should be selected.
+   *
+   * - For \`Type.SELECT\` type, exactly **one ID** should be passed;
+   *   if more than one ID is provided, only the **first ID** will be used.
+   * - For other types it can contain multiple IDs.
+   *
+   * - The component treats this as a **controlled prop**.
+   */
+  selectedIds?: string[];
+
+  /**
+   * The IDs of the nodes that should be expanded.
+   *
+   * - Used only when \`type\` is \`Type.TREE_SELECT\` or \`Type.TREE_SELECT_FLAT\`.
+   *   For all other types, this prop is ignored.
+   *
+   * - The component treats this as a **controlled prop**.
+   */
+  expandedIds?: string[];
+
+  /**
    * The \`id\` attribute to apply to the root \`<div>\` of the component.
    */
   id?: string;
@@ -782,18 +793,16 @@ export interface TreeMultiSelectProps {
    *
    * @param node - The node that was changed.
    * @param selectedNodes - The list of currently selected nodes.
-   * @param data - The full tree data reflecting the updated state.
    */
-  onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[], data: TreeNode[]) => void;
+  onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
 
   /**
    * Callback triggered when a node is toggled (expanded or collapsed).
    *
    * @param node - The node that was toggled.
    * @param expandedNodes - The list of currently expanded nodes.
-   * @param data - The full tree data reflecting the updated state.
    */
-  onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[], data: TreeNode[]) => void;
+  onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
 
   /**
    * Callback triggered when the \`FieldClear\` component is activated by user interaction,
@@ -804,9 +813,8 @@ export interface TreeMultiSelectProps {
    * @param selectedNodes - The list of currently selected nodes.
    * @param selectAllCheckedState - The current check state of the \`SelectAll\` component,
    * or \`undefined\` if the component type is \`Type.SELECT\`.
-   * @param data - The full tree data reflecting the updated state.
    */
-  onClearAll?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState | undefined, data: TreeNode[]) => void;
+  onClearAll?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState | undefined) => void;
 
   /**
    * Callback triggered when the \`SelectAll\` component is activated by user interaction,
@@ -816,9 +824,8 @@ export interface TreeMultiSelectProps {
    *
    * @param selectedNodes - The list of currently selected nodes.
    * @param selectAllCheckedState - The current check state of the \`SelectAll\` component.
-   * @param data - The full tree data reflecting the updated state.
    */
-  onSelectAllChange?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState, data: TreeNode[]) => void;
+  onSelectAllChange?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => void;
 
   /**
    * Callback triggered when the component receives focus.

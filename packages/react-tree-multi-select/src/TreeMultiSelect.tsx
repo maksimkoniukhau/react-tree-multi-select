@@ -399,9 +399,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   const callClearAllHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onClearAll) {
       const selectedTreeNodes = selectedNodes.map(node => node.initTreeNode);
-      onClearAll(selectedTreeNodes,
-        type !== Type.SELECT ? selectAllCheckedState : undefined,
-        nodesManager.current.copiedData);
+      onClearAll(selectedTreeNodes, type !== Type.SELECT ? selectAllCheckedState : undefined);
     }
   }, [onClearAll, type]);
 
@@ -449,7 +447,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   const callSelectAllChangeHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
     if (onSelectAllChange) {
       const selectedTreeNodes = selectedNodes.map(node => node.initTreeNode);
-      onSelectAllChange(selectedTreeNodes, selectAllCheckedState, nodesManager.current.copiedData);
+      onSelectAllChange(selectedTreeNodes, selectAllCheckedState);
     }
   }, [onSelectAllChange]);
 
@@ -507,7 +505,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (onNodeToggle) {
       const toggledTreeNode = toggledNode.initTreeNode;
       const expandedTreeNodes = expandedNodes.map(node => node.initTreeNode);
-      onNodeToggle(toggledTreeNode, expandedTreeNodes, nodesManager.current.copiedData);
+      onNodeToggle(toggledTreeNode, expandedTreeNodes);
     }
   }, [onNodeToggle]);
 
@@ -515,7 +513,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (onNodeChange && !changedNode.disabled) {
       const changedTreeNode = changedNode.initTreeNode;
       const selectedTreeNodes = selectedNodes.map(node => node.initTreeNode);
-      onNodeChange(changedTreeNode, selectedTreeNodes, nodesManager.current.copiedData);
+      onNodeChange(changedTreeNode, selectedTreeNodes);
     }
   }, [onNodeChange]);
 

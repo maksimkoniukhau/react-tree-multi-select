@@ -9,9 +9,6 @@ export class NodesManager {
 
   private _nodeMap: Map<string, Node>;
 
-  // shallow copy of data with actual selected/expanded/disabled props
-  private _copiedData: TreeNode[];
-
   // original tree structure
   private _roots: Node[];
 
@@ -20,10 +17,6 @@ export class NodesManager {
 
   constructor(data: TreeNode[], type: Type, searchValue: string) {
     this.initialize(data, type, searchValue);
-  }
-
-  get copiedData(): TreeNode[] {
-    return this._copiedData;
   }
 
   get nodes(): Node[] {
@@ -121,14 +114,12 @@ export class NodesManager {
   private initialize = (data: TreeNode[], type: Type, searchValue: string) => {
     this._type = type;
     this._nodeMap = new Map<string, Node>();
-    this._copiedData = [];
     this._roots = [];
     this._nodes = [];
 
     data.forEach((treeNode, index) => {
       const node = this.mapTreeNodeToNode(treeNode, index.toString(), null, this._nodeMap);
       this._roots.push(node);
-      this._copiedData.push(node.initTreeNode);
     });
 
     this._nodes = this._roots;
