@@ -2,7 +2,7 @@
 
 import React, {FC, memo, useEffect, useState} from 'react';
 import {CheckedState, TreeMultiSelect, TreeNode, Type} from 'react-tree-multi-select';
-import {getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
+import {getBaseExpandedIds, getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
 import {Select} from '@/shared-components/Select';
 import {Checkbox} from '@/shared-components/Checkbox';
 import {Input} from '@/shared-components/Input';
@@ -15,9 +15,10 @@ const OVERSCAN = 1;
 
 const BasicPage: FC = memo(() => {
 
-  const [data, setData] = useState<TreeNode[]>(getTreeNodeData(true, true));
+  const [data, setData] = useState<TreeNode[]>(getTreeNodeData(true));
   const [type, setType] = useState<Type>(Type.TREE_SELECT);
   const [selectedIds, setSelectedIds] = useState<string[]>(getBaseSelectedIds());
+  const [expandedIds, setExpandedIds] = useState<string[]>(getBaseExpandedIds());
   const [inputPlaceholder, setInputPlaceholder] = useState<string>(INPUT_PLACEHOLDER);
   const [noDataText, setNoDataText] = useState<string>(NO_DATA);
   const [noMatchesText, setNoMatchesText] = useState<string>(NO_MATCHES);
@@ -41,12 +42,16 @@ const BasicPage: FC = memo(() => {
   const [emptyData, setEmptyData] = useState<boolean>(false);
 
   useEffect(() => {
-    setData(emptyData ? [] : getTreeNodeData(expandedNodes, disabledNodes));
-  }, [expandedNodes, disabledNodes, emptyData]);
+    setData(emptyData ? [] : getTreeNodeData(disabledNodes));
+  }, [disabledNodes, emptyData]);
 
   useEffect(() => {
     setSelectedIds(selectedNodes ? getBaseSelectedIds() : []);
   }, [selectedNodes]);
+
+  useEffect(() => {
+    setExpandedIds(expandedNodes ? getBaseExpandedIds() : []);
+  }, [expandedNodes]);
 
   const handleOptionChange = (name: string) => (value: string | number | boolean): void => {
     switch (name) {
@@ -214,6 +219,7 @@ const BasicPage: FC = memo(() => {
           data={data}
           type={type}
           selectedIds={selectedIds}
+          expandedIds={expandedIds}
           id="basic-rtms-id"
           className="basic-rtms-custom-class"
           inputPlaceholder={inputPlaceholder}

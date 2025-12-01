@@ -439,7 +439,7 @@ export const CustomFieldToggleExample: FC = () => {
 
 export const dropdownExample = `import React, {FC, useState} from 'react';
 import {Components, DropdownProps, DropdownType, TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
-import {getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
+import {getBaseExpandedIds, getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
 
 const CustomDropdown: FC<DropdownProps> = (props) => {
   return (
@@ -460,14 +460,16 @@ const components: Components = {Dropdown};
 
 export const CustomDropdownExample: FC = () => {
 
-  const [data] = useState<TreeNode[]>(getTreeNodeData(true));
+  const [data] = useState<TreeNode[]>(getTreeNodeData());
   const [selectedIds] = useState<string[]>(getBaseSelectedIds());
+  const [expandedIds] = useState<string[]>(getBaseExpandedIds());
 
   return (
     <div className="component-example">
       <TreeMultiSelect
         data={data}
         selectedIds={selectedIds}
+        expandedIds={expandedIds}
         components={components}
       />
     </div>
@@ -770,17 +772,19 @@ export const CustomFooterExample: FC = () => {
 
   const [data, setData] = useState<RandomTreeNode[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [expandedIds, setExpandedIds] = useState<string[]>([]);
   const [lastPageReached, setLastPageReached] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
 
   const loadData = useCallback(async (delay: number) => {
     setIsLoading(true);
-    const {data: newData, nextPage} = await fetchFakeService(page, 7, delay);
+    const {data: newData, expandedIds, nextPage} = await fetchFakeService(page, 7, delay);
     if (!nextPage) {
       setLastPageReached(true);
     }
     setData(prevData => [...prevData, ...newData]);
+    setExpandedIds(prevExpandedIds => [...prevExpandedIds, ...expandedIds]);
     setPage(page + 1);
     setIsLoading(false);
   }, [page]);
@@ -793,8 +797,8 @@ export const CustomFooterExample: FC = () => {
     setSelectedIds(selectedNodes.map(node => node.id));
   };
 
-  const handleNodeToggle = (_node: TreeNode, _expandedNodes: TreeNode[], data: TreeNode[]): void => {
-    setData(data as RandomTreeNode[]);
+  const handleNodeToggle = (_node: TreeNode, expandedNodes: TreeNode[]): void => {
+    setExpandedIds(expandedNodes.map(node => node.id));
   };
 
   const loadMore = useCallback(async () => {
@@ -818,6 +822,7 @@ export const CustomFooterExample: FC = () => {
       <TreeMultiSelect
         data={data}
         selectedIds={selectedIds}
+        expandedIds={expandedIds}
         withClearAll={false}
         components={components}
         onNodeChange={handleNodeChange}
@@ -860,12 +865,13 @@ export const CustomNoDataExample: FC = () => {
 
 export const controlledExample = `import React, {FC, memo, useState} from 'react';
 import {TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
-import {getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
+import {getBaseExpandedIds, getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
 
 export const ControlledExample: FC = memo(() => {
 
-  const [data, setData] = useState<TreeNode[]>(getTreeNodeData(true, true));
+  const [data] = useState<TreeNode[]>(getTreeNodeData(true));
   const [selectedIds, setSelectedIds] = useState<string[]>(getBaseSelectedIds());
+  const [expandedIds, setExpandedIds] = useState<string[]>(getBaseExpandedIds());
   const [open, setOpen] = useState<boolean>(true);
 
   const handleDropdownToggle = (open: boolean): void => {
@@ -876,8 +882,8 @@ export const ControlledExample: FC = memo(() => {
     setSelectedIds(selectedNodes.map(node => node.id));
   };
 
-  const handleNodeToggle = (_node: TreeNode, _expandedNodes: TreeNode[], data: TreeNode[]): void => {
-    setData(data);
+  const handleNodeToggle = (_node: TreeNode, expandedNodes: TreeNode[]): void => {
+    setExpandedIds(expandedNodes.map(node => node.id));
   };
 
   return (
@@ -885,6 +891,7 @@ export const ControlledExample: FC = memo(() => {
       <TreeMultiSelect
         data={data}
         selectedIds={selectedIds}
+        expandedIds={expandedIds}
         withClearAll={false}
         openDropdown={open}
         onDropdownToggle={handleDropdownToggle}
@@ -896,16 +903,27 @@ export const ControlledExample: FC = memo(() => {
 });`;
 
 export const largeDataExample = `import React, {FC, memo, useState} from 'react';
-import {TreeMultiSelect} from 'react-tree-multi-select';
+import {TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
 import {largeTreeNodeData25, largeTreeNodeData50, RandomTreeNode} from '@/utils/utils';
 import {Select} from '@/shared-components/Select';
 
 export const LargeDataExample: FC = memo(() => {
 
   const [data, setData] = useState<RandomTreeNode[]>(largeTreeNodeData25.data);
+  const [selectedIds, setSelectedIds] = useState<string[]>(['1', '5.5.3', '10.3']);
+  const [expandedIds, setExpandedIds] = useState<string[]>(largeTreeNodeData25.expandedIds);
 
   const handleOptionChange = (value: string): void => {
     setData(value === '50' ? largeTreeNodeData50.data : largeTreeNodeData25.data);
+    setExpandedIds(value === '50' ? largeTreeNodeData50.expandedIds : largeTreeNodeData25.expandedIds);
+  };
+
+  const handleNodeChange = (_node: TreeNode, selectedNodes: TreeNode[]): void => {
+    setSelectedIds(selectedNodes.map(node => node.id));
+  };
+
+  const handleNodeToggle = (_node: TreeNode, expandedNodes: TreeNode[]): void => {
+    setExpandedIds(expandedNodes.map(node => node.id));
   };
 
   return (
@@ -918,14 +936,20 @@ export const LargeDataExample: FC = memo(() => {
         ]}
         onChange={handleOptionChange}
       />
-      <TreeMultiSelect data={data}/>
+      <TreeMultiSelect
+        data={data}
+        selectedIds={selectedIds}
+        expandedIds={expandedIds}
+        onNodeChange={handleNodeChange}
+        onNodeToggle={handleNodeToggle}
+      />
     </div>
   );
 });`;
 
 export const nonVirtualizedExample = `import React, {FC, memo, useState} from 'react';
 import {TreeMultiSelect} from 'react-tree-multi-select';
-import {generateRandomTreeNodeData, RandomTreeNode} from '@/utils/utils';
+import {generateRandomTreeNodeData, getAllExpandedIds, RandomTreeNode} from '@/utils/utils';
 
 /*Add to styles:
 .non-virtualized-example .rtms-dropdown {
@@ -934,11 +958,13 @@ import {generateRandomTreeNodeData, RandomTreeNode} from '@/utils/utils';
 export const NonVirtualizedExample: FC = memo(() => {
 
   const [data] = useState<RandomTreeNode[]>(generateRandomTreeNodeData(3, 3));
+  const [expandedIds] = useState<string[]>(getAllExpandedIds(data));
 
   return (
     <div className="non-virtualized-example">
       <TreeMultiSelect
         data={data}
+        expandedIds={expandedIds}
         isVirtualized={false}
       />
     </div>
@@ -961,6 +987,7 @@ export const InfiniteScrollExample: FC = () => {
 
   const [data, setData] = useState<RandomTreeNode[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [expandedIds, setExpandedIds] = useState<string[]>([]);
   const [lastPageReached, setLastPageReached] = useState<boolean>(false);
   const [keyboardConfig, setKeyboardConfig] = useState<KeyboardConfig>({dropdown: {loopUp: false, loopDown: false}});
   const [page, setPage] = useState<number>(0);
@@ -969,15 +996,15 @@ export const InfiniteScrollExample: FC = () => {
     setSelectedIds(selectedNodes.map(node => node.id));
   };
 
-  const handleNodeToggle = (_node: TreeNode, _expandedNodes: TreeNode[], data: TreeNode[]): void => {
-    setData(data as RandomTreeNode[]);
+  const handleNodeToggle = (_node: TreeNode, expandedNodes: TreeNode[],): void => {
+    setExpandedIds(expandedNodes.map(node => node.id));
   };
 
   const handleDropdownLastItemReached = async (inputValue: string): Promise<void> => {
     if (inputValue || lastPageReached) {
       return;
     }
-    const {data: newData, nextPage} = await fetchFakeService(page, 7, 1000);
+    const {data: newData, expandedIds, nextPage} = await fetchFakeService(page, 7, 1000);
     if (nextPage) {
       setPage(nextPage);
     } else {
@@ -985,6 +1012,7 @@ export const InfiniteScrollExample: FC = () => {
       setLastPageReached(true);
     }
     setData(prevData => [...prevData, ...newData]);
+    setExpandedIds(prevExpandedIds => [...prevExpandedIds, ...expandedIds]);
   };
 
   const components = useMemo(() => (
@@ -1001,6 +1029,7 @@ export const InfiniteScrollExample: FC = () => {
       <TreeMultiSelect
         data={data}
         selectedIds={selectedIds}
+        expandedIds={expandedIds}
         noDataText="Initial data loading..."
         withClearAll={false}
         keyboardConfig={keyboardConfig}
@@ -1030,7 +1059,7 @@ export const dropdownVirtualFocusIdsDefinition = `const getDropdownVirtualFocusI
     return focusableElements;
   };`;
 
-export const customVirtualFocusInFieldExample = `import React, {FC} from 'react';
+export const customVirtualFocusInFieldExample = `import React, {FC, useState} from 'react';
 import {
   ChipContainerProps,
   ChipContainerType,
@@ -1040,9 +1069,10 @@ import {
   FieldType,
   InputProps,
   InputType,
-  TreeMultiSelect
+  TreeMultiSelect,
+  TreeNode
 } from 'react-tree-multi-select';
-import {getTreeNodeData} from '@/utils/utils';
+import {getBaseExpandedIds, getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
 
 const CustomFieldInput: FC<InputProps> = (props) => {
   const {['data-rtms-virtual-focus-id']: _omit, ...restAttributes} = props.attributes;
@@ -1074,10 +1104,16 @@ const customComponents: Components = {Field, ChipContainer, Input};
 
 export const CustomVirtualFocusInFieldExample: FC = () => {
 
+  const [data] = useState<TreeNode[]>(getTreeNodeData(true));
+  const [selectedIds] = useState<string[]>(getBaseSelectedIds());
+  const [expandedIds] = useState<string[]>(getBaseExpandedIds());
+
   return (
     <div className="component-example">
       <TreeMultiSelect
-        data={getTreeNodeData(true, true, true)}
+        data={data}
+        selectedIds={selectedIds}
+        expandedIds={expandedIds}
         components={customComponents}
       />
     </div>

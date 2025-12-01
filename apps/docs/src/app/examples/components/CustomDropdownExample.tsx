@@ -1,6 +1,6 @@
 import React, {FC, useState} from 'react';
 import {Components, DropdownProps, DropdownType, TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
-import {getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
+import {getBaseExpandedIds, getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
 
 const CustomDropdown: FC<DropdownProps> = (props) => {
   return (
@@ -21,14 +21,16 @@ const components: Components = {Dropdown};
 
 export const CustomDropdownExample: FC = () => {
 
-  const [data] = useState<TreeNode[]>(getTreeNodeData(true));
+  const [data] = useState<TreeNode[]>(getTreeNodeData());
   const [selectedIds] = useState<string[]>(getBaseSelectedIds());
+  const [expandedIds] = useState<string[]>(getBaseExpandedIds());
 
   return (
     <div className="component-example">
       <TreeMultiSelect
         data={data}
         selectedIds={selectedIds}
+        expandedIds={expandedIds}
         components={components}
       />
     </div>

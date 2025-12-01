@@ -5,34 +5,34 @@ export interface RandomTreeNode extends TreeNode {
   description?: string;
 }
 
-const buildTreeNodes = (
-  treeNodes: TreeNode[], expanded: string[] = [], disabled: string[] = []
-): TreeNode[] => {
+const buildTreeNodes = (treeNodes: TreeNode[], disabled: string[] = []): TreeNode[] => {
   return treeNodes.map(treeNode => {
     const result: TreeNode = {
       ...treeNode,
-      expanded: expanded.some(v => v === treeNode.id),
       disabled: disabled.some(v => v === treeNode.id)
     };
     if (treeNode.children?.length) {
-      result.children = buildTreeNodes(treeNode.children, expanded, disabled);
+      result.children = buildTreeNodes(treeNode.children, disabled);
     }
     return result;
   });
 };
 
-export const getTreeNodeData = (expanded?: boolean, disabled?: boolean): TreeNode[] => {
-  const expandedIndexes = expanded ? ['1', '2', '11', '12', '40'] : [];
+export const getTreeNodeData = (disabled?: boolean): TreeNode[] => {
   const disabledIndexes = disabled ? ['2', '7', '18', '34', '35', '40'] : [];
-  return getTreeNodeDataNum(expandedIndexes, disabledIndexes);
+  return getTreeNodeDataNum(disabledIndexes);
 };
 
-export const getTreeNodeDataNum = (expanded?: string[], disabled?: string[]): TreeNode[] => {
-  return buildTreeNodes(treeNodes, expanded, disabled);
+export const getTreeNodeDataNum = (disabled?: string[]): TreeNode[] => {
+  return buildTreeNodes(treeNodes, disabled);
 };
 
 export const getBaseSelectedIds = (): string[] => {
   return ['3', '6', '7', '18', '23', '28', '29', '41'];
+};
+
+export const getBaseExpandedIds = (): string[] => {
+  return ['1', '2', '11', '12', '40'];
 };
 
 export const randomNumber = (min: number, max: number): number => {
@@ -63,7 +63,6 @@ export const generateRandomTreeNodeData = (
       id: path,
       description: randomString(7),
       label: `${path} - ${randomString(20)}`,
-      expanded: hasChildren,
       children: hasChildren ? generateRandomTreeNodeData(amount, depth - 1, 0, path) : []
     });
   }
@@ -98,8 +97,6 @@ const generateData = (amount: number, depth: string): RandomTreeNode[] => {
       id,
       description: randomString(7),
       label: `${id} - ${randomString(20)}`,
-      selected: id === '1' || id === '5.5.3' || id === '10.3',
-      expanded: nextAmount > 0,
       children: nextAmount === 0 ? [] : generateData(nextAmount, id)
     });
   }
@@ -117,24 +114,51 @@ export const countData = (data: TreeNode[]): number => {
   return count;
 };
 
-const generateLargeTreeNodeData = (rootAmount: number): { data: RandomTreeNode[], amount: number } => {
-  const data = generateData(rootAmount, '0');
-  return {data, amount: countData(data)};
+const fillArrayWithExpandedIds = (data: TreeNode[], expandedIds: string[]): void => {
+  data?.forEach(node => {
+    if (node.children?.length) {
+      expandedIds.push(node.id);
+      fillArrayWithExpandedIds(node.children, expandedIds);
+    }
+  });
 };
 
-export const largeTreeNodeData25: { data: RandomTreeNode[], amount: number } = generateLargeTreeNodeData(25);
-export const largeTreeNodeData50: { data: RandomTreeNode[], amount: number } = generateLargeTreeNodeData(50);
+export const getAllExpandedIds = (data: TreeNode[]): string[] => {
+  const expandedIds: string[] = [];
+  fillArrayWithExpandedIds(data, expandedIds);
+  return expandedIds;
+};
+
+const generateLargeTreeNodeData = (rootAmount: number): {
+  data: RandomTreeNode[],
+  expandedIds: string[],
+  amount: number
+} => {
+  const data = generateData(rootAmount, '0');
+  return {data, expandedIds: getAllExpandedIds(data), amount: countData(data)};
+};
+
+export const largeTreeNodeData25: {
+  data: RandomTreeNode[],
+  expandedIds: string[],
+  amount: number
+} = generateLargeTreeNodeData(25);
+export const largeTreeNodeData50: {
+  data: RandomTreeNode[],
+  expandedIds: string[],
+  amount: number
+} = generateLargeTreeNodeData(50);
 
 export const fetchFakeService = (
   page: number,
   totalPage: number,
   delay: number
-): Promise<{ data: RandomTreeNode[], nextPage: number | null }> => {
+): Promise<{ data: RandomTreeNode[], expandedIds: string[], nextPage: number | null }> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       const amount = 5;
       const newData = generateRandomTreeNodeData(amount, 2, page * amount);
-      resolve({data: newData, nextPage: page === totalPage ? null : page + 1});
+      resolve({data: newData, expandedIds: getAllExpandedIds(newData), nextPage: page === totalPage ? null : page + 1});
     }, delay);
   });
 };

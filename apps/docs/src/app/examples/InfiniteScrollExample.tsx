@@ -14,6 +14,7 @@ export const InfiniteScrollExample: FC = () => {
 
   const [data, setData] = useState<RandomTreeNode[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [expandedIds, setExpandedIds] = useState<string[]>([]);
   const [lastPageReached, setLastPageReached] = useState<boolean>(false);
   const [keyboardConfig, setKeyboardConfig] = useState<KeyboardConfig>({dropdown: {loopUp: false, loopDown: false}});
   const [page, setPage] = useState<number>(0);
@@ -22,15 +23,15 @@ export const InfiniteScrollExample: FC = () => {
     setSelectedIds(selectedNodes.map(node => node.id));
   };
 
-  const handleNodeToggle = (_node: TreeNode, _expandedNodes: TreeNode[], data: TreeNode[]): void => {
-    setData(data as RandomTreeNode[]);
+  const handleNodeToggle = (_node: TreeNode, expandedNodes: TreeNode[],): void => {
+    setExpandedIds(expandedNodes.map(node => node.id));
   };
 
   const handleDropdownLastItemReached = async (inputValue: string): Promise<void> => {
     if (inputValue || lastPageReached) {
       return;
     }
-    const {data: newData, nextPage} = await fetchFakeService(page, 7, 1000);
+    const {data: newData, expandedIds, nextPage} = await fetchFakeService(page, 7, 1000);
     if (nextPage) {
       setPage(nextPage);
     } else {
@@ -38,6 +39,7 @@ export const InfiniteScrollExample: FC = () => {
       setLastPageReached(true);
     }
     setData(prevData => [...prevData, ...newData]);
+    setExpandedIds(prevExpandedIds => [...prevExpandedIds, ...expandedIds]);
   };
 
   const components = useMemo(() => (
@@ -54,6 +56,7 @@ export const InfiniteScrollExample: FC = () => {
       <TreeMultiSelect
         data={data}
         selectedIds={selectedIds}
+        expandedIds={expandedIds}
         noDataText="Initial data loading..."
         withClearAll={false}
         keyboardConfig={keyboardConfig}

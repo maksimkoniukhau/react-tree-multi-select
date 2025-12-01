@@ -28,17 +28,19 @@ export const CustomFooterExample: FC = () => {
 
   const [data, setData] = useState<RandomTreeNode[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [expandedIds, setExpandedIds] = useState<string[]>([]);
   const [lastPageReached, setLastPageReached] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
 
   const loadData = useCallback(async (delay: number) => {
     setIsLoading(true);
-    const {data: newData, nextPage} = await fetchFakeService(page, 7, delay);
+    const {data: newData, expandedIds, nextPage} = await fetchFakeService(page, 7, delay);
     if (!nextPage) {
       setLastPageReached(true);
     }
     setData(prevData => [...prevData, ...newData]);
+    setExpandedIds(prevExpandedIds => [...prevExpandedIds, ...expandedIds]);
     setPage(page + 1);
     setIsLoading(false);
   }, [page]);
@@ -51,8 +53,8 @@ export const CustomFooterExample: FC = () => {
     setSelectedIds(selectedNodes.map(node => node.id));
   };
 
-  const handleNodeToggle = (_node: TreeNode, _expandedNodes: TreeNode[], data: TreeNode[]): void => {
-    setData(data as RandomTreeNode[]);
+  const handleNodeToggle = (_node: TreeNode, expandedNodes: TreeNode[]): void => {
+    setExpandedIds(expandedNodes.map(node => node.id));
   };
 
   const loadMore = useCallback(async () => {
@@ -76,6 +78,7 @@ export const CustomFooterExample: FC = () => {
       <TreeMultiSelect
         data={data}
         selectedIds={selectedIds}
+        expandedIds={expandedIds}
         withClearAll={false}
         components={components}
         onNodeChange={handleNodeChange}

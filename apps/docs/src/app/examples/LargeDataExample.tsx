@@ -1,14 +1,25 @@
 import React, {FC, memo, useState} from 'react';
-import {TreeMultiSelect} from 'react-tree-multi-select';
+import {TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
 import {largeTreeNodeData25, largeTreeNodeData50, RandomTreeNode} from '@/utils/utils';
 import {Select} from '@/shared-components/Select';
 
 export const LargeDataExample: FC = memo(() => {
 
   const [data, setData] = useState<RandomTreeNode[]>(largeTreeNodeData25.data);
+  const [selectedIds, setSelectedIds] = useState<string[]>(['1', '5.5.3', '10.3']);
+  const [expandedIds, setExpandedIds] = useState<string[]>(largeTreeNodeData25.expandedIds);
 
   const handleOptionChange = (value: string): void => {
     setData(value === '50' ? largeTreeNodeData50.data : largeTreeNodeData25.data);
+    setExpandedIds(value === '50' ? largeTreeNodeData50.expandedIds : largeTreeNodeData25.expandedIds);
+  };
+
+  const handleNodeChange = (_node: TreeNode, selectedNodes: TreeNode[]): void => {
+    setSelectedIds(selectedNodes.map(node => node.id));
+  };
+
+  const handleNodeToggle = (_node: TreeNode, expandedNodes: TreeNode[]): void => {
+    setExpandedIds(expandedNodes.map(node => node.id));
   };
 
   return (
@@ -21,7 +32,13 @@ export const LargeDataExample: FC = memo(() => {
         ]}
         onChange={handleOptionChange}
       />
-      <TreeMultiSelect data={data}/>
+      <TreeMultiSelect
+        data={data}
+        selectedIds={selectedIds}
+        expandedIds={expandedIds}
+        onNodeChange={handleNodeChange}
+        onNodeToggle={handleNodeToggle}
+      />
     </div>
   );
 });
