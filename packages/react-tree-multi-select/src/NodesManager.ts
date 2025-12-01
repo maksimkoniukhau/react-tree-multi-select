@@ -81,6 +81,12 @@ export class NodesManager {
     this._roots.forEach(node => node.computeSelectionState(node, this._type));
   };
 
+  public syncExpandedIds = (expandedIds: Set<string>, isSearchMode: boolean): void => {
+    this._nodes.forEach(node => {
+      node.handleExpand(isSearchMode, expandedIds.has(node.id));
+    });
+  };
+
   public handleSearch = (value: string): void => {
     this._nodes.forEach(node => node.handleSearch(value));
   };
@@ -149,7 +155,6 @@ export class NodesManager {
     // 2. Build Node AFTER children are processed (bottom-up)
     const id = treeNode.id;
     const skipDropdownVirtualFocus = treeNode.skipDropdownVirtualFocus ?? false;
-    const expanded = Boolean(children.length && treeNode.expanded);
     const childrenIds = children.map(child => child.id);
     const initTreeNode: TreeNode = Object.assign(Object.create(Object.getPrototypeOf(treeNode)), treeNode);
 
@@ -162,7 +167,6 @@ export class NodesManager {
       parentId,
       childrenIds,
       path.split(PATH_DELIMITER).length - 1,
-      expanded,
       treeNode.disabled ?? false,
       initTreeNode
     );

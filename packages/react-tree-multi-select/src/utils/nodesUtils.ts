@@ -33,3 +33,13 @@ export const getSelectAllCheckedState = (selectedNodes: Node[], allNodes: Node[]
 export const normalizeSelectedIds = (selectedIds: string[] = [], type: Type) => {
   return type === Type.SELECT ? selectedIds.slice(0, 1) : selectedIds;
 };
+
+export const normalizeExpandedIds = (expandedIds: string[] = [], type: Type) => {
+  switch (type) {
+    case Type.TREE_SELECT:
+    case Type.TREE_SELECT_FLAT:
+      return expandedIds;
+    default:
+      return [];
+  }
+};

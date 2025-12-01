@@ -34,7 +34,6 @@ export class Node {
     parentId: string | null,
     childrenIds: string[],
     depth: number,
-    expanded: boolean,
     disabled: boolean,
     initTreeNode: TreeNode
   ) {
@@ -51,7 +50,7 @@ export class Node {
     this._effectivelySelected = false;
     this._partiallySelected = false;
     this._someDescendantSelected = false;
-    this._expanded = expanded;
+    this._expanded = false;
     this._searchExpanded = false;
     this._matched = false;
     this._filtered = true;
@@ -105,7 +104,6 @@ export class Node {
 
   private set selected(value: boolean) {
     this._selected = value || false;
-    this._initTreeNode.selected = value || false;
   }
 
   get effectivelySelected(): boolean {
@@ -138,7 +136,6 @@ export class Node {
 
   private set expanded(value: boolean) {
     this._expanded = value || false;
-    this._initTreeNode.expanded = value || false;
   }
 
   get searchExpanded(): boolean {

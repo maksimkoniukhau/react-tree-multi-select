@@ -16,7 +16,7 @@ import {
 import {InnerComponents, NullableVirtualFocusId} from './innerTypes';
 import {DEFAULT_DROPDOWN_MAX_HEIGHT, INPUT_PLACEHOLDER, NO_DATA_TEXT, NO_MATCHES_TEXT, OVERSCAN} from './constants';
 import {areSetsEqual, getFieldFocusableElement} from './utils/commonUtils';
-import {filterChips, getSelectAllCheckedState, normalizeSelectedIds} from './utils/nodesUtils';
+import {filterChips, getSelectAllCheckedState, normalizeExpandedIds, normalizeSelectedIds} from './utils/nodesUtils';
 import {getKeyboardConfig, shouldRenderSelectAll, typeToClassName} from './utils/componentUtils';
 import {getComponents, hasCustomFooterComponent} from './utils/componentsUtils';
 import {
@@ -35,6 +35,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     data,
     type = Type.TREE_SELECT,
     selectedIds: propsSelectedIds,
+    expandedIds: propsExpandedIds,
     id = '',
     className = '',
     inputPlaceholder = INPUT_PLACEHOLDER,
@@ -224,6 +225,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   useEffect(() => {
     nodesManager.current = new NodesManager(data, type, searchValue);
     nodesManager.current.syncSelectedIds(new Set<string>(normalizeSelectedIds(propsSelectedIds, type)));
+    nodesManager.current.syncExpandedIds(new Set<string>(normalizeExpandedIds(propsExpandedIds, type)), isSearchMode);
 
     const newDisplayedNodes = nodesManager.current.getDisplayed(isSearchMode);
     const newSelectedNodes = nodesManager.current.getSelected();
@@ -251,6 +253,21 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     setSelectAllCheckedState(newSelectAllCheckedState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [propsSelectedIds]);
+
+  useEffect(() => {
+    const prevExpandedIds = new Set<string>(displayedNodes.map(node => node.id));
+    const newExpandedIds = new Set<string>(normalizeExpandedIds(propsExpandedIds, type));
+    if (areSetsEqual(prevExpandedIds, newExpandedIds)) {
+      return;
+    }
+
+    nodesManager.current.syncExpandedIds(newExpandedIds, isSearchMode);
+
+    const newDisplayedNodes = nodesManager.current.getDisplayed(isSearchMode);
+
+    setDisplayedNodes(newDisplayedNodes);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [propsExpandedIds]);
 
   const resetState = useCallback(() => {
     if (isDisabled) {
