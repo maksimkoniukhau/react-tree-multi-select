@@ -4,7 +4,7 @@ import React, {FC} from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
 import userEvent, {UserEvent} from '@testing-library/user-event';
 import {CheckedState, FooterProps, TreeMultiSelect, TreeNode, Type} from '../index';
-import {getBaseTreeNodeData, getTreeNodeData} from './testutils/dataUtils';
+import {getBaseExpandedIds, getBaseSelectedIds, getBaseTreeNodeData, getTreeNodeData} from './testutils/dataUtils';
 import {
   getChipClear,
   getChipClears,
@@ -30,6 +30,8 @@ import {
 import {INPUT_PLACEHOLDER, NO_DATA_TEXT, NO_MATCHES_TEXT} from '../constants';
 
 const treeNodeData = getBaseTreeNodeData();
+const baseSelectedIds = getBaseSelectedIds();
+const baseExpandedIds = getBaseExpandedIds();
 
 const footerText = 'Custom Footer';
 const CustomFooter: FC<FooterProps> = (props) => {
@@ -65,7 +67,7 @@ const selectAllMatcher = (
 
 describe('TreeMultiSelect component: base', () => {
   it('renders component', () => {
-    render(<TreeMultiSelect data={treeNodeData}/>);
+    render(<TreeMultiSelect data={treeNodeData} selectedIds={baseSelectedIds} expandedIds={baseExpandedIds}/>);
 
     const chip = screen.getByText(/Angular/i);
     expect(chip).toBeInTheDocument();
@@ -103,7 +105,7 @@ describe('TreeMultiSelect component: inputPlaceholder prop', () => {
 
       const {container} = render(
         <TreeMultiSelect
-          data={getTreeNodeData([], [], [])}
+          data={getTreeNodeData([])}
           type={type}
           withDropdownInput={withDropdownInput}/>
       );
@@ -134,7 +136,7 @@ describe('TreeMultiSelect component: inputPlaceholder prop', () => {
 
       const {container} = render(
         <TreeMultiSelect
-          data={getTreeNodeData([], [], [])}
+          data={getTreeNodeData([])}
           type={type}
           inputPlaceholder={inputPlaceholder}
           withDropdownInput={withDropdownInput}
@@ -220,7 +222,7 @@ describe('TreeMultiSelect component: noDataText, noMatchesText props', () => {
     const user: UserEvent = userEvent.setup();
 
     const {container} = render(
-      <TreeMultiSelect data={treeNodeData}/>
+      <TreeMultiSelect data={treeNodeData} selectedIds={baseSelectedIds} expandedIds={baseExpandedIds}/>
     );
 
     await user.click(getField(container));
@@ -241,7 +243,12 @@ describe('TreeMultiSelect component: noDataText, noMatchesText props', () => {
       const user: UserEvent = userEvent.setup();
 
       const {container} = render(
-        <TreeMultiSelect data={treeNodeData} noMatchesText={noMatchesText}/>
+        <TreeMultiSelect
+          data={treeNodeData}
+          selectedIds={baseSelectedIds}
+          expandedIds={baseExpandedIds}
+          noMatchesText={noMatchesText}
+        />
       );
 
       await user.click(getField(container));
@@ -304,6 +311,8 @@ describe('TreeMultiSelect component: isDisabled prop', () => {
       const {container} = render(
         <TreeMultiSelect
           data={treeNodeData}
+          selectedIds={baseSelectedIds}
+          expandedIds={baseExpandedIds}
           isDisabled={true}
           withDropdownInput={withDropdownInput}
           openDropdown={openDropdown}
@@ -394,7 +403,13 @@ describe('TreeMultiSelect component: isSearchable prop', () => {
       const user: UserEvent = userEvent.setup();
 
       const {container} = render(
-        <TreeMultiSelect data={treeNodeData} isSearchable={isSearchable} withDropdownInput={withDropdownInput}/>
+        <TreeMultiSelect
+          data={treeNodeData}
+          selectedIds={baseSelectedIds}
+          expandedIds={baseExpandedIds}
+          isSearchable={isSearchable}
+          withDropdownInput={withDropdownInput}
+        />
       );
 
       isSearchableMatcher(container, isSearchable, withDropdownInput, false);
@@ -428,7 +443,13 @@ describe('TreeMultiSelect component: withChipClear prop', () => {
     const handleNodeChange = jest.fn();
 
     const {container} = render(
-      <TreeMultiSelect data={treeNodeData} withChipClear={withChipClear} onNodeChange={handleNodeChange}/>
+      <TreeMultiSelect
+        data={treeNodeData}
+        selectedIds={baseSelectedIds}
+        expandedIds={baseExpandedIds}
+        withChipClear={withChipClear}
+        onNodeChange={handleNodeChange}
+      />
     );
 
     withChipClearMatcher(container, withChipClear, withChipClear ? 4 : 0, handleNodeChange, 0);
@@ -461,7 +482,13 @@ describe('TreeMultiSelect component: withChipClear prop', () => {
     const handleNodeChange = jest.fn();
 
     const {container} = render(
-      <TreeMultiSelect data={treeNodeData} withChipClear={withChipClear} onNodeChange={handleNodeChange}/>
+      <TreeMultiSelect
+        data={treeNodeData}
+        selectedIds={baseSelectedIds}
+        expandedIds={baseExpandedIds}
+        withChipClear={withChipClear}
+        onNodeChange={handleNodeChange}
+      />
     );
 
     withChipClearMatcher(container, withChipClear, withChipClear ? 4 : 0, handleNodeChange, 0);
@@ -516,7 +543,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
     withClearAll: boolean,
     chipsAmount: number,
     selectedNodesAmount: number,
-    handleClearAll?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState | undefined, data: TreeNode[]) => void
+    handleClearAll?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState | undefined) => void
   ): void => {
     if (withClearAll) {
       expect(getFieldClear(container)).toBeInTheDocument();
@@ -536,7 +563,8 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
     async (withClearAll, presents) => {
       const {container, rerender} = render(
         <TreeMultiSelect
-          data={presents ? getTreeNodeData(['1'], [], []) : []}
+          data={presents ? getTreeNodeData([]) : []}
+          selectedIds={['1']}
           withClearAll={withClearAll ? undefined : withClearAll}
         />
       );
@@ -544,7 +572,8 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
 
       rerender(
         <TreeMultiSelect
-          data={presents ? getTreeNodeData(['1'], [], []) : []}
+          data={presents ? getTreeNodeData([]) : []}
+          selectedIds={['1']}
           withClearAll={withClearAll ? undefined : withClearAll}
           type={Type.TREE_SELECT_FLAT}
         />
@@ -553,7 +582,8 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
 
       rerender(
         <TreeMultiSelect
-          data={presents ? getTreeNodeData(['1'], [], []) : []}
+          data={presents ? getTreeNodeData([]) : []}
+          selectedIds={['1']}
           withClearAll={withClearAll ? undefined : withClearAll}
           type={Type.MULTI_SELECT}
         />
@@ -562,7 +592,8 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
 
       rerender(
         <TreeMultiSelect
-          data={presents ? getTreeNodeData(['1'], [], []) : []}
+          data={presents ? getTreeNodeData([]) : []}
+          selectedIds={['1']}
           withClearAll={withClearAll ? undefined : withClearAll}
           type={Type.SELECT}
         />
@@ -571,7 +602,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
 
       rerender(
         <TreeMultiSelect
-          data={getTreeNodeData([], [], [])}
+          data={getTreeNodeData([])}
           withClearAll={withClearAll ? undefined : withClearAll}
         />
       );
@@ -585,7 +616,9 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
 
     const {container, rerender} = render(
       <TreeMultiSelect
-        data={getTreeNodeData(['8'], ['7'], ['8'])}
+        data={getTreeNodeData(['8'])}
+        selectedIds={['8']}
+        expandedIds={['7']}
         withSelectAll
         onClearAll={handleClearAll}
       />
@@ -616,7 +649,9 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
 
     rerender(
       <TreeMultiSelect
-        data={getTreeNodeData(['8'], ['7'], [])}
+        data={getTreeNodeData([])}
+        selectedIds={['8']}
+        expandedIds={['7']}
         withSelectAll
         onClearAll={handleClearAll}
       />
@@ -646,7 +681,8 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
 
     rerender(
       <TreeMultiSelect
-        data={getTreeNodeData([], ['7'], ['8'])}
+        data={getTreeNodeData(['8'])}
+        expandedIds={['7']}
         withSelectAll
         onClearAll={handleClearAll}
       />
@@ -689,7 +725,7 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
     const handleSelectAllChange = jest.fn();
 
     const {container} = render(
-      <TreeMultiSelect data={getTreeNodeData([], [], [])} onSelectAllChange={handleSelectAllChange}/>
+      <TreeMultiSelect data={getTreeNodeData([])} onSelectAllChange={handleSelectAllChange}/>
     );
 
     await user.click(getField(container));
@@ -700,7 +736,7 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
     const user: UserEvent = userEvent.setup();
 
     const handleSelectAllChange = jest.fn();
-    const treeNodeData = getTreeNodeData([], [], []);
+    const treeNodeData = getTreeNodeData([]);
 
     const {container, rerender} = render(
       <TreeMultiSelect
@@ -732,7 +768,7 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
 
     const {container} = render(
       <TreeMultiSelect
-        data={getTreeNodeData([], [], [])}
+        data={getTreeNodeData([])}
         withSelectAll
         isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
@@ -872,6 +908,8 @@ describe('TreeMultiSelect component: closeDropdownOnNodeChange prop', () => {
       const {container} = render(
         <TreeMultiSelect
           data={treeNodeData}
+          selectedIds={baseSelectedIds}
+          expandedIds={baseExpandedIds}
           onFocus={handleFocus}
           onBlur={handleBlur}
           closeDropdownOnNodeChange={closeDropdownOnNodeChange}
@@ -931,7 +969,14 @@ describe('TreeMultiSelect component: openDropdown and onDropdownToggle props', (
 
     const handleDropdownToggle = jest.fn();
 
-    const {container} = render(<TreeMultiSelect data={treeNodeData} onDropdownToggle={handleDropdownToggle}/>);
+    const {container} = render(
+      <TreeMultiSelect
+        data={treeNodeData}
+        selectedIds={baseSelectedIds}
+        expandedIds={baseExpandedIds}
+        onDropdownToggle={handleDropdownToggle}
+      />
+    );
 
     openDropdownMatcher(container, false, handleDropdownToggle, null);
     handleDropdownToggle.mockClear();
@@ -975,7 +1020,13 @@ describe('TreeMultiSelect component: openDropdown and onDropdownToggle props', (
     const handleDropdownToggle = jest.fn();
 
     const {container, rerender} = render(
-      <TreeMultiSelect data={treeNodeData} openDropdown={true} onDropdownToggle={handleDropdownToggle}/>
+      <TreeMultiSelect
+        data={treeNodeData}
+        selectedIds={baseSelectedIds}
+        expandedIds={baseExpandedIds}
+        openDropdown={true}
+        onDropdownToggle={handleDropdownToggle}
+      />
     );
 
     openDropdownMatcher(container, true, handleDropdownToggle, null);
@@ -985,7 +1036,15 @@ describe('TreeMultiSelect component: openDropdown and onDropdownToggle props', (
     openDropdownMatcher(container, true, handleDropdownToggle, false);
     handleDropdownToggle.mockClear();
 
-    rerender(<TreeMultiSelect data={treeNodeData} openDropdown={false} onDropdownToggle={handleDropdownToggle}/>);
+    rerender(
+      <TreeMultiSelect
+        data={treeNodeData}
+        selectedIds={baseSelectedIds}
+        expandedIds={baseExpandedIds}
+        openDropdown={false}
+        onDropdownToggle={handleDropdownToggle}
+      />
+    );
     user = userEvent.setup();
     openDropdownMatcher(container, false, handleDropdownToggle, null);
     handleDropdownToggle.mockClear();
@@ -1000,7 +1059,9 @@ describe('TreeMultiSelect component: dropdownHeight prop', () => {
   it('tests component with default dropdownHeight', async () => {
     const user: UserEvent = userEvent.setup();
 
-    const {container} = render(<TreeMultiSelect data={treeNodeData}/>);
+    const {container} = render(
+      <TreeMultiSelect data={treeNodeData} selectedIds={baseSelectedIds} expandedIds={baseExpandedIds}/>
+    );
 
     await user.click(getField(container));
 
@@ -1013,7 +1074,14 @@ describe('TreeMultiSelect component: dropdownHeight prop', () => {
   it.each([[100], [200], [400]])('tests component when dropdownHeight={%s}', async (dropdownHeight) => {
     const user: UserEvent = userEvent.setup();
 
-    const {container} = render(<TreeMultiSelect data={treeNodeData} dropdownHeight={dropdownHeight}/>);
+    const {container} = render(
+      <TreeMultiSelect
+        data={treeNodeData}
+        selectedIds={baseSelectedIds}
+        expandedIds={baseExpandedIds}
+        dropdownHeight={dropdownHeight}
+      />
+    );
 
     await user.click(getField(container));
 
@@ -1037,7 +1105,7 @@ describe('TreeMultiSelect component: overscan prop', () => {
     const user: UserEvent = userEvent.setup();
 
     const {container} = render(
-      <TreeMultiSelect data={getTreeNodeData([], [], [])} overscan={overscan === 1 ? undefined : overscan}/>
+      <TreeMultiSelect data={getTreeNodeData([])} overscan={overscan === 1 ? undefined : overscan}/>
     );
 
     await user.click(getField(container));
@@ -1089,7 +1157,12 @@ describe('TreeMultiSelect component: isVirtualized prop', () => {
     const user: UserEvent = userEvent.setup();
 
     const {container} = render(
-      <TreeMultiSelect data={treeNodeData} isVirtualized={isVirtualized ? undefined : isVirtualized}/>
+      <TreeMultiSelect
+        data={treeNodeData}
+        selectedIds={baseSelectedIds}
+        expandedIds={baseExpandedIds}
+        isVirtualized={isVirtualized ? undefined : isVirtualized}
+      />
     );
 
     await user.click(getField(container));
@@ -1136,7 +1209,7 @@ describe('TreeMultiSelect component: footerConfig prop', () => {
     let user: UserEvent = userEvent.setup();
 
     const {container, rerender} = render(
-      <TreeMultiSelect data={getTreeNodeData([], [], [])}/>
+      <TreeMultiSelect data={getTreeNodeData([])}/>
     );
 
     await user.click(getField(container));
@@ -1152,7 +1225,7 @@ describe('TreeMultiSelect component: footerConfig prop', () => {
     expect(screen.queryByText(footerText)).not.toBeInTheDocument();
 
     rerender(
-      <TreeMultiSelect data={getTreeNodeData([], [], [])} components={{Footer: {component: CustomFooter}}}/>
+      <TreeMultiSelect data={getTreeNodeData([])} components={{Footer: {component: CustomFooter}}}/>
     );
     user = userEvent.setup();
     expect(screen.queryByText(footerText)).toBeInTheDocument();
@@ -1221,7 +1294,7 @@ describe('TreeMultiSelect component: footerConfig prop', () => {
 
     rerender(
       <TreeMultiSelect
-        data={getTreeNodeData([], [], [])}
+        data={getTreeNodeData([])}
         footerConfig={{showWhenNoItems: true}}
         components={{Footer: {component: CustomFooter}}}
       />
@@ -1240,7 +1313,7 @@ describe('TreeMultiSelect component: footerConfig prop', () => {
 
     rerender(
       <TreeMultiSelect
-        data={getTreeNodeData([], [], [])}
+        data={getTreeNodeData([])}
         footerConfig={{showWhenSearching: true}}
         components={{Footer: {component: CustomFooter}}}
       />
@@ -1259,7 +1332,7 @@ describe('TreeMultiSelect component: footerConfig prop', () => {
 
     rerender(
       <TreeMultiSelect
-        data={getTreeNodeData([], [], [])}
+        data={getTreeNodeData([])}
         footerConfig={{showWhenSearching: true, showWhenNoItems: true}}
         components={{Footer: {component: CustomFooter}}}
       />
@@ -1281,7 +1354,7 @@ describe('TreeMultiSelect component: footerConfig prop', () => {
     const user: UserEvent = userEvent.setup();
 
     const {container} = render(
-      <TreeMultiSelect data={getTreeNodeData([], [], [])} components={{Footer: {component: CustomFooter}}}/>
+      <TreeMultiSelect data={getTreeNodeData([])} components={{Footer: {component: CustomFooter}}}/>
     );
 
     await user.click(getField(container));
@@ -1352,7 +1425,7 @@ describe('TreeMultiSelect component: keyboardConfig prop', () => {
     let user: UserEvent = userEvent.setup();
 
     const {container, rerender} = render(
-      <TreeMultiSelect data={getTreeNodeData(['1', '7', '10'], [], [])}/>
+      <TreeMultiSelect data={getTreeNodeData([])} selectedIds={['1', '7', '10']}/>
     );
 
     fieldKeyboardConfigMatcher(container, null);
@@ -1388,7 +1461,11 @@ describe('TreeMultiSelect component: keyboardConfig prop', () => {
     fieldKeyboardConfigMatcher(container, 0);
 
     rerender(
-      <TreeMultiSelect data={getTreeNodeData(['1', '7', '10'], [], [])} keyboardConfig={{field: {loopLeft: true}}}/>
+      <TreeMultiSelect
+        data={getTreeNodeData([])}
+        selectedIds={['1', '7', '10']}
+        keyboardConfig={{field: {loopLeft: true}}}
+      />
     );
     user = userEvent.setup();
     fieldKeyboardConfigMatcher(container, 0);
@@ -1418,7 +1495,11 @@ describe('TreeMultiSelect component: keyboardConfig prop', () => {
     fieldKeyboardConfigMatcher(container, -1);
 
     rerender(
-      <TreeMultiSelect data={getTreeNodeData(['1', '7', '10'], [], [])} keyboardConfig={{field: {loopRight: true}}}/>
+      <TreeMultiSelect
+        data={getTreeNodeData([])}
+        selectedIds={['1', '7', '10']}
+        keyboardConfig={{field: {loopRight: true}}}
+      />
     );
     user = userEvent.setup();
     fieldKeyboardConfigMatcher(container, -1);
@@ -1452,7 +1533,8 @@ describe('TreeMultiSelect component: keyboardConfig prop', () => {
 
     rerender(
       <TreeMultiSelect
-        data={getTreeNodeData(['7', '10', '11'], [], [])}
+        data={getTreeNodeData([])}
+        selectedIds={['7', '10', '11']}
         keyboardConfig={{field: {loopLeft: true, loopRight: true}}}
       />
     );
@@ -1503,7 +1585,8 @@ describe('TreeMultiSelect component: keyboardConfig prop', () => {
 
     rerender(
       <TreeMultiSelect
-        data={getTreeNodeData(['7', '10', '11'], [], [])}
+        data={getTreeNodeData([])}
+        selectedIds={['7', '10', '11']}
         keyboardConfig={{field: {loopLeft: true, loopRight: true}}}
       />
     );
@@ -1776,6 +1859,8 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
       const {container} = render(
         <TreeMultiSelect
           data={treeNodeData}
+          selectedIds={baseSelectedIds}
+          expandedIds={baseExpandedIds}
           onFocus={handleFocus}
           onBlur={handleBlur}
           withDropdownInput={withDropdownInput}
@@ -1825,6 +1910,8 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
       const {container} = render(
         <TreeMultiSelect
           data={treeNodeData}
+          selectedIds={baseSelectedIds}
+          expandedIds={baseExpandedIds}
           onFocus={handleFocus}
           onBlur={handleBlur}
           withDropdownInput={withDropdownInput}
@@ -1883,6 +1970,8 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
       const {container} = render(
         <TreeMultiSelect
           data={treeNodeData}
+          selectedIds={baseSelectedIds}
+          expandedIds={baseExpandedIds}
           onFocus={handleFocus}
           onBlur={handleBlur}
           withDropdownInput={withDropdownInput}
@@ -2042,6 +2131,8 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
       const {container} = render(
         <TreeMultiSelect
           data={treeNodeData}
+          selectedIds={baseSelectedIds}
+          expandedIds={baseExpandedIds}
           onFocus={handleFocus}
           onBlur={handleBlur}
           withDropdownInput={withDropdownInput}
@@ -2200,6 +2291,8 @@ describe('TreeMultiSelect component: focus/blur component and open/close dropdow
     const {container} = render(
       <TreeMultiSelect
         data={treeNodeData}
+        selectedIds={baseSelectedIds}
+        expandedIds={baseExpandedIds}
         onFocus={handleFocus}
         onBlur={handleBlur}
       />
@@ -2289,7 +2382,8 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     const handleSelectAllChange = jest.fn();
     const {container} = render(
       <TreeMultiSelect
-        data={getTreeNodeData([], ['1', '2'], ['4'])}
+        data={getTreeNodeData(['4'])}
+        expandedIds={['1', '2']}
         withSelectAll
         isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
@@ -2413,7 +2507,8 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     const handleSelectAllChange = jest.fn();
     const {container} = render(
       <TreeMultiSelect
-        data={getTreeNodeData([], ['1', '2'], ['4', '10'])}
+        data={getTreeNodeData(['4', '10'])}
+        expandedIds={['1', '2']}
         withSelectAll
         isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
@@ -2537,7 +2632,9 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     const handleSelectAllChange = jest.fn();
     const {container} = render(
       <TreeMultiSelect
-        data={getTreeNodeData(['4'], ['1', '2'], ['4'])}
+        data={getTreeNodeData(['4'])}
+        selectedIds={['4']}
+        expandedIds={['1', '2']}
         withSelectAll
         isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
@@ -2679,7 +2776,9 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     const handleSelectAllChange = jest.fn();
     const {container} = render(
       <TreeMultiSelect
-        data={getTreeNodeData(['4'], ['1', '2'], ['2'])}
+        data={getTreeNodeData(['2', '3', '4'])}
+        selectedIds={['4']}
+        expandedIds={['1', '2']}
         withSelectAll
         isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
@@ -2689,7 +2788,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     await user.click(getField(container));
     itemsStateMatcher(container, [
       {index: 0, state: 'partial'},
-      {index: 1, state: 'partial'},
+      {index: 1, state: 'unselected'},
       {index: 2, state: 'unselected'},
       {index: 3, state: 'selected'},
       {index: 4, state: 'unselected'},
@@ -2707,7 +2806,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     await user.click(getListItem(container, 0));
     itemsStateMatcher(container, [
       {index: 0, state: 'partial'},
-      {index: 1, state: 'partial'},
+      {index: 1, state: 'unselected'},
       {index: 2, state: 'unselected'},
       {index: 3, state: 'selected'},
       {index: 4, state: 'selected'},
@@ -2725,7 +2824,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     await user.click(getListItem(container, 0));
     itemsStateMatcher(container, [
       {index: 0, state: 'partial'},
-      {index: 1, state: 'partial'},
+      {index: 1, state: 'unselected'},
       {index: 2, state: 'unselected'},
       {index: 3, state: 'selected'},
       {index: 4, state: 'unselected'},
@@ -2743,7 +2842,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     await user.click(getListItem(container, 1));
     itemsStateMatcher(container, [
       {index: 0, state: 'partial'},
-      {index: 1, state: 'partial'},
+      {index: 1, state: 'unselected'},
       {index: 2, state: 'unselected'},
       {index: 3, state: 'selected'},
       {index: 4, state: 'unselected'},
@@ -2761,7 +2860,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     await user.click(getListItem(container, 2));
     itemsStateMatcher(container, [
       {index: 0, state: 'partial'},
-      {index: 1, state: 'partial'},
+      {index: 1, state: 'unselected'},
       {index: 2, state: 'unselected'},
       {index: 3, state: 'selected'},
       {index: 4, state: 'unselected'},
@@ -2779,7 +2878,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     await user.click(getListItem(container, 3));
     itemsStateMatcher(container, [
       {index: 0, state: 'partial'},
-      {index: 1, state: 'partial'},
+      {index: 1, state: 'unselected'},
       {index: 2, state: 'unselected'},
       {index: 3, state: 'selected'},
       {index: 4, state: 'unselected'},
@@ -2797,7 +2896,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     await user.click(getStickyItem(container, 0));
     itemsStateMatcher(container, [
       {index: 0, state: 'partial'},
-      {index: 1, state: 'partial'},
+      {index: 1, state: 'unselected'},
       {index: 2, state: 'unselected'},
       {index: 3, state: 'selected'},
       {index: 4, state: 'selected'},
@@ -2816,7 +2915,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     await user.click(getStickyItem(container, 0));
     itemsStateMatcher(container, [
       {index: 0, state: 'partial'},
-      {index: 1, state: 'partial'},
+      {index: 1, state: 'unselected'},
       {index: 2, state: 'unselected'},
       {index: 3, state: 'selected'},
       {index: 4, state: 'unselected'},
@@ -2835,7 +2934,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     await user.click(getStickyItem(container, 0));
     itemsStateMatcher(container, [
       {index: 0, state: 'partial'},
-      {index: 1, state: 'partial'},
+      {index: 1, state: 'unselected'},
       {index: 2, state: 'unselected'},
       {index: 3, state: 'selected'},
       {index: 4, state: 'selected'},
@@ -2854,7 +2953,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     await user.click(getListItem(container, 4));
     itemsStateMatcher(container, [
       {index: 0, state: 'partial'},
-      {index: 1, state: 'partial'},
+      {index: 1, state: 'unselected'},
       {index: 2, state: 'unselected'},
       {index: 3, state: 'selected'},
       {index: 4, state: 'unselected'},
@@ -2872,7 +2971,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     await user.click(getStickyItem(container, 0));
     itemsStateMatcher(container, [
       {index: 0, state: 'partial'},
-      {index: 1, state: 'partial'},
+      {index: 1, state: 'unselected'},
       {index: 2, state: 'unselected'},
       {index: 3, state: 'selected'},
       {index: 4, state: 'selected'},
@@ -2891,7 +2990,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     await user.click(getFieldClear(container));
     itemsStateMatcher(container, [
       {index: 0, state: 'partial'},
-      {index: 1, state: 'partial'},
+      {index: 1, state: 'unselected'},
       {index: 2, state: 'unselected'},
       {index: 3, state: 'selected'},
       {index: 4, state: 'unselected'},
@@ -2913,7 +3012,8 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     const handleSelectAllChange = jest.fn();
     const {container} = render(
       <TreeMultiSelect
-        data={getTreeNodeData([], ['11', '12', '13'], [])}
+        data={getTreeNodeData([])}
+        expandedIds={['11', '12', '13']}
         withSelectAll
         isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
@@ -3246,7 +3346,9 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       const handleSelectAllChange = jest.fn();
       const {container} = render(
         <TreeMultiSelect
-          data={getTreeNodeData(['4', '5', '6'], ['1', '2'], ['3'])}
+          data={getTreeNodeData(['3'])}
+          selectedIds={['4', '5', '6']}
+          expandedIds={['1', '2']}
           withSelectAll
           isVirtualized={false}
           onSelectAllChange={handleSelectAllChange}

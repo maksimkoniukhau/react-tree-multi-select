@@ -232,27 +232,31 @@ export const treeNodes: TreeNode[] = [
   }
 ];
 
-const buildTreeNodes = (
-  treeNodes: TreeNode[], selected: string[] = [], expanded: string[] = [], disabled: string[] = []
-): TreeNode[] => {
+const buildTreeNodes = (treeNodes: TreeNode[], disabled: string[] = []): TreeNode[] => {
   return treeNodes.map(treeNode => {
     const result: TreeNode = {
       ...treeNode,
-      selected: selected.some(v => v === treeNode.id),
-      expanded: expanded.some(v => v === treeNode.id),
       disabled: disabled.some(v => v === treeNode.id)
     };
     if (treeNode.children?.length) {
-      result.children = buildTreeNodes(treeNode.children, selected, expanded, disabled);
+      result.children = buildTreeNodes(treeNode.children, disabled);
     }
     return result;
   });
 };
 
 export const getBaseTreeNodeData = (): TreeNode[] => {
-  return buildTreeNodes(treeNodes, ['3', '6', '7', '18', '23', '28', '29', '41'], ['1', '2', '11', '12', '40'], ['2', '7', '18', '34', '35', '40']);
+  return buildTreeNodes(treeNodes, ['2', '3', '4', '7', '8', '9', '18', '35', '40', '41', '42', '43']);
 };
 
-export const getTreeNodeData = (selected?: string[], expanded?: string[], disabled?: string[]): TreeNode[] => {
-  return buildTreeNodes(treeNodes, selected, expanded, disabled);
+export const getBaseSelectedIds = (): string[] => {
+  return ['3', '6', '7', '8', '9', '18', '23', '28', '29', '30', '31', '32', '41'];
+};
+
+export const getBaseExpandedIds = (): string[] => {
+  return ['1', '2', '11', '12', '40'];
+};
+
+export const getTreeNodeData = (disabled?: string[]): TreeNode[] => {
+  return buildTreeNodes(treeNodes, disabled);
 };
