@@ -91,7 +91,7 @@ export class NodesManager {
   public setSelected = (node: Node, select: boolean): void => {
     if (this._type === Type.SELECT) {
       const selectedNodes = this.getSelected();
-      if (selectedNodes.every(selectedNode => selectedNode.disabled)) {
+      if (selectedNodes.length > 0 && selectedNodes.every(selectedNode => selectedNode.disabled)) {
         return;
       }
       selectedNodes.forEach(node => node.handleUnselect(this._type));
