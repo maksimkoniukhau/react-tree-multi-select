@@ -22,7 +22,7 @@ export class Node {
   private _matched: boolean;
   private _filtered: boolean;
 
-  // shallow copy of original TreeNode with actual selected/expanded/disabled props
+  // original TreeNode
   private readonly _initTreeNode: TreeNode;
 
   constructor(

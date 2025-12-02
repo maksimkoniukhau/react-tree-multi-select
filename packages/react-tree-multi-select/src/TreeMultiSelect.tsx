@@ -255,7 +255,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   }, [propsSelectedIds]);
 
   useEffect(() => {
-    const prevExpandedIds = new Set<string>(displayedNodes.map(node => node.id));
+    const prevExpandedIds = new Set<string>(displayedNodes.filter(node => node.expanded).map(node => node.id));
     const newExpandedIds = new Set<string>(normalizeExpandedIds(propsExpandedIds, type));
     if (areSetsEqual(prevExpandedIds, newExpandedIds)) {
       return;

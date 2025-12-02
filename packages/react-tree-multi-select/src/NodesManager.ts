@@ -138,16 +138,13 @@ export class NodesManager {
     parentId: string | null,
     nodeMap: Map<string, Node>
   ): Node => {
-    // 1. Process deepest level first
     const children = treeNode.children?.map((child, index) => {
       return this.mapTreeNodeToNode(child, `${path}${PATH_DELIMITER}${index}`, null, nodeMap);
     }) || [];
 
-    // 2. Build Node AFTER children are processed (bottom-up)
     const id = treeNode.id;
     const skipDropdownVirtualFocus = treeNode.skipDropdownVirtualFocus ?? false;
     const childrenIds = children.map(child => child.id);
-    const initTreeNode: TreeNode = Object.assign(Object.create(Object.getPrototypeOf(treeNode)), treeNode);
 
     const node: Node = new Node(
       nodeMap,
@@ -159,18 +156,11 @@ export class NodesManager {
       childrenIds,
       path.split(PATH_DELIMITER).length - 1,
       treeNode.disabled ?? false,
-      initTreeNode
+      treeNode
     );
 
-    // 3. After creating current Node, assign its parent to all children
+    // After creating current Node, assign its parent to all children
     children.forEach(child => child.parentId = node.id);
-
-    // 4. After creating the current Node, update its `initTreeNode.children`
-    // to point to the initTreeNodes of its mapped children,
-    // so changes in the children are reflected in the parent’s initTreeNode
-    if (treeNode.children) {
-      node.initTreeNode.children = children.map(child => child.initTreeNode);
-    }
 
     nodeMap.set(id, node);
 
