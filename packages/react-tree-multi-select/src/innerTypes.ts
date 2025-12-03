@@ -13,3 +13,10 @@ export type InnerKeyboardConfig = Required<KeyboardConfig>;
 export type InnerComponents = Required<Components>;
 
 export type NullableVirtualFocusId = VirtualFocusId | null;
+
+export interface SelectionState {
+  selectedIds: Set<string>;
+  effectivelySelectedIds: Set<string>;
+  partiallySelectedIds: Set<string>;
+  someDescendantSelectedIds: Set<string>;
+}

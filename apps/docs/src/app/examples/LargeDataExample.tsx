@@ -6,7 +6,7 @@ import {Select} from '@/shared-components/Select';
 export const LargeDataExample: FC = memo(() => {
 
   const [data, setData] = useState<RandomTreeNode[]>(largeTreeNodeData25.data);
-  const [selectedIds, setSelectedIds] = useState<string[]>(['1', '5.5.3', '10.3']);
+  const [selectedIds, setSelectedIds] = useState<string[]>(['1.0.0.0.1.1', '5.5.3.0.0.0', '10.3.0.0.0.0']);
   const [expandedIds, setExpandedIds] = useState<string[]>(largeTreeNodeData25.expandedIds);
 
   const handleOptionChange = (value: string): void => {

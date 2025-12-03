@@ -1,4 +1,5 @@
 import {TreeNode, Type} from './types';
+import {SelectionState} from './innerTypes';
 import {PATH_DELIMITER} from './constants';
 import {convertTreeArrayToFlatArray} from './utils/nodesUtils';
 import {Node} from './Node';
@@ -15,12 +16,18 @@ export class NodesManager {
   // flat structure
   private _nodes: Node[];
 
+  private _selectionState: SelectionState;
+
   constructor(data: TreeNode[], type: Type, searchValue: string) {
     this.initialize(data, type, searchValue);
   }
 
   get nodes(): Node[] {
     return this._nodes;
+  }
+
+  get selectionState(): SelectionState {
+    return this._selectionState;
   }
 
   public areAllEffectivelySelected = (): boolean => {
@@ -67,11 +74,106 @@ export class NodesManager {
     });
   };
 
-  public syncSelectedIds = (selectedIds: Set<string>): void => {
+  public syncSelectedIds = (propsSelectedIds: Set<string>): void => {
     this._nodes.forEach(node => {
-      node.setExplicitSelection(selectedIds.has(node.id));
+      node.setExplicitSelection(propsSelectedIds.has(node.id));
     });
     this._roots.forEach(node => node.computeSelectionState(node, this._type));
+
+    this._selectionState = this.computeSelectionState(propsSelectedIds);
+  };
+
+  private computeSelectionState = (propsSelectedIds: Set<string>): SelectionState => {
+    if (this._type === Type.TREE_SELECT) {
+      return this.computeHierarchicalSelectionState(propsSelectedIds);
+    } else {
+      return this.computeFlatSelectionState(propsSelectedIds);
+    }
+  };
+
+  private computeFlatSelectionState = (propsSelectedIds: Set<string>): SelectionState => {
+    return {
+      selectedIds: new Set(propsSelectedIds),
+      effectivelySelectedIds: new Set(propsSelectedIds),
+      partiallySelectedIds: new Set(),
+      someDescendantSelectedIds: new Set()
+    };
+  };
+
+  private computeHierarchicalSelectionState = (propsSelectedIds: Set<string>): SelectionState => {
+    const allSelectedIds = new Set<string>();
+    const allEffectivelySelectedIds = new Set<string>();
+    const allPartiallySelectedIds = new Set<string>();
+    const allSomeDescendantSelectedIds = new Set<string>();
+
+    for (const root of this._roots) {
+      const nodesSelectionState = this.computeRootHierarchicalSelectionState(root, propsSelectedIds);
+      for (const id of nodesSelectionState.selectedIds) {
+        allSelectedIds.add(id);
+      }
+      for (const id of nodesSelectionState.effectivelySelectedIds) {
+        allEffectivelySelectedIds.add(id);
+      }
+      for (const id of nodesSelectionState.partiallySelectedIds) {
+        allPartiallySelectedIds.add(id);
+      }
+      for (const id of nodesSelectionState.someDescendantSelectedIds) {
+        allSomeDescendantSelectedIds.add(id);
+      }
+    }
+    return {
+      selectedIds: allSelectedIds,
+      effectivelySelectedIds: allEffectivelySelectedIds,
+      partiallySelectedIds: allPartiallySelectedIds,
+      someDescendantSelectedIds: allSomeDescendantSelectedIds
+    };
+  };
+
+  private computeRootHierarchicalSelectionState = (root: Node, propsSelectedIds: Set<string>): SelectionState => {
+    const selectedIds = new Set<string>;
+    const effectivelySelectedIds = new Set<string>;
+    const partiallySelectedIds = new Set<string>;
+    const someDescendantSelectedIds = new Set<string>;
+
+    function computeHierarchicalSelection(node: Node, newSelectedIds: Set<string>): void {
+      const children = node.children ?? [];
+
+      for (const child of children) {
+        computeHierarchicalSelection(child, newSelectedIds);
+      }
+
+      const selected = newSelectedIds.has(node.id);
+
+      if (selected) {
+        selectedIds.add(node.id);
+      }
+
+      if (children.length === 0) {
+        if (selected || node.disabled) {
+          effectivelySelectedIds.add(node.id);
+        }
+      } else {
+        const someDescendantSelected = node.children
+          .some(child => selectedIds.has(child.id) || someDescendantSelectedIds.has(child.id));
+        const allChildrenEffectivelySelected = node.children
+          .every(child => effectivelySelectedIds.has(child.id));
+        const allChildrenSelected = node.children.every(child => selectedIds.has(child.id));
+
+        if (allChildrenEffectivelySelected) {
+          effectivelySelectedIds.add(node.id);
+        }
+        if (!node.disabled && !allChildrenSelected && someDescendantSelected) {
+          partiallySelectedIds.add(node.id);
+        }
+        if (someDescendantSelected) {
+          someDescendantSelectedIds.add(node.id);
+        }
+      }
+    }
+
+    computeHierarchicalSelection(root, propsSelectedIds);
+
+    return {selectedIds, effectivelySelectedIds, partiallySelectedIds, someDescendantSelectedIds};
   };
 
   public syncExpandedIds = (expandedIds: Set<string>, isSearchMode: boolean): void => {
