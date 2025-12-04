@@ -267,12 +267,12 @@ export class NodesManager {
 
   private computeTreeNodeSelected = (node: Node, select: boolean): SelectionState => {
     const selectedIds = new Set(this.selectionState.selectedIds);
-    this.setExplicitSelectedSubtree(node, selectedIds, select);
-    this.setExplicitSelectedAncestors(node, selectedIds, select);
-
     const effectivelySelectedIds = new Set(this.selectionState.effectivelySelectedIds);
     const partiallySelectedIds = new Set(this.selectionState.partiallySelectedIds);
     const someDescendantSelectedIds = new Set(this.selectionState.someDescendantSelectedIds);
+
+    this.setSelectedSubtree(node, selectedIds, select);
+    this.setSelectedAncestors(node, selectedIds, select);
 
     const setHierarchicalSelected = (node: Node): void => {
       const children = node.children ?? [];
@@ -290,11 +290,11 @@ export class NodesManager {
           effectivelySelectedIds.delete(node.id);
         }
       } else {
-        const someDescendantSelected = node.children
+        const someDescendantSelected = children
           .some(child => selectedIds.has(child.id) || someDescendantSelectedIds.has(child.id));
-        const allChildrenEffectivelySelected = node.children
+        const allChildrenEffectivelySelected = children
           .every(child => effectivelySelectedIds.has(child.id));
-        const allChildrenSelected = node.children.every(child => selectedIds.has(child.id));
+        const allChildrenSelected = children.every(child => selectedIds.has(child.id));
 
         if (allChildrenEffectivelySelected) {
           effectivelySelectedIds.add(node.id);
@@ -319,33 +319,41 @@ export class NodesManager {
     return {selectedIds, effectivelySelectedIds, partiallySelectedIds, someDescendantSelectedIds};
   };
 
-  private setExplicitSelectedSubtree = (node: Node, selectedIds: Set<string>, select: boolean): void => {
-    for (const child of node.children) {
-      this.setExplicitSelectedSubtree(child, selectedIds, select);
+  private setSelectedSubtree = (node: Node, selectedIds: Set<string>, select: boolean): void => {
+    const children = node.children ?? [];
+
+    for (const child of children) {
+      this.setSelectedSubtree(child, selectedIds, select);
     }
+
     if (!node.disabled) {
-      if (select) {
-        selectedIds.add(node.id);
+      if (children.length === 0) {
+        if (select) {
+          selectedIds.add(node.id);
+        } else {
+          selectedIds.delete(node.id);
+        }
       } else {
-        selectedIds.delete(node.id);
+        const allChildrenSelected = children.every(child => selectedIds.has(child.id));
+        if (select && allChildrenSelected) {
+          selectedIds.add(node.id);
+        } else {
+          selectedIds.delete(node.id);
+        }
       }
     }
   };
 
-  private setExplicitSelectedAncestors = (node: Node, selectedIds: Set<string>, select: boolean): void => {
+  private setSelectedAncestors = (node: Node, selectedIds: Set<string>, select: boolean): void => {
     const parentNode = node.parent;
     if (parentNode) {
       const allChildrenSelected = parentNode.children.every(child => selectedIds.has(child.id));
-      if (select) {
-        if (allChildrenSelected) {
-          selectedIds.add(parentNode.id);
-        }
+      if (select && allChildrenSelected) {
+        selectedIds.add(parentNode.id);
       } else {
-        if (!allChildrenSelected) {
-          selectedIds.delete(parentNode.id);
-        }
+        selectedIds.delete(parentNode.id);
       }
-      this.setExplicitSelectedAncestors(parentNode, selectedIds, select);
+      this.setSelectedAncestors(parentNode, selectedIds, select);
     }
   };
 
