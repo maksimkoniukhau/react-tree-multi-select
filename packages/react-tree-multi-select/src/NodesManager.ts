@@ -205,6 +205,103 @@ export class NodesManager {
     }
   };
 
+  public computeSelected = (node: Node, select: boolean): SelectionState => {
+    if (node.disabled) {
+      return this.selectionState;
+    }
+    if (this._type === Type.SELECT) {
+      const selectedIds = this.selectionState.selectedIds;
+      if (selectedIds.size > 0 && selectedIds.values().every(id => this._nodeMap.get(id)?.disabled)) {
+        return this.selectionState;
+      }
+      return {
+        selectedIds: select ? new Set(node.id) : new Set(),
+        effectivelySelectedIds: select ? new Set(node.id) : new Set(),
+        partiallySelectedIds: new Set(),
+        someDescendantSelectedIds: new Set()
+      };
+    } else {
+      if (select) {
+        return this.computeSelect(node);
+      } else {
+        return this.computeDeselect(node);
+      }
+    }
+  };
+
+  private computeSelect = (node: Node): SelectionState => {
+    if (node.disabled) {
+      return this.selectionState;
+    }
+    if (this._type === Type.TREE_SELECT) {
+      return this.computeTreeNodeSelected(node, true);
+    } else {
+      return {
+        selectedIds: new Set(this.selectionState.selectedIds).add(node.id),
+        effectivelySelectedIds: new Set(this.selectionState.effectivelySelectedIds).add(node.id),
+        partiallySelectedIds: new Set(),
+        someDescendantSelectedIds: new Set()
+      };
+    }
+  };
+
+  private computeDeselect = (node: Node): SelectionState => {
+    if (node.disabled) {
+      return this.selectionState;
+    }
+    if (this._type === Type.TREE_SELECT) {
+      return this.computeTreeNodeSelected(node, false);
+    } else {
+      const newSelectedIds = new Set(this.selectionState.selectedIds);
+      newSelectedIds.delete(node.id);
+      const newEffectivelySelectedIds = new Set(this.selectionState.effectivelySelectedIds);
+      newEffectivelySelectedIds.delete(node.id);
+      return {
+        selectedIds: newEffectivelySelectedIds,
+        effectivelySelectedIds: newEffectivelySelectedIds,
+        partiallySelectedIds: new Set(),
+        someDescendantSelectedIds: new Set()
+      };
+    }
+  };
+
+  private computeTreeNodeSelected = (node: Node, select: boolean): SelectionState => {
+    const newSelectedIds = new Set(this.selectionState.selectedIds);
+    this.setExplicitSelectedSubtree(node, newSelectedIds, select);
+    this.setExplicitSelectedAncestors(node, newSelectedIds, select);
+    return this.computeSelectionState(newSelectedIds);
+  };
+
+  private setExplicitSelectedSubtree = (node: Node, selectedIds: Set<string>, select: boolean): void => {
+    for (const child of node.children) {
+      this.setExplicitSelectedSubtree(child, selectedIds, select);
+    }
+    if (!node.disabled) {
+      if (select) {
+        selectedIds.add(node.id);
+      } else {
+        selectedIds.delete(node.id);
+      }
+    }
+  };
+
+  private setExplicitSelectedAncestors = (node: Node, selectedIds: Set<string>, select: boolean): void => {
+    const parentNode = node.parent;
+    if (parentNode) {
+      const allChildrenSelected = parentNode.children.every(child => selectedIds.has(child.id));
+      if (select) {
+        if (allChildrenSelected) {
+          selectedIds.add(parentNode.id);
+        }
+      } else {
+        if (!allChildrenSelected) {
+          selectedIds.delete(parentNode.id);
+        }
+      }
+      this.setExplicitSelectedAncestors(parentNode, selectedIds, select);
+    }
+  };
+
   public handleExpand = (node: Node, isSearchMode: boolean, expand: boolean): void => {
     node.handleExpand(isSearchMode, expand);
   };
