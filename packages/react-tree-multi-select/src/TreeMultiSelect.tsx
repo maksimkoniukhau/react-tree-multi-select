@@ -35,7 +35,9 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     data,
     type = Type.TREE_SELECT,
     selectedIds: propsSelectedIds,
+    defaultSelectedIds,
     expandedIds: propsExpandedIds,
+    defaultExpandedIds,
     id = '',
     className = '',
     inputPlaceholder = INPUT_PLACEHOLDER,
@@ -79,8 +81,10 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   }
 
   const isSelectedIdsControlled = propsSelectedIds !== undefined;
+  const isExpandedIdsControlled = propsExpandedIds !== undefined;
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [expandedIds, setExpandedIds] = useState<string[]>([]);
   const [displayedNodes, setDisplayedNodes] = useState<Node[]>([]);
   const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
   const [selectAllCheckedState, setSelectAllCheckedState] = useState<CheckedState>(CheckedState.UNSELECTED);
@@ -101,6 +105,14 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       setIsDropdownOpen(openDropdown);
     }
   }, [openDropdown]);
+
+  useEffect(() => {
+    const initSelectedIds = normalizeSelectedIds(isSelectedIdsControlled ? propsSelectedIds : defaultSelectedIds, type);
+    const initExpandedIds = normalizeExpandedIds(isExpandedIdsControlled ? propsExpandedIds : defaultExpandedIds, type);
+    setSelectedIds(initSelectedIds);
+    setExpandedIds(initExpandedIds);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const isAnyNodeDisplayed = displayedNodes.length > 0;
   const isAnyNodeSelected = selectedNodes.length > 0;
@@ -227,9 +239,8 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
 
   useEffect(() => {
     nodesManager.current = new NodesManager(data, type, searchValue);
-    const initSelectedIds = isSelectedIdsControlled ? normalizeSelectedIds(propsSelectedIds, type) : selectedIds;
-    nodesManager.current.syncSelectedIds(new Set(initSelectedIds));
-    nodesManager.current.syncExpandedIds(new Set(normalizeExpandedIds(propsExpandedIds, type)), isSearchMode);
+    nodesManager.current.syncSelectedIds(new Set(selectedIds));
+    nodesManager.current.syncExpandedIds(new Set(expandedIds), isSearchMode);
 
     const newDisplayedNodes = nodesManager.current.getDisplayed(isSearchMode);
     const newSelectedNodes = nodesManager.current.getSelected();
@@ -245,7 +256,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   }, [data, type]);
 
   useEffect(() => {
-    const prevSelectedIds = new Set(selectedNodes.map(node => node.id));
+    const prevSelectedIds = new Set(selectedIds);
     const newSelectedIds = new Set(normalizeSelectedIds(propsSelectedIds, type));
     if (areSetsEqual(prevSelectedIds, newSelectedIds)) {
       return;
@@ -265,7 +276,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   }, [propsSelectedIds]);
 
   useEffect(() => {
-    const prevExpandedIds = new Set(displayedNodes.filter(node => node.expanded).map(node => node.id));
+    const prevExpandedIds = new Set(expandedIds);
     const newExpandedIds = new Set(normalizeExpandedIds(propsExpandedIds, type));
     if (areSetsEqual(prevExpandedIds, newExpandedIds)) {
       return;

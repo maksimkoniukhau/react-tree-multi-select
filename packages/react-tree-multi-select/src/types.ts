@@ -450,6 +450,19 @@ export interface TreeMultiSelectProps {
   selectedIds?: string[];
 
   /**
+   * The IDs of the nodes that should be selected initially (uncontrolled mode).
+   *
+   * - For `Type.SELECT` type, exactly **one ID** should be passed;
+   *   if more than one ID is provided, only the **first ID** will be used.
+   * - For other types it can contain multiple IDs.
+   * - Used **only when `selectedIds` is not provided**.
+   * - The component will initialize its internal selection state using this value
+   *   and will manage selection internally afterward.
+   * - Changes to this prop after the initial render are ignored.
+   */
+  defaultSelectedIds?: string[];
+
+  /**
    * The IDs of the nodes that should be expanded.
    *
    * - Used only when `type` is `Type.TREE_SELECT` or `Type.TREE_SELECT_FLAT`.
@@ -458,6 +471,18 @@ export interface TreeMultiSelectProps {
    * - The component treats this as a **controlled prop**.
    */
   expandedIds?: string[];
+
+  /**
+   * The IDs of the nodes that should be expanded initially (uncontrolled mode).
+   *
+   * - Used only when `type` is `Type.TREE_SELECT` or `Type.TREE_SELECT_FLAT`.
+   *   For all other types, this prop is ignored.
+   * - Used **only when `expandedIds` is not provided**.
+   * - The component will initialize its internal expansion state using this value
+   *   and will manage expansion internally afterward.
+   * - Changes to this prop after the initial render are ignored.
+   */
+  defaultExpandedIds?: string[];
 
   /**
    * The `id` attribute to apply to the root `<div>` of the component.
