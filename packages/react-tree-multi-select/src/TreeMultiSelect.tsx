@@ -78,6 +78,9 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     nodesManager.current = new NodesManager([], type, '');
   }
 
+  const isSelectedIdsControlled = propsSelectedIds !== undefined;
+
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [displayedNodes, setDisplayedNodes] = useState<Node[]>([]);
   const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
   const [selectAllCheckedState, setSelectAllCheckedState] = useState<CheckedState>(CheckedState.UNSELECTED);
@@ -224,13 +227,17 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
 
   useEffect(() => {
     nodesManager.current = new NodesManager(data, type, searchValue);
-    nodesManager.current.syncSelectedIds(new Set<string>(normalizeSelectedIds(propsSelectedIds, type)));
-    nodesManager.current.syncExpandedIds(new Set<string>(normalizeExpandedIds(propsExpandedIds, type)), isSearchMode);
+    const initSelectedIds = isSelectedIdsControlled ? normalizeSelectedIds(propsSelectedIds, type) : selectedIds;
+    nodesManager.current.syncSelectedIds(new Set(initSelectedIds));
+    nodesManager.current.syncExpandedIds(new Set(normalizeExpandedIds(propsExpandedIds, type)), isSearchMode);
 
     const newDisplayedNodes = nodesManager.current.getDisplayed(isSearchMode);
     const newSelectedNodes = nodesManager.current.getSelected();
     const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
 
+    setSelectedIds(nodesManager.current.nodes
+      .filter(node => nodesManager.current.selectionState.selectedIds.has(node.id))
+      .map(node => node.id));
     setDisplayedNodes(newDisplayedNodes);
     setSelectedNodes(newSelectedNodes);
     setSelectAllCheckedState(newSelectAllCheckedState);
@@ -238,8 +245,8 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   }, [data, type]);
 
   useEffect(() => {
-    const prevSelectedIds = new Set<string>(selectedNodes.map(node => node.id));
-    const newSelectedIds = new Set<string>(normalizeSelectedIds(propsSelectedIds, type));
+    const prevSelectedIds = new Set(selectedNodes.map(node => node.id));
+    const newSelectedIds = new Set(normalizeSelectedIds(propsSelectedIds, type));
     if (areSetsEqual(prevSelectedIds, newSelectedIds)) {
       return;
     }
@@ -249,14 +256,17 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     const newSelectedNodes = nodesManager.current.getSelected();
     const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
 
+    setSelectedIds(nodesManager.current.nodes
+      .filter(node => nodesManager.current.selectionState.selectedIds.has(node.id))
+      .map(node => node.id));
     setSelectedNodes(newSelectedNodes);
     setSelectAllCheckedState(newSelectAllCheckedState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [propsSelectedIds]);
 
   useEffect(() => {
-    const prevExpandedIds = new Set<string>(displayedNodes.filter(node => node.expanded).map(node => node.id));
-    const newExpandedIds = new Set<string>(normalizeExpandedIds(propsExpandedIds, type));
+    const prevExpandedIds = new Set(displayedNodes.filter(node => node.expanded).map(node => node.id));
+    const newExpandedIds = new Set(normalizeExpandedIds(propsExpandedIds, type));
     if (areSetsEqual(prevExpandedIds, newExpandedIds)) {
       return;
     }
@@ -409,15 +419,24 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       return;
     }
     event.preventDefault();
-    nodesManager.current.deselectAll();
-    const newSelectedNodes = nodesManager.current.getSelected();
-    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
 
-    setSelectedNodes(newSelectedNodes);
-    setSelectAllCheckedState(newSelectAllCheckedState);
-    setVirtualFocusId(findFieldVirtualFocusId(buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX)));
+    if (isSelectedIdsControlled) {
+      const newSelectedIds = nodesManager.current.computeAllSelected(false);
+      const newSelectedNodes = nodesManager.current.nodes.filter(node => newSelectedIds.selectedIds.has(node.id));
+      const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
+      callClearAllHandler(newSelectAllCheckedState, newSelectedNodes);
+    } else {
+      nodesManager.current.deselectAll();
+      const newSelectedNodes = nodesManager.current.getSelected();
+      const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
 
-    callClearAllHandler(newSelectAllCheckedState, newSelectedNodes);
+      setSelectedIds(newSelectedNodes.map(node => node.id));
+      setSelectedNodes(newSelectedNodes);
+      setSelectAllCheckedState(newSelectAllCheckedState);
+      setVirtualFocusId(findFieldVirtualFocusId(buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX)));
+
+      callClearAllHandler(newSelectAllCheckedState, newSelectedNodes);
+    }
   };
 
   const handleDeleteAll = useCallback((event: React.MouseEvent | React.KeyboardEvent): void => {
@@ -459,15 +478,21 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (!(type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT || type === Type.MULTI_SELECT)) {
       return;
     }
-    nodesManager.current.setAllSelected(selectAll);
 
-    const newSelectedNodes = nodesManager.current.getSelected();
-    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
-
-    setSelectedNodes(newSelectedNodes);
-    setSelectAllCheckedState(newSelectAllCheckedState);
-
-    callSelectAllChangeHandler(newSelectAllCheckedState, newSelectedNodes);
+    if (isSelectedIdsControlled) {
+      const newSelectedIds = nodesManager.current.computeAllSelected(selectAll);
+      const newSelectedNodes = nodesManager.current.nodes.filter(node => newSelectedIds.selectedIds.has(node.id));
+      const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
+      callSelectAllChangeHandler(newSelectAllCheckedState, newSelectedNodes);
+    } else {
+      nodesManager.current.setAllSelected(selectAll);
+      const newSelectedNodes = nodesManager.current.getSelected();
+      const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
+      setSelectedIds(newSelectedNodes.map(node => node.id));
+      setSelectedNodes(newSelectedNodes);
+      setSelectAllCheckedState(newSelectAllCheckedState);
+      callSelectAllChangeHandler(newSelectAllCheckedState, newSelectedNodes);
+    }
   };
 
   const setAllSelected = useCallback((selectAll: boolean): void => {
@@ -549,14 +574,20 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       return;
     }
 
-    nodesManager.current.setSelected(node, select);
+    if (isSelectedIdsControlled) {
+      const newSelectedIds = nodesManager.current.computeSelected(node, select);
+      const newSelectedNodes = nodesManager.current.nodes.filter(node => newSelectedIds.selectedIds.has(node.id));
+      callNodeChangeHandler(node, newSelectedNodes);
+    } else {
+      nodesManager.current.setSelected(node, select);
+      const newSelectedNodes = nodesManager.current.getSelected();
+      const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
+      setSelectedIds(newSelectedNodes.map(node => node.id));
+      setSelectedNodes(newSelectedNodes);
+      setSelectAllCheckedState(newSelectAllCheckedState);
 
-    const newSelectedNodes = nodesManager.current.getSelected();
-    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
-    setSelectedNodes(newSelectedNodes);
-    setSelectAllCheckedState(newSelectAllCheckedState);
-
-    callNodeChangeHandler(node, newSelectedNodes);
+      callNodeChangeHandler(node, newSelectedNodes);
+    }
   };
 
   const setNodeSelected = useCallback((id: string, select: boolean): void => {
