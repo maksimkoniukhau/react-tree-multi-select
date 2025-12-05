@@ -205,6 +205,128 @@ export class NodesManager {
     }
   };
 
+  public computeAllSelected = (select: boolean): SelectionState => {
+    if (this._type === Type.TREE_SELECT) {
+      return this.computeHierarchicalAllSelected(select);
+    } else {
+      return this.computeFlatAllSelected(select);
+    }
+  };
+
+  private computeFlatAllSelected = (select: boolean): SelectionState => {
+    const selectedIds = new Set(this.selectionState.selectedIds);
+    const effectivelySelectedIds = new Set(this.selectionState.effectivelySelectedIds);
+    const partiallySelectedIds = new Set<string>();
+    const someDescendantSelectedIds = new Set<string>();
+
+    const setAllSelected = (root: Node, select: boolean): void => {
+      const setSelectAll = (node: Node): void => {
+        const children = node.children ?? [];
+        for (const child of children) {
+          setSelectAll(child);
+        }
+        if (!node.disabled) {
+          if (select) {
+            selectedIds.add(node.id);
+            effectivelySelectedIds.add(node.id);
+          } else {
+            selectedIds.delete(node.id);
+            effectivelySelectedIds.delete(node.id);
+          }
+        }
+      };
+      setSelectAll(root);
+    };
+
+    for (const root of this._roots) {
+      setAllSelected(root, select);
+    }
+
+    return {
+      selectedIds,
+      effectivelySelectedIds,
+      partiallySelectedIds,
+      someDescendantSelectedIds
+    };
+  };
+
+  private computeHierarchicalAllSelected = (select: boolean): SelectionState => {
+    const selectedIds = new Set(this.selectionState.selectedIds);
+    const effectivelySelectedIds = new Set(this.selectionState.effectivelySelectedIds);
+    const partiallySelectedIds = new Set<string>(this.selectionState.partiallySelectedIds);
+    const someDescendantSelectedIds = new Set<string>(this.selectionState.someDescendantSelectedIds);
+
+    const setAllSelected = (root: Node, select: boolean): void => {
+      const setHierarchicalSelected = (node: Node): void => {
+        const children = node.children ?? [];
+
+        for (const child of children) {
+          setHierarchicalSelected(child);
+        }
+
+        if (children.length === 0) {
+          if (!node.disabled) {
+            if (select) {
+              selectedIds.add(node.id);
+            } else {
+              selectedIds.delete(node.id);
+            }
+          }
+          const selected = selectedIds.has(node.id);
+          if (selected || node.disabled) {
+            effectivelySelectedIds.add(node.id);
+          } else {
+            effectivelySelectedIds.delete(node.id);
+          }
+          partiallySelectedIds.delete(node.id);
+          someDescendantSelectedIds.delete(node.id);
+        } else {
+          const someDescendantSelected = children
+            .some(child => selectedIds.has(child.id) || someDescendantSelectedIds.has(child.id));
+          const allChildrenEffectivelySelected = children
+            .every(child => effectivelySelectedIds.has(child.id));
+          const allChildrenSelected = children.every(child => selectedIds.has(child.id));
+
+          if (!node.disabled) {
+            if (select && allChildrenSelected) {
+              selectedIds.add(node.id);
+            } else {
+              selectedIds.delete(node.id);
+            }
+          }
+
+          if (allChildrenEffectivelySelected) {
+            effectivelySelectedIds.add(node.id);
+          } else {
+            effectivelySelectedIds.delete(node.id);
+          }
+          if (!node.disabled && !allChildrenSelected && someDescendantSelected) {
+            partiallySelectedIds.add(node.id);
+          } else {
+            partiallySelectedIds.delete(node.id);
+          }
+          if (someDescendantSelected) {
+            someDescendantSelectedIds.add(node.id);
+          } else {
+            someDescendantSelectedIds.delete(node.id);
+          }
+        }
+      };
+      setHierarchicalSelected(root);
+    };
+
+    for (const root of this._roots) {
+      setAllSelected(root, select);
+    }
+
+    return {
+      selectedIds,
+      effectivelySelectedIds,
+      partiallySelectedIds,
+      someDescendantSelectedIds
+    };
+  };
+
   public computeSelected = (node: Node, select: boolean): SelectionState => {
     if (node.disabled) {
       return this.selectionState;
@@ -347,11 +469,13 @@ export class NodesManager {
   private setSelectedAncestors = (node: Node, selectedIds: Set<string>, select: boolean): void => {
     const parentNode = node.parent;
     if (parentNode) {
-      const allChildrenSelected = parentNode.children.every(child => selectedIds.has(child.id));
-      if (select && allChildrenSelected) {
-        selectedIds.add(parentNode.id);
-      } else {
-        selectedIds.delete(parentNode.id);
+      if (!parentNode.disabled) {
+        const allChildrenSelected = parentNode.children.every(child => selectedIds.has(child.id));
+        if (select && allChildrenSelected) {
+          selectedIds.add(parentNode.id);
+        } else {
+          selectedIds.delete(parentNode.id);
+        }
       }
       this.setSelectedAncestors(parentNode, selectedIds, select);
     }

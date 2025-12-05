@@ -269,7 +269,7 @@ export class Node {
       this.computeFlatSelectionState(child);
     }
 
-    node.effectivelySelected = node.selected;
+    node.effectivelySelected = node.selected || node.disabled;
     node.partiallySelected = false;
     node.someDescendantSelected = false;
   };
