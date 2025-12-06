@@ -47,7 +47,7 @@ const selectAllMatcher = (
   selectAllState: CheckedState,
   chipsAmount: number,
   selectedNodesAmount: number,
-  handleSelectAllChange?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => void
+  handleSelectAllChange?: (selectedIds: string[], selectAllCheckedState: CheckedState) => void
 ): void => {
   const selectAll = getStickyItem(container, 0);
   expect(selectAll).toBeInTheDocument();
@@ -272,9 +272,9 @@ describe('TreeMultiSelect component: isDisabled prop', () => {
     openDropdown: boolean,
     handleFocus: (event: React.FocusEvent) => void,
     handleBlur: (event: React.FocusEvent) => void,
-    handleNodeChange: (node: TreeNode, selectedNodes: TreeNode[]) => void,
-    handleNodeToggle: (node: TreeNode, expandedNodes: TreeNode[]) => void,
-    handleClearAll: (selectedNodes: TreeNode[], selectAllCheckedState?: CheckedState) => void
+    handleNodeChange: (node: TreeNode, selectedIds: string[]) => void,
+    handleNodeToggle: (node: TreeNode, expandedIds: string[]) => void,
+    handleClearAll: (selectedIds: string[], selectAllCheckedState?: CheckedState) => void
   ): void => {
     expect(container.contains(document.activeElement)).toBeFalsy();
     expect(getRootContainer(container)).not.toHaveClass('focused');
@@ -425,7 +425,7 @@ describe('TreeMultiSelect component: withChipClear prop', () => {
     container: HTMLElement,
     withChipClear: boolean,
     chipClearsAmount: number,
-    handleNodeChange: (node: TreeNode, selectedNodes: TreeNode[]) => void,
+    handleNodeChange: (node: TreeNode, selectedIds: string[]) => void,
     nodeChangeTimes: number
   ): void => {
     if (withChipClear) {
@@ -445,8 +445,8 @@ describe('TreeMultiSelect component: withChipClear prop', () => {
     const {container} = render(
       <TreeMultiSelect
         data={treeNodeData}
-        selectedIds={baseSelectedIds}
-        expandedIds={baseExpandedIds}
+        defaultSelectedIds={baseSelectedIds}
+        defaultExpandedIds={baseExpandedIds}
         withChipClear={withChipClear}
         onNodeChange={handleNodeChange}
       />
@@ -484,8 +484,8 @@ describe('TreeMultiSelect component: withChipClear prop', () => {
     const {container} = render(
       <TreeMultiSelect
         data={treeNodeData}
-        selectedIds={baseSelectedIds}
-        expandedIds={baseExpandedIds}
+        defaultSelectedIds={baseSelectedIds}
+        defaultExpandedIds={baseExpandedIds}
         withChipClear={withChipClear}
         onNodeChange={handleNodeChange}
       />
@@ -543,7 +543,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
     withClearAll: boolean,
     chipsAmount: number,
     selectedNodesAmount: number,
-    handleClearAll?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState | undefined) => void
+    handleClearAll?: (selectedIds: string[], selectAllCheckedState: CheckedState | undefined) => void
   ): void => {
     if (withClearAll) {
       expect(getFieldClear(container)).toBeInTheDocument();
@@ -561,10 +561,11 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
   it.each([[true, true], [false, true], [true, false], [false, false]])(
     'tests component when withClearAll={%s} and data presents={%s}',
     async (withClearAll, presents) => {
+      const user: UserEvent = userEvent.setup();
       const {container, rerender} = render(
         <TreeMultiSelect
           data={presents ? getTreeNodeData([]) : []}
-          selectedIds={['1']}
+          defaultSelectedIds={['1']}
           withClearAll={withClearAll ? undefined : withClearAll}
         />
       );
@@ -573,7 +574,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
       rerender(
         <TreeMultiSelect
           data={presents ? getTreeNodeData([]) : []}
-          selectedIds={['1']}
+          defaultSelectedIds={['1']}
           withClearAll={withClearAll ? undefined : withClearAll}
           type={Type.TREE_SELECT_FLAT}
         />
@@ -583,7 +584,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
       rerender(
         <TreeMultiSelect
           data={presents ? getTreeNodeData([]) : []}
-          selectedIds={['1']}
+          defaultSelectedIds={['1']}
           withClearAll={withClearAll ? undefined : withClearAll}
           type={Type.MULTI_SELECT}
         />
@@ -593,13 +594,14 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
       rerender(
         <TreeMultiSelect
           data={presents ? getTreeNodeData([]) : []}
-          selectedIds={['1']}
+          defaultSelectedIds={['1']}
           withClearAll={withClearAll ? undefined : withClearAll}
           type={Type.SELECT}
         />
       );
       withClearAllPresentsMatcher(container, withClearAll, presents);
 
+      await user.click(getFieldClear(container));
       rerender(
         <TreeMultiSelect
           data={getTreeNodeData([])}
@@ -617,8 +619,8 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
     const {container, rerender} = render(
       <TreeMultiSelect
         data={getTreeNodeData(['8'])}
-        selectedIds={['8']}
-        expandedIds={['7']}
+        defaultSelectedIds={['8']}
+        defaultExpandedIds={['7']}
         withSelectAll
         onClearAll={handleClearAll}
       />
@@ -650,8 +652,8 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
     rerender(
       <TreeMultiSelect
         data={getTreeNodeData([])}
-        selectedIds={['8']}
-        expandedIds={['7']}
+        defaultSelectedIds={['8']}
+        defaultExpandedIds={['7']}
         withSelectAll
         onClearAll={handleClearAll}
       />
@@ -682,7 +684,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
     rerender(
       <TreeMultiSelect
         data={getTreeNodeData(['8'])}
-        expandedIds={['7']}
+        defaultExpandedIds={['7']}
         withSelectAll
         onClearAll={handleClearAll}
       />
@@ -2383,7 +2385,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     const {container} = render(
       <TreeMultiSelect
         data={getTreeNodeData(['4'])}
-        expandedIds={['1', '2']}
+        defaultExpandedIds={['1', '2']}
         withSelectAll
         isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
@@ -2633,8 +2635,8 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     const {container} = render(
       <TreeMultiSelect
         data={getTreeNodeData(['4'])}
-        selectedIds={['4']}
-        expandedIds={['1', '2']}
+        defaultSelectedIds={['4']}
+        defaultExpandedIds={['1', '2']}
         withSelectAll
         isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
@@ -2777,8 +2779,8 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     const {container} = render(
       <TreeMultiSelect
         data={getTreeNodeData(['2', '3', '4'])}
-        selectedIds={['4']}
-        expandedIds={['1', '2']}
+        defaultSelectedIds={['4']}
+        defaultExpandedIds={['1', '2']}
         withSelectAll
         isVirtualized={false}
         onSelectAllChange={handleSelectAllChange}
@@ -3347,8 +3349,8 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       const {container} = render(
         <TreeMultiSelect
           data={getTreeNodeData(['3'])}
-          selectedIds={['4', '5', '6']}
-          expandedIds={['1', '2']}
+          defaultSelectedIds={['4', '5', '6']}
+          defaultExpandedIds={['1', '2']}
           withSelectAll
           isVirtualized={false}
           onSelectAllChange={handleSelectAllChange}
