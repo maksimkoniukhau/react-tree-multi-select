@@ -3,6 +3,7 @@ import {SELECT_ALL_LABEL} from './constants';
 import {buildVirtualFocusId} from './utils/focusUtils';
 import {CheckedState, DROPDOWN_PREFIX, FOOTER_SUFFIX, SELECT_ALL_SUFFIX, Type} from './types';
 import {InnerComponents, NullableVirtualFocusId} from './innerTypes';
+import {NodesManager} from './NodesManager';
 import {Node} from './Node';
 import {NoDataWrapper} from './components/NoData';
 import {SelectAllWrapper} from './components/SelectAllWrapper';
@@ -11,9 +12,9 @@ import {NodeWrapper} from './components/NodeWrapper';
 export interface ListItemProps {
   type: Type;
   index: number;
-  nodesAmount: number;
+  nodesManager: NodesManager;
   displayedNodes: Node[];
-  selectedNodes: Node[];
+  selectedIds: string[];
   displayedItemCount: number;
   isAnyHasChildren: boolean;
   searchValue: string;
@@ -34,7 +35,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
   const {
     type,
     index,
-    nodesAmount,
+    nodesManager,
     displayedNodes,
     displayedItemCount,
     isAnyHasChildren,
@@ -83,13 +84,13 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     return (
       <NoDataWrapper
         noData={components.NoData}
-        label={nodesAmount === 0 ? noDataText : noMatchesText}
+        label={nodesManager.getSize() === 0 ? noDataText : noMatchesText}
       />
     );
   }
 
   let nodeIndex = index;
-  if (showSelectAll && nodesAmount > 0) {
+  if (showSelectAll && nodesManager.getSize() > 0) {
     nodeIndex = index - 1;
   }
   const node = displayedNodes[nodeIndex];
@@ -105,8 +106,8 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
       depth={node.depth}
       label={node.name}
       disabled={node.disabled}
-      selected={node.selected}
-      partial={node.partiallySelected}
+      selected={nodesManager.selectionState.selectedIds.has(node.id)}
+      partial={nodesManager.selectionState.partiallySelectedIds.has(node.id)}
       expanded={expanded}
       focused={focused}
       matched={node.matched}

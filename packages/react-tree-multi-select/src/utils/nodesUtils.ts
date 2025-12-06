@@ -1,4 +1,5 @@
 import {CheckedState, Type} from '../types';
+import {NodesManager} from '../NodesManager';
 import {Node} from '../Node';
 
 const fillArrayFromTreeArray = (treeArray: Node[], nodeArray: Node[]): void => {
@@ -16,10 +17,18 @@ export const convertTreeArrayToFlatArray = (treeArray: Node[]): Node[] => {
   return nodeArray;
 };
 
-export const filterChips = (nodes: Node[], type: Type): Node[] => {
-  return type === Type.TREE_SELECT
-    ? nodes.filter(node => node.selected && !node.parent?.selected)
-    : nodes.filter(node => node.selected);
+export const filterChips = (nodesManager: NodesManager): Node[] => {
+  return nodesManager.type === Type.TREE_SELECT
+    ? nodesManager.nodes.filter(node => nodesManager.selectionState.selectedIds.has(node.id)
+      && (!node.parent || !nodesManager.selectionState.selectedIds.has(node.parent.id)))
+    : nodesManager.nodes.filter(node => nodesManager.selectionState.selectedIds.has(node.id));
+};
+
+export const getOrderedSelectedIds = (
+  selectedIds: Set<string>,
+  nodesManager: NodesManager
+): string[] => {
+  return nodesManager.nodes.filter(node => selectedIds.has(node.id)).map(node => node.id);
 };
 
 export const getSelectAllCheckedState = (selectedNodes: Node[], allNodes: Node[]): CheckedState => {

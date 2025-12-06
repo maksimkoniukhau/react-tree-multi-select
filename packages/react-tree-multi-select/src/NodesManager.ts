@@ -22,6 +22,18 @@ export class NodesManager {
     this.initialize(data, type, searchValue);
   }
 
+  get type(): Type {
+    return this._type;
+  }
+
+  private get nodeMap(): Map<string, Node> {
+    return this._nodeMap;
+  }
+
+  private get roots(): Node[] {
+    return this._roots;
+  }
+
   get nodes(): Node[] {
     return this._nodes;
   }
@@ -30,61 +42,42 @@ export class NodesManager {
     return this._selectionState;
   }
 
-  public areAllEffectivelySelected = (): boolean => {
-    return this._roots.every(root => root.effectivelySelected);
-  };
-
-  public getSize = (): number => {
-    return this._nodes.length;
-  };
-
-  public getDisplayed = (isSearchMode: boolean): Node[] => {
-    return this._nodes.filter(node => node.isDisplayed(isSearchMode));
-  };
-
-  public getSelected = (): Node[] => {
-    return this._nodes.filter(node => node.selected);
-  };
-
-  public getExpanded = (): Node[] => {
-    return this._nodes.filter(node => node.expanded);
-  };
-
-  public isAnyHasChildren = (): boolean => {
-    return this._nodes.some(node => node.hasChildren());
-  };
-
-  public isAnySelectedExcludingDisabled = (): boolean => {
-    return this._nodes
-      .filter(node => !node.disabled)
-      .some(node => node.selected);
-  };
-
-  public deselectAll = (): void => {
-    this._nodes.forEach(node => node.handleUnselect(this._type));
-  };
-
-  public setAllSelected = (select: boolean): void => {
-    this._nodes.forEach(node => {
-      if (select) {
-        node.handleSelect(this._type);
-      } else {
-        node.handleUnselect(this._type);
-      }
-    });
-  };
-
   public syncSelectedIds = (propsSelectedIds: Set<string>): void => {
-    this._nodes.forEach(node => {
-      node.setExplicitSelection(propsSelectedIds.has(node.id));
-    });
-    this._roots.forEach(node => node.computeSelectionState(node, this._type));
-
     this._selectionState = this.computeSelectionState(propsSelectedIds);
   };
 
+  public areAllEffectivelySelected = (): boolean => {
+    return this.roots.every(root => root.effectivelySelected);
+  };
+
+  public getSize = (): number => {
+    return this.nodes.length;
+  };
+
+  public getDisplayed = (isSearchMode: boolean): Node[] => {
+    return this.nodes.filter(node => node.isDisplayed(isSearchMode));
+  };
+
+  public getSelected = (): Node[] => {
+    return this.nodes.filter(node => this.selectionState.selectedIds.has(node.id));
+  };
+
+  public getExpanded = (): Node[] => {
+    return this.nodes.filter(node => node.expanded);
+  };
+
+  public isAnyHasChildren = (): boolean => {
+    return this.nodes.some(node => node.hasChildren());
+  };
+
+  public isAnySelectedExcludingDisabled = (): boolean => {
+    return this.nodes
+      .filter(node => !node.disabled)
+      .some(node => this.selectionState.selectedIds.has(node.id));
+  };
+
   private computeSelectionState = (propsSelectedIds: Set<string>): SelectionState => {
-    if (this._type === Type.TREE_SELECT) {
+    if (this.type === Type.TREE_SELECT) {
       return this.computeHierarchicalSelectionState(propsSelectedIds);
     } else {
       return this.computeFlatSelectionState(propsSelectedIds);
@@ -106,7 +99,7 @@ export class NodesManager {
     const allPartiallySelectedIds = new Set<string>();
     const allSomeDescendantSelectedIds = new Set<string>();
 
-    for (const root of this._roots) {
+    for (const root of this.roots) {
       const nodesSelectionState = this.computeRootHierarchicalSelectionState(root, propsSelectedIds);
       for (const id of nodesSelectionState.selectedIds) {
         allSelectedIds.add(id);
@@ -177,40 +170,30 @@ export class NodesManager {
   };
 
   public syncExpandedIds = (expandedIds: Set<string>, isSearchMode: boolean): void => {
-    this._nodes.forEach(node => {
+    this.nodes.forEach(node => {
       node.handleExpand(isSearchMode, expandedIds.has(node.id));
     });
   };
 
   public handleSearch = (value: string): void => {
-    this._nodes.forEach(node => node.handleSearch(value));
+    this.nodes.forEach(node => node.handleSearch(value));
   };
 
   public resetSearch = (): void => {
-    this._nodes.forEach(node => node.resetSearch());
+    this.nodes.forEach(node => node.resetSearch());
   };
 
-  public setSelected = (node: Node, select: boolean): void => {
-    if (this._type === Type.SELECT) {
-      const selectedNodes = this.getSelected();
-      if (selectedNodes.length > 0 && selectedNodes.every(selectedNode => selectedNode.disabled)) {
-        return;
-      }
-      selectedNodes.forEach(node => node.handleUnselect(this._type));
-    }
-    if (select) {
-      node.handleSelect(this._type);
+  public computeAllSelected = (select: boolean, sync: boolean = false): SelectionState => {
+    let newSelectionState: SelectionState;
+    if (this.type === Type.TREE_SELECT) {
+      newSelectionState = this.computeHierarchicalAllSelected(select);
     } else {
-      node.handleUnselect(this._type);
+      newSelectionState = this.computeFlatAllSelected(select);
     }
-  };
-
-  public computeAllSelected = (select: boolean): SelectionState => {
-    if (this._type === Type.TREE_SELECT) {
-      return this.computeHierarchicalAllSelected(select);
-    } else {
-      return this.computeFlatAllSelected(select);
+    if (sync) {
+      this._selectionState = newSelectionState;
     }
+    return newSelectionState;
   };
 
   private computeFlatAllSelected = (select: boolean): SelectionState => {
@@ -238,7 +221,7 @@ export class NodesManager {
       setSelectAll(root);
     };
 
-    for (const root of this._roots) {
+    for (const root of this.roots) {
       setAllSelected(root, select);
     }
 
@@ -315,7 +298,7 @@ export class NodesManager {
       setHierarchicalSelected(root);
     };
 
-    for (const root of this._roots) {
+    for (const root of this.roots) {
       setAllSelected(root, select);
     }
 
@@ -327,35 +310,42 @@ export class NodesManager {
     };
   };
 
-  public computeSelected = (node: Node, select: boolean): SelectionState => {
+  public computeSelected = (node: Node, select: boolean, sync: boolean = false): SelectionState => {
+    let newSelectionState: SelectionState;
     if (node.disabled) {
-      return this.selectionState;
-    }
-    if (this._type === Type.SELECT) {
-      const selectedIds = this.selectionState.selectedIds;
-      if (selectedIds.size > 0 && selectedIds.values().every(id => this._nodeMap.get(id)?.disabled)) {
-        return this.selectionState;
-      }
-      return {
-        selectedIds: select ? new Set(node.id) : new Set(),
-        effectivelySelectedIds: select ? new Set(node.id) : new Set(),
-        partiallySelectedIds: new Set(),
-        someDescendantSelectedIds: new Set()
-      };
+      newSelectionState = this.selectionState;
     } else {
-      if (select) {
-        return this.computeSelect(node);
+      if (this.type === Type.SELECT) {
+        const selectedIds = this.selectionState.selectedIds;
+        if (selectedIds.size > 0 && selectedIds.values().every(id => this.nodeMap.get(id)?.disabled)) {
+          newSelectionState = this.selectionState;
+        } else {
+          newSelectionState = {
+            selectedIds: select ? new Set(node.id) : new Set(),
+            effectivelySelectedIds: select ? new Set(node.id) : new Set(),
+            partiallySelectedIds: new Set(),
+            someDescendantSelectedIds: new Set()
+          };
+        }
       } else {
-        return this.computeDeselect(node);
+        if (select) {
+          newSelectionState = this.computeSelect(node);
+        } else {
+          newSelectionState = this.computeDeselect(node);
+        }
       }
     }
+    if (sync) {
+      this._selectionState = newSelectionState;
+    }
+    return newSelectionState;
   };
 
   private computeSelect = (node: Node): SelectionState => {
     if (node.disabled) {
       return this.selectionState;
     }
-    if (this._type === Type.TREE_SELECT) {
+    if (this.type === Type.TREE_SELECT) {
       return this.computeTreeNodeSelected(node, true);
     } else {
       return {
@@ -371,7 +361,7 @@ export class NodesManager {
     if (node.disabled) {
       return this.selectionState;
     }
-    if (this._type === Type.TREE_SELECT) {
+    if (this.type === Type.TREE_SELECT) {
       return this.computeTreeNodeSelected(node, false);
     } else {
       const newSelectedIds = new Set(this.selectionState.selectedIds);
@@ -496,7 +486,7 @@ export class NodesManager {
   };
 
   public findById = (id: string): Node | undefined => {
-    return this._nodeMap.get(id);
+    return this.nodeMap.get(id);
   };
 
   private initialize = (data: TreeNode[], type: Type, searchValue: string) => {
@@ -504,18 +494,24 @@ export class NodesManager {
     this._nodeMap = new Map<string, Node>();
     this._roots = [];
     this._nodes = [];
+    this._selectionState = {
+      selectedIds: new Set<string>(),
+      effectivelySelectedIds: new Set<string>(),
+      partiallySelectedIds: new Set<string>(),
+      someDescendantSelectedIds: new Set<string>()
+    };
 
     data.forEach((treeNode, index) => {
-      const node = this.mapTreeNodeToNode(treeNode, index.toString(), null, this._nodeMap);
-      this._roots.push(node);
+      const node = this.mapTreeNodeToNode(treeNode, index.toString(), null, this.nodeMap);
+      this.roots.push(node);
     });
 
-    this._nodes = this._roots;
-
-    if (this._type === Type.TREE_SELECT || this._type === Type.TREE_SELECT_FLAT) {
-      this._nodes = convertTreeArrayToFlatArray(this._roots);
+    if (this.type === Type.TREE_SELECT || this.type === Type.TREE_SELECT_FLAT) {
+      this._nodes = convertTreeArrayToFlatArray(this.roots);
+    } else {
+      this._nodes = this.roots;
     }
-    this._nodes.forEach(node => {
+    this.nodes.forEach(node => {
       node.handleSearch(searchValue);
     });
   };

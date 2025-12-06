@@ -16,7 +16,13 @@ import {
 import {InnerComponents, NullableVirtualFocusId} from './innerTypes';
 import {DEFAULT_DROPDOWN_MAX_HEIGHT, INPUT_PLACEHOLDER, NO_DATA_TEXT, NO_MATCHES_TEXT, OVERSCAN} from './constants';
 import {areSetsEqual, getFieldFocusableElement} from './utils/commonUtils';
-import {filterChips, getSelectAllCheckedState, normalizeExpandedIds, normalizeSelectedIds} from './utils/nodesUtils';
+import {
+  filterChips,
+  getOrderedSelectedIds,
+  getSelectAllCheckedState,
+  normalizeExpandedIds,
+  normalizeSelectedIds
+} from './utils/nodesUtils';
 import {getKeyboardConfig, shouldRenderSelectAll, typeToClassName} from './utils/componentUtils';
 import {getComponents, hasCustomFooterComponent} from './utils/componentsUtils';
 import {
@@ -83,10 +89,13 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   const isSelectedIdsControlled = propsSelectedIds !== undefined;
   const isExpandedIdsControlled = propsExpandedIds !== undefined;
 
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [expandedIds, setExpandedIds] = useState<string[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>(
+    () => normalizeSelectedIds(isSelectedIdsControlled ? propsSelectedIds : defaultSelectedIds, type)
+  );
+  const [expandedIds, setExpandedIds] = useState<string[]>(
+    () => normalizeExpandedIds(isExpandedIdsControlled ? propsExpandedIds : defaultExpandedIds, type)
+  );
   const [displayedNodes, setDisplayedNodes] = useState<Node[]>([]);
-  const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
   const [selectAllCheckedState, setSelectAllCheckedState] = useState<CheckedState>(CheckedState.UNSELECTED);
   const [searchValue, setSearchValue] = useState<string>('');
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
@@ -106,16 +115,8 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     }
   }, [openDropdown]);
 
-  useEffect(() => {
-    const initSelectedIds = normalizeSelectedIds(isSelectedIdsControlled ? propsSelectedIds : defaultSelectedIds, type);
-    const initExpandedIds = normalizeExpandedIds(isExpandedIdsControlled ? propsExpandedIds : defaultExpandedIds, type);
-    setSelectedIds(initSelectedIds);
-    setExpandedIds(initExpandedIds);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const isAnyNodeDisplayed = displayedNodes.length > 0;
-  const isAnyNodeSelected = selectedNodes.length > 0;
+  const isAnyNodeSelected = selectedIds.length > 0;
 
   const isSearchMode = Boolean(searchValue);
 
@@ -214,7 +215,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       }
       return prev;
     });
-  }, [selectedNodes]);
+  }, [selectedIds]);
 
   useEffect(() => {
     // when dropdown was closed and previously virtually focused element was in the dropdown
@@ -246,47 +247,39 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     const newSelectedNodes = nodesManager.current.getSelected();
     const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
 
-    setSelectedIds(nodesManager.current.nodes
-      .filter(node => nodesManager.current.selectionState.selectedIds.has(node.id))
-      .map(node => node.id));
+    setSelectedIds(getOrderedSelectedIds(nodesManager.current.selectionState.selectedIds, nodesManager.current));
     setDisplayedNodes(newDisplayedNodes);
-    setSelectedNodes(newSelectedNodes);
     setSelectAllCheckedState(newSelectAllCheckedState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, type]);
 
   useEffect(() => {
-    const prevSelectedIds = new Set(selectedIds);
-    const newSelectedIds = new Set(normalizeSelectedIds(propsSelectedIds, type));
-    if (areSetsEqual(prevSelectedIds, newSelectedIds)) {
-      return;
+    if (isSelectedIdsControlled) {
+      const prevSelectedIds = new Set(selectedIds);
+      const newSelectedIds = new Set(normalizeSelectedIds(propsSelectedIds, type));
+      if (areSetsEqual(prevSelectedIds, newSelectedIds)) {
+        return;
+      }
+      nodesManager.current.syncSelectedIds(newSelectedIds);
+      const newSelectedNodes = nodesManager.current.getSelected();
+      const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
+      setSelectedIds(getOrderedSelectedIds(nodesManager.current.selectionState.selectedIds, nodesManager.current));
+      setSelectAllCheckedState(newSelectAllCheckedState);
     }
-
-    nodesManager.current.syncSelectedIds(newSelectedIds);
-
-    const newSelectedNodes = nodesManager.current.getSelected();
-    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
-
-    setSelectedIds(nodesManager.current.nodes
-      .filter(node => nodesManager.current.selectionState.selectedIds.has(node.id))
-      .map(node => node.id));
-    setSelectedNodes(newSelectedNodes);
-    setSelectAllCheckedState(newSelectAllCheckedState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [propsSelectedIds]);
 
   useEffect(() => {
-    const prevExpandedIds = new Set(expandedIds);
-    const newExpandedIds = new Set(normalizeExpandedIds(propsExpandedIds, type));
-    if (areSetsEqual(prevExpandedIds, newExpandedIds)) {
-      return;
+    if (isExpandedIdsControlled) {
+      const prevExpandedIds = new Set(expandedIds);
+      const newExpandedIds = new Set(normalizeExpandedIds(propsExpandedIds, type));
+      if (areSetsEqual(prevExpandedIds, newExpandedIds)) {
+        return;
+      }
+      nodesManager.current.syncExpandedIds(newExpandedIds, isSearchMode);
+      const newDisplayedNodes = nodesManager.current.getDisplayed(isSearchMode);
+      setDisplayedNodes(newDisplayedNodes);
     }
-
-    nodesManager.current.syncExpandedIds(newExpandedIds, isSearchMode);
-
-    const newDisplayedNodes = nodesManager.current.getDisplayed(isSearchMode);
-
-    setDisplayedNodes(newDisplayedNodes);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [propsExpandedIds]);
 
@@ -431,23 +424,15 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     }
     event.preventDefault();
 
-    if (isSelectedIdsControlled) {
-      const newSelectedIds = nodesManager.current.computeAllSelected(false);
-      const newSelectedNodes = nodesManager.current.nodes.filter(node => newSelectedIds.selectedIds.has(node.id));
-      const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
-      callClearAllHandler(newSelectAllCheckedState, newSelectedNodes);
-    } else {
-      nodesManager.current.deselectAll();
-      const newSelectedNodes = nodesManager.current.getSelected();
-      const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
-
-      setSelectedIds(newSelectedNodes.map(node => node.id));
-      setSelectedNodes(newSelectedNodes);
+    const selectionState = nodesManager.current.computeAllSelected(false, !isSelectedIdsControlled);
+    const newSelectedNodes = nodesManager.current.nodes.filter(node => selectionState.selectedIds.has(node.id));
+    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
+    if (!isSelectedIdsControlled) {
+      setSelectedIds(getOrderedSelectedIds(selectionState.selectedIds, nodesManager.current));
       setSelectAllCheckedState(newSelectAllCheckedState);
       setVirtualFocusId(findFieldVirtualFocusId(buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX)));
-
-      callClearAllHandler(newSelectAllCheckedState, newSelectedNodes);
     }
+    callClearAllHandler(newSelectAllCheckedState, newSelectedNodes);
   };
 
   const handleDeleteAll = useCallback((event: React.MouseEvent | React.KeyboardEvent): void => {
@@ -490,20 +475,14 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       return;
     }
 
-    if (isSelectedIdsControlled) {
-      const newSelectedIds = nodesManager.current.computeAllSelected(selectAll);
-      const newSelectedNodes = nodesManager.current.nodes.filter(node => newSelectedIds.selectedIds.has(node.id));
-      const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
-      callSelectAllChangeHandler(newSelectAllCheckedState, newSelectedNodes);
-    } else {
-      nodesManager.current.setAllSelected(selectAll);
-      const newSelectedNodes = nodesManager.current.getSelected();
-      const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
-      setSelectedIds(newSelectedNodes.map(node => node.id));
-      setSelectedNodes(newSelectedNodes);
+    const selectionState = nodesManager.current.computeAllSelected(selectAll, !isSelectedIdsControlled);
+    const newSelectedNodes = nodesManager.current.nodes.filter(node => selectionState.selectedIds.has(node.id));
+    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
+    if (!isSelectedIdsControlled) {
+      setSelectedIds(getOrderedSelectedIds(selectionState.selectedIds, nodesManager.current));
       setSelectAllCheckedState(newSelectAllCheckedState);
-      callSelectAllChangeHandler(newSelectAllCheckedState, newSelectedNodes);
     }
+    callSelectAllChangeHandler(newSelectAllCheckedState, newSelectedNodes);
   };
 
   const setAllSelected = useCallback((selectAll: boolean): void => {
@@ -581,24 +560,18 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       return;
     }
     const node = nodesManager.current.findById(id);
-    if (!node || node.disabled || node.effectivelySelected === select) {
+    if (!node || node.disabled || nodesManager.current.selectionState.effectivelySelectedIds.has(node.id) === select) {
       return;
     }
 
-    if (isSelectedIdsControlled) {
-      const newSelectedIds = nodesManager.current.computeSelected(node, select);
-      const newSelectedNodes = nodesManager.current.nodes.filter(node => newSelectedIds.selectedIds.has(node.id));
-      callNodeChangeHandler(node, newSelectedNodes);
-    } else {
-      nodesManager.current.setSelected(node, select);
-      const newSelectedNodes = nodesManager.current.getSelected();
-      const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
-      setSelectedIds(newSelectedNodes.map(node => node.id));
-      setSelectedNodes(newSelectedNodes);
+    const selectionState = nodesManager.current.computeSelected(node, select, !isSelectedIdsControlled);
+    const newSelectedNodes = nodesManager.current.nodes.filter(node => selectionState.selectedIds.has(node.id));
+    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
+    if (!isSelectedIdsControlled) {
+      setSelectedIds(getOrderedSelectedIds(selectionState.selectedIds, nodesManager.current));
       setSelectAllCheckedState(newSelectAllCheckedState);
-
-      callNodeChangeHandler(node, newSelectedNodes);
     }
+    callNodeChangeHandler(node, newSelectedNodes);
   };
 
   const setNodeSelected = useCallback((id: string, select: boolean): void => {
@@ -615,7 +588,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       return;
     }
 
-    if (node.effectivelySelected) {
+    if (nodesManager.current.selectionState.effectivelySelectedIds.has(node.id)) {
       setNodeSelected(node.id, false);
     } else {
       setNodeSelected(node.id, true);
@@ -842,7 +815,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
         break;
       case 'Enter':
         if (!virtualFocusId || isVirtualFocusInField(virtualFocusId)) {
-          const chipId = filterChips(selectedNodes, type)
+          const chipId = filterChips(nodesManager.current)
             ?.find(node => buildVirtualFocusId(FIELD_PREFIX, node.id) === virtualFocusId)
             ?.id;
           if (chipId) {
@@ -1026,7 +999,8 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
         fieldRef={fieldRef}
         fieldInputRef={fieldInputRef}
         type={type}
-        selectedNodes={selectedNodes}
+        nodesManager={nodesManager.current}
+        selectedIds={selectedIds}
         isDropdownOpen={isDropdownOpen}
         withClearAll={withClearAll}
         showClearAll={showClearAll}
@@ -1049,9 +1023,8 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
         <DropdownContainer
           type={type}
           nodesManager={nodesManager.current}
-          nodesAmount={nodesManager.current.getSize()}
           displayedNodes={displayedNodes}
-          selectedNodes={selectedNodes}
+          selectedIds={selectedIds}
           isAnyHasChildren={nodesManager.current.isAnyHasChildren()}
           isSearchable={isSearchable}
           withDropdownInput={withDropdownInput}

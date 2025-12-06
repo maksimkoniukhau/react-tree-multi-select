@@ -19,9 +19,8 @@ export const Dropdown: FC<DropdownProps> = memo((props) => {
 interface DropdownContainerProps {
   type: Type;
   nodesManager: NodesManager;
-  nodesAmount: number;
   displayedNodes: Node[];
-  selectedNodes: Node[];
+  selectedIds: string[];
   isAnyHasChildren: boolean;
   isSearchable: boolean;
   withDropdownInput: boolean;
@@ -53,9 +52,8 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
   const {
     type,
     nodesManager,
-    nodesAmount,
     displayedNodes,
-    selectedNodes,
+    selectedIds,
     isAnyHasChildren,
     isSearchable,
     withDropdownInput,
@@ -120,9 +118,9 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
       <ListItem
         type={type}
         index={index}
-        nodesAmount={nodesAmount}
+        nodesManager={nodesManager}
         displayedNodes={displayedNodes}
-        selectedNodes={selectedNodes}
+        selectedIds={selectedIds}
         displayedItemCount={displayedItemCount}
         isAnyHasChildren={isAnyHasChildren}
         searchValue={searchValue}
