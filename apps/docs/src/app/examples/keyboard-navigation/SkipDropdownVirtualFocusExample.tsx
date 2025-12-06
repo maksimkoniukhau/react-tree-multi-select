@@ -32,8 +32,8 @@ export const SkipDropdownVirtualFocusExample: FC = () => {
             ]
           }
         ]}
-        selectedIds={['3']}
-        expandedIds={['1', '2', '3']}
+        defaultSelectedIds={['3']}
+        defaultExpandedIds={['1', '2', '3']}
       />
     </div>
   );

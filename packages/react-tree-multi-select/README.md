@@ -59,23 +59,23 @@ export const ReactTreeMultiSelectApp: FC = () => {
     }
   ];
 
-  const handleNodeChange = (node: TreeNode, selectedNodes: TreeNode[]): void => {
+  const handleNodeChange = (node: TreeNode, selectedIds: string[]): void => {
     console.log('handleNodeChange node:', node);
-    console.log('handleNodeChange selectedNodes:', selectedNodes);
+    console.log('handleNodeChange selectedIds:', selectedIds);
   };
 
-  const handleNodeToggle = (node: TreeNode, expandedNodes: TreeNode[]): void => {
+  const handleNodeToggle = (node: TreeNode, expandedIds: string[]): void => {
     console.log('handleNodeToggle node:', node);
-    console.log('handleNodeToggle expandedNodes:', expandedNodes);
+    console.log('handleNodeToggle expandedIds:', expandedIds);
   };
 
-  const handleClearAll = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState | undefined): void => {
-    console.log('handleClearAll selectedNodes:', selectedNodes);
+  const handleClearAll = (selectedIds: string[], selectAllCheckedState: CheckedState | undefined): void => {
+    console.log('handleClearAll selectedIds:', selectedIds);
     console.log('handleClearAll selectAllCheckedState:', selectAllCheckedState);
   };
 
-  const handleSelectAllChange = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState): void => {
-    console.log('handleSelectAllChange selectedNodes:', selectedNodes);
+  const handleSelectAllChange = (selectedIds: string[], selectAllCheckedState: CheckedState): void => {
+    console.log('handleSelectAllChange selectedIds:', selectedIds);
     console.log('handleSelectAllChange selectAllCheckedState:', selectAllCheckedState);
   };
 

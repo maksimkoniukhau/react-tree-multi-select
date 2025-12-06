@@ -36,7 +36,7 @@ export const CustomChipContainerExample: FC = () => {
     <div className="component-example">
       <TreeMultiSelect
         data={data}
-        selectedIds={selectedIds}
+        defaultSelectedIds={selectedIds}
         components={customComponents}
       />
     </div>

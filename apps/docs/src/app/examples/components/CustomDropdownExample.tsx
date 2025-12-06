@@ -29,8 +29,8 @@ export const CustomDropdownExample: FC = () => {
     <div className="component-example">
       <TreeMultiSelect
         data={data}
-        selectedIds={selectedIds}
-        expandedIds={expandedIds}
+        defaultSelectedIds={selectedIds}
+        defaultExpandedIds={expandedIds}
         components={components}
       />
     </div>

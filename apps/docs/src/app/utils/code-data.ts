@@ -38,23 +38,23 @@ export const ReactTreeMultiSelectApp: FC = () => {
     }
   ];
   
-  const handleNodeChange = (node: TreeNode, selectedNodes: TreeNode[]): void => {
+  const handleNodeChange = (node: TreeNode, selectedIds: string[]): void => {
     console.log('handleNodeChange node:', node);
-    console.log('handleNodeChange selectedNodes:', selectedNodes);
+    console.log('handleNodeChange selectedIds:', selectedIds);
   };
 
-  const handleNodeToggle = (node: TreeNode, expandedNodes: TreeNode[]): void => {
+  const handleNodeToggle = (node: TreeNode, expandedIds: string[]): void => {
     console.log('handleNodeToggle node:', node);
-    console.log('handleNodeToggle expandedNodes:', expandedNodes);
+    console.log('handleNodeToggle expandedIds:', expandedIds);
   };
 
-  const handleClearAll = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState | undefined): void => {
-    console.log('handleClearAll selectedNodes:', selectedNodes);
+  const handleClearAll = (selectedIds: string[], selectAllCheckedState: CheckedState | undefined): void => {
+    console.log('handleClearAll selectedIds:', selectedIds);
     console.log('handleClearAll selectAllCheckedState:', selectAllCheckedState);
   };
 
-  const handleSelectAllChange = (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState): void => {
-    console.log('handleSelectAllChange selectedNodes:', selectedNodes);
+  const handleSelectAllChange = (selectedIds: string[], selectAllCheckedState: CheckedState): void => {
+    console.log('handleSelectAllChange selectedIds:', selectedIds);
     console.log('handleSelectAllChange selectAllCheckedState:', selectAllCheckedState);
   };
 
@@ -789,12 +789,12 @@ export const CustomFooterExample: FC = () => {
     void loadData(0);
   }, []);
 
-  const handleNodeChange = (_node: TreeNode, selectedNodes: TreeNode[]): void => {
-    setSelectedIds(selectedNodes.map(node => node.id));
+  const handleNodeChange = (_node: TreeNode, selectedIds: string[]): void => {
+    setSelectedIds(selectedIds);
   };
 
-  const handleNodeToggle = (_node: TreeNode, expandedNodes: TreeNode[]): void => {
-    setExpandedIds(expandedNodes.map(node => node.id));
+  const handleNodeToggle = (_node: TreeNode, expandedIds: string[]): void => {
+    setExpandedIds(expandedIds);
   };
 
   const loadMore = useCallback(async () => {
@@ -874,12 +874,12 @@ export const ControlledExample: FC = memo(() => {
     setOpen(open);
   };
 
-  const handleNodeChange = (_node: TreeNode, selectedNodes: TreeNode[]): void => {
-    setSelectedIds(selectedNodes.map(node => node.id));
+  const handleNodeChange = (_node: TreeNode, selectedIds: string[]): void => {
+    setSelectedIds(selectedIds);
   };
 
-  const handleNodeToggle = (_node: TreeNode, expandedNodes: TreeNode[]): void => {
-    setExpandedIds(expandedNodes.map(node => node.id));
+  const handleNodeToggle = (_node: TreeNode, expandedIds: string[]): void => {
+    setExpandedIds(expandedIds);
   };
 
   return (
@@ -914,12 +914,12 @@ export const LargeDataExample: FC = memo(() => {
     setExpandedIds(value === '50' ? largeTreeNodeData50.expandedIds : largeTreeNodeData25.expandedIds);
   };
 
-  const handleNodeChange = (_node: TreeNode, selectedNodes: TreeNode[]): void => {
-    setSelectedIds(selectedNodes.map(node => node.id));
+  const handleNodeChange = (_node: TreeNode, selectedIds: string[]): void => {
+    setSelectedIds(selectedIds);
   };
 
-  const handleNodeToggle = (_node: TreeNode, expandedNodes: TreeNode[]): void => {
-    setExpandedIds(expandedNodes.map(node => node.id));
+  const handleNodeToggle = (_node: TreeNode, expandedIds: string[]): void => {
+    setExpandedIds(expandedIds);
   };
 
   return (
@@ -988,12 +988,12 @@ export const InfiniteScrollExample: FC = () => {
   const [keyboardConfig, setKeyboardConfig] = useState<KeyboardConfig>({dropdown: {loopUp: false, loopDown: false}});
   const [page, setPage] = useState<number>(0);
 
-  const handleNodeChange = (_node: TreeNode, selectedNodes: TreeNode[]): void => {
-    setSelectedIds(selectedNodes.map(node => node.id));
+  const handleNodeChange = (_node: TreeNode, selectedIds: string[]): void => {
+    setSelectedIds(selectedIds);
   };
 
-  const handleNodeToggle = (_node: TreeNode, expandedNodes: TreeNode[],): void => {
-    setExpandedIds(expandedNodes.map(node => node.id));
+  const handleNodeToggle = (_node: TreeNode, expandedIds: string[]): void => {
+    setExpandedIds(expandedIds);
   };
 
   const handleDropdownLastItemReached = async (inputValue: string): Promise<void> => {

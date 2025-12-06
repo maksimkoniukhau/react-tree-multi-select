@@ -35,7 +35,7 @@ export const CustomSelectAllContainerExample: FC = () => {
     <div className="component-example">
       <TreeMultiSelect
         data={data}
-        selectedIds={selectedIds}
+        defaultSelectedIds={selectedIds}
         withSelectAll
         components={components}
       />

@@ -47,7 +47,7 @@ export const CustomFieldExample: FC = () => {
             expanded: true
           }
         ]}
-        selectedIds={['2.2']}
+        defaultSelectedIds={['2.2']}
         withDropdownInput={true}
         components={companyComponents}
       />
@@ -60,7 +60,7 @@ export const CustomFieldExample: FC = () => {
           {id: '4', label: 'Brand4'},
           {id: '5', label: 'Brand5'}
         ]}
-        selectedIds={['3', '5']}
+        defaultSelectedIds={['3', '5']}
         withSelectAll={true}
         components={brandComponents}
       />

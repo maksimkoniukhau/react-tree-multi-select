@@ -51,8 +51,8 @@ export const CustomVirtualFocusInFieldExample: FC = () => {
     <div className="component-example">
       <TreeMultiSelect
         data={data}
-        selectedIds={selectedIds}
-        expandedIds={expandedIds}
+        defaultSelectedIds={selectedIds}
+        defaultExpandedIds={expandedIds}
         components={customComponents}
       />
     </div>

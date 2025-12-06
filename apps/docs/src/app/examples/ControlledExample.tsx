@@ -13,12 +13,12 @@ export const ControlledExample: FC = memo(() => {
     setOpen(open);
   };
 
-  const handleNodeChange = (_node: TreeNode, selectedNodes: TreeNode[]): void => {
-    setSelectedIds(selectedNodes.map(node => node.id));
+  const handleNodeChange = (_node: TreeNode, selectedIds: string[]): void => {
+    setSelectedIds(selectedIds);
   };
 
-  const handleNodeToggle = (_node: TreeNode, expandedNodes: TreeNode[]): void => {
-    setExpandedIds(expandedNodes.map(node => node.id));
+  const handleNodeToggle = (_node: TreeNode, expandedIds: string[]): void => {
+    setExpandedIds(expandedIds);
   };
 
   return (

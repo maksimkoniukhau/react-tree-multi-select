@@ -15,7 +15,7 @@ export const NonVirtualizedExample: FC = memo(() => {
     <div className="non-virtualized-example">
       <TreeMultiSelect
         data={data}
-        expandedIds={expandedIds}
+        defaultExpandedIds={expandedIds}
         isVirtualized={false}
       />
     </div>

@@ -22,7 +22,7 @@ export const CustomFieldClearExample: FC = () => {
     <div className="component-example">
       <TreeMultiSelect
         data={data}
-        selectedIds={selectedIds}
+        defaultSelectedIds={selectedIds}
         components={components}
       />
     </div>

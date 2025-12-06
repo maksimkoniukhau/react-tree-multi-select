@@ -19,12 +19,12 @@ export const InfiniteScrollExample: FC = () => {
   const [keyboardConfig, setKeyboardConfig] = useState<KeyboardConfig>({dropdown: {loopUp: false, loopDown: false}});
   const [page, setPage] = useState<number>(0);
 
-  const handleNodeChange = (_node: TreeNode, selectedNodes: TreeNode[]): void => {
-    setSelectedIds(selectedNodes.map(node => node.id));
+  const handleNodeChange = (_node: TreeNode, selectedIds: string[]): void => {
+    setSelectedIds(selectedIds);
   };
 
-  const handleNodeToggle = (_node: TreeNode, expandedNodes: TreeNode[],): void => {
-    setExpandedIds(expandedNodes.map(node => node.id));
+  const handleNodeToggle = (_node: TreeNode, expandedIds: string[],): void => {
+    setExpandedIds(expandedIds);
   };
 
   const handleDropdownLastItemReached = async (inputValue: string): Promise<void> => {

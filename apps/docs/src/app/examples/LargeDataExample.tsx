@@ -14,12 +14,12 @@ export const LargeDataExample: FC = memo(() => {
     setExpandedIds(value === '50' ? largeTreeNodeData50.expandedIds : largeTreeNodeData25.expandedIds);
   };
 
-  const handleNodeChange = (_node: TreeNode, selectedNodes: TreeNode[]): void => {
-    setSelectedIds(selectedNodes.map(node => node.id));
+  const handleNodeChange = (_node: TreeNode, selectedIds: string[]): void => {
+    setSelectedIds(selectedIds);
   };
 
-  const handleNodeToggle = (_node: TreeNode, expandedNodes: TreeNode[]): void => {
-    setExpandedIds(expandedNodes.map(node => node.id));
+  const handleNodeToggle = (_node: TreeNode, expandedIds: string[]): void => {
+    setExpandedIds(expandedIds);
   };
 
   return (
