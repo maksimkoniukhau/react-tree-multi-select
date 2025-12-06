@@ -58,10 +58,6 @@ export class NodesManager {
     return this.nodes.filter(node => node.isDisplayed(isSearchMode));
   };
 
-  public getSelected = (): Node[] => {
-    return this.nodes.filter(node => this.selectionState.selectedIds.has(node.id));
-  };
-
   public getExpanded = (): Node[] => {
     return this.nodes.filter(node => node.expanded);
   };

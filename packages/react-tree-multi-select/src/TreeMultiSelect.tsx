@@ -244,8 +244,10 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     nodesManager.current.syncExpandedIds(new Set(expandedIds), isSearchMode);
 
     const newDisplayedNodes = nodesManager.current.getDisplayed(isSearchMode);
-    const newSelectedNodes = nodesManager.current.getSelected();
-    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
+    const newSelectAllCheckedState = getSelectAllCheckedState(
+      [...nodesManager.current.selectionState.selectedIds],
+      nodesManager.current.nodes
+    );
 
     setSelectedIds(getOrderedSelectedIds(nodesManager.current.selectionState.selectedIds, nodesManager.current));
     setDisplayedNodes(newDisplayedNodes);
@@ -261,8 +263,10 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
         return;
       }
       nodesManager.current.syncSelectedIds(newSelectedIds);
-      const newSelectedNodes = nodesManager.current.getSelected();
-      const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
+      const newSelectAllCheckedState = getSelectAllCheckedState(
+        [...nodesManager.current.selectionState.selectedIds],
+        nodesManager.current.nodes
+      );
       setSelectedIds(getOrderedSelectedIds(nodesManager.current.selectionState.selectedIds, nodesManager.current));
       setSelectAllCheckedState(newSelectAllCheckedState);
     }
@@ -410,10 +414,9 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     handleFieldClickRef.current?.(event);
   }, []);
 
-  const callClearAllHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
+  const callClearAllHandler = useCallback((selectAllCheckedState: CheckedState, selectedIds: string[]): void => {
     if (onClearAll) {
-      const selectedTreeNodes = selectedNodes.map(node => node.initTreeNode);
-      onClearAll(selectedTreeNodes, type !== Type.SELECT ? selectAllCheckedState : undefined);
+      onClearAll(selectedIds, type !== Type.SELECT ? selectAllCheckedState : undefined);
     }
   }, [onClearAll, type]);
 
@@ -425,14 +428,14 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     event.preventDefault();
 
     const selectionState = nodesManager.current.computeAllSelected(false, !isSelectedIdsControlled);
-    const newSelectedNodes = nodesManager.current.nodes.filter(node => selectionState.selectedIds.has(node.id));
-    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
+    const newSelectedIds = getOrderedSelectedIds(selectionState.selectedIds, nodesManager.current);
+    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedIds, nodesManager.current.nodes);
     if (!isSelectedIdsControlled) {
-      setSelectedIds(getOrderedSelectedIds(selectionState.selectedIds, nodesManager.current));
+      setSelectedIds(newSelectedIds);
       setSelectAllCheckedState(newSelectAllCheckedState);
       setVirtualFocusId(findFieldVirtualFocusId(buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX)));
     }
-    callClearAllHandler(newSelectAllCheckedState, newSelectedNodes);
+    callClearAllHandler(newSelectAllCheckedState, newSelectedIds);
   };
 
   const handleDeleteAll = useCallback((event: React.MouseEvent | React.KeyboardEvent): void => {
@@ -459,10 +462,9 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     handleInputChangeRef.current?.(event);
   }, []);
 
-  const callSelectAllChangeHandler = useCallback((selectAllCheckedState: CheckedState, selectedNodes: Node[]): void => {
+  const callSelectAllChangeHandler = useCallback((selectAllCheckedState: CheckedState, selectedIds: string[]): void => {
     if (onSelectAllChange) {
-      const selectedTreeNodes = selectedNodes.map(node => node.initTreeNode);
-      onSelectAllChange(selectedTreeNodes, selectAllCheckedState);
+      onSelectAllChange(selectedIds, selectAllCheckedState);
     }
   }, [onSelectAllChange]);
 
@@ -476,13 +478,13 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     }
 
     const selectionState = nodesManager.current.computeAllSelected(selectAll, !isSelectedIdsControlled);
-    const newSelectedNodes = nodesManager.current.nodes.filter(node => selectionState.selectedIds.has(node.id));
-    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
+    const newSelectedIds = getOrderedSelectedIds(selectionState.selectedIds, nodesManager.current);
+    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedIds, nodesManager.current.nodes);
     if (!isSelectedIdsControlled) {
-      setSelectedIds(getOrderedSelectedIds(selectionState.selectedIds, nodesManager.current));
+      setSelectedIds(newSelectedIds);
       setSelectAllCheckedState(newSelectAllCheckedState);
     }
-    callSelectAllChangeHandler(newSelectAllCheckedState, newSelectedNodes);
+    callSelectAllChangeHandler(newSelectAllCheckedState, newSelectedIds);
   };
 
   const setAllSelected = useCallback((selectAll: boolean): void => {
@@ -516,19 +518,17 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     handleSelectAllChangeRef.current?.();
   }, []);
 
-  const callNodeToggleHandler = useCallback((toggledNode: Node, expandedNodes: Node[]): void => {
+  const callNodeToggleHandler = useCallback((toggledNode: Node, expandedIds: string[]): void => {
     if (onNodeToggle) {
       const toggledTreeNode = toggledNode.initTreeNode;
-      const expandedTreeNodes = expandedNodes.map(node => node.initTreeNode);
-      onNodeToggle(toggledTreeNode, expandedTreeNodes);
+      onNodeToggle(toggledTreeNode, expandedIds);
     }
   }, [onNodeToggle]);
 
-  const callNodeChangeHandler = useCallback((changedNode: Node, selectedNodes: Node[]): void => {
+  const callNodeChangeHandler = useCallback((changedNode: Node, selectedIds: string[]): void => {
     if (onNodeChange && !changedNode.disabled) {
       const changedTreeNode = changedNode.initTreeNode;
-      const selectedTreeNodes = selectedNodes.map(node => node.initTreeNode);
-      onNodeChange(changedTreeNode, selectedTreeNodes);
+      onNodeChange(changedTreeNode, selectedIds);
     }
   }, [onNodeChange]);
 
@@ -565,13 +565,13 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     }
 
     const selectionState = nodesManager.current.computeSelected(node, select, !isSelectedIdsControlled);
-    const newSelectedNodes = nodesManager.current.nodes.filter(node => selectionState.selectedIds.has(node.id));
-    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedNodes, nodesManager.current.nodes);
+    const newSelectedIds = getOrderedSelectedIds(selectionState.selectedIds, nodesManager.current);
+    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedIds, nodesManager.current.nodes);
     if (!isSelectedIdsControlled) {
-      setSelectedIds(getOrderedSelectedIds(selectionState.selectedIds, nodesManager.current));
+      setSelectedIds(newSelectedIds);
       setSelectAllCheckedState(newSelectAllCheckedState);
     }
-    callNodeChangeHandler(node, newSelectedNodes);
+    callNodeChangeHandler(node, newSelectedIds);
   };
 
   const setNodeSelected = useCallback((id: string, select: boolean): void => {
@@ -661,7 +661,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     const newDisplayedNodes = nodesManager.current.getDisplayed(isSearchMode);
     setDisplayedNodes(newDisplayedNodes);
 
-    callNodeToggleHandler(node, nodesManager.current.getExpanded());
+    callNodeToggleHandler(node, nodesManager.current.getExpanded().map(node => node.id));
   };
 
   const setNodeExpanded = useCallback((id: string, expand: boolean): void => {

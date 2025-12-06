@@ -31,10 +31,10 @@ export const getOrderedSelectedIds = (
   return nodesManager.nodes.filter(node => selectedIds.has(node.id)).map(node => node.id);
 };
 
-export const getSelectAllCheckedState = (selectedNodes: Node[], allNodes: Node[]): CheckedState => {
-  return selectedNodes.length === allNodes.length
+export const getSelectAllCheckedState = (selectedIds: string[], allNodes: Node[]): CheckedState => {
+  return selectedIds.length === allNodes.length
     ? CheckedState.SELECTED
-    : selectedNodes.length === 0
+    : selectedIds.length === 0
       ? CheckedState.UNSELECTED
       : CheckedState.PARTIAL;
 };

@@ -640,17 +640,17 @@ export interface TreeMultiSelectProps {
    * This includes interactions from the dropdown as well as chip removal in the field.
    *
    * @param node - The node that was changed.
-   * @param selectedNodes - The list of currently selected nodes.
+   * @param selectedIds - The list of currently selected nodes IDs.
    */
-  onNodeChange?: (node: TreeNode, selectedNodes: TreeNode[]) => void;
+  onNodeChange?: (node: TreeNode, selectedIds: string[]) => void;
 
   /**
    * Callback triggered when a node is toggled (expanded or collapsed).
    *
    * @param node - The node that was toggled.
-   * @param expandedNodes - The list of currently expanded nodes.
+   * @param expandedIds - The list of currently expanded nodes IDs.
    */
-  onNodeToggle?: (node: TreeNode, expandedNodes: TreeNode[]) => void;
+  onNodeToggle?: (node: TreeNode, expandedIds: string[]) => void;
 
   /**
    * Callback triggered when the `FieldClear` component is activated by user interaction,
@@ -658,11 +658,11 @@ export interface TreeMultiSelectProps {
    *
    * This is used to clear all selected nodes, except for nodes that are disabled.
    *
-   * @param selectedNodes - The list of currently selected nodes.
+   * @param selectedIds - The list of currently selected nodes Ids.
    * @param selectAllCheckedState - The current check state of the `SelectAll` component,
    * or `undefined` if the component type is `Type.SELECT`.
    */
-  onClearAll?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState | undefined) => void;
+  onClearAll?: (selectedIds: string[], selectAllCheckedState: CheckedState | undefined) => void;
 
   /**
    * Callback triggered when the `SelectAll` component is activated by user interaction,
@@ -670,10 +670,10 @@ export interface TreeMultiSelectProps {
    *
    * This is used to select or unselect all nodes, except for nodes that are disabled.
    *
-   * @param selectedNodes - The list of currently selected nodes.
+   * @param selectedIds - The list of currently selected nodes IDs.
    * @param selectAllCheckedState - The current check state of the `SelectAll` component.
    */
-  onSelectAllChange?: (selectedNodes: TreeNode[], selectAllCheckedState: CheckedState) => void;
+  onSelectAllChange?: (selectedIds: string[], selectAllCheckedState: CheckedState) => void;
 
   /**
    * Callback triggered when the component receives focus.
