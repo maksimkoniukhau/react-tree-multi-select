@@ -3,6 +3,7 @@ import {
   ChipClearProps,
   ChipContainerProps,
   ChipLabelProps,
+  DropdownProps,
   FieldClearProps,
   FieldProps,
   FieldToggleProps,
@@ -23,6 +24,7 @@ import {ChipClear} from './ChipClear';
 import {Input} from './Input';
 import {FieldClear} from './FieldClear';
 import {FieldToggle} from './FieldToggle';
+import {Dropdown} from '../DropdownContainer';
 import {SelectAllContainer} from './SelectAllContainer';
 import {SelectAllCheckbox} from './SelectAllCheckbox';
 import {SelectAllLabel} from './SelectAllLabel';
@@ -40,6 +42,7 @@ export interface ComponentsType {
   Input: FC<InputProps>;
   FieldClear: FC<FieldClearProps>;
   FieldToggle: FC<FieldToggleProps>;
+  Dropdown: FC<DropdownProps>;
   SelectAllContainer: FC<SelectAllContainerProps>;
   SelectAllCheckbox: FC<SelectAllCheckboxProps>;
   SelectAllLabel: FC<SelectAllLabelProps>;
@@ -58,6 +61,7 @@ export const components: ComponentsType = {
   Input,
   FieldClear,
   FieldToggle,
+  Dropdown,
   SelectAllContainer,
   SelectAllCheckbox,
   SelectAllLabel,
