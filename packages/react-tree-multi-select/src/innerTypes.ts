@@ -16,6 +16,7 @@ export type NullableVirtualFocusId = VirtualFocusId | null;
 
 export interface SelectionState {
   selectedIds: Set<string>;
+  // Node is effectively selected when all not disabled descendants are selected
   effectivelySelectedIds: Set<string>;
   partiallySelectedIds: Set<string>;
   someDescendantSelectedIds: Set<string>;

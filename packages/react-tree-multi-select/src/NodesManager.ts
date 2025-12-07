@@ -47,7 +47,7 @@ export class NodesManager {
   };
 
   public areAllEffectivelySelected = (): boolean => {
-    return this.roots.every(root => root.effectivelySelected);
+    return this.roots.every(root => this.selectionState.effectivelySelectedIds.has(root.id));
   };
 
   public getSize = (): number => {
