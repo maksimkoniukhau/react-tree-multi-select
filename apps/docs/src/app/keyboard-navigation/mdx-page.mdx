@@ -4,11 +4,11 @@ import {
     skipDropdownVirtualFocusExample,
     virtualFocusIdDefinition
 } from '@/utils/code-data';
-import {Alert} from "@/shared-components/Alert";
-import {CodeBlock} from "@/shared-components/CodeBlock";
-import {DemoContainer} from "@/shared-components/DemoContainer";
-import {CustomVirtualFocusInFieldExample} from "@/examples/keyboard-navigation/CustomVirtualFocusInFieldExample";
-import {SkipDropdownVirtualFocusExample} from "@/examples/keyboard-navigation/SkipDropdownVirtualFocusExample";
+import {Alert} from '@/shared-components/Alert';
+import {CodeBlock} from '@/shared-components/CodeBlock';
+import {DemoContainer} from '@/shared-components/DemoContainer';
+import {CustomVirtualFocusInFieldExample} from '@/examples/keyboard-navigation/CustomVirtualFocusInFieldExample';
+import {SkipDropdownVirtualFocusExample} from '@/examples/keyboard-navigation/SkipDropdownVirtualFocusExample';
 
 # Keyboard Navigation
 
@@ -22,7 +22,7 @@ The virtual keyboard navigation system supports moving focus between elements su
 - SelectAll, Nodes and Footer inside the Dropdown (including virtualized content).
 - Custom user elements, if marked as virtually focusable.
 
-Navigation between these elements is controlled via arrow keys and custom `onKeyDown` handler.
+Navigation between these elements is controlled via arrow keys.
 
 ## Virtual Focus Design
 
@@ -87,6 +87,6 @@ Although the Field and Dropdown regions use different internal mechanisms (DOM-b
 
 - Both use the same `VirtualFocusId` format.
 - Both integrate with the same keyboard handler system.
-- Both can be controlled through the same `onKeyDown` callback and actions (e.g. `focusNext`, `focusPrev`, `focusDropdown`, `focusField`).
+- Both can be controlled through the same `onKeyDown` callback.
 
 From a developer’s perspective, it behaves like one continuous virtual focus system.

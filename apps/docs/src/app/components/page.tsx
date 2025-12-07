@@ -1,5 +1,3 @@
-'use client'
-
 import React, {FC, memo} from 'react';
 import {
   chipClearExample,

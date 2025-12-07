@@ -1,3 +1,5 @@
+'use client'
+
 import React, {FC, memo, useState} from 'react';
 import {TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
 import {largeTreeNodeData25, largeTreeNodeData50, RandomTreeNode} from '@/utils/utils';

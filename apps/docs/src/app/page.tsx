@@ -1,5 +1,3 @@
-'use client'
-
 import React, {FC} from 'react';
 import {basicUsageCode} from '@/utils/code-data';
 import {CodeBlock} from '@/shared-components/CodeBlock';

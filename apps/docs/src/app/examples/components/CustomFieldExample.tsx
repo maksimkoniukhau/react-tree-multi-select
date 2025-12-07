@@ -1,3 +1,5 @@
+'use client'
+
 import React, {FC, useMemo} from 'react';
 import {Components, FieldProps, FieldType, TreeMultiSelect, Type} from 'react-tree-multi-select';
 

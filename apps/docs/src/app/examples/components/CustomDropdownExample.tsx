@@ -1,3 +1,5 @@
+'use client'
+
 import React, {FC, useState} from 'react';
 import {Components, DropdownProps, DropdownType, TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
 import {getBaseExpandedIds, getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';

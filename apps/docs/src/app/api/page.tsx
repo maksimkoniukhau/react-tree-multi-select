@@ -1,5 +1,3 @@
-'use client'
-
 import React, {FC} from 'react';
 import {rtmsProps, rtmsTypes} from '@/utils/api-data';
 import {CodeBlock} from '@/shared-components/CodeBlock';

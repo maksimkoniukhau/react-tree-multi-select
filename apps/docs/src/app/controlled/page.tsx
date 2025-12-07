@@ -1,5 +1,3 @@
-'use client'
-
 import React, {FC, memo} from 'react';
 import {CodeBlock} from '@/shared-components/CodeBlock';
 import {controlledExample} from '@/utils/code-data';

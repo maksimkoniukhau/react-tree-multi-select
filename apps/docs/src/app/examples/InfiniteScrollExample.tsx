@@ -1,3 +1,5 @@
+'use client'
+
 import React, {FC, useMemo, useState} from 'react';
 import {FooterProps, KeyboardConfig, TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
 import {fetchFakeService, RandomTreeNode} from '@/utils/utils';

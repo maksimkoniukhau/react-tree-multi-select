@@ -1,5 +1,3 @@
-'use client'
-
 import React, {FC, memo} from 'react';
 import {largeDataExample, nonVirtualizedExample} from '@/utils/code-data';
 import {Alert} from '@/shared-components/Alert';

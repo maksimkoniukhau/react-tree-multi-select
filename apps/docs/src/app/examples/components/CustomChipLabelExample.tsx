@@ -1,3 +1,5 @@
+'use client'
+
 import React, {FC, useMemo, useState} from 'react';
 import {ChipLabelProps, Components, TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
 import {getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';

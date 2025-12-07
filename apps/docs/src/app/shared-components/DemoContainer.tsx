@@ -1,3 +1,5 @@
+'use client'
+
 import React, {FC, memo, ReactNode, useState} from 'react';
 import {CodeBlock} from '@/shared-components/CodeBlock';
 

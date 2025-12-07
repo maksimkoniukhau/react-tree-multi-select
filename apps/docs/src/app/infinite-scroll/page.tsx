@@ -1,5 +1,3 @@
-'use client'
-
 import React, {FC, memo} from 'react';
 import {infiniteScrollExample} from '@/utils/code-data';
 import {CodeBlock} from '@/shared-components/CodeBlock';
