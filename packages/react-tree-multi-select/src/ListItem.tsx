@@ -15,6 +15,7 @@ export interface ListItemProps {
   nodesManager: NodesManager;
   displayedNodes: Node[];
   selectedIds: string[];
+  expandedIds: string[];
   displayedItemCount: number;
   isAnyHasChildren: boolean;
   searchValue: string;
@@ -95,7 +96,9 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
   }
   const node = displayedNodes[nodeIndex];
   const focused = virtualFocusId === buildVirtualFocusId(DROPDOWN_PREFIX, node.id);
-  const expanded = searchValue ? node.searchExpanded : node.expanded;
+  const expanded = searchValue
+    ? nodesManager.expansionState.searchExpandedIds.has(node.id)
+    : nodesManager.expansionState.expandedIds.has(node.id);
   const hasChildren = node.hasChildren();
   const indentation = !(type === Type.MULTI_SELECT || type === Type.SELECT) && isAnyHasChildren && !hasChildren;
 

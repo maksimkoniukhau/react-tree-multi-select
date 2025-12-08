@@ -12,8 +12,6 @@ export class Node {
   private _childrenIds: string[];
   private readonly _depth: number;
   private readonly _disabled: boolean;
-  private _expanded: boolean;
-  private _searchExpanded: boolean;
   private _matched: boolean;
   private _filtered: boolean;
 
@@ -41,8 +39,6 @@ export class Node {
     this._childrenIds = childrenIds;
     this._depth = depth || 0;
     this._disabled = disabled;
-    this._expanded = false;
-    this._searchExpanded = false;
     this._matched = false;
     this._filtered = true;
     this._initTreeNode = initTreeNode;
@@ -89,22 +85,6 @@ export class Node {
     return this._disabled;
   }
 
-  get expanded(): boolean {
-    return this._expanded;
-  }
-
-  private set expanded(value: boolean) {
-    this._expanded = value || false;
-  }
-
-  get searchExpanded(): boolean {
-    return this._searchExpanded;
-  }
-
-  private set searchExpanded(value: boolean) {
-    this._searchExpanded = value || false;
-  }
-
   get matched(): boolean {
     return this._matched;
   }
@@ -129,30 +109,20 @@ export class Node {
     return this.children?.length > 0;
   };
 
-  public handleExpand = (isSearchMode: boolean, expand: boolean): void => {
-    if (this.hasChildren()) {
-      if (isSearchMode) {
-        this.searchExpanded = expand;
-      } else {
-        this.expanded = expand;
-      }
-    }
-  };
-
   public handleSearch = (searchValue: string): void => {
     if (searchValue) {
       if (this.name?.toLowerCase().includes(searchValue.toLowerCase())) {
         this.filtered = true;
         if (this.hasChildren()) {
-          this.searchExpanded = true;
+          //  this.searchExpanded = true;
         }
         this.forEachAncestor(this, ancestor => {
           ancestor.filtered = true;
-          ancestor.searchExpanded = true;
+          // ancestor.searchExpanded = true;
         });
         this.matched = true;
       } else {
-        this.searchExpanded = false;
+        // this.searchExpanded = false;
         this.matched = false;
         this.filtered = false;
       }
@@ -162,20 +132,9 @@ export class Node {
   };
 
   public resetSearch = (): void => {
-    this.searchExpanded = false;
+    // this.searchExpanded = false;
     this.matched = false;
     this.filtered = true;
-  };
-
-  public isDisplayed = (isSearchMode: boolean): boolean => {
-    return this.filtered && this.isVisible(isSearchMode);
-  };
-
-  private isVisible = (isSearchMode: boolean): boolean => {
-    if (!this.parent) {
-      return true;
-    }
-    return this.everyAncestor(this, ancestor => isSearchMode ? ancestor.searchExpanded : ancestor.expanded);
   };
 
   private forEachAncestor = (node: Node, callback: (ancestor: Node) => void): void => {
@@ -184,13 +143,5 @@ export class Node {
       callback(parentNode);
       this.forEachAncestor(parentNode, callback);
     }
-  };
-
-  private everyAncestor = (node: Node, predicate: (ancestor: Node) => boolean): boolean => {
-    const parentNode = node.parent;
-    if (!parentNode) {
-      return true;
-    }
-    return predicate(parentNode) && this.everyAncestor(parentNode, predicate);
   };
 }

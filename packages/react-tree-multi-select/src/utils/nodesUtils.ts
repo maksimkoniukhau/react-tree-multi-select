@@ -24,11 +24,8 @@ export const filterChips = (nodesManager: NodesManager): Node[] => {
     : nodesManager.nodes.filter(node => nodesManager.selectionState.selectedIds.has(node.id));
 };
 
-export const getOrderedSelectedIds = (
-  selectedIds: Set<string>,
-  nodesManager: NodesManager
-): string[] => {
-  return nodesManager.nodes.filter(node => selectedIds.has(node.id)).map(node => node.id);
+export const getOrderedIds = (setIds: Set<string>, nodesManager: NodesManager): string[] => {
+  return nodesManager.nodes.filter(node => setIds.has(node.id)).map(node => node.id);
 };
 
 export const getSelectAllCheckedState = (selectedIds: string[], allNodes: Node[]): CheckedState => {

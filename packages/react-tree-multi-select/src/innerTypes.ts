@@ -21,3 +21,8 @@ export interface SelectionState {
   partiallySelectedIds: Set<string>;
   someDescendantSelectedIds: Set<string>;
 }
+
+export interface ExpansionState {
+  expandedIds: Set<string>;
+  searchExpandedIds: Set<string>;
+}

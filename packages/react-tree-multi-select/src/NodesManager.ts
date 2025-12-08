@@ -1,5 +1,5 @@
 import {TreeNode, Type} from './types';
-import {SelectionState} from './innerTypes';
+import {ExpansionState, SelectionState} from './innerTypes';
 import {PATH_DELIMITER} from './constants';
 import {convertTreeArrayToFlatArray} from './utils/nodesUtils';
 import {Node} from './Node';
@@ -17,6 +17,8 @@ export class NodesManager {
   private _nodes: Node[];
 
   private _selectionState: SelectionState;
+
+  private _expansionState: ExpansionState;
 
   constructor(data: TreeNode[], type: Type, searchValue: string) {
     this.initialize(data, type, searchValue);
@@ -42,8 +44,20 @@ export class NodesManager {
     return this._selectionState;
   }
 
-  public syncSelectedIds = (propsSelectedIds: Set<string>): void => {
-    this._selectionState = this.computeSelectionState(propsSelectedIds);
+  get expansionState(): ExpansionState {
+    return this._expansionState;
+  }
+
+  public findById = (id: string): Node | undefined => {
+    return this.nodeMap.get(id);
+  };
+
+  public syncSelectedIds = (selectedIds: Set<string>): void => {
+    this._selectionState = this.computeSelectionState(selectedIds);
+  };
+
+  public syncExpandedIds = (expandedIds: Set<string>, isSearchMode: boolean): void => {
+    this._expansionState = this.computeExpansionState(expandedIds, isSearchMode);
   };
 
   public areAllEffectivelySelected = (): boolean => {
@@ -54,12 +68,32 @@ export class NodesManager {
     return this.nodes.length;
   };
 
-  public getDisplayed = (isSearchMode: boolean): Node[] => {
-    return this.nodes.filter(node => node.isDisplayed(isSearchMode));
+  public getDisplayed = (isSearchMode: boolean, expansionState: ExpansionState): Node[] => {
+    return this.nodes.filter(node => this.isDisplayed(node, isSearchMode, expansionState));
   };
 
-  public getExpanded = (): Node[] => {
-    return this.nodes.filter(node => node.expanded);
+  private isDisplayed = (node: Node, isSearchMode: boolean, expansionState: ExpansionState): boolean => {
+    return node.filtered && this.isVisible(node, isSearchMode, expansionState);
+  };
+
+  private isVisible = (node: Node, isSearchMode: boolean, expansionState: ExpansionState): boolean => {
+    if (!node.parent) {
+      return true;
+    }
+    return this.everyAncestor(
+      node,
+      ancestor => isSearchMode
+        ? expansionState.searchExpandedIds.has(ancestor.id)
+        : expansionState.expandedIds.has(ancestor.id)
+    );
+  };
+
+  private everyAncestor = (node: Node, predicate: (ancestor: Node) => boolean): boolean => {
+    const parentNode = node.parent;
+    if (!parentNode) {
+      return true;
+    }
+    return predicate(parentNode) && this.everyAncestor(parentNode, predicate);
   };
 
   public isAnyHasChildren = (): boolean => {
@@ -70,6 +104,51 @@ export class NodesManager {
     return this.nodes
       .filter(node => !node.disabled)
       .some(node => this.selectionState.selectedIds.has(node.id));
+  };
+
+  public handleSearch = (value: string): void => {
+    this.nodes.forEach(node => node.handleSearch(value));
+  };
+
+  public resetSearch = (): void => {
+    this.nodes.forEach(node => node.resetSearch());
+  };
+
+  private computeExpansionState = (expandedIds: Set<string>, isSearchMode: boolean): ExpansionState => {
+    const newExpandedIds = isSearchMode ? new Set(this.expansionState.expandedIds) : new Set(expandedIds);
+    const newSearchExpandedIds = isSearchMode ? new Set(expandedIds) : new Set(this.expansionState.searchExpandedIds);
+    return {
+      expandedIds: newExpandedIds,
+      searchExpandedIds: newSearchExpandedIds
+    };
+  };
+
+  public computeExpanded = (node: Node, expand: boolean, isSearchMode: boolean, sync: boolean = false): ExpansionState => {
+    const newExpandedIds = new Set(this.expansionState.expandedIds);
+    const newSearchExpandedIds = new Set(this.expansionState.searchExpandedIds);
+    const newExpansionState = {
+      expandedIds: newExpandedIds,
+      searchExpandedIds: newSearchExpandedIds
+    };
+    if (node.hasChildren()) {
+      if (isSearchMode) {
+        if (expand) {
+          newSearchExpandedIds.add(node.id);
+        } else {
+          newSearchExpandedIds.delete(node.id);
+        }
+      } else {
+        if (expand) {
+          newExpandedIds.add(node.id);
+        } else {
+          newExpandedIds.delete(node.id);
+        }
+      }
+    }
+    if (sync) {
+      this._expansionState = newExpansionState;
+    }
+    return newExpansionState;
   };
 
   private computeSelectionState = (propsSelectedIds: Set<string>): SelectionState => {
@@ -163,20 +242,6 @@ export class NodesManager {
     computeHierarchicalSelection(root, propsSelectedIds);
 
     return {selectedIds, effectivelySelectedIds, partiallySelectedIds, someDescendantSelectedIds};
-  };
-
-  public syncExpandedIds = (expandedIds: Set<string>, isSearchMode: boolean): void => {
-    this.nodes.forEach(node => {
-      node.handleExpand(isSearchMode, expandedIds.has(node.id));
-    });
-  };
-
-  public handleSearch = (value: string): void => {
-    this.nodes.forEach(node => node.handleSearch(value));
-  };
-
-  public resetSearch = (): void => {
-    this.nodes.forEach(node => node.resetSearch());
   };
 
   public computeAllSelected = (select: boolean, sync: boolean = false): SelectionState => {
@@ -477,14 +542,6 @@ export class NodesManager {
     return getNodeRoot(node);
   };
 
-  public handleExpand = (node: Node, isSearchMode: boolean, expand: boolean): void => {
-    node.handleExpand(isSearchMode, expand);
-  };
-
-  public findById = (id: string): Node | undefined => {
-    return this.nodeMap.get(id);
-  };
-
   private initialize = (data: TreeNode[], type: Type, searchValue: string) => {
     this._type = type;
     this._nodeMap = new Map<string, Node>();
@@ -495,6 +552,10 @@ export class NodesManager {
       effectivelySelectedIds: new Set<string>(),
       partiallySelectedIds: new Set<string>(),
       someDescendantSelectedIds: new Set<string>()
+    };
+    this._expansionState = {
+      expandedIds: new Set<string>(),
+      searchExpandedIds: new Set<string>()
     };
 
     data.forEach((treeNode, index) => {
