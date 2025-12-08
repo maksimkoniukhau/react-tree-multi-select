@@ -26,3 +26,8 @@ export interface ExpansionState {
   expandedIds: Set<string>;
   searchExpandedIds: Set<string>;
 }
+
+export interface SearchingState {
+  matchedIds: Set<string>;
+  filteredIds: Set<string>;
+}

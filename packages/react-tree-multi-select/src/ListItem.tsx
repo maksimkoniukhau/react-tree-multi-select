@@ -113,7 +113,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
       partial={nodesManager.selectionState.partiallySelectedIds.has(node.id)}
       expanded={expanded}
       focused={focused}
-      matched={node.matched}
+      matched={nodesManager.searchingState.matchedIds.has(node.id)}
       skipDropdownVirtualFocus={node.skipDropdownVirtualFocus}
       indentation={indentation}
       withToggle={type !== Type.MULTI_SELECT && type !== Type.SELECT && hasChildren}

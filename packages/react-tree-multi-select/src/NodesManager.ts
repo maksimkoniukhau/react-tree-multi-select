@@ -1,5 +1,5 @@
 import {TreeNode, Type} from './types';
-import {ExpansionState, SelectionState} from './innerTypes';
+import {ExpansionState, SearchingState, SelectionState} from './innerTypes';
 import {PATH_DELIMITER} from './constants';
 import {convertTreeArrayToFlatArray} from './utils/nodesUtils';
 import {Node} from './Node';
@@ -19,6 +19,8 @@ export class NodesManager {
   private _selectionState: SelectionState;
 
   private _expansionState: ExpansionState;
+
+  private _searchingState: SearchingState;
 
   constructor(data: TreeNode[], type: Type, searchValue: string) {
     this.initialize(data, type, searchValue);
@@ -48,6 +50,10 @@ export class NodesManager {
     return this._expansionState;
   }
 
+  get searchingState(): SearchingState {
+    return this._searchingState;
+  }
+
   public findById = (id: string): Node | undefined => {
     return this.nodeMap.get(id);
   };
@@ -73,7 +79,7 @@ export class NodesManager {
   };
 
   private isDisplayed = (node: Node, isSearchMode: boolean, expansionState: ExpansionState): boolean => {
-    return node.filtered && this.isVisible(node, isSearchMode, expansionState);
+    return this.searchingState.filteredIds.has(node.id) && this.isVisible(node, isSearchMode, expansionState);
   };
 
   private isVisible = (node: Node, isSearchMode: boolean, expansionState: ExpansionState): boolean => {
@@ -88,14 +94,6 @@ export class NodesManager {
     );
   };
 
-  private everyAncestor = (node: Node, predicate: (ancestor: Node) => boolean): boolean => {
-    const parentNode = node.parent;
-    if (!parentNode) {
-      return true;
-    }
-    return predicate(parentNode) && this.everyAncestor(parentNode, predicate);
-  };
-
   public isAnyHasChildren = (): boolean => {
     return this.nodes.some(node => node.hasChildren());
   };
@@ -106,12 +104,43 @@ export class NodesManager {
       .some(node => this.selectionState.selectedIds.has(node.id));
   };
 
-  public handleSearch = (value: string): void => {
-    this.nodes.forEach(node => node.handleSearch(value));
+  public handleSearch = (searchValue: string): void => {
+    if (searchValue) {
+      const newSearchExpandedIds = new Set<string>();
+      const newSearchingState = {
+        matchedIds: new Set<string>(),
+        filteredIds: new Set<string>()
+      };
+      this.nodes.forEach(node => {
+        if (node.name?.toLowerCase().includes(searchValue.toLowerCase())) {
+          newSearchingState.matchedIds.add(node.id);
+          newSearchingState.filteredIds.add(node.id);
+          if (node.hasChildren()) {
+            newSearchExpandedIds.add(node.id);
+          }
+          this.forEachAncestor(node, ancestor => {
+            newSearchingState.filteredIds.add(ancestor.id);
+            newSearchExpandedIds.add(ancestor.id);
+          });
+        }
+      });
+      this.expansionState.searchExpandedIds = newSearchExpandedIds;
+      this._searchingState = newSearchingState;
+    } else {
+      this.resetSearch();
+    }
   };
 
   public resetSearch = (): void => {
-    this.nodes.forEach(node => node.resetSearch());
+    const newSearchingState = {
+      matchedIds: new Set<string>(),
+      filteredIds: new Set<string>()
+    }
+    this.nodes.forEach(node => {
+      newSearchingState.filteredIds.add(node.id);
+    });
+    this.expansionState.searchExpandedIds = new Set();
+    this._searchingState = newSearchingState;
   };
 
   private computeExpansionState = (expandedIds: Set<string>, isSearchMode: boolean): ExpansionState => {
@@ -557,6 +586,10 @@ export class NodesManager {
       expandedIds: new Set<string>(),
       searchExpandedIds: new Set<string>()
     };
+    this._searchingState = {
+      matchedIds: new Set<string>(),
+      filteredIds: new Set<string>()
+    };
 
     data.forEach((treeNode, index) => {
       const node = this.mapTreeNodeToNode(treeNode, index.toString(), null, this.nodeMap);
@@ -568,9 +601,7 @@ export class NodesManager {
     } else {
       this._nodes = this.roots;
     }
-    this.nodes.forEach(node => {
-      node.handleSearch(searchValue);
-    });
+    this.handleSearch(searchValue);
   };
 
   private mapTreeNodeToNode = (
@@ -606,5 +637,21 @@ export class NodesManager {
     nodeMap.set(id, node);
 
     return node;
+  };
+
+  private everyAncestor = (node: Node, predicate: (ancestor: Node) => boolean): boolean => {
+    const parentNode = node.parent;
+    if (!parentNode) {
+      return true;
+    }
+    return predicate(parentNode) && this.everyAncestor(parentNode, predicate);
+  };
+
+  private forEachAncestor = (node: Node, callback: (ancestor: Node) => void): void => {
+    const parentNode = node.parent;
+    if (parentNode) {
+      callback(parentNode);
+      this.forEachAncestor(parentNode, callback);
+    }
   };
 }

@@ -1161,8 +1161,8 @@ describe('TreeMultiSelect component: isVirtualized prop', () => {
     const {container} = render(
       <TreeMultiSelect
         data={treeNodeData}
-        selectedIds={baseSelectedIds}
-        expandedIds={baseExpandedIds}
+        defaultSelectedIds={baseSelectedIds}
+        defaultExpandedIds={baseExpandedIds}
         isVirtualized={isVirtualized ? undefined : isVirtualized}
       />
     );
@@ -1171,6 +1171,7 @@ describe('TreeMultiSelect component: isVirtualized prop', () => {
     expect(getListItems(container).length).toBe(isVirtualized ? 13 : 21);
 
     await user.click(getNodeToggle(container, 6));
+    screen.debug();
     expect(getListItems(container).length).toBe(isVirtualized ? 13 : 23);
 
     await user.click(getNodeToggle(container, 12));

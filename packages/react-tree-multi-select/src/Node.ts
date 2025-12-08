@@ -12,8 +12,6 @@ export class Node {
   private _childrenIds: string[];
   private readonly _depth: number;
   private readonly _disabled: boolean;
-  private _matched: boolean;
-  private _filtered: boolean;
 
   // original TreeNode
   private readonly _initTreeNode: TreeNode;
@@ -39,8 +37,6 @@ export class Node {
     this._childrenIds = childrenIds;
     this._depth = depth || 0;
     this._disabled = disabled;
-    this._matched = false;
-    this._filtered = true;
     this._initTreeNode = initTreeNode;
   }
 
@@ -85,63 +81,11 @@ export class Node {
     return this._disabled;
   }
 
-  get matched(): boolean {
-    return this._matched;
-  }
-
-  private set matched(value: boolean) {
-    this._matched = value || false;
-  }
-
-  get filtered(): boolean {
-    return this._filtered;
-  }
-
-  private set filtered(value: boolean) {
-    this._filtered = value || false;
-  }
-
   get initTreeNode(): TreeNode {
     return this._initTreeNode;
   }
 
   public hasChildren = (): boolean => {
     return this.children?.length > 0;
-  };
-
-  public handleSearch = (searchValue: string): void => {
-    if (searchValue) {
-      if (this.name?.toLowerCase().includes(searchValue.toLowerCase())) {
-        this.filtered = true;
-        if (this.hasChildren()) {
-          //  this.searchExpanded = true;
-        }
-        this.forEachAncestor(this, ancestor => {
-          ancestor.filtered = true;
-          // ancestor.searchExpanded = true;
-        });
-        this.matched = true;
-      } else {
-        // this.searchExpanded = false;
-        this.matched = false;
-        this.filtered = false;
-      }
-    } else {
-      this.resetSearch();
-    }
-  };
-
-  public resetSearch = (): void => {
-    // this.searchExpanded = false;
-    this.matched = false;
-    this.filtered = true;
-  };
-
-  private forEachAncestor = (node: Node, callback: (ancestor: Node) => void): void => {
-    const parentNode = node.parent;
-    if (parentNode) {
-      callback(parentNode);
-      this.forEachAncestor(parentNode, callback);
-    }
   };
 }
