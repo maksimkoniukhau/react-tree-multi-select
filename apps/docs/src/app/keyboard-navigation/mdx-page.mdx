@@ -1,9 +1,5 @@
-import {
-    customVirtualFocusInFieldExample,
-    dropdownVirtualFocusIdsDefinition,
-    skipDropdownVirtualFocusExample,
-    virtualFocusIdDefinition
-} from '@/utils/code-data';
+import {dropdownVirtualFocusIdsDefinition, virtualFocusIdDefinition} from '@/utils/code-data';
+import {loadSource} from '@/utils/fs-utils';
 import {Alert} from '@/shared-components/Alert';
 import {CodeBlock} from '@/shared-components/CodeBlock';
 import {DemoContainer} from '@/shared-components/DemoContainer';
@@ -47,7 +43,10 @@ This approach gives you complete flexibility:
 
 Example — Adding custom and removing built-in virtual focusable elements in field:
 
-<DemoContainer code={customVirtualFocusInFieldExample} title="Custom virtual focus in Field">
+<DemoContainer
+    code={loadSource('keyboard-navigation/CustomVirtualFocusInFieldExample.tsx')}
+    title="Custom virtual focus in Field"
+>
     <CustomVirtualFocusInFieldExample/>
 </DemoContainer>
 
@@ -77,7 +76,10 @@ You can exclude a specific node from the dropdown's virtual focus system by sett
 
 Example — Skipping disabled nodes from dropdown virtual focus system:
 
-<DemoContainer code={skipDropdownVirtualFocusExample} title="Skip Dropdown virtual focus">
+<DemoContainer
+    code={loadSource('keyboard-navigation/SkipDropdownVirtualFocusExample.tsx')}
+    title="Skip Dropdown virtual focus"
+>
     <SkipDropdownVirtualFocusExample/>
 </DemoContainer>
 
