@@ -16,7 +16,7 @@ import {getTreeNodeData} from '@/utils/utils';
 
 const CustomField: FC<FieldProps> = (props) => (
   <div {...props.attributes}>
-    <button className="filter-btn">Tree multi select</button>
+    <button className="btn filter-btn">Tree multi select</button>
   </div>
 );
 

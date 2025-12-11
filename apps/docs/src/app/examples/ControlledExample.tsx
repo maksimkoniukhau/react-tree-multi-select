@@ -7,33 +7,25 @@ import {getBaseExpandedIds, getBaseSelectedIds, getTreeNodeData} from '@/utils/u
 export const ControlledExample: FC = memo(() => {
 
   const [data] = useState<TreeNode[]>(getTreeNodeData(true));
-  const [selectedIds, setSelectedIds] = useState<string[]>(getBaseSelectedIds());
-  const [expandedIds, setExpandedIds] = useState<string[]>(getBaseExpandedIds());
+  const [selectedIds] = useState<string[]>(getBaseSelectedIds());
+  const [expandedIds] = useState<string[]>(getBaseExpandedIds());
   const [open, setOpen] = useState<boolean>(true);
 
   const handleDropdownToggle = (open: boolean): void => {
     setOpen(open);
   };
 
-  const handleNodeChange = (_node: TreeNode, selectedIds: string[]): void => {
-    setSelectedIds(selectedIds);
-  };
-
-  const handleNodeToggle = (_node: TreeNode, expandedIds: string[]): void => {
-    setExpandedIds(expandedIds);
-  };
-
   return (
     <div className="controlled-example">
+      <button className="btn" onClick={() => handleDropdownToggle(!open)}>
+        Toggle dropdown
+      </button>
       <TreeMultiSelect
         data={data}
-        selectedIds={selectedIds}
-        expandedIds={expandedIds}
-        withClearAll={false}
+        defaultSelectedIds={selectedIds}
+        defaultExpandedIds={expandedIds}
         openDropdown={open}
         onDropdownToggle={handleDropdownToggle}
-        onNodeChange={handleNodeChange}
-        onNodeToggle={handleNodeToggle}
       />
     </div>
   );

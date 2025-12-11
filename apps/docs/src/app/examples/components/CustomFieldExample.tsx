@@ -9,7 +9,7 @@ interface CustomFieldProps {
 
 const CustomField: FC<FieldProps<CustomFieldProps>> = (props) => (
   <div {...props.attributes}>
-    <button className="filter-btn">{props.customProps.label}</button>
+    <button className="btn filter-btn">{props.customProps.label}</button>
   </div>
 );
 

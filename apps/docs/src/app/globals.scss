@@ -16,8 +16,21 @@ code {
 
 .btn {
   background: none;
-  border: none;
   margin: 0;
+  outline: none;
+  padding: 2px 5px;
+  border: 2px solid #dfdfdf;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #efefef;
+  }
+
+  &:focus {
+    border-color: transparent;
+    box-shadow: 0 0 3px 0 #12bef3;
+  }
 }
 
 .overlay {
@@ -242,13 +255,7 @@ code {
             color: #12bef3;
             margin-left: auto;
             padding: 1px 5px;
-            border: 1px solid #dfdfdf;
             border-radius: 10px;
-            cursor: pointer;
-
-            &:hover {
-              background-color: #efefef;
-            }
           }
         }
 
@@ -283,11 +290,16 @@ code {
       }
 
       .filter-btn {
-        border: none;
         background-color: #d1f2fc;
         padding: 5px 10px;
+        border-color: transparent;
         border-radius: 8px;
-        outline: none;
+      }
+
+      .controlled-example {
+        button {
+          margin-bottom: 10px;
+        }
       }
 
       .large-data-example {
@@ -318,6 +330,7 @@ code {
 
         .custom-dropdown-input {
           width: fit-content;
+
           .rtms-dropdown {
             width: 250px;
           }

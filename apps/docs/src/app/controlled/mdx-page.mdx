@@ -1,0 +1,18 @@
+import {loadSource} from '@/utils/fs-utils';
+import {DemoContainer} from '@/shared-components/DemoContainer';
+import {ControlledExample} from '@/examples/ControlledExample';
+
+# Controlled
+
+**react-tree-multi-select** allows you to externally control the dropdown’s open and close state using the `openDropdown` prop.<br/>
+This gives you full control over when the dropdown is rendered or hidden.<br/>
+By pairing `openDropdown` with the `onDropdownToggle` callback, you can synchronize the dropdown’s visibility state with your application’s state,
+enabling custom behaviors such as toggling from external controls or reacting to other UI events.<br/>
+Here’s how to implement controlled dropdown behavior:
+
+<DemoContainer
+    code={loadSource('ControlledExample.tsx')}
+    title="Controlled example"
+>
+    <ControlledExample/>
+</DemoContainer>
