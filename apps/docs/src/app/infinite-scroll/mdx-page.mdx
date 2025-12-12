@@ -1,0 +1,38 @@
+import {loadSource} from '@/utils/fs-utils';
+import {Alert} from '@/shared-components/Alert';
+import {DemoContainer} from '@/shared-components/DemoContainer';
+import {InfiniteScrollExample} from '@/examples/infinite-scroll/InfiniteScrollExample';
+import {PaginationExample} from '@/examples/infinite-scroll/PaginationExample';
+
+# Infinite Scroll
+
+You can implement infinite scrolling by using the `onDropdownLastItemReached` callback.<br/>
+Within this callback, you can call the imperative `loadData` method,
+which internally invokes the `onLoadData` callback to fetch and append additional nodes to the existing dataset.<br/>
+If `onLoadData` is not provided or returns an empty array, no data will be appended.
+
+<Alert type={'note'}>
+    {`The onDropdownLastItemReached callback is triggered when the last item (including overscan) is rendered.
+    The component uses overscan to render a small number of additional items just outside the visible area for smoother scrolling.
+    By default, it overscans 1 item above and below the visible range.`}
+</Alert>
+
+<DemoContainer
+    code={loadSource('infinite-scroll/InfiniteScrollExample.tsx')}
+    title="Infinite scroll example"
+>
+    <InfiniteScrollExample/>
+</DemoContainer>
+
+## Pagination
+
+You can implement pagination using a similar approach.<br/>
+A custom `Footer` component can be used to display a "Load more" button, which, when clicked,
+calls the imperative `loadData` method to fetch and append the next page of data to the existing dataset.
+
+<DemoContainer
+    code={loadSource('infinite-scroll/PaginationExample.tsx')}
+    title="Pagination example"
+>
+    <PaginationExample/>
+</DemoContainer>

@@ -738,92 +738,30 @@ export const CustomNodeLabelExample: FC = () => {
   );
 };`;
 
-export const footerExample = `import React, {FC, useCallback, useEffect, useMemo, useState} from 'react';
-import {Components, FooterProps, TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
-import {fetchFakeService, RandomTreeNode} from '@/utils/utils';
+export const footerExample = `'use client'
 
-interface CustomFooterProps {
-  isLoading: boolean;
-  isEndReached: boolean;
-  onClick: () => void;
-}
+import React, {FC, useState} from 'react';
+import {Components, FooterProps, FooterType, TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
+import {getTreeNodeData} from '@/utils/utils';
 
-const CustomFooter: FC<FooterProps<CustomFooterProps>> = (props) => {
+const CustomFooter: FC<FooterProps> = (props) => {
   return (
     <div {...props.attributes} style={{display: 'flex', justifyContent: 'center', height: '22px'}}>
-      {props.customProps.isEndReached || props.customProps.isLoading ? (
-        <span style={{display: 'flex', alignItems: 'center'}}>
-          {props.customProps.isEndReached ? 'End reached!' : 'Loading...'}
-        </span>
-      ) : (
-        <button onClick={props.customProps.onClick}>
-          Load more
-        </button>
-      )}
+      {'Custom Footer'}
     </div>
   );
 };
 
+const Footer: FooterType = {component: CustomFooter};
+const components: Components = {Footer};
+
 export const CustomFooterExample: FC = () => {
 
-  const [data, setData] = useState<RandomTreeNode[]>([]);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [expandedIds, setExpandedIds] = useState<string[]>([]);
-  const [lastPageReached, setLastPageReached] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [page, setPage] = useState<number>(0);
-
-  const loadData = useCallback(async (delay: number) => {
-    setIsLoading(true);
-    const {data: newData, expandedIds, nextPage} = await fetchFakeService(page, 7, delay);
-    if (!nextPage) {
-      setLastPageReached(true);
-    }
-    setData(prevData => [...prevData, ...newData]);
-    setExpandedIds(prevExpandedIds => [...prevExpandedIds, ...expandedIds]);
-    setPage(page + 1);
-    setIsLoading(false);
-  }, [page]);
-
-  useEffect(() => {
-    void loadData(0);
-  }, []);
-
-  const handleNodeChange = (_node: TreeNode, selectedIds: string[]): void => {
-    setSelectedIds(selectedIds);
-  };
-
-  const handleNodeToggle = (_node: TreeNode, expandedIds: string[]): void => {
-    setExpandedIds(expandedIds);
-  };
-
-  const loadMore = useCallback(async () => {
-    if (lastPageReached) {
-      return;
-    }
-    void loadData(1000);
-  }, [lastPageReached, loadData]);
-
-  const components: Components = useMemo(() => (
-    {
-      Footer: {
-        component: CustomFooter,
-        props: {isLoading, isEndReached: lastPageReached, onClick: loadMore}
-      }
-    }
-  ), [isLoading, lastPageReached, loadMore]);
+  const [data] = useState<TreeNode[]>(getTreeNodeData());
 
   return (
     <div className="component-example">
-      <TreeMultiSelect
-        data={data}
-        selectedIds={selectedIds}
-        expandedIds={expandedIds}
-        withClearAll={false}
-        components={components}
-        onNodeChange={handleNodeChange}
-        onNodeToggle={handleNodeToggle}
-      />
+      <TreeMultiSelect data={data} components={components}/>
     </div>
   );
 };`;
@@ -966,77 +904,6 @@ export const NonVirtualizedExample: FC = memo(() => {
     </div>
   );
 });`;
-
-export const infiniteScrollExample = `import React, {FC, useMemo, useState} from 'react';
-import {FooterProps, KeyboardConfig, TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
-import {fetchFakeService, RandomTreeNode} from '@/utils/utils';
-
-const Footer: FC<FooterProps<{ text: string }>> = (props) => {
-  return (
-    <div {...props.attributes} style={{padding: '5px', display: 'flex', justifyContent: 'center'}}>
-      {props.customProps.text}
-    </div>
-  );
-};
-
-export const InfiniteScrollExample: FC = () => {
-
-  const [data, setData] = useState<RandomTreeNode[]>([]);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [expandedIds, setExpandedIds] = useState<string[]>([]);
-  const [lastPageReached, setLastPageReached] = useState<boolean>(false);
-  const [keyboardConfig, setKeyboardConfig] = useState<KeyboardConfig>({dropdown: {loopUp: false, loopDown: false}});
-  const [page, setPage] = useState<number>(0);
-
-  const handleNodeChange = (_node: TreeNode, selectedIds: string[]): void => {
-    setSelectedIds(selectedIds);
-  };
-
-  const handleNodeToggle = (_node: TreeNode, expandedIds: string[]): void => {
-    setExpandedIds(expandedIds);
-  };
-
-  const handleDropdownLastItemReached = async (inputValue: string): Promise<void> => {
-    if (inputValue || lastPageReached) {
-      return;
-    }
-    const {data: newData, expandedIds, nextPage} = await fetchFakeService(page, 7, 1000);
-    if (nextPage) {
-      setPage(nextPage);
-    } else {
-      setKeyboardConfig({dropdown: {loopUp: true, loopDown: true}});
-      setLastPageReached(true);
-    }
-    setData(prevData => [...prevData, ...newData]);
-    setExpandedIds(prevExpandedIds => [...prevExpandedIds, ...expandedIds]);
-  };
-
-  const components = useMemo(() => (
-    {
-      Footer: {
-        component: Footer,
-        props: {text: lastPageReached ? 'No more data!' : 'Loading more data...'}
-      }
-    }
-  ), [lastPageReached]);
-
-  return (
-    <div className="component-example">
-      <TreeMultiSelect
-        data={data}
-        selectedIds={selectedIds}
-        expandedIds={expandedIds}
-        noDataText="Initial data loading..."
-        withClearAll={false}
-        keyboardConfig={keyboardConfig}
-        components={components}
-        onNodeChange={handleNodeChange}
-        onNodeToggle={handleNodeToggle}
-        onDropdownLastItemReached={handleDropdownLastItemReached}
-      />
-    </div>
-  );
-};`;
 
 export const virtualFocusIdDefinition = `field:<elementId> 
 dropdown:<elementId>`;

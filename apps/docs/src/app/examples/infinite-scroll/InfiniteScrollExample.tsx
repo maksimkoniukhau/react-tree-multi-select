@@ -1,7 +1,7 @@
 'use client'
 
-import React, {FC, useMemo, useState} from 'react';
-import {FooterProps, KeyboardConfig, TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
+import React, {FC, useMemo, useRef, useState} from 'react';
+import {FooterProps, KeyboardConfig, TreeMultiSelect, TreeMultiSelectHandle, TreeNode} from 'react-tree-multi-select';
 import {fetchFakeService, RandomTreeNode} from '@/utils/utils';
 
 const Footer: FC<FooterProps<{ text: string }>> = (props) => {
@@ -14,7 +14,9 @@ const Footer: FC<FooterProps<{ text: string }>> = (props) => {
 
 export const InfiniteScrollExample: FC = () => {
 
-  const [data, setData] = useState<RandomTreeNode[]>([]);
+  const rtmsRef = useRef<TreeMultiSelectHandle>(null);
+
+  const [data] = useState<RandomTreeNode[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [expandedIds, setExpandedIds] = useState<string[]>([]);
   const [lastPageReached, setLastPageReached] = useState<boolean>(false);
@@ -33,6 +35,14 @@ export const InfiniteScrollExample: FC = () => {
     if (inputValue || lastPageReached) {
       return;
     }
+    const rtmsAPI = rtmsRef.current;
+    if (!rtmsAPI) {
+      return;
+    }
+    await rtmsAPI.loadData();
+  };
+
+  const handleLoadData = async (): Promise<TreeNode[]> => {
     const {data: newData, expandedIds, nextPage} = await fetchFakeService(page, 7, 1000);
     if (nextPage) {
       setPage(nextPage);
@@ -40,8 +50,8 @@ export const InfiniteScrollExample: FC = () => {
       setKeyboardConfig({dropdown: {loopUp: true, loopDown: true}});
       setLastPageReached(true);
     }
-    setData(prevData => [...prevData, ...newData]);
     setExpandedIds(prevExpandedIds => [...prevExpandedIds, ...expandedIds]);
+    return newData;
   };
 
   const components = useMemo(() => (
@@ -56,6 +66,7 @@ export const InfiniteScrollExample: FC = () => {
   return (
     <div className="component-example">
       <TreeMultiSelect
+        ref={rtmsRef}
         data={data}
         selectedIds={selectedIds}
         expandedIds={expandedIds}
@@ -66,6 +77,7 @@ export const InfiniteScrollExample: FC = () => {
         onNodeChange={handleNodeChange}
         onNodeToggle={handleNodeToggle}
         onDropdownLastItemReached={handleDropdownLastItemReached}
+        onLoadData={handleLoadData}
       />
     </div>
   );
