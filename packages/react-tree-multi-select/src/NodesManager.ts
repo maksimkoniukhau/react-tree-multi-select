@@ -604,6 +604,23 @@ export class NodesManager {
     this.handleSearch(searchValue);
   };
 
+  public appendData = (data: TreeNode[], searchValue: string) => {
+    const roots: Node[] = [];
+    data.forEach((treeNode, index) => {
+      const node = this.mapTreeNodeToNode(treeNode, index.toString(), null, this.nodeMap);
+      roots.push(node);
+    });
+
+    this.roots.push(...roots);
+
+    if (this.type === Type.TREE_SELECT || this.type === Type.TREE_SELECT_FLAT) {
+      this.nodes.push(...convertTreeArrayToFlatArray(roots));
+    } else {
+      this._nodes = this.roots;
+    }
+    this.handleSearch(searchValue);
+  };
+
   private mapTreeNodeToNode = (
     treeNode: TreeNode,
     path: string,

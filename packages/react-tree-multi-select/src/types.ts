@@ -417,6 +417,17 @@ export interface TreeMultiSelectHandle {
    * from which to move the virtual focus.
    */
   focusNextItem: (virtualFocusId?: VirtualFocusId) => void;
+
+  /**
+   * Loads additional data and appends it to the current dataset.
+   *
+   * This method calls the `onLoadData` callback internally and merges the returned
+   * nodes with the existing data. It does nothing if `onLoadData` is not provided
+   * or returns an empty array.
+   *
+   * @returns A Promise that resolves once the data has been loaded and appended.
+   */
+  loadData: () => Promise<void>;
 }
 
 /**
@@ -716,6 +727,23 @@ export interface TreeMultiSelectProps {
    * @param displayedNodes - An array of TreeNode objects currently displayed in the dropdown.
    */
   onDropdownLastItemReached?: (inputValue: string, displayedNodes: TreeNode[]) => void;
+
+  /**
+   * Callback for loading additional data to be appended to the end of the existing dataset.
+   *
+   * This is useful for implementing infinite scrolling, pagination, or incremental data fetching
+   * where new items extend the current list rather than replacing it.
+   *
+   * This function is *not* invoked automatically by the component. Instead, it is triggered manually by the consumer
+   * via the imperative `TreeMultiSelectHandle.loadData()` method.
+   *
+   * Note: The component automatically appends the nodes returned by this callback to the existing dataset.
+   * It does not remove duplicates, merge updates, or otherwise reconcile data conflicts.
+   * These responsibilities must be handled by the consumer.
+   *
+   * @returns A Promise resolving to an array of TreeNode objects to append.
+   */
+  onLoadData?: () => Promise<TreeNode[]>;
 }
 
 export interface FieldOwnProps {

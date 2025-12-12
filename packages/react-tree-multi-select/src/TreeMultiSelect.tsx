@@ -71,7 +71,8 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     onFocus,
     onBlur,
     onKeyDown,
-    onDropdownLastItemReached
+    onDropdownLastItemReached,
+    onLoadData
   } = props;
 
   const treeMultiSelectRef = useRef<HTMLDivElement>(null);
@@ -916,6 +917,16 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     }
   }, []);
 
+  const handleLoadData = async () => {
+    const newData = await onLoadData?.();
+    if (!newData || newData.length === 0) {
+      return;
+    }
+    nodesManager.current.appendData(newData, searchValue);
+    const newDisplayedNodes = nodesManager.current.getDisplayed(isSearchMode, nodesManager.current.expansionState);
+    setDisplayedNodes(newDisplayedNodes);
+  };
+
   useImperativeHandle(ref, (): TreeMultiSelectHandle => ({
     getState: () => ({
       allNodesSelectionState: selectAllCheckedState,
@@ -987,7 +998,8 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
             ? getNextDropdownVirtualFocusId(focusId)
             : prev
       });
-    }
+    },
+    loadData: async () => await handleLoadData()
   }));
 
   const typeClassName = useMemo(() => typeToClassName(type), [type]);
