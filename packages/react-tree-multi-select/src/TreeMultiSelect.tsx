@@ -72,7 +72,8 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     onBlur,
     onKeyDown,
     onDropdownLastItemReached,
-    onLoadData
+    onLoadData,
+    onLoadChildren
   } = props;
 
   const treeMultiSelectRef = useRef<HTMLDivElement>(null);
@@ -652,12 +653,12 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   }, []);
 
   const setNodeExpandedRef = useRef<(id: string, expand: boolean) => void>(null);
-  setNodeExpandedRef.current = (id: string, expand: boolean): void => {
+  setNodeExpandedRef.current = async (id: string, expand: boolean): Promise<void> => {
     if (isDisabled) {
       return;
     }
     const node = nodesManager.current.findById(id);
-    if (!(type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT) || !node || !node.hasChildren()
+    if (!(type === Type.TREE_SELECT || type === Type.TREE_SELECT_FLAT) || !node || !node.canExpand()
       || ((isSearchMode && nodesManager.current.expansionState.searchExpandedIds.has(node.id) === expand)
         || (!isSearchMode && nodesManager.current.expansionState.expandedIds.has(node.id) === expand))) {
       return;
@@ -668,11 +669,22 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       isSearchMode ? expansionState.searchExpandedIds : expansionState.expandedIds,
       nodesManager.current
     );
-    if (!isExpandedIdsControlled) {
-      setExpandedIds(newExpandedIds);
-      setDisplayedNodes(nodesManager.current.getDisplayed(isSearchMode, expansionState));
+
+    if (node.hasLoadedChildren() || !expand) {
+      if (!isExpandedIdsControlled) {
+        setExpandedIds(newExpandedIds);
+        setDisplayedNodes(nodesManager.current.getDisplayed(isSearchMode, expansionState));
+      }
+      callNodeToggleHandler(node, newExpandedIds);
+    } else if (node.hasChildren && !node.hasLoaded) {
+      const newChildren = await onLoadChildren?.(node.id) ?? [];
+      nodesManager.current.appendChildren(node, newChildren, searchValue);
+      if (!isExpandedIdsControlled) {
+        setExpandedIds(newExpandedIds);
+        setDisplayedNodes(nodesManager.current.getDisplayed(isSearchMode, expansionState));
+      }
+      callNodeToggleHandler(node, newExpandedIds);
     }
-    callNodeToggleHandler(node, newExpandedIds);
   };
 
   const setNodeExpanded = useCallback((id: string, expand: boolean): void => {
@@ -917,7 +929,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     }
   }, []);
 
-  const handleLoadData = async () => {
+  const handleLoadData = async (): Promise<void> => {
     const newData = await onLoadData?.();
     if (!newData || newData.length === 0) {
       return;
@@ -1048,7 +1060,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
           displayedNodes={displayedNodes}
           selectedIds={selectedIds}
           expandedIds={expandedIds}
-          isAnyHasChildren={nodesManager.current.isAnyHasChildren()}
+          isAnyCanExpand={nodesManager.current.isAnyCanExpand()}
           isSearchable={isSearchable}
           withDropdownInput={withDropdownInput}
           inputPlaceholder={inputPlaceholder}

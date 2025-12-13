@@ -59,6 +59,18 @@ export interface TreeNode {
   skipDropdownVirtualFocus?: boolean;
 
   /**
+   * Indicates whether the node has child nodes.
+   *
+   * When set to `true`, the node is treated as expandable, even if its `children`
+   * array is not yet populated. This is commonly used with lazy loading, where
+   * the actual children are loaded on demand (via `onLoadChildren`).
+   *
+   * If omitted or set to `false`, the node is treated as a leaf node unless
+   * child nodes are explicitly provided.
+   */
+  hasChildren?: boolean;
+
+  /**
    * Additional properties can be added as needed.
    */
   [key: PropertyKey]: unknown;
@@ -731,7 +743,7 @@ export interface TreeMultiSelectProps {
   /**
    * Callback for loading additional data to be appended to the end of the existing dataset.
    *
-   * This is useful for implementing infinite scrolling, pagination, or incremental data fetching
+   * This is useful for implementing infinite scrolling, pagination, lazy loading, or incremental data fetching
    * where new items extend the current list rather than replacing it.
    *
    * This function is *not* invoked automatically by the component. Instead, it is triggered manually by the consumer
@@ -744,6 +756,24 @@ export interface TreeMultiSelectProps {
    * @returns A Promise resolving to an array of TreeNode objects to append.
    */
   onLoadData?: () => Promise<TreeNode[]>;
+
+  /**
+   * Callback for loading children of a specific node on demand.
+   *
+   * This function is called automatically by the component when the user expands a node that has not yet loaded
+   * its children. It enables lazy loading of hierarchical data for large trees or server-driven datasets.
+   *
+   * The function should return a Promise resolving to an array of TreeNode objects,
+   * which will be set as the children of the specified node.
+   *
+   * Note: The component does not perform deduplication, merging, or conflict
+   * resolution. The returned nodes replace any existing children of the node,
+   * so ensure the data returned is complete and correct for that node.
+   *
+   * @param nodeId - The unique identifier of the node whose children are being loaded.
+   * @returns A Promise resolving to an array of TreeNode objects to be set as the node’s children.
+   */
+  onLoadChildren?: (id: string) => Promise<TreeNode[]>;
 }
 
 export interface FieldOwnProps {

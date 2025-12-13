@@ -1,6 +1,5 @@
 import {TreeNode, Type} from './types';
 import {ExpansionState, SearchingState, SelectionState} from './innerTypes';
-import {PATH_DELIMITER} from './constants';
 import {convertTreeArrayToFlatArray} from './utils/nodesUtils';
 import {Node} from './Node';
 
@@ -94,8 +93,8 @@ export class NodesManager {
     );
   };
 
-  public isAnyHasChildren = (): boolean => {
-    return this.nodes.some(node => node.hasChildren());
+  public isAnyCanExpand = (): boolean => {
+    return this.nodes.some(node => node.canExpand());
   };
 
   public isAnySelectedExcludingDisabled = (): boolean => {
@@ -115,7 +114,7 @@ export class NodesManager {
         if (node.name?.toLowerCase().includes(searchValue.toLowerCase())) {
           newSearchingState.matchedIds.add(node.id);
           newSearchingState.filteredIds.add(node.id);
-          if (node.hasChildren()) {
+          if (node.hasLoadedChildren()) {
             newSearchExpandedIds.add(node.id);
           }
           this.forEachAncestor(node, ancestor => {
@@ -159,7 +158,7 @@ export class NodesManager {
       expandedIds: newExpandedIds,
       searchExpandedIds: newSearchExpandedIds
     };
-    if (node.hasChildren()) {
+    if (node.canExpand()) {
       if (isSearchMode) {
         if (expand) {
           newSearchExpandedIds.add(node.id);
@@ -591,8 +590,8 @@ export class NodesManager {
       filteredIds: new Set<string>()
     };
 
-    data.forEach((treeNode, index) => {
-      const node = this.mapTreeNodeToNode(treeNode, index.toString(), null, this.nodeMap);
+    data.forEach(treeNode => {
+      const node = this.mapTreeNodeToNode(treeNode, 0, null, this.nodeMap);
       this.roots.push(node);
     });
 
@@ -606,8 +605,8 @@ export class NodesManager {
 
   public appendData = (data: TreeNode[], searchValue: string) => {
     const roots: Node[] = [];
-    data.forEach((treeNode, index) => {
-      const node = this.mapTreeNodeToNode(treeNode, index.toString(), null, this.nodeMap);
+    data.forEach(treeNode => {
+      const node = this.mapTreeNodeToNode(treeNode, 0, null, this.nodeMap);
       roots.push(node);
     });
 
@@ -621,14 +620,28 @@ export class NodesManager {
     this.handleSearch(searchValue);
   };
 
+  public appendChildren = (parentNode: Node, children: TreeNode[], searchValue: string) => {
+    parentNode.hasLoaded = true;
+
+    if (children?.length > 0) {
+      parentNode.children = children.map(treeNode => (
+        this.mapTreeNodeToNode(treeNode, parentNode.depth + 1, parentNode.id, this.nodeMap)
+      ));
+
+      this._nodes = convertTreeArrayToFlatArray(this.roots);
+      this.handleSearch(searchValue);
+    }
+  };
+
   private mapTreeNodeToNode = (
     treeNode: TreeNode,
-    path: string,
+    depth: number,
     parentId: string | null,
     nodeMap: Map<string, Node>
   ): Node => {
-    const children = treeNode.children?.map((child, index) => {
-      return this.mapTreeNodeToNode(child, `${path}${PATH_DELIMITER}${index}`, null, nodeMap);
+    const childrenDepth = depth + 1;
+    const children = treeNode.children?.map(child => {
+      return this.mapTreeNodeToNode(child, childrenDepth, null, nodeMap);
     }) || [];
 
     const id = treeNode.id;
@@ -641,7 +654,8 @@ export class NodesManager {
       skipDropdownVirtualFocus,
       parentId,
       children,
-      path.split(PATH_DELIMITER).length - 1,
+      treeNode.hasChildren ?? false,
+      depth,
       treeNode.disabled ?? false,
       treeNode
     );

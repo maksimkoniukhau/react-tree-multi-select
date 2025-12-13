@@ -2,19 +2,18 @@ import {CheckedState, Type} from '../types';
 import {NodesManager} from '../NodesManager';
 import {Node} from '../Node';
 
-const fillArrayFromTreeArray = (treeArray: Node[], nodeArray: Node[]): void => {
-  treeArray?.forEach(node => {
-    nodeArray.push(node);
-    if (node.hasChildren()) {
-      fillArrayFromTreeArray(node.children, nodeArray);
-    }
-  });
-};
-
 export const convertTreeArrayToFlatArray = (treeArray: Node[]): Node[] => {
-  const nodeArray: Node[] = [];
-  fillArrayFromTreeArray(treeArray, nodeArray);
-  return nodeArray;
+  const flatArray: Node[] = [];
+  const fillArrayFromTreeArray = (treeArray: Node[]): void => {
+    treeArray?.forEach(node => {
+      flatArray.push(node);
+      if (node.hasLoadedChildren()) {
+        fillArrayFromTreeArray(node.children);
+      }
+    });
+  };
+  fillArrayFromTreeArray(treeArray);
+  return flatArray;
 };
 
 export const filterChips = (nodesManager: NodesManager): Node[] => {

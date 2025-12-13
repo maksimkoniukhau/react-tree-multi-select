@@ -9,6 +9,8 @@ export class Node {
   private readonly _skipDropdownVirtualFocus: boolean;
   private _parentId: string | null;
   private _children: Node[];
+  private readonly _hasChildren: boolean;
+  private _hasLoaded: boolean;
   private readonly _depth: number;
   private readonly _disabled: boolean;
 
@@ -22,6 +24,7 @@ export class Node {
     skipDropdownVirtualFocus: boolean,
     parentId: string | null,
     children: Node[],
+    hasChildren: boolean,
     depth: number,
     disabled: boolean,
     initTreeNode: TreeNode
@@ -32,6 +35,8 @@ export class Node {
     this._skipDropdownVirtualFocus = skipDropdownVirtualFocus;
     this._parentId = parentId;
     this._children = children ?? [];
+    this._hasChildren = hasChildren;
+    this._hasLoaded = false;
     this._depth = depth || 0;
     this._disabled = disabled;
     this._initTreeNode = initTreeNode;
@@ -68,6 +73,18 @@ export class Node {
     this._children = children;
   }
 
+  get hasChildren(): boolean {
+    return this._hasChildren;
+  }
+
+  get hasLoaded(): boolean {
+    return this._hasLoaded;
+  }
+
+  set hasLoaded(hasLoaded: boolean) {
+    this._hasLoaded = hasLoaded;
+  }
+
   get depth(): number {
     return this._depth;
   }
@@ -80,7 +97,11 @@ export class Node {
     return this._initTreeNode;
   }
 
-  public hasChildren = (): boolean => {
-    return this.children?.length > 0;
+  public hasLoadedChildren = (): boolean => {
+    return this.children.length > 0;
+  };
+
+  public canExpand = (): boolean => {
+    return this.hasLoadedChildren() || (this.hasChildren && !this.hasLoaded);
   };
 }

@@ -17,7 +17,7 @@ export interface ListItemProps {
   selectedIds: string[];
   expandedIds: string[];
   displayedItemCount: number;
-  isAnyHasChildren: boolean;
+  isAnyCanExpand: boolean;
   searchValue: string;
   showSelectAll: boolean;
   selectAllCheckedState: CheckedState;
@@ -39,7 +39,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     nodesManager,
     displayedNodes,
     displayedItemCount,
-    isAnyHasChildren,
+    isAnyCanExpand,
     searchValue,
     showSelectAll,
     selectAllCheckedState,
@@ -99,8 +99,8 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
   const expanded = searchValue
     ? nodesManager.expansionState.searchExpandedIds.has(node.id)
     : nodesManager.expansionState.expandedIds.has(node.id);
-  const hasChildren = node.hasChildren();
-  const indentation = !(type === Type.MULTI_SELECT || type === Type.SELECT) && isAnyHasChildren && !hasChildren;
+  const canExpand = node.canExpand();
+  const indentation = !(type === Type.MULTI_SELECT || type === Type.SELECT) && isAnyCanExpand && !canExpand;
 
   return (
     <NodeWrapper
@@ -116,7 +116,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
       matched={nodesManager.searchingState.matchedIds.has(node.id)}
       skipDropdownVirtualFocus={node.skipDropdownVirtualFocus}
       indentation={indentation}
-      withToggle={type !== Type.MULTI_SELECT && type !== Type.SELECT && hasChildren}
+      withToggle={type !== Type.MULTI_SELECT && type !== Type.SELECT && canExpand}
       withCheckbox={type !== Type.MULTI_SELECT && type !== Type.SELECT}
       onNodeChange={onNodeChange}
       onNodeToggle={onNodeToggle}
