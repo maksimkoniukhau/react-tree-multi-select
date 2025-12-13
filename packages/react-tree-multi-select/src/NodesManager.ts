@@ -633,16 +633,14 @@ export class NodesManager {
 
     const id = treeNode.id;
     const skipDropdownVirtualFocus = treeNode.skipDropdownVirtualFocus ?? false;
-    const childrenIds = children.map(child => child.id);
 
     const node: Node = new Node(
       nodeMap,
-      path,
       id,
       treeNode.label,
       skipDropdownVirtualFocus,
       parentId,
-      childrenIds,
+      children,
       path.split(PATH_DELIMITER).length - 1,
       treeNode.disabled ?? false,
       treeNode

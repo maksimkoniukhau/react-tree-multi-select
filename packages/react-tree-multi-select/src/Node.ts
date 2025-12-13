@@ -4,12 +4,11 @@ export class Node {
 
   private _nodeMap: Map<string, Node>;
 
-  private readonly _path: string;
   private readonly _id: string;
   private readonly _name: string;
   private readonly _skipDropdownVirtualFocus: boolean;
   private _parentId: string | null;
-  private _childrenIds: string[];
+  private _children: Node[];
   private readonly _depth: number;
   private readonly _disabled: boolean;
 
@@ -18,30 +17,24 @@ export class Node {
 
   constructor(
     nodeMap: Map<string, Node>,
-    path: string,
     id: string,
     name: string,
     skipDropdownVirtualFocus: boolean,
     parentId: string | null,
-    childrenIds: string[],
+    children: Node[],
     depth: number,
     disabled: boolean,
     initTreeNode: TreeNode
   ) {
     this._nodeMap = nodeMap;
-    this._path = path ?? '';
     this._id = id;
     this._name = name ?? '';
     this._skipDropdownVirtualFocus = skipDropdownVirtualFocus;
     this._parentId = parentId;
-    this._childrenIds = childrenIds;
+    this._children = children ?? [];
     this._depth = depth || 0;
     this._disabled = disabled;
     this._initTreeNode = initTreeNode;
-  }
-
-  get path(): string {
-    return this._path;
   }
 
   get id(): string {
@@ -68,9 +61,11 @@ export class Node {
   }
 
   get children(): Node[] {
-    return this._childrenIds
-      .map(childId => this._nodeMap.get(childId))
-      .filter(node => node !== undefined);
+    return this._children;
+  }
+
+  set children(children: Node[]) {
+    this._children = children;
   }
 
   get depth(): number {
