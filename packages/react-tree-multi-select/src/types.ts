@@ -867,6 +867,10 @@ export interface NoDataOwnProps {
   label: string;
 }
 
+/* eslint-disable-next-line @typescript-eslint/no-empty-object-type */
+export interface SpinnerOwnProps {
+}
+
 export type Attributes<Tag extends keyof JSX.IntrinsicElements> = JSX.IntrinsicElements[Tag] & {
   'data-rtms-virtual-focus-id'?: string;
 };
@@ -900,6 +904,7 @@ export type NodeCheckboxProps<CustomProps = unknown> = ComponentProps<'div', Nod
 export type NodeLabelProps<CustomProps = unknown> = ComponentProps<'div', NodeLabelOwnProps, CustomProps>;
 export type FooterProps<CustomProps = unknown> = ComponentProps<'div', FooterOwnProps, CustomProps>;
 export type NoDataProps<CustomProps = unknown> = ComponentProps<'div', NoDataOwnProps, CustomProps>;
+export type SpinnerProps<CustomProps = unknown> = ComponentProps<'div', SpinnerOwnProps, CustomProps>;
 
 export type FieldType<CustomProps = unknown> = Component<FieldProps<CustomProps>, CustomProps>;
 export type ChipContainerType<CustomProps = unknown> = Component<ChipContainerProps<CustomProps>, CustomProps>;
@@ -918,6 +923,7 @@ export type NodeCheckboxType<CustomProps = unknown> = Component<NodeCheckboxProp
 export type NodeLabelType<CustomProps = unknown> = Component<NodeLabelProps<CustomProps>, CustomProps>;
 export type FooterType<CustomProps = unknown> = Component<FooterProps<CustomProps>, CustomProps>;
 export type NoDataType<CustomProps = unknown> = Component<NoDataProps<CustomProps>, CustomProps>;
+export type SpinnerType<CustomProps = unknown> = Component<SpinnerProps<CustomProps>, CustomProps>;
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type ComponentTypes = {
@@ -938,6 +944,7 @@ export type ComponentTypes = {
   NodeLabel: NodeLabelType<any>;
   Footer: FooterType<any>;
   NoData: NoDataType<any>;
+  Spinner: SpinnerType<any>;
 };
 
 export type ComponentNames = keyof ComponentTypes;

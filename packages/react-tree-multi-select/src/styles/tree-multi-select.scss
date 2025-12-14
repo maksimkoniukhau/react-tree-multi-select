@@ -8,6 +8,7 @@ TreeMultiSelect styles
 @use 'checkbox' as checkbox;
 @use 'field' as field;
 @use 'dropdown' as dropdown;
+@use 'spinner' as spinner;
 
 .rtms-tree-multi-select {
   @include css-variables.variables;
@@ -40,4 +41,5 @@ TreeMultiSelect styles
   @include checkbox.checkbox-styles;
   @include field.field-styles;
   @include dropdown.dropdown-styles;
+  @include spinner.spinner-styles;
 }

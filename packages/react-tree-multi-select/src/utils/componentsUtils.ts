@@ -18,6 +18,7 @@ import {NodeCheckbox} from '../components/NodeCheckbox';
 import {NodeLabel} from '../components/NodeLabel';
 import {Footer} from '../components/Footer';
 import {NoData} from '../components/NoData';
+import {Spinner} from '../components/Spinner';
 
 const components: InnerComponents = {
   Field: {
@@ -70,6 +71,9 @@ const components: InnerComponents = {
   },
   NoData: {
     component: NoData
+  },
+  Spinner: {
+    component: Spinner
   }
 };
 

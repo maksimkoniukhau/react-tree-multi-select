@@ -15,7 +15,8 @@ import {
   NodeToggleProps,
   SelectAllCheckboxProps,
   SelectAllContainerProps,
-  SelectAllLabelProps
+  SelectAllLabelProps,
+  SpinnerProps
 } from '../types';
 import {Field} from './Field';
 import {ChipContainer} from './ChipContainer';
@@ -33,6 +34,7 @@ import {NodeToggle} from './NodeToggle';
 import {NodeCheckbox} from './NodeCheckbox';
 import {NodeLabel} from './NodeLabel';
 import {NoData} from './NoData';
+import {Spinner} from './Spinner';
 
 export interface ComponentsType {
   Field: FC<FieldProps>;
@@ -51,6 +53,7 @@ export interface ComponentsType {
   NodeCheckbox: FC<NodeCheckboxProps>;
   NodeLabel: FC<NodeLabelProps>;
   NoData: FC<NoDataProps>;
+  Spinner: FC<SpinnerProps>;
 }
 
 export const components: ComponentsType = {
@@ -69,5 +72,6 @@ export const components: ComponentsType = {
   NodeToggle,
   NodeCheckbox,
   NodeLabel,
-  NoData
+  NoData,
+  Spinner
 };

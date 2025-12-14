@@ -4,6 +4,7 @@ import {NodeContainerWrapper} from './NodeContainer';
 import {NodeToggleWrapper} from './NodeToggle';
 import {NodeCheckboxWrapper} from './NodeCheckbox';
 import {NodeLabelWrapper} from './NodeLabel';
+import {SpinnerWrapper} from './Spinner';
 
 export interface NodeWrapperProps {
   components: InnerComponents;
@@ -77,6 +78,9 @@ export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
           partial={partial}
           disabled={disabled}
         />
+      )}
+      {loaded && (
+        <SpinnerWrapper spinner={components.Spinner}/>
       )}
       <NodeLabelWrapper nodeLabel={components.NodeLabel} label={label}/>
     </NodeContainerWrapper>

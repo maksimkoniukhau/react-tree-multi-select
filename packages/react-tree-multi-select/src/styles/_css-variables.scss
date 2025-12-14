@@ -111,6 +111,14 @@
   --rtms-checkbox-content-color-selected: #ffffff;
   --rtms-checkbox-content-color-partial: #808080;
 
+  // Spinner
+  --rtms-spinner-container-width: var(--rtms-icon-base-width);
+  --rtms-spinner-container-height: var(--rtms-icon-base-height);
+  --rtms-spinner-width: var(--rtms-icon-base-width);
+  --rtms-spinner-height: var(--rtms-icon-base-height);
+  --rtms-spinner-border-color-default: var(--rtms-border-color-default);
+  --rtms-spinner-border-color-accent: var(--rtms-color-default);
+
   // Footer
   --rtms-footer-background-color-default: var(--rtms-background-color-default);
   --rtms-footer-background-color-focus: var(--rtms-background-color-focus);

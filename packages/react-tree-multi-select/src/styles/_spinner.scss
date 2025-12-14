@@ -1,0 +1,25 @@
+@mixin spinner-styles {
+  .rtms-spinner-container {
+    display: flex;
+    align-items: center;
+    width: var(--rtms-spinner-container-width);
+    height: var(--rtms-spinner-container-height);
+
+    .rtms-spinner {
+      display: block;
+      box-sizing: border-box;
+      width: var(--rtms-spinner-width);
+      height: var(--rtms-spinner-height);
+      border: 1px solid var(--rtms-spinner-border-color-default);
+      border-top-color: var(--rtms-spinner-border-color-accent);
+      border-radius: 50%;
+      animation: spinner-rotate 0.75s linear infinite;
+    }
+
+    @keyframes spinner-rotate {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  }
+}
