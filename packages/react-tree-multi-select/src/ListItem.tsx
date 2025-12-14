@@ -16,6 +16,7 @@ export interface ListItemProps {
   displayedNodes: Node[];
   selectedIds: string[];
   expandedIds: string[];
+  loadedIds: Set<string>;
   displayedItemCount: number;
   isAnyCanExpand: boolean;
   searchValue: string;
@@ -38,6 +39,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     index,
     nodesManager,
     displayedNodes,
+    loadedIds,
     displayedItemCount,
     isAnyCanExpand,
     searchValue,
@@ -114,6 +116,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
       expanded={expanded}
       focused={focused}
       matched={nodesManager.searchingState.matchedIds.has(node.id)}
+      loaded={loadedIds.has(node.id)}
       skipDropdownVirtualFocus={node.skipDropdownVirtualFocus}
       indentation={indentation}
       withToggle={type !== Type.MULTI_SELECT && type !== Type.SELECT && canExpand}

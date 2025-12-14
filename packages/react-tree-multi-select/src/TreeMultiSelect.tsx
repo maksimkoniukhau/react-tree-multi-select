@@ -97,6 +97,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   const [expandedIds, setExpandedIds] = useState<string[]>(
     () => normalizeExpandedIds(isExpandedIdsControlled ? propsExpandedIds : defaultExpandedIds, type)
   );
+  const [loadedIds, setLoadedIds] = useState<Set<string>>(new Set());
   const [displayedNodes, setDisplayedNodes] = useState<Node[]>([]);
   const [selectAllCheckedState, setSelectAllCheckedState] = useState<CheckedState>(CheckedState.UNSELECTED);
   const [searchValue, setSearchValue] = useState<string>('');
@@ -669,21 +670,24 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       isSearchMode ? expansionState.searchExpandedIds : expansionState.expandedIds,
       nodesManager.current
     );
+    if (!isExpandedIdsControlled) {
+      setExpandedIds(newExpandedIds);
+      setDisplayedNodes(nodesManager.current.getDisplayed(isSearchMode, expansionState));
+    }
+    callNodeToggleHandler(node, newExpandedIds);
 
-    if (node.hasLoadedChildren() || !expand) {
-      if (!isExpandedIdsControlled) {
-        setExpandedIds(newExpandedIds);
-        setDisplayedNodes(nodesManager.current.getDisplayed(isSearchMode, expansionState));
+    if (!node.hasLoadedChildren() && node.hasChildren && !node.hasLoaded && !loadedIds.has(node.id)) {
+      setLoadedIds(prev => new Set(prev.add(node.id)));
+      try {
+        const newChildren = await onLoadChildren?.(node.id) ?? [];
+        nodesManager.current.appendChildren(node, newChildren, searchValue);
+      } finally {
+        setLoadedIds(prev => {
+          prev.delete(node.id);
+          return new Set(prev);
+        });
       }
-      callNodeToggleHandler(node, newExpandedIds);
-    } else if (node.hasChildren && !node.hasLoaded) {
-      const newChildren = await onLoadChildren?.(node.id) ?? [];
-      nodesManager.current.appendChildren(node, newChildren, searchValue);
-      if (!isExpandedIdsControlled) {
-        setExpandedIds(newExpandedIds);
-        setDisplayedNodes(nodesManager.current.getDisplayed(isSearchMode, expansionState));
-      }
-      callNodeToggleHandler(node, newExpandedIds);
+      setDisplayedNodes(nodesManager.current.getDisplayed(isSearchMode, nodesManager.current.expansionState));
     }
   };
 
@@ -1060,6 +1064,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
           displayedNodes={displayedNodes}
           selectedIds={selectedIds}
           expandedIds={expandedIds}
+          loadedIds={loadedIds}
           isAnyCanExpand={nodesManager.current.isAnyCanExpand()}
           isSearchable={isSearchable}
           withDropdownInput={withDropdownInput}

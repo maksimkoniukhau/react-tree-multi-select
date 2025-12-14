@@ -16,6 +16,7 @@ export interface NodeWrapperProps {
   expanded: boolean;
   focused: boolean;
   matched: boolean;
+  loaded: boolean;
   skipDropdownVirtualFocus: boolean;
   indentation: boolean;
   withToggle: boolean;
@@ -36,6 +37,7 @@ export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
     expanded,
     focused,
     matched,
+    loaded,
     skipDropdownVirtualFocus,
     indentation,
     withToggle,

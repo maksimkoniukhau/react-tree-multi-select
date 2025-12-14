@@ -22,6 +22,7 @@ interface DropdownContainerProps {
   displayedNodes: Node[];
   selectedIds: string[];
   expandedIds: string[];
+  loadedIds: Set<string>;
   isAnyCanExpand: boolean;
   isSearchable: boolean;
   withDropdownInput: boolean;
@@ -56,6 +57,7 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
     displayedNodes,
     selectedIds,
     expandedIds,
+    loadedIds,
     isAnyCanExpand,
     isSearchable,
     withDropdownInput,
@@ -124,6 +126,7 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
         displayedNodes={displayedNodes}
         selectedIds={selectedIds}
         expandedIds={expandedIds}
+        loadedIds={loadedIds}
         displayedItemCount={displayedItemCount}
         isAnyCanExpand={isAnyCanExpand}
         searchValue={searchValue}
