@@ -4,29 +4,28 @@ export const useItemsResizeObserver = (
   callback: (index: number, size: { width: number; height: number }) => void
 ) => {
   const observerRef = useRef<ResizeObserver>(null);
+  if (!observerRef.current) {
+    observerRef.current = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        const index = elementMap.current.get(entry.target);
+        if (index !== undefined) {
+          const width = entry.borderBoxSize[0].inlineSize;
+          const height = entry.borderBoxSize[0].blockSize;
+          if (width !== 0 || height !== 0) {
+            callback(index, {width, height});
+          }
+        }
+      }
+    });
+  }
+
   const elementMap = useRef(new Map<Element, number>());
 
   const callbackRef = useRef(callback);
   callbackRef.current = callback;
 
   useEffect(() => {
-    if (!observerRef.current) {
-      observerRef.current = new ResizeObserver(entries => {
-        for (const entry of entries) {
-          const index = elementMap.current.get(entry.target);
-          if (index !== undefined) {
-            const width = entry.borderBoxSize[0].inlineSize;
-            const height = entry.borderBoxSize[0].blockSize;
-            if (width !== 0 || height !== 0) {
-              callback(index, {width, height});
-            }
-          }
-        }
-      });
-    }
-
     return () => observerRef.current?.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const observeItem = (element: HTMLElement | null, index: number): void => {
