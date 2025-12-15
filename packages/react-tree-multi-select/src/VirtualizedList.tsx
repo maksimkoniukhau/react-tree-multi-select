@@ -96,7 +96,6 @@ export const VirtualizedList = forwardRef<VirtualizedListHandle, VirtualizedList
   const [pendingScrollIndex, setPendingScrollIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    setItemHeights(new Map<number, number>());
     setPendingScrollIndex(null);
   }, [totalCount, topItemCount]);
 
