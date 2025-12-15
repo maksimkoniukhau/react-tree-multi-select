@@ -64,12 +64,16 @@ export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
       onClick={onNodeChange}
     >
       {withToggle && (
-        <NodeToggleWrapper
-          nodeToggle={components.NodeToggle}
-          id={id}
-          expanded={expanded}
-          onClick={onNodeToggle}
-        />
+        loaded ? (
+          <SpinnerWrapper spinner={components.Spinner}/>
+        ) : (
+          <NodeToggleWrapper
+            nodeToggle={components.NodeToggle}
+            id={id}
+            expanded={expanded}
+            onClick={onNodeToggle}
+          />
+        )
       )}
       {withCheckbox && (
         <NodeCheckboxWrapper
@@ -78,9 +82,6 @@ export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
           partial={partial}
           disabled={disabled}
         />
-      )}
-      {loaded && (
-        <SpinnerWrapper spinner={components.Spinner}/>
       )}
       <NodeLabelWrapper nodeLabel={components.NodeLabel} label={label}/>
     </NodeContainerWrapper>

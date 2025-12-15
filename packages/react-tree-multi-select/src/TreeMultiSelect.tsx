@@ -664,6 +664,9 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
         || (!isSearchMode && nodesManager.current.expansionState.expandedIds.has(node.id) === expand))) {
       return;
     }
+    if (loadedIds.has(node.id)) {
+      return;
+    }
 
     const expansionState = nodesManager.current.computeExpanded(node, expand, isSearchMode, !isExpandedIdsControlled);
     const newExpandedIds = getOrderedIds(

@@ -14,9 +14,13 @@ interface SpinnerWrapperProps {
 }
 
 export const SpinnerWrapper: FC<SpinnerWrapperProps> = memo(({spinner}) => {
+  const handleClick = (event: React.MouseEvent) => {
+    event.preventDefault();
+  };
+
   return (
     <spinner.component
-      attributes={{className: "rtms-spinner-container"}}
+      attributes={{className: "rtms-spinner-container", onClick: handleClick}}
       ownProps={{}}
       customProps={spinner.props}
     />
