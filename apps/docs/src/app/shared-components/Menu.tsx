@@ -6,24 +6,26 @@ import React, {FC, memo} from 'react';
 
 export enum MENU_ITEM {
   GETTING_STARTED = 'Getting Started',
-  API = 'API',
   BASIC = 'Basic',
   CONTROLLED = 'Controlled',
   VIRTUALIZATION = 'Virtualization',
   INFINITE_SCROLL = 'Infinite Scroll',
-  COMPONENTS = 'Components',
+  ASYNC = 'Async',
   KEYBOARD_NAVIGATION = 'Keyboard Navigation',
+  COMPONENTS = 'Components',
+  API = 'API'
 }
 
 const pathPageMap = new Map<string, MENU_ITEM>([
   ['/', MENU_ITEM.GETTING_STARTED],
-  ['/api', MENU_ITEM.API],
   ['/basic', MENU_ITEM.BASIC],
   ['/controlled', MENU_ITEM.CONTROLLED],
   ['/virtualization', MENU_ITEM.VIRTUALIZATION],
   ['/infinite-scroll', MENU_ITEM.INFINITE_SCROLL],
+  ['/async', MENU_ITEM.ASYNC],
+  ['/keyboard-navigation', MENU_ITEM.KEYBOARD_NAVIGATION],
   ['/components', MENU_ITEM.COMPONENTS],
-  ['/keyboard-navigation', MENU_ITEM.KEYBOARD_NAVIGATION]
+  ['/api', MENU_ITEM.API]
 ]);
 
 export interface MenuProps {

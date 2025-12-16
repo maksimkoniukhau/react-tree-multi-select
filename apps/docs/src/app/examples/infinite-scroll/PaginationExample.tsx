@@ -2,7 +2,7 @@
 
 import React, {FC, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Components, FooterProps, TreeMultiSelect, TreeMultiSelectHandle, TreeNode} from 'react-tree-multi-select';
-import {fetchFakeService, RandomTreeNode} from '@/utils/utils';
+import {fetchFakeService} from '@/utils/utils';
 
 interface CustomFooterProps {
   isLoading: boolean;
@@ -30,7 +30,7 @@ export const PaginationExample: FC = () => {
 
   const rtmsRef = useRef<TreeMultiSelectHandle>(null);
 
-  const [data, setData] = useState<RandomTreeNode[]>([]);
+  const [data, setData] = useState<TreeNode[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [expandedIds, setExpandedIds] = useState<string[]>([]);
   const [lastPageReached, setLastPageReached] = useState<boolean>(false);

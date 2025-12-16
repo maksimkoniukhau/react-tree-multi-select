@@ -22,7 +22,9 @@ export const DemoContainer: FC<DemoContainerProps> = memo(({code, children, titl
         </button>
       </div>
       {isCodeOpen && <CodeBlock code={code}/>}
-      {children}
+      <div className="demo-content">
+        {children}
+      </div>
     </div>
   );
 });

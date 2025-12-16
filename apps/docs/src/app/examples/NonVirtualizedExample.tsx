@@ -1,8 +1,8 @@
 'use client'
 
 import React, {FC, memo, useState} from 'react';
-import {TreeMultiSelect} from 'react-tree-multi-select';
-import {generateRandomTreeNodeData, getAllExpandedIds, RandomTreeNode} from '@/utils/utils';
+import {TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
+import {generateRandomTreeNodeData, getAllExpandedIds} from '@/utils/utils';
 
 /*Add to styles:
 .non-virtualized-example .rtms-dropdown {
@@ -10,7 +10,7 @@ import {generateRandomTreeNodeData, getAllExpandedIds, RandomTreeNode} from '@/u
 }*/
 export const NonVirtualizedExample: FC = memo(() => {
 
-  const [data] = useState<RandomTreeNode[]>(generateRandomTreeNodeData(3, 3));
+  const [data] = useState<TreeNode[]>(generateRandomTreeNodeData(3, 3));
   const [expandedIds] = useState<string[]>(getAllExpandedIds(data));
 
   return (

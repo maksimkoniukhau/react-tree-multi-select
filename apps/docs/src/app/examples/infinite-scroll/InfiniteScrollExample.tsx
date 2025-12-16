@@ -2,7 +2,7 @@
 
 import React, {FC, useMemo, useRef, useState} from 'react';
 import {FooterProps, KeyboardConfig, TreeMultiSelect, TreeMultiSelectHandle, TreeNode} from 'react-tree-multi-select';
-import {fetchFakeService, RandomTreeNode} from '@/utils/utils';
+import {fetchFakeService} from '@/utils/utils';
 
 const Footer: FC<FooterProps<{ text: string }>> = (props) => {
   return (
@@ -16,7 +16,7 @@ export const InfiniteScrollExample: FC = () => {
 
   const rtmsRef = useRef<TreeMultiSelectHandle>(null);
 
-  const [data] = useState<RandomTreeNode[]>([]);
+  const [data] = useState<TreeNode[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [expandedIds, setExpandedIds] = useState<string[]>([]);
   const [lastPageReached, setLastPageReached] = useState<boolean>(false);
