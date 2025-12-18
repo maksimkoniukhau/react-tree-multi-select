@@ -8,6 +8,7 @@ import {Node} from './Node';
 import {NoDataWrapper} from './components/NoData';
 import {SelectAllWrapper} from './components/SelectAllWrapper';
 import {NodeWrapper} from './components/NodeWrapper';
+import {FooterWrapper} from './components/Footer';
 
 export interface ListItemProps {
   type: Type;
@@ -71,15 +72,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
   if (showFooter && index === displayedItemCount - 1) {
     const isFooterFocused = virtualFocusId === buildVirtualFocusId(DROPDOWN_PREFIX, FOOTER_SUFFIX);
     return (
-      <components.Footer.component
-        attributes={{
-          'data-rtms-virtual-focus-id': buildVirtualFocusId(DROPDOWN_PREFIX, FOOTER_SUFFIX),
-          className: `rtms-footer${isFooterFocused ? ' focused' : ''}`,
-          onClick: onFooterClick
-        }}
-        ownProps={{focused: isFooterFocused}}
-        customProps={components.Footer.props}
-      />
+      <FooterWrapper footer={components.Footer} focused={isFooterFocused} onClick={onFooterClick}/>
     );
   }
 
