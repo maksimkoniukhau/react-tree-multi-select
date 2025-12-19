@@ -1,4 +1,4 @@
-import {loadSource} from '@/utils/fs-utils';
+import {loadExampleSource} from '@/utils/fsUtils';
 import {Alert} from '@/shared-components/Alert';
 import {DemoContainer} from '@/shared-components/DemoContainer';
 import {InfiniteScrollExample} from '@/examples/infinite-scroll/InfiniteScrollExample';
@@ -18,7 +18,7 @@ If `onLoadData` is not provided or returns an empty array, no data will be appen
 </Alert>
 
 <DemoContainer
-    code={loadSource('infinite-scroll/InfiniteScrollExample.tsx')}
+    code={loadExampleSource('infinite-scroll/InfiniteScrollExample.tsx')}
     title="Infinite scroll"
 >
     <InfiniteScrollExample/>
@@ -31,7 +31,7 @@ A custom `Footer` component can be used to display a "Load more" button, which, 
 calls the imperative `loadData` method to fetch and append the next page of data to the existing dataset.
 
 <DemoContainer
-    code={loadSource('infinite-scroll/PaginationExample.tsx')}
+    code={loadExampleSource('infinite-scroll/PaginationExample.tsx')}
     title="Pagination"
 >
     <PaginationExample/>

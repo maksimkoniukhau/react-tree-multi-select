@@ -1,4 +1,4 @@
-import {loadSource} from '@/utils/fs-utils';
+import {loadExampleSource} from '@/utils/fsUtils';
 import {DemoContainer} from '@/shared-components/DemoContainer';
 import {ControlledExample} from '@/examples/ControlledExample';
 
@@ -11,7 +11,7 @@ enabling custom behaviors such as toggling from external controls or reacting to
 Here’s how to implement controlled dropdown behavior:
 
 <DemoContainer
-    code={loadSource('ControlledExample.tsx')}
+    code={loadExampleSource('ControlledExample.tsx')}
     title="Controlled"
 >
     <ControlledExample/>

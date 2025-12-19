@@ -1,4 +1,4 @@
-import {loadSource} from '@/utils/fs-utils';
+import {loadExampleSource} from '@/utils/fsUtils';
 import {DemoContainer} from '@/shared-components/DemoContainer';
 import {LoadChildrenExample} from '@/examples/async/LoadChildrenExample';
 
@@ -7,7 +7,7 @@ import {LoadChildrenExample} from '@/examples/async/LoadChildrenExample';
 Async children loading.
 
 <DemoContainer
-    code={loadSource('async/LoadChildrenExample.tsx')}
+    code={loadExampleSource('async/LoadChildrenExample.tsx')}
     title="Async children loading"
 >
     <LoadChildrenExample/>

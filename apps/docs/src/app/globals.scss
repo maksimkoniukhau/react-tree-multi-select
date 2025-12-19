@@ -147,7 +147,7 @@ code {
     padding: 70px 20px 0;
     min-height: calc(100vh - 140px);
 
-    .menu-navigation, .page-navigation {
+    .menu-navigation, .page-navigation, .toc {
       ul {
         margin: 0;
         padding: 0;
@@ -156,6 +156,10 @@ code {
     }
 
     .section-heading {
+      scroll-margin-top: 70px;
+    }
+
+    [id^="nav-"] {
       scroll-margin-top: 70px;
     }
 
@@ -338,10 +342,10 @@ code {
       }
     }
 
-    .page-navigation-container {
+    .page-navigation-container, .toc-container {
       margin-top: -70px;
 
-      .page-navigation {
+      .page-navigation, .toc {
         position: sticky;
         top: 0;
         padding: 70px 0 0;
@@ -352,7 +356,7 @@ code {
           font-size: 14px;
 
           .navigation-item {
-            margin: 5px 0;
+            margin: 5px 70px;
             cursor: pointer;
             opacity: 0.75;
 
@@ -370,7 +374,7 @@ code {
 
             .nav-link {
               display: block;
-              padding: 2px 70px;
+              padding: 2px 0;
               text-decoration: none;
               color: inherit;
 
@@ -431,7 +435,7 @@ code {
     .content {
       grid-template-columns: 20% 80% 0;
 
-      .page-navigation {
+      .page-navigation, .toc {
         display: none;
       }
     }
