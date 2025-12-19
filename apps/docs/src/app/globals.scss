@@ -323,21 +323,20 @@ code {
         gap: 15px;
 
         .rtms-dropdown {
-          width: 210px;
+          width: auto;
+
+          .rtms-list-item {
+            min-width: 170px;
+          }
         }
       }
 
       .input-example {
         display: flex;
-        flex-direction: column;
         gap: 15px;
 
-        .custom-dropdown-input {
-          width: fit-content;
-
-          .rtms-dropdown {
-            width: 250px;
-          }
+        .rtms-tree-multi-select {
+          width: 100%;
         }
       }
     }

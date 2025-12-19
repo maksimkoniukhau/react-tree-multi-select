@@ -3,22 +3,8 @@
 import React, {FC} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
-import {
-  Attributes,
-  Components,
-  FieldProps,
-  FieldType,
-  InputProps,
-  InputType,
-  TreeMultiSelect
-} from 'react-tree-multi-select';
+import {Attributes, Components, InputProps, InputType, TreeMultiSelect} from 'react-tree-multi-select';
 import {getTreeNodeData} from '@/utils/utils';
-
-const CustomField: FC<FieldProps> = (props) => (
-  <div {...props.attributes}>
-    <button className="btn filter-btn">Tree multi select</button>
-  </div>
-);
 
 const CustomFieldInput: FC<InputProps> = (props) => (
   <textarea {...props.attributes as unknown as Attributes<'textarea'>}/>
@@ -31,9 +17,8 @@ const CustomDropdownInput: FC<InputProps> = (props) => (
   </div>
 );
 
-const Field: FieldType = {component: CustomField};
 const DropdownInput: InputType = {component: CustomDropdownInput};
-const dropdownComponents: Components = {Field, Input: DropdownInput};
+const dropdownComponents: Components = {Input: DropdownInput};
 
 const FieldInput: InputType = {component: CustomFieldInput};
 const fieldComponents: Components = {Input: FieldInput};

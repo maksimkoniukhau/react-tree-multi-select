@@ -50,7 +50,9 @@ export const CustomFieldExample: FC = () => {
           }
         ]}
         defaultSelectedIds={['2.2']}
+        defaultExpandedIds={['1', '2', '3']}
         withDropdownInput={true}
+        isVirtualized={false}
         components={companyComponents}
       />
       <TreeMultiSelect
@@ -64,6 +66,7 @@ export const CustomFieldExample: FC = () => {
         ]}
         defaultSelectedIds={['3', '5']}
         withSelectAll={true}
+        isVirtualized={false}
         components={brandComponents}
       />
       <TreeMultiSelect
@@ -75,6 +78,7 @@ export const CustomFieldExample: FC = () => {
           {id: '4', label: '400'},
           {id: '5', label: '500'}
         ]}
+        isVirtualized={false}
         components={priceComponents}
       />
     </div>

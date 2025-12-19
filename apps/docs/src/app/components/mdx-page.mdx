@@ -1,0 +1,289 @@
+import {loadExampleSource} from '@/utils/fsUtils';
+import {
+    customComponentBuiltin,
+    customComponentCommonPattern,
+    customComponentMergeClassname,
+    customProps,
+    tsSupport
+} from '@/utils/code-data';
+import {Alert} from '@/shared-components/Alert';
+import {CodeBlock} from '@/shared-components/CodeBlock';
+import {DemoContainer} from '@/shared-components/DemoContainer';
+import {CustomFieldExample} from '@/examples/components/CustomFieldExample';
+import {CustomChipContainerExample} from '@/examples/components/CustomChipContainerExample';
+import {CustomChipLabelExample} from '@/examples/components/CustomChipLabelExample';
+import {CustomChipClearExample} from '@/examples/components/CustomChipClearExample';
+import {CustomInputExample} from '@/examples/components/CustomInputExample';
+import {CustomFieldClearExample} from '@/examples/components/CustomFieldClearExample';
+import {CustomFieldToggleExample} from '@/examples/components/CustomFieldToggleExample';
+import {CustomDropdownExample} from '@/examples/components/CustomDropdownExample';
+import {CustomSelectAllContainerExample} from '@/examples/components/CustomSelectAllContainerExample';
+import {CustomSelectAllCheckboxExample} from '@/examples/components/CustomSelectAllCheckboxExample';
+import {CustomSelectAllLabelExample} from '@/examples/components/CustomSelectAllLabelExample';
+import {CustomNodeContainerExample} from '@/examples/components/CustomNodeContainerExample';
+import {CustomNodeToggleExample} from '@/examples/components/CustomNodeToggleExample';
+import {CustomNodeCheckboxExample} from '@/examples/components/CustomNodeCheckboxExample';
+import {CustomNodeLabelExample} from '@/examples/components/CustomNodeLabelExample';
+import {CustomFooterExample} from '@/examples/components/CustomFooterExample';
+import {CustomNoDataExample} from '@/examples/components/CustomNoDataExample';
+
+# Components
+
+**react-tree-multi-select** allows you to customize its built-in components
+by providing your own custom components as a property.
+This feature enables you to tailor the appearance and behavior of various components.<br/>
+The general pattern for implementing a custom component involves creating a component
+and passing the `attributes` prop to the root element.<br/>
+Here's a simple implementation:
+
+<CodeBlock code={customComponentCommonPattern}/>
+
+<Alert type={'important'}>
+    You must pass `attributes` prop to the root element in order for component to work properly.
+</Alert>
+
+If you would like to add custom CSS class to component, you can merge component classname with your own
+like in the example below:
+
+<CodeBlock code={customComponentMergeClassname}/>
+
+### Built-in components
+
+You can import and reuse built-in components from the library for additional flexibility (except of `Footer`,
+since it has empty implementation by default).
+For an example, refer to the <a className="link" href="#chip-container">CustomChipContainer</a>.
+
+<CodeBlock code={customComponentBuiltin}/>
+
+### Custom props
+
+You can pass your own properties to the component through the props object.
+When creating a custom component, you can access these properties and use them in your implementation.
+
+<Alert type={'important'}>
+    To improve performance, make sure to memoize `components` prop (and other props like objects, arrays, or callbacks).
+    This helps prevent unnecessary re-renders by ensuring prop references remain stable between renders.
+</Alert>
+
+<CodeBlock code={customProps}/>
+
+For an example, refer to the <a className="link" href="#chip-label">CustomChipLabel</a>.
+
+### TypeScript support
+
+You can use generic parameters to strongly type each component, ensuring type safety and preventing accidental misuse.
+
+<Alert type={'note'}>
+    - Component type entries can be listed in any order. The order of keys in the generic argument does not matter —
+    TypeScript will correctly match each one by name.
+    - Only known component keys (`Field`, `Footer`, `NodeContainer`, etc.) are allowed.
+    - Each component’s props are strongly typed according to the generics you specify.
+    - Extra or unknown keys (like WrongComponent) or mismatched types will result in a TypeScript error.
+    - Extra or unknown fields inside the component config (like wrongProp) are disallowed.
+</Alert>
+
+<CodeBlock code={tsSupport}/>
+
+For an example, refer to the <a className="link" href="#field">CustomField</a>.
+
+
+## Field
+
+Let's say you have filters on a page that, when clicked, open a dropdown with a range of filter options.<br/>
+It can be achieved by providing custom `Field` component like in the example below.
+
+<Alert type={'important'}>
+    Your custom `Field` component must either be focusable itself or contain exactly one focusable child to ensure
+    proper keyboard navigation.
+</Alert>
+
+<DemoContainer
+    code={loadExampleSource('components/CustomFieldExample.tsx')}
+    title="Field"
+>
+    <CustomFieldExample/>
+</DemoContainer>
+
+## ChipContainer
+
+Custom ChipContainer component example.
+
+<DemoContainer
+    code={loadExampleSource('components/CustomChipContainerExample.tsx')}
+    title="ChipContainer"
+>
+    <CustomChipContainerExample/>
+</DemoContainer>
+
+## ChipLabel
+
+Custom ChipLabel component example.
+
+<DemoContainer
+    code={loadExampleSource('components/CustomChipLabelExample.tsx')}
+    title="ChipLabel"
+>
+    <CustomChipLabelExample/>
+</DemoContainer>
+
+## ChipClear
+
+Custom ChipClear component example.
+
+<DemoContainer
+    code={loadExampleSource('components/CustomChipClearExample.tsx')}
+    title="ChipClear"
+>
+    <CustomChipClearExample/>
+</DemoContainer>
+
+## Input
+
+Custom Input component example.
+
+<DemoContainer
+    code={loadExampleSource('components/CustomInputExample.tsx')}
+    title="Input"
+>
+    <CustomInputExample/>
+</DemoContainer>
+
+## FieldClear
+
+Custom FieldClear component example.
+
+<DemoContainer
+    code={loadExampleSource('components/CustomFieldClearExample.tsx')}
+    title="FieldClear"
+>
+    <CustomFieldClearExample/>
+</DemoContainer>
+
+## FieldToggle
+
+Custom FieldToggle component example.
+
+<DemoContainer
+    code={loadExampleSource('components/CustomFieldToggleExample.tsx')}
+    title="FieldToggle"
+>
+    <CustomFieldToggleExample/>
+</DemoContainer>
+
+## Dropdown
+
+Custom Dropdown component example.
+
+<DemoContainer
+    code={loadExampleSource('components/CustomDropdownExample.tsx')}
+    title="Dropdown"
+>
+    <CustomDropdownExample/>
+</DemoContainer>
+
+## SelectAllContainer
+
+Custom SelectAllContainer component example.
+
+<DemoContainer
+    code={loadExampleSource('components/CustomSelectAllContainerExample.tsx')}
+    title="SelectAllContainer"
+>
+    <CustomSelectAllContainerExample/>
+</DemoContainer>
+
+## SelectAllCheckbox
+
+Custom SelectAllCheckbox component example.
+
+<DemoContainer
+    code={loadExampleSource('components/CustomSelectAllCheckboxExample.tsx')}
+    title="SelectAllCheckbox"
+>
+    <CustomSelectAllCheckboxExample/>
+</DemoContainer>
+
+## SelectAllLabel
+
+Custom SelectAllLabel component example.
+
+<DemoContainer
+    code={loadExampleSource('components/CustomSelectAllLabelExample.tsx')}
+    title="SelectAllLabel"
+>
+    <CustomSelectAllLabelExample/>
+</DemoContainer>
+
+## NodeContainer
+
+Custom NodeContainer component example.
+
+<DemoContainer
+    code={loadExampleSource('components/CustomNodeContainerExample.tsx')}
+    title="NodeContainer"
+>
+    <CustomNodeContainerExample/>
+</DemoContainer>
+
+## NodeToggle
+
+Custom NodeToggle component example.
+
+<DemoContainer
+    code={loadExampleSource('components/CustomNodeToggleExample.tsx')}
+    title="NodeToggle"
+>
+    <CustomNodeToggleExample/>
+</DemoContainer>
+
+## NodeCheckbox
+
+Custom NodeCheckbox component example.
+
+<DemoContainer
+    code={loadExampleSource('components/CustomNodeCheckboxExample.tsx')}
+    title="NodeCheckbox"
+>
+    <CustomNodeCheckboxExample/>
+</DemoContainer>
+
+## NodeLabel
+
+Custom NodeLabel component example.
+
+<DemoContainer
+    code={loadExampleSource('components/CustomNodeLabelExample.tsx')}
+    title="NodeLabel"
+>
+    <CustomNodeLabelExample/>
+</DemoContainer>
+
+## Footer
+
+An optional custom component rendered at the bottom of the dropdown, scrolling together with the items.
+The default implementation is null, so the `Footer` is not rendered unless explicitly provided.
+You can use the `Footer` to implement features like pagination.
+
+<Alert type={'note'}>
+    By default, the `Footer` is not shown during search (when the input has a value) or when there are no items in the
+    dropdown.
+    This behavior can be customized using the `footerConfig` prop.
+</Alert>
+
+<DemoContainer
+    code={loadExampleSource('components/CustomFooterExample.tsx')}
+    title="Footer"
+>
+    <CustomFooterExample/>
+</DemoContainer>
+
+## NoData
+
+Custom NoData component example.
+
+<DemoContainer
+    code={loadExampleSource('components/CustomNoDataExample.tsx')}
+    title="NoData"
+>
+    <CustomNoDataExample/>
+</DemoContainer>
