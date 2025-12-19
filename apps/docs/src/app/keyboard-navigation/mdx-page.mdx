@@ -5,6 +5,7 @@ import {CodeBlock} from '@/shared-components/CodeBlock';
 import {DemoContainer} from '@/shared-components/DemoContainer';
 import {CustomVirtualFocusInFieldExample} from '@/examples/keyboard-navigation/CustomVirtualFocusInFieldExample';
 import {SkipDropdownVirtualFocusExample} from '@/examples/keyboard-navigation/SkipDropdownVirtualFocusExample';
+import {KeyboardNavigationSimulatorExample} from '@/examples/keyboard-navigation/KeyboardNavigationSimulatorExample';
 
 # Keyboard Navigation
 
@@ -92,3 +93,27 @@ Although the Field and Dropdown regions use different internal mechanisms (DOM-b
 - Both can be controlled through the same `onKeyDown` callback.
 
 From a developer’s perspective, it behaves like one continuous virtual focus system.
+
+## Custom Keyboard Navigation
+
+You can fully customize the keyboard navigation behavior of **react-tree-multi-select**
+using the `onKeyDown` callback in combination with the component’s `imperative API`.<br/>
+To access the component API, pass a ref to the component
+and interact with it through the exposed `TreeMultiSelectHandle`.<br/>
+This approach allows you to:
+
+- Intercept specific keyboard events.
+- Override or extend the default keyboard behavior.
+- Implement entirely custom navigation logic if needed.
+
+On the example below, you can see a complete reimplementation of the component’s internal keyboard navigation
+using the `onKeyDown` callback and the `imperative API` exposed via the component ref.<br/>
+This demonstrates how flexible the keyboard navigation system is,
+enabling advanced behaviors to be implemented entirely through the component’s public API.
+
+<DemoContainer
+    code={loadExampleSource('keyboard-navigation/KeyboardNavigationSimulatorExample.tsx')}
+    title="Keyboard navigation simulator"
+>
+    <KeyboardNavigationSimulatorExample/>
+</DemoContainer>

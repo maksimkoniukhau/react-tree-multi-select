@@ -4,7 +4,7 @@ import React, {FC, memo, useState} from 'react';
 import {TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
 import {getBaseExpandedIds, getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
 
-export const ControlledExample: FC = memo(() => {
+export const ControlledIsDropdownOpenExample: FC = memo(() => {
 
   const [data] = useState<TreeNode[]>(getTreeNodeData(true));
   const [selectedIds] = useState<string[]>(getBaseSelectedIds());
