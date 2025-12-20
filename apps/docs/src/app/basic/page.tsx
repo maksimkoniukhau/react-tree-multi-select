@@ -151,11 +151,11 @@ const BasicPage: FC = memo(() => {
   };
 
   const handleFocus = (event: React.FocusEvent): void => {
-    console.log('focus', event);
+    console.log('handleFocus', event);
   };
 
   const handleBlur = (event: React.FocusEvent): void => {
-    console.log('blur', event);
+    console.log('handleBlur', event);
   };
 
   return (

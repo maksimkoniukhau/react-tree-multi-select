@@ -54,3 +54,23 @@ export type KeyboardConfig = {
    */
   dropdown?: DropdownKeyboardOptions;
 };
+
+/**
+ * Controls when the Footer component is rendered in the dropdown.
+ */
+export type FooterConfig = {
+  /**
+   * Renders the Footer when the component is in the search mode (when the input contains value).
+   *
+   * @default false
+   */
+  showWhenSearching?: boolean;
+
+  /**
+   * Renders the Footer when no items are available in the dropdown
+   * (takes precedence over `showWhenSearching` if both apply).
+   *
+   * @default false
+   */
+  showWhenNoItems?: boolean;
+};

@@ -1,27 +1,7 @@
 import {Components} from './components';
 import {CheckedState, Type} from './core';
-import {KeyboardConfig} from './keyboard';
+import {FooterConfig, KeyboardConfig} from './configs';
 import {TreeNode} from './nodes';
-
-/**
- * Controls when the Footer component is rendered in the dropdown.
- */
-export type FooterConfig = {
-  /**
-   * Renders the Footer when the component is in the search mode (when the input contains value).
-   *
-   * @default false
-   */
-  showWhenSearching?: boolean;
-
-  /**
-   * Renders the Footer when no items are available in the dropdown
-   * (takes precedence over `showWhenSearching` if both apply).
-   *
-   * @default false
-   */
-  showWhenNoItems?: boolean;
-}
 
 /**
  * Props for the `TreeMultiSelect` component.
