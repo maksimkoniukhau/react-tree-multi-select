@@ -22,18 +22,6 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
   const [selectedIds] = useState<string[]>(getBaseSelectedIds());
   const [expandedIds] = useState<string[]>(getBaseExpandedIds());
 
-  const findNode = (data: TreeNode[], id: string): TreeNode | undefined => {
-    for (const node of data) {
-      if (node.id === id) return node;
-
-      if (node.children) {
-        const found = findNode(node.children, id);
-        if (found) return found;
-      }
-    }
-    return undefined;
-  };
-
   const buildVirtualFocusId = (
     region: typeof FIELD_PREFIX | typeof DROPDOWN_PREFIX,
     elementId: string
@@ -152,7 +140,7 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
             rtmsAPI.deselectAll();
           } else {
             rtmsAPI.deselectNode();
-            if (!findNode(data, extractElementId(virtualFocusId))?.disabled) {
+            if (!rtmsAPI.getById(extractElementId(virtualFocusId))?.disabled) {
               rtmsAPI.focusPrevItem();
             }
           }

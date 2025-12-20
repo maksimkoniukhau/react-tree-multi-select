@@ -1,3 +1,4 @@
+import {TreeNode} from './nodes';
 import {State} from './state';
 import {DROPDOWN_PREFIX, FIELD_PREFIX, VirtualFocusId} from './virtualFocus';
 
@@ -15,8 +16,20 @@ export interface TreeMultiSelectHandle {
    * Returns a snapshot of the current internal component state.
    *
    * The returned object is always up-to-date at the moment of the call.
+   *
+   * @returns The current internal state of the TreeMultiSelect component.
    */
   getState: () => State;
+
+  /**
+   * Returns a node by its unique identifier.
+   *
+   * The identifier corresponds to the node `id`.
+   *
+   * @param id - The unique identifier of the node.
+   * @returns The matching `TreeNode` if found; otherwise `undefined`.
+   */
+  getById: (id: string) => TreeNode | undefined;
 
   /**
    * Opens (renders) the dropdown.

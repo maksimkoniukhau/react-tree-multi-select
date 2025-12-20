@@ -953,6 +953,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
       isDropdownOpen,
       virtualFocusId
     }),
+    getById: (id: string) => nodesManager.current.findById(id)?.initTreeNode,
     openDropdown: () => toggleDropdown(true),
     closeDropdown: () => toggleDropdown(false),
     toggleDropdown: () => toggleDropdown(!isDropdownOpen),
