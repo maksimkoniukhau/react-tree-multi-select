@@ -16,8 +16,8 @@
     z-index: 1;
     font-size: var(--rtms-dropdown-font-size);
     margin-top: 7px;
-    background-color: var(--rtms-dropdown-background-color-default);
-    border: 1px solid var(--rtms-dropdown-border-color-default);
+    background-color: var(--rtms-dropdown-background-color);
+    border: 1px solid var(--rtms-dropdown-border-color);
     border-radius: 4px;
     box-sizing: border-box;
     animation: fadeIn 0.1s forwards;
@@ -41,7 +41,7 @@
     .rtms-top-item {
       display: flex;
       align-items: center;
-      padding: var(--rtms-list-item-tb-padding) var(--rtms-list-item-lr-padding);
+      padding: var(--rtms-list-item-padding-tb) var(--rtms-list-item-padding-lr);
     }
 
     .rtms-list-outer {
@@ -62,25 +62,25 @@
     .rtms-list-item, .rtms-sticky-item {
       display: flex;
       align-items: center;
-      padding-top: var(--rtms-list-item-tb-padding);
-      padding-bottom: var(--rtms-list-item-tb-padding);
+      padding-top: var(--rtms-list-item-padding-tb);
+      padding-bottom: var(--rtms-list-item-padding-tb);
       outline: none;
       cursor: pointer;
       gap: var(--rtms-list-item-gap);
     }
 
     .rtms-list-item {
-      color: var(--rtms-list-item-color-default);
-      background-color: var(--rtms-list-item-background-color-default);
+      color: var(--rtms-list-item-color);
+      background-color: var(--rtms-list-item-background-color);
       padding-left: calc(
               ((var(--rtms-checkbox-width) + var(--rtms-list-item-gap)) * var(--rtms-list-item-depth, 0))
               + ((var(--rtms-node-toggle-icon-width) + var(--rtms-list-item-gap)) * var(--rtms-list-item-indentation))
-              + var(--rtms-list-item-lr-padding)
+              + var(--rtms-list-item-padding-lr)
       );
-      padding-right: var(--rtms-list-item-lr-padding);
+      padding-right: var(--rtms-list-item-padding-lr);
 
       &.selected {
-        background-color: var(--rtms-list-item-selected-background-color);
+        background-color: var(--rtms-list-item-background-color-selected);
       }
 
       &.focused {
@@ -112,7 +112,7 @@
           height: var(--rtms-node-toggle-icon-height);
 
           path {
-            fill: var(--rtms-icon-base-color);
+            fill: var(--rtms-icon-color);
           }
         }
       }
@@ -126,16 +126,16 @@
     }
 
     .rtms-sticky-item {
-      color: var(--rtms-sticky-item-color-default);
-      background-color: var(--rtms-sticky-item-background-color-default);
-      padding-left: var(--rtms-list-item-lr-padding);
-      padding-right: var(--rtms-list-item-lr-padding);
+      color: var(--rtms-sticky-item-color);
+      background-color: var(--rtms-sticky-item-background-color);
+      padding-left: var(--rtms-list-item-padding-lr);
+      padding-right: var(--rtms-list-item-padding-lr);
 
-      &.focused:not(:has(.rtms-input-container)) {
+      &.focused {
         background-color: var(--rtms-sticky-item-background-color-focus);
       }
 
-      &:hover:not(:has(.rtms-input-container)) {
+      &:hover {
         background-color: var(--rtms-sticky-item-background-color-hover);
       }
 
@@ -146,9 +146,9 @@
     }
 
     .rtms-footer {
-      color: var(--rtms-footer-color-default);
-      background-color: var(--rtms-footer-background-color-default);
-      padding: var(--rtms-list-item-tb-padding) var(--rtms-list-item-lr-padding);
+      color: var(--rtms-footer-color);
+      background-color: var(--rtms-footer-background-color);
+      padding: var(--rtms-list-item-padding-tb) var(--rtms-list-item-padding-lr);
       outline: none;
 
       &.focused {
@@ -164,7 +164,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: var(--rtms-list-item-tb-padding) var(--rtms-list-item-lr-padding);
+      padding: var(--rtms-list-item-padding-tb) var(--rtms-list-item-padding-lr);
       outline: none;
     }
   }

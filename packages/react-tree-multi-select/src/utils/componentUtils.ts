@@ -2,10 +2,6 @@ import {KeyboardConfig, Type} from '../types';
 import {InnerKeyboardConfig} from '../innerTypes';
 import {Node} from '../Node';
 
-export const typeToClassName = (type: Type): string => {
-  return `rtms-${type.toLowerCase().replaceAll('_', '-')}-type`;
-};
-
 export const getKeyboardConfig = (propsKeyboardConfig: KeyboardConfig = {}): InnerKeyboardConfig => {
   const {field = {}, dropdown = {}} = propsKeyboardConfig;
   return {

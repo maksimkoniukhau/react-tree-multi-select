@@ -17,16 +17,14 @@ TreeMultiSelect styles
     pointer-events: none;
   }
 
-  &.rtms-multi-select-type, &.rtms-select-type {
-    --rtms-list-item-selected-background-color: var(--rtms-multi-select-list-item-background-color-selected);
+  &[data-rtms-type="multi-select"], &[data-rtms-type="select"] {
+    --rtms-list-item-background-color-selected: var(--rtms-list-item-background-color-selected-accent);
   }
 
   &:focus-within {
     .rtms-field {
-      &:has(> .rtms-field-content, > .rtms-actions) {
-        border-color: var(--rtms-field-border-color-focus);
-        box-shadow: 0 0 3px 0 var(--rtms-field-box-shadow-color-focus);
-      }
+      border-color: var(--rtms-field-border-color-focus);
+      box-shadow: 0 0 3px 0 var(--rtms-field-box-shadow-color-focus);
     }
 
     .rtms-input-container {

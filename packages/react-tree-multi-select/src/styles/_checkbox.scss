@@ -6,9 +6,9 @@
     width: var(--rtms-checkbox-width);
     height: var(--rtms-checkbox-height);
     flex: 0 0 auto;
-    background-color: var(--rtms-checkbox-background-color-default);
+    background-color: var(--rtms-checkbox-background-color);
     border-radius: 3px;
-    box-shadow: inset 0 0 2px 0 var(--rtms-checkbox-box-shadow-color-default);
+    box-shadow: inset 0 0 2px 0 var(--rtms-checkbox-box-shadow-color);
 
     &:hover {
       background-color: var(--rtms-checkbox-background-color-hover);
@@ -30,7 +30,7 @@
         left: 5.7px;
         width: 5.5px;
         height: 11px;
-        border: solid var(--rtms-checkbox-content-color-selected);
+        border: solid var(--rtms-checkbox-content-border-color-selected);
         border-width: 0 3.1px 3.1px 0;
         transform: rotate(43deg);
         box-sizing: border-box;
@@ -46,7 +46,7 @@
         left: 3.5px;
         width: 9px;
         height: 3px;
-        background-color: var(--rtms-checkbox-content-color-partial);
+        background-color: var(--rtms-checkbox-content-background-color-partial);
       }
     }
 

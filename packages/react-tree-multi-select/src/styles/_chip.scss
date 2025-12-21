@@ -6,7 +6,7 @@
     gap: 4px;
     margin: 2px;
     padding: 2px 6px;
-    background-color: var(--rtms-chip-background-color-default);
+    background-color: var(--rtms-chip-background-color);
     border-radius: 16px;
     cursor: default;
 
@@ -39,7 +39,7 @@
       cursor: pointer;
 
       path {
-        fill: var(--rtms-icon-base-color);
+        fill: var(--rtms-icon-color);
       }
 
       &:hover {

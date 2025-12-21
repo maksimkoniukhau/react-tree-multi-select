@@ -15,7 +15,7 @@ import {
 } from './types';
 import {InnerComponents, NullableVirtualFocusId} from './innerTypes';
 import {DEFAULT_DROPDOWN_MAX_HEIGHT, INPUT_PLACEHOLDER, NO_DATA_TEXT, NO_MATCHES_TEXT, OVERSCAN} from './constants';
-import {areSetsEqual, getFieldFocusableElement} from './utils/commonUtils';
+import {areSetsEqual, classNames, getFieldFocusableElement} from './utils/commonUtils';
 import {
   filterChips,
   getOrderedIds,
@@ -23,7 +23,7 @@ import {
   normalizeExpandedIds,
   normalizeSelectedIds
 } from './utils/nodesUtils';
-import {getKeyboardConfig, shouldRenderSelectAll, typeToClassName} from './utils/componentUtils';
+import {getKeyboardConfig, shouldRenderSelectAll} from './utils/componentUtils';
 import {getComponents, hasCustomFooterComponent} from './utils/componentsUtils';
 import {
   buildVirtualFocusId,
@@ -1022,12 +1022,14 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     loadData: async () => await handleLoadData()
   }));
 
-  const typeClassName = useMemo(() => typeToClassName(type), [type]);
-  const rootClasses = `rtms-tree-multi-select ${typeClassName}${isDisabled ? ' disabled' : ''}`
-    + (className ? ` ${className}` : '');
+  const dataRtmsType = useMemo(() => type.toLowerCase().replaceAll('_', '-'), [type]);
+  const rootClasses = useMemo(() => {
+    return classNames('rtms-tree-multi-select', isDisabled && 'disabled', className);
+  }, [isDisabled, className]);
 
   return (
     <div
+      data-rtms-type={dataRtmsType}
       ref={treeMultiSelectRef}
       id={id}
       className={rootClasses}

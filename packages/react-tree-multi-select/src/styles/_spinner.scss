@@ -10,7 +10,7 @@
       box-sizing: border-box;
       width: var(--rtms-spinner-width);
       height: var(--rtms-spinner-height);
-      border: 1px solid var(--rtms-spinner-border-color-default);
+      border: 1px solid var(--rtms-spinner-border-color);
       border-top-color: var(--rtms-spinner-border-color-accent);
       border-radius: 50%;
       animation: spinner-rotate 0.75s linear infinite;

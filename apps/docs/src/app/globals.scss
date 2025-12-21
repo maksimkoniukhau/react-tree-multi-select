@@ -287,19 +287,6 @@ code {
         }
       }
 
-      .rtms-tree-multi-select.focused {
-        .filter-btn {
-          background-color: #82eefe;
-        }
-      }
-
-      .filter-btn {
-        background-color: #d1f2fc;
-        padding: 5px 10px;
-        border-color: transparent;
-        border-radius: 8px;
-      }
-
       .controlled-example {
         button {
           margin-bottom: 10px;
@@ -321,6 +308,22 @@ code {
       .field-example {
         display: flex;
         gap: 15px;
+
+        .btn {
+          &:focus {
+            box-shadow: none;
+          }
+        }
+
+        .filter-btn {
+          padding: 5px 10px;
+          border-color: transparent;
+        }
+
+        .rtms-field {
+          min-height: unset;
+          padding: unset;
+        }
 
         .rtms-dropdown {
           width: auto;

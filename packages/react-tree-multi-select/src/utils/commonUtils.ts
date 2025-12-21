@@ -34,3 +34,9 @@ export const areSetsEqual = (a: Set<string>, b: Set<string>): boolean => {
   }
   return true;
 };
+
+type ClassValue = string | undefined | null | false;
+
+export const classNames = (...values: ClassValue[]): string => {
+  return values.filter(Boolean).join(' ');
+};

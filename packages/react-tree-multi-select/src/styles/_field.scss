@@ -1,24 +1,21 @@
 @mixin field-styles {
   .rtms-field {
     font-size: var(--rtms-field-font-size);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 34px;
+    padding: 2px;
+    font-weight: 400;
+    outline: none;
+    color: var(--rtms-field-color);
+    background-color: var(--rtms-field-background-color);
+    border: 1px solid var(--rtms-field-border-color);
+    border-radius: 4px;
+    box-sizing: border-box;
 
-    &:has(> .rtms-field-content, > .rtms-actions) {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      min-height: 34px;
-      padding: 2px;
-      font-weight: 400;
-      outline: none;
-      color: var(--rtms-field-color-default);
-      background-color: var(--rtms-field-background-color-default);
-      border: 1px solid var(--rtms-field-border-color-default);
-      border-radius: 4px;
-      box-sizing: border-box;
-
-      &.disabled {
-        background-color: var(--rtms-field-background-color-disabled);
-      }
+    &.disabled {
+      background-color: var(--rtms-field-background-color-disabled);
     }
 
     .rtms-field-content {
@@ -69,12 +66,21 @@
         }
       }
 
-      .rtms-field-clear-icon, .rtms-field-toggle-icon {
-        width: var(--rtms-field-icon-width);
-        height: var(--rtms-field-icon-height);
+      .rtms-field-clear-icon {
+        width: var(--rtms-field-clear-icon-width);
+        height: var(--rtms-field-clear-icon-height);
 
         path {
-          fill: var(--rtms-icon-base-color);
+          fill: var(--rtms-icon-color);
+        }
+      }
+
+      .rtms-field-toggle-icon {
+        width: var(--rtms-field-toggle-icon-width);
+        height: var(--rtms-field-toggle-icon-height);
+
+        path {
+          fill: var(--rtms-icon-color);
         }
       }
     }

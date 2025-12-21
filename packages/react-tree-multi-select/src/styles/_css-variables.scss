@@ -1,135 +1,130 @@
 @mixin variables {
   /* ========================================================
-    Sizes
+    CSS variable templates:
+      Core: --{namespace}-{property}-{state?}
+      Elements: --{namespace}-{element}-{property}-{state?}
   ======================================================== */
+
+  // Core
   --rtms-font-size: 16px;
 
-  --rtms-field-font-size: var(--rtms-font-size);
-  --rtms-dropdown-font-size: var(--rtms-font-size);
+  --rtms-icon-width: 16px;
+  --rtms-icon-height: 16px;
 
-  --rtms-icon-base-width: 16px;
-  --rtms-icon-base-height: 16px;
-
-  --rtms-field-icon-width: var(--rtms-icon-base-width);
-  --rtms-field-icon-height: var(--rtms-icon-base-height);
-  --rtms-chip-clear-icon-width: var(--rtms-icon-base-width);
-  --rtms-chip-clear-icon-height: var(--rtms-icon-base-height);
-
-  --rtms-node-toggle-width: var(--rtms-icon-base-width);
-  --rtms-node-toggle-height: var(--rtms-icon-base-height);
-
-  --rtms-node-toggle-icon-width: var(--rtms-icon-base-width);
-  --rtms-node-toggle-icon-height: var(--rtms-icon-base-height);
-
-  --rtms-checkbox-width: var(--rtms-icon-base-width);
-  --rtms-checkbox-height: var(--rtms-icon-base-height);
-
-  --rtms-node-checkbox-width: var(--rtms-icon-base-width);
-  --rtms-node-checkbox-height: var(--rtms-icon-base-height);
-
-  /* ========================================================
-    Colors
-  ======================================================== */
-  --rtms-border-color-default: #ced4da;
+  // Colors
+  --rtms-border-color: #ced4da;
   --rtms-border-color-focus: #92bcff;
 
-  --rtms-box-shadow-color-focus: #016aff;
-
-  --rtms-background-color-default: #ffffff;
-  --rtms-background-color-focus: #ebebeb;
-  --rtms-background-color-hover: #ebebeb;
-  --rtms-disabled-background-color: #f5f5f5;
-
-  --rtms-color-default: #212529;
-  --rtms-disabled-color: #acacac;
+  --rtms-color: #212529;
+  --rtms-color-disabled: #acacac;
   --rtms-color-error: #ff3b3b;
 
-  --rtms-icon-base-color: #6c6c6c;
+  --rtms-background-color: #ffffff;
+  --rtms-background-color-focus: #ebebeb;
+  --rtms-background-color-hover: #ebebeb;
+  --rtms-background-color-disabled: #f5f5f5;
+
+  --rtms-icon-color: #6c6c6c;
 
   // Field
-  --rtms-field-border-color-default: var(--rtms-border-color-default);
+  --rtms-field-border-color: var(--rtms-border-color);
   --rtms-field-border-color-focus: var(--rtms-border-color-focus);
-  --rtms-field-box-shadow-color-focus: var(--rtms-box-shadow-color-focus);
-  --rtms-field-background-color-default: var(--rtms-background-color-default);
-  --rtms-field-background-color-disabled: var(--rtms-disabled-background-color);
-  --rtms-field-color-default: var(--rtms-color-default);
+  --rtms-field-box-shadow-color-focus: #016aff;
+  --rtms-field-background-color: var(--rtms-background-color);
+  --rtms-field-background-color-disabled: var(--rtms-background-color-disabled);
+  --rtms-field-color: var(--rtms-color);
+  --rtms-field-font-size: var(--rtms-font-size);
 
   // Chip
-  --rtms-chip-background-color-default: #ebebeb;
+  --rtms-chip-background-color: #ebebeb;
   --rtms-chip-box-shadow-color-focus: #a1a1a1;
   --rtms-chip-box-shadow-color-hover: #a1a1a1;
-  --rtms-chip-color-disabled: var(--rtms-disabled-color);
+  --rtms-chip-color-disabled: var(--rtms-color-disabled);
 
   // ChipClear
   --rtms-chip-clear-color-focus: var(--rtms-color-error);
   --rtms-chip-clear-color-hover: var(--rtms-color-error);
+  --rtms-chip-clear-icon-width: var(--rtms-icon-width);
+  --rtms-chip-clear-icon-height: var(--rtms-icon-height);
 
   // Input
-  --rtms-input-container-border-color-default: var(--rtms-border-color-default);
+  --rtms-input-container-border-color: var(--rtms-border-color);
   --rtms-input-container-border-color-focus: var(--rtms-border-color-focus);
-  --rtms-input-container-background-color-default: var(--rtms-background-color-default);
-  --rtms-input-background-color-disabled: var(--rtms-disabled-background-color);
+  --rtms-input-container-background-color: var(--rtms-background-color);
+  --rtms-input-background-color-disabled: var(--rtms-background-color-disabled);
 
   // FieldClear
   --rtms-field-clear-color-focus: var(--rtms-color-error);
   --rtms-field-clear-color-hover: var(--rtms-color-error);
-  --rtms-field-clear-color-disabled: var(--rtms-disabled-color);
+  --rtms-field-clear-color-disabled: var(--rtms-color-disabled);
+  --rtms-field-clear-icon-width: var(--rtms-icon-width);
+  --rtms-field-clear-icon-height: var(--rtms-icon-height);
 
   // FieldToggle
-  --rtms-field-toggle-color-disabled: var(--rtms-disabled-color);
+  --rtms-field-toggle-color-disabled: var(--rtms-color-disabled);
+  --rtms-field-toggle-icon-width: var(--rtms-icon-width);
+  --rtms-field-toggle-icon-height: var(--rtms-icon-height);
 
   // Dropdown
-  --rtms-dropdown-border-color-default: var(--rtms-border-color-default);
-  --rtms-dropdown-background-color-default: var(--rtms-background-color-default);
-  --rtms-dropdown-background-color-disabled: var(--rtms-disabled-background-color);
+  --rtms-dropdown-border-color: var(--rtms-border-color);
+  --rtms-dropdown-background-color: var(--rtms-background-color);
+  --rtms-dropdown-background-color-disabled: var(--rtms-background-color-disabled);
+  --rtms-dropdown-font-size: var(--rtms-font-size);
 
   // StickyItem
-  --rtms-sticky-item-background-color-default: var(--rtms-background-color-default);
+  --rtms-sticky-item-background-color: var(--rtms-background-color);
   --rtms-sticky-item-background-color-focus: var(--rtms-background-color-focus);
   --rtms-sticky-item-background-color-hover: var(--rtms-background-color-hover);
-  --rtms-sticky-item-background-color-disabled: var(--rtms-disabled-background-color);
-  --rtms-sticky-item-color-default: var(--rtms-color-default);
+  --rtms-sticky-item-background-color-disabled: var(--rtms-background-color-disabled);
+  --rtms-sticky-item-color: var(--rtms-color);
 
   // ListItem
-  --rtms-tree-select-list-item-background-color-selected: transparent;
-  --rtms-multi-select-list-item-background-color-selected: #e7f3fc;
-  --rtms-list-item-selected-background-color: var(--rtms-tree-select-list-item-background-color-selected);
-  --rtms-list-item-background-color-default: var(--rtms-background-color-default);
+  --rtms-list-item-gap: 3px;
+  --rtms-list-item-padding-tb: 2px;
+  --rtms-list-item-padding-lr: 5px;
+  --rtms-list-item-background-color: var(--rtms-background-color);
   --rtms-list-item-background-color-focus: var(--rtms-background-color-focus);
   --rtms-list-item-background-color-hover: var(--rtms-background-color-hover);
-  --rtms-list-item-background-color-disabled: var(--rtms-disabled-background-color);
+  --rtms-list-item-background-color-selected: unset;
+  --rtms-list-item-background-color-selected-accent: #e7f3fc;
+  --rtms-list-item-background-color-disabled: var(--rtms-background-color-disabled);
   --rtms-list-item-background-color-matched: #ffffb0b0;
-  --rtms-list-item-color-default: var(--rtms-color-default);
-  --rtms-list-item-color-disabled: var(--rtms-disabled-color);
+  --rtms-list-item-color: var(--rtms-color);
+  --rtms-list-item-color-disabled: var(--rtms-color-disabled);
+
+  // NodeToggle
+  --rtms-node-toggle-width: var(--rtms-icon-width);
+  --rtms-node-toggle-height: var(--rtms-icon-height);
+  --rtms-node-toggle-icon-width: var(--rtms-icon-width);
+  --rtms-node-toggle-icon-height: var(--rtms-icon-height);
+
+  // NodeCheckbox
+  --rtms-node-checkbox-width: var(--rtms-icon-width);
+  --rtms-node-checkbox-height: var(--rtms-icon-height);
 
   // Checkbox
-  --rtms-checkbox-box-shadow-color-default: #000000;
-  --rtms-checkbox-background-color-default: var(--rtms-background-color-default);
+  --rtms-checkbox-width: var(--rtms-icon-width);
+  --rtms-checkbox-height: var(--rtms-icon-height);
+  --rtms-checkbox-box-shadow-color: #000000;
+  --rtms-checkbox-background-color: var(--rtms-background-color);
   --rtms-checkbox-background-color-hover: #f1f1f1;
   --rtms-checkbox-background-color-selected: #0784e7;
   --rtms-checkbox-background-color-selected-hover: #0a6bb8;
-  --rtms-checkbox-content-color-selected: #ffffff;
-  --rtms-checkbox-content-color-partial: #808080;
+  --rtms-checkbox-content-border-color-selected: #ffffff;
+  --rtms-checkbox-content-background-color-partial: #808080;
 
   // Spinner
-  --rtms-spinner-container-width: var(--rtms-icon-base-width);
-  --rtms-spinner-container-height: var(--rtms-icon-base-height);
-  --rtms-spinner-width: var(--rtms-icon-base-width);
-  --rtms-spinner-height: var(--rtms-icon-base-height);
-  --rtms-spinner-border-color-default: var(--rtms-border-color-default);
-  --rtms-spinner-border-color-accent: var(--rtms-color-default);
+  --rtms-spinner-container-width: var(--rtms-icon-width);
+  --rtms-spinner-container-height: var(--rtms-icon-height);
+  --rtms-spinner-width: var(--rtms-icon-width);
+  --rtms-spinner-height: var(--rtms-icon-height);
+  --rtms-spinner-border-color: var(--rtms-border-color);
+  --rtms-spinner-border-color-accent: #212529;
 
   // Footer
-  --rtms-footer-background-color-default: var(--rtms-background-color-default);
+  --rtms-footer-background-color: var(--rtms-background-color);
   --rtms-footer-background-color-focus: var(--rtms-background-color-focus);
   --rtms-footer-background-color-hover: var(--rtms-background-color-hover);
-  --rtms-footer-background-color-disabled: var(--rtms-disabled-background-color);
-  --rtms-footer-color-default: var(--rtms-color-default);
-
-  /* ========================================================
-    Paddings, Margins, Gaps
-  ======================================================== */
-  --rtms-list-item-gap: 3px;
-  --rtms-list-item-tb-padding: 2px;
-  --rtms-list-item-lr-padding: 5px;
+  --rtms-footer-background-color-disabled: var(--rtms-background-color-disabled);
+  --rtms-footer-color: var(--rtms-color);
 }
