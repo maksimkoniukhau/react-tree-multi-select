@@ -87,6 +87,11 @@
         background-color: var(--rtms-list-item-background-color-focus);
       }
 
+      &.focused.selected {
+        background-color: var(--rtms-list-item-background-color-focus-selected);
+        color: var(--rtms-list-item-color-focus-selected);
+      }
+
       &:hover {
         background-color: var(--rtms-list-item-background-color-hover);
       }

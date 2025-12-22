@@ -15,8 +15,8 @@
   --rtms-border-color: #ced4da;
   --rtms-border-color-focus: #92bcff;
 
-  --rtms-color: #212529;
-  --rtms-color-disabled: #acacac;
+  --rtms-color: #000000;
+  --rtms-color-disabled: #c2c2c2;
   --rtms-color-error: #ff3b3b;
 
   --rtms-background-color: #ffffff;
@@ -84,12 +84,13 @@
   --rtms-list-item-padding-lr: 5px;
   --rtms-list-item-background-color: var(--rtms-background-color);
   --rtms-list-item-background-color-focus: var(--rtms-background-color-focus);
+  --rtms-list-item-background-color-focus-selected: var(--rtms-background-color-focus);
   --rtms-list-item-background-color-hover: var(--rtms-background-color-hover);
   --rtms-list-item-background-color-selected: unset;
-  --rtms-list-item-background-color-selected-accent: #e7f3fc;
   --rtms-list-item-background-color-disabled: var(--rtms-background-color-disabled);
   --rtms-list-item-background-color-matched: #ffffb0b0;
   --rtms-list-item-color: var(--rtms-color);
+  --rtms-list-item-color-focus-selected: var(--rtms-color);
   --rtms-list-item-color-disabled: var(--rtms-color-disabled);
 
   // NodeToggle

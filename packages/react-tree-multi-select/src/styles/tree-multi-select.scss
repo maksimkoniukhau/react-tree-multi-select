@@ -18,7 +18,9 @@ TreeMultiSelect styles
   }
 
   &[data-rtms-type="multi-select"], &[data-rtms-type="select"] {
-    --rtms-list-item-background-color-selected: var(--rtms-list-item-background-color-selected-accent);
+    --rtms-list-item-background-color-selected: #d5e7ff;
+    --rtms-list-item-background-color-focus-selected: #408fff;
+    --rtms-list-item-color-focus-selected: #ffffff;
   }
 
   &:focus-within {
