@@ -410,8 +410,8 @@ export class NodesManager {
           newSelectionState = this.selectionState;
         } else {
           newSelectionState = {
-            selectedIds: select ? new Set(node.id) : new Set(),
-            effectivelySelectedIds: select ? new Set(node.id) : new Set(),
+            selectedIds: select ? new Set([node.id]) : new Set(),
+            effectivelySelectedIds: select ? new Set([node.id]) : new Set(),
             partiallySelectedIds: new Set(),
             someDescendantSelectedIds: new Set()
           };
