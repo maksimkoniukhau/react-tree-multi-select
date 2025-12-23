@@ -1,11 +1,18 @@
 import {TreeNode, Type} from './types';
 import {ExpansionState, SearchingState, SelectionState} from './innerTypes';
 import {convertTreeArrayToFlatArray} from './utils/nodesUtils';
+import {NodesBehavior} from './behaviors/NodesBehavior';
+import {SelectBehavior} from './behaviors/SelectBehavior';
+import {MultiSelectBehavior} from './behaviors/MultiSelectBehavior';
+import {TreeSelectFlatBehavior} from './behaviors/TreeSelectFlatBehavior';
+import {TreeSelectBehavior} from './behaviors/TreeSelectBehavior';
 import {Node} from './Node';
 
 export class NodesManager {
 
   private _type: Type;
+
+  private _nodesBehavior: NodesBehavior;
 
   private _nodeMap: Map<string, Node>;
 
@@ -22,11 +29,34 @@ export class NodesManager {
   private _searchingState: SearchingState;
 
   constructor(data: TreeNode[], type: Type, searchValue: string) {
+    this._type = type;
+    this._nodeMap = new Map<string, Node>();
+    this._roots = [];
+    this._nodes = [];
+    this._selectionState = {
+      selectedIds: new Set<string>(),
+      effectivelySelectedIds: new Set<string>(),
+      partiallySelectedIds: new Set<string>(),
+      someDescendantSelectedIds: new Set<string>()
+    };
+    this._expansionState = {
+      expandedIds: new Set<string>(),
+      searchExpandedIds: new Set<string>()
+    };
+    this._searchingState = {
+      matchedIds: new Set<string>(),
+      filteredIds: new Set<string>()
+    };
+    this._nodesBehavior = this.createBehavior(type);
     this.initialize(data, type, searchValue);
   }
 
   get type(): Type {
     return this._type;
+  }
+
+  private get nodesBehavior(): NodesBehavior {
+    return this._nodesBehavior;
   }
 
   private get nodeMap(): Map<string, Node> {
@@ -58,7 +88,23 @@ export class NodesManager {
   };
 
   public syncSelectedIds = (selectedIds: Set<string>): void => {
-    this._selectionState = this.computeSelectionState(selectedIds);
+    this._selectionState = this.nodesBehavior.syncSelected(selectedIds, this.roots);
+  };
+
+  public computeSelected = (node: Node, select: boolean, sync: boolean): SelectionState => {
+    const newSelectionState = this.nodesBehavior.computeSelected(node, select, this.selectionState, this.nodeMap);
+    if (sync) {
+      this._selectionState = newSelectionState;
+    }
+    return newSelectionState;
+  };
+
+  public computeAllSelected = (select: boolean, sync: boolean = false): SelectionState => {
+    const newSelectionState = this.nodesBehavior.computeAllSelected(select, this.selectionState, this.roots, this.nodeMap);
+    if (sync) {
+      this._selectionState = newSelectionState;
+    }
+    return newSelectionState;
   };
 
   public syncExpandedIds = (expandedIds: Set<string>, isSearchMode: boolean): void => {
@@ -179,417 +225,20 @@ export class NodesManager {
     return newExpansionState;
   };
 
-  private computeSelectionState = (propsSelectedIds: Set<string>): SelectionState => {
-    if (this.type === Type.TREE_SELECT) {
-      return this.computeHierarchicalSelectionState(propsSelectedIds);
-    } else {
-      return this.computeFlatSelectionState(propsSelectedIds);
+  private createBehavior = (type: Type): NodesBehavior => {
+    switch (type) {
+      case Type.SELECT:
+        return new SelectBehavior();
+      case Type.MULTI_SELECT:
+        return new MultiSelectBehavior();
+      case Type.TREE_SELECT_FLAT:
+        return new TreeSelectFlatBehavior();
+      case Type.TREE_SELECT:
+        return new TreeSelectBehavior();
     }
-  };
-
-  private computeFlatSelectionState = (propsSelectedIds: Set<string>): SelectionState => {
-    return {
-      selectedIds: new Set(propsSelectedIds),
-      effectivelySelectedIds: new Set(propsSelectedIds),
-      partiallySelectedIds: new Set(),
-      someDescendantSelectedIds: new Set()
-    };
-  };
-
-  private computeHierarchicalSelectionState = (propsSelectedIds: Set<string>): SelectionState => {
-    const allSelectedIds = new Set<string>();
-    const allEffectivelySelectedIds = new Set<string>();
-    const allPartiallySelectedIds = new Set<string>();
-    const allSomeDescendantSelectedIds = new Set<string>();
-
-    for (const root of this.roots) {
-      const nodesSelectionState = this.computeRootHierarchicalSelectionState(root, propsSelectedIds);
-      for (const id of nodesSelectionState.selectedIds) {
-        allSelectedIds.add(id);
-      }
-      for (const id of nodesSelectionState.effectivelySelectedIds) {
-        allEffectivelySelectedIds.add(id);
-      }
-      for (const id of nodesSelectionState.partiallySelectedIds) {
-        allPartiallySelectedIds.add(id);
-      }
-      for (const id of nodesSelectionState.someDescendantSelectedIds) {
-        allSomeDescendantSelectedIds.add(id);
-      }
-    }
-    return {
-      selectedIds: allSelectedIds,
-      effectivelySelectedIds: allEffectivelySelectedIds,
-      partiallySelectedIds: allPartiallySelectedIds,
-      someDescendantSelectedIds: allSomeDescendantSelectedIds
-    };
-  };
-
-  private computeRootHierarchicalSelectionState = (root: Node, propsSelectedIds: Set<string>): SelectionState => {
-    const selectedIds = new Set<string>();
-    const effectivelySelectedIds = new Set<string>();
-    const partiallySelectedIds = new Set<string>();
-    const someDescendantSelectedIds = new Set<string>();
-
-    function computeHierarchicalSelection(node: Node, newSelectedIds: Set<string>): void {
-      const children = node.children ?? [];
-
-      for (const child of children) {
-        computeHierarchicalSelection(child, newSelectedIds);
-      }
-
-      const selected = newSelectedIds.has(node.id);
-
-      if (selected) {
-        selectedIds.add(node.id);
-      }
-
-      if (children.length === 0) {
-        if (selected || node.disabled) {
-          effectivelySelectedIds.add(node.id);
-        }
-      } else {
-        const someDescendantSelected = node.children
-          .some(child => selectedIds.has(child.id) || someDescendantSelectedIds.has(child.id));
-        const allChildrenEffectivelySelected = node.children
-          .every(child => effectivelySelectedIds.has(child.id));
-        const allChildrenSelected = node.children.every(child => selectedIds.has(child.id));
-
-        if (allChildrenEffectivelySelected) {
-          effectivelySelectedIds.add(node.id);
-        }
-        if (!node.disabled && !allChildrenSelected && someDescendantSelected) {
-          partiallySelectedIds.add(node.id);
-        }
-        if (someDescendantSelected) {
-          someDescendantSelectedIds.add(node.id);
-        }
-      }
-    }
-
-    computeHierarchicalSelection(root, propsSelectedIds);
-
-    return {selectedIds, effectivelySelectedIds, partiallySelectedIds, someDescendantSelectedIds};
-  };
-
-  public computeAllSelected = (select: boolean, sync: boolean = false): SelectionState => {
-    let newSelectionState: SelectionState;
-    if (this.type === Type.TREE_SELECT) {
-      newSelectionState = this.computeHierarchicalAllSelected(select);
-    } else {
-      newSelectionState = this.computeFlatAllSelected(select);
-    }
-    if (sync) {
-      this._selectionState = newSelectionState;
-    }
-    return newSelectionState;
-  };
-
-  private computeFlatAllSelected = (select: boolean): SelectionState => {
-    const selectedIds = new Set(this.selectionState.selectedIds);
-    const effectivelySelectedIds = new Set(this.selectionState.effectivelySelectedIds);
-    const partiallySelectedIds = new Set<string>();
-    const someDescendantSelectedIds = new Set<string>();
-
-    const setAllSelected = (root: Node, select: boolean): void => {
-      const setSelectAll = (node: Node): void => {
-        const children = node.children ?? [];
-        for (const child of children) {
-          setSelectAll(child);
-        }
-        if (!node.disabled) {
-          if (select) {
-            selectedIds.add(node.id);
-            effectivelySelectedIds.add(node.id);
-          } else {
-            selectedIds.delete(node.id);
-            effectivelySelectedIds.delete(node.id);
-          }
-        }
-      };
-      setSelectAll(root);
-    };
-
-    for (const root of this.roots) {
-      setAllSelected(root, select);
-    }
-
-    return {
-      selectedIds,
-      effectivelySelectedIds,
-      partiallySelectedIds,
-      someDescendantSelectedIds
-    };
-  };
-
-  private computeHierarchicalAllSelected = (select: boolean): SelectionState => {
-    const selectedIds = new Set(this.selectionState.selectedIds);
-    const effectivelySelectedIds = new Set(this.selectionState.effectivelySelectedIds);
-    const partiallySelectedIds = new Set<string>(this.selectionState.partiallySelectedIds);
-    const someDescendantSelectedIds = new Set<string>(this.selectionState.someDescendantSelectedIds);
-
-    const setAllSelected = (root: Node, select: boolean): void => {
-      const setHierarchicalSelected = (node: Node): void => {
-        const children = node.children ?? [];
-
-        for (const child of children) {
-          setHierarchicalSelected(child);
-        }
-
-        if (children.length === 0) {
-          if (!node.disabled) {
-            if (select) {
-              selectedIds.add(node.id);
-            } else {
-              selectedIds.delete(node.id);
-            }
-          }
-          const selected = selectedIds.has(node.id);
-          if (selected || node.disabled) {
-            effectivelySelectedIds.add(node.id);
-          } else {
-            effectivelySelectedIds.delete(node.id);
-          }
-          partiallySelectedIds.delete(node.id);
-          someDescendantSelectedIds.delete(node.id);
-        } else {
-          const someDescendantSelected = children
-            .some(child => selectedIds.has(child.id) || someDescendantSelectedIds.has(child.id));
-          const allChildrenEffectivelySelected = children
-            .every(child => effectivelySelectedIds.has(child.id));
-          const allChildrenSelected = children.every(child => selectedIds.has(child.id));
-
-          if (!node.disabled) {
-            if (select && allChildrenSelected) {
-              selectedIds.add(node.id);
-            } else {
-              selectedIds.delete(node.id);
-            }
-          }
-
-          if (allChildrenEffectivelySelected) {
-            effectivelySelectedIds.add(node.id);
-          } else {
-            effectivelySelectedIds.delete(node.id);
-          }
-          if (!node.disabled && !allChildrenSelected && someDescendantSelected) {
-            partiallySelectedIds.add(node.id);
-          } else {
-            partiallySelectedIds.delete(node.id);
-          }
-          if (someDescendantSelected) {
-            someDescendantSelectedIds.add(node.id);
-          } else {
-            someDescendantSelectedIds.delete(node.id);
-          }
-        }
-      };
-      setHierarchicalSelected(root);
-    };
-
-    for (const root of this.roots) {
-      setAllSelected(root, select);
-    }
-
-    return {
-      selectedIds,
-      effectivelySelectedIds,
-      partiallySelectedIds,
-      someDescendantSelectedIds
-    };
-  };
-
-  public computeSelected = (node: Node, select: boolean, sync: boolean = false): SelectionState => {
-    let newSelectionState: SelectionState;
-    if (node.disabled) {
-      newSelectionState = this.selectionState;
-    } else {
-      if (this.type === Type.SELECT) {
-        const selectedIds = this.selectionState.selectedIds;
-        if (selectedIds.size > 0 && selectedIds.values().every(id => this.nodeMap.get(id)?.disabled)) {
-          newSelectionState = this.selectionState;
-        } else {
-          newSelectionState = {
-            selectedIds: select ? new Set([node.id]) : new Set(),
-            effectivelySelectedIds: select ? new Set([node.id]) : new Set(),
-            partiallySelectedIds: new Set(),
-            someDescendantSelectedIds: new Set()
-          };
-        }
-      } else {
-        if (select) {
-          newSelectionState = this.computeSelect(node);
-        } else {
-          newSelectionState = this.computeDeselect(node);
-        }
-      }
-    }
-    if (sync) {
-      this._selectionState = newSelectionState;
-    }
-    return newSelectionState;
-  };
-
-  private computeSelect = (node: Node): SelectionState => {
-    if (node.disabled) {
-      return this.selectionState;
-    }
-    if (this.type === Type.TREE_SELECT) {
-      return this.computeTreeNodeSelected(node, true);
-    } else {
-      return {
-        selectedIds: new Set(this.selectionState.selectedIds).add(node.id),
-        effectivelySelectedIds: new Set(this.selectionState.effectivelySelectedIds).add(node.id),
-        partiallySelectedIds: new Set(),
-        someDescendantSelectedIds: new Set()
-      };
-    }
-  };
-
-  private computeDeselect = (node: Node): SelectionState => {
-    if (node.disabled) {
-      return this.selectionState;
-    }
-    if (this.type === Type.TREE_SELECT) {
-      return this.computeTreeNodeSelected(node, false);
-    } else {
-      const newSelectedIds = new Set(this.selectionState.selectedIds);
-      newSelectedIds.delete(node.id);
-      const newEffectivelySelectedIds = new Set(this.selectionState.effectivelySelectedIds);
-      newEffectivelySelectedIds.delete(node.id);
-      return {
-        selectedIds: newEffectivelySelectedIds,
-        effectivelySelectedIds: newEffectivelySelectedIds,
-        partiallySelectedIds: new Set(),
-        someDescendantSelectedIds: new Set()
-      };
-    }
-  };
-
-  private computeTreeNodeSelected = (node: Node, select: boolean): SelectionState => {
-    const selectedIds = new Set(this.selectionState.selectedIds);
-    const effectivelySelectedIds = new Set(this.selectionState.effectivelySelectedIds);
-    const partiallySelectedIds = new Set(this.selectionState.partiallySelectedIds);
-    const someDescendantSelectedIds = new Set(this.selectionState.someDescendantSelectedIds);
-
-    this.setSelectedSubtree(node, selectedIds, select);
-    this.setSelectedAncestors(node, selectedIds, select);
-
-    const setHierarchicalSelected = (node: Node): void => {
-      const children = node.children ?? [];
-
-      for (const child of children) {
-        setHierarchicalSelected(child);
-      }
-
-      const selected = selectedIds.has(node.id);
-
-      if (children.length === 0) {
-        if (selected || node.disabled) {
-          effectivelySelectedIds.add(node.id);
-        } else {
-          effectivelySelectedIds.delete(node.id);
-        }
-      } else {
-        const someDescendantSelected = children
-          .some(child => selectedIds.has(child.id) || someDescendantSelectedIds.has(child.id));
-        const allChildrenEffectivelySelected = children
-          .every(child => effectivelySelectedIds.has(child.id));
-        const allChildrenSelected = children.every(child => selectedIds.has(child.id));
-
-        if (allChildrenEffectivelySelected) {
-          effectivelySelectedIds.add(node.id);
-        } else {
-          effectivelySelectedIds.delete(node.id);
-        }
-        if (!node.disabled && !allChildrenSelected && someDescendantSelected) {
-          partiallySelectedIds.add(node.id);
-        } else {
-          partiallySelectedIds.delete(node.id);
-        }
-        if (someDescendantSelected) {
-          someDescendantSelectedIds.add(node.id);
-        } else {
-          someDescendantSelectedIds.delete(node.id);
-        }
-      }
-    };
-
-    setHierarchicalSelected(this.getRoot(node));
-
-    return {selectedIds, effectivelySelectedIds, partiallySelectedIds, someDescendantSelectedIds};
-  };
-
-  private setSelectedSubtree = (node: Node, selectedIds: Set<string>, select: boolean): void => {
-    const children = node.children ?? [];
-
-    for (const child of children) {
-      this.setSelectedSubtree(child, selectedIds, select);
-    }
-
-    if (!node.disabled) {
-      if (children.length === 0) {
-        if (select) {
-          selectedIds.add(node.id);
-        } else {
-          selectedIds.delete(node.id);
-        }
-      } else {
-        const allChildrenSelected = children.every(child => selectedIds.has(child.id));
-        if (select && allChildrenSelected) {
-          selectedIds.add(node.id);
-        } else {
-          selectedIds.delete(node.id);
-        }
-      }
-    }
-  };
-
-  private setSelectedAncestors = (node: Node, selectedIds: Set<string>, select: boolean): void => {
-    const parentNode = node.parent;
-    if (parentNode) {
-      if (!parentNode.disabled) {
-        const allChildrenSelected = parentNode.children.every(child => selectedIds.has(child.id));
-        if (select && allChildrenSelected) {
-          selectedIds.add(parentNode.id);
-        } else {
-          selectedIds.delete(parentNode.id);
-        }
-      }
-      this.setSelectedAncestors(parentNode, selectedIds, select);
-    }
-  };
-
-  private getRoot = (node: Node): Node => {
-    const getNodeRoot = (node: Node): Node => {
-      if (node.parent) {
-        return getNodeRoot(node.parent);
-      }
-      return node;
-    };
-    return getNodeRoot(node);
   };
 
   private initialize = (data: TreeNode[], type: Type, searchValue: string) => {
-    this._type = type;
-    this._nodeMap = new Map<string, Node>();
-    this._roots = [];
-    this._nodes = [];
-    this._selectionState = {
-      selectedIds: new Set<string>(),
-      effectivelySelectedIds: new Set<string>(),
-      partiallySelectedIds: new Set<string>(),
-      someDescendantSelectedIds: new Set<string>()
-    };
-    this._expansionState = {
-      expandedIds: new Set<string>(),
-      searchExpandedIds: new Set<string>()
-    };
-    this._searchingState = {
-      matchedIds: new Set<string>(),
-      filteredIds: new Set<string>()
-    };
-
     data.forEach(treeNode => {
       const node = this.mapTreeNodeToNode(treeNode, 0, null, this.nodeMap);
       this.roots.push(node);
