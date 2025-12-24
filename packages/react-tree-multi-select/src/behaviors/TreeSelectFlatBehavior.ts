@@ -1,4 +1,4 @@
-import {SelectionState} from '../innerTypes';
+import {ExpansionState, SelectionState} from '../innerTypes';
 import {NodesBehavior} from './NodesBehavior';
 import {Node} from '../Node';
 
@@ -77,5 +77,39 @@ export class TreeSelectFlatBehavior implements NodesBehavior {
       partiallySelectedIds,
       someDescendantSelectedIds
     };
+  };
+
+  syncExpanded(expandedIds: Set<string>, isSearchMode: boolean, expansionState: ExpansionState): ExpansionState {
+    const newExpandedIds = isSearchMode ? new Set(expansionState.expandedIds) : new Set(expandedIds);
+    const newSearchExpandedIds = isSearchMode ? new Set(expandedIds) : new Set(expansionState.searchExpandedIds);
+    return {
+      expandedIds: newExpandedIds,
+      searchExpandedIds: newSearchExpandedIds
+    };
+  };
+
+  computeExpanded(node: Node, expand: boolean, isSearchMode: boolean, expansionState: ExpansionState): ExpansionState {
+    const newExpandedIds = new Set(expansionState.expandedIds);
+    const newSearchExpandedIds = new Set(expansionState.searchExpandedIds);
+    const newExpansionState = {
+      expandedIds: newExpandedIds,
+      searchExpandedIds: newSearchExpandedIds
+    };
+    if (node.canExpand()) {
+      if (isSearchMode) {
+        if (expand) {
+          newSearchExpandedIds.add(node.id);
+        } else {
+          newSearchExpandedIds.delete(node.id);
+        }
+      } else {
+        if (expand) {
+          newExpandedIds.add(node.id);
+        } else {
+          newExpandedIds.delete(node.id);
+        }
+      }
+    }
+    return newExpansionState;
   };
 }

@@ -48,7 +48,7 @@ export class NodesManager {
       filteredIds: new Set<string>()
     };
     this._nodesBehavior = this.createBehavior(type);
-    this.initialize(data, type, searchValue);
+    this.initialize(data, searchValue);
   }
 
   get type(): Type {
@@ -83,8 +83,26 @@ export class NodesManager {
     return this._searchingState;
   }
 
+  public getSize = (): number => {
+    return this.nodes.length;
+  };
+
   public findById = (id: string): Node | undefined => {
     return this.nodeMap.get(id);
+  };
+
+  public areAllEffectivelySelected = (): boolean => {
+    return this.roots.every(root => this.selectionState.effectivelySelectedIds.has(root.id));
+  };
+
+  public isAnyCanExpand = (): boolean => {
+    return this.nodes.some(node => node.canExpand());
+  };
+
+  public isAnySelectedExcludingDisabled = (): boolean => {
+    return this.nodes
+      .filter(node => !node.disabled)
+      .some(node => this.selectionState.selectedIds.has(node.id));
   };
 
   public syncSelectedIds = (selectedIds: Set<string>): void => {
@@ -99,7 +117,7 @@ export class NodesManager {
     return newSelectionState;
   };
 
-  public computeAllSelected = (select: boolean, sync: boolean = false): SelectionState => {
+  public computeAllSelected = (select: boolean, sync: boolean): SelectionState => {
     const newSelectionState = this.nodesBehavior.computeAllSelected(select, this.selectionState, this.roots, this.nodeMap);
     if (sync) {
       this._selectionState = newSelectionState;
@@ -108,15 +126,15 @@ export class NodesManager {
   };
 
   public syncExpandedIds = (expandedIds: Set<string>, isSearchMode: boolean): void => {
-    this._expansionState = this.computeExpansionState(expandedIds, isSearchMode);
+    this._expansionState = this.nodesBehavior.syncExpanded(expandedIds, isSearchMode, this.expansionState);
   };
 
-  public areAllEffectivelySelected = (): boolean => {
-    return this.roots.every(root => this.selectionState.effectivelySelectedIds.has(root.id));
-  };
-
-  public getSize = (): number => {
-    return this.nodes.length;
+  public computeExpanded = (node: Node, expand: boolean, isSearchMode: boolean, sync: boolean): ExpansionState => {
+    const newExpansionState = this.nodesBehavior.computeExpanded(node, expand, isSearchMode, this.expansionState);
+    if (sync) {
+      this._expansionState = newExpansionState;
+    }
+    return newExpansionState;
   };
 
   public getDisplayed = (isSearchMode: boolean, expansionState: ExpansionState): Node[] => {
@@ -137,16 +155,6 @@ export class NodesManager {
         ? expansionState.searchExpandedIds.has(ancestor.id)
         : expansionState.expandedIds.has(ancestor.id)
     );
-  };
-
-  public isAnyCanExpand = (): boolean => {
-    return this.nodes.some(node => node.canExpand());
-  };
-
-  public isAnySelectedExcludingDisabled = (): boolean => {
-    return this.nodes
-      .filter(node => !node.disabled)
-      .some(node => this.selectionState.selectedIds.has(node.id));
   };
 
   public handleSearch = (searchValue: string): void => {
@@ -188,43 +196,6 @@ export class NodesManager {
     this._searchingState = newSearchingState;
   };
 
-  private computeExpansionState = (expandedIds: Set<string>, isSearchMode: boolean): ExpansionState => {
-    const newExpandedIds = isSearchMode ? new Set(this.expansionState.expandedIds) : new Set(expandedIds);
-    const newSearchExpandedIds = isSearchMode ? new Set(expandedIds) : new Set(this.expansionState.searchExpandedIds);
-    return {
-      expandedIds: newExpandedIds,
-      searchExpandedIds: newSearchExpandedIds
-    };
-  };
-
-  public computeExpanded = (node: Node, expand: boolean, isSearchMode: boolean, sync: boolean = false): ExpansionState => {
-    const newExpandedIds = new Set(this.expansionState.expandedIds);
-    const newSearchExpandedIds = new Set(this.expansionState.searchExpandedIds);
-    const newExpansionState = {
-      expandedIds: newExpandedIds,
-      searchExpandedIds: newSearchExpandedIds
-    };
-    if (node.canExpand()) {
-      if (isSearchMode) {
-        if (expand) {
-          newSearchExpandedIds.add(node.id);
-        } else {
-          newSearchExpandedIds.delete(node.id);
-        }
-      } else {
-        if (expand) {
-          newExpandedIds.add(node.id);
-        } else {
-          newExpandedIds.delete(node.id);
-        }
-      }
-    }
-    if (sync) {
-      this._expansionState = newExpansionState;
-    }
-    return newExpansionState;
-  };
-
   private createBehavior = (type: Type): NodesBehavior => {
     switch (type) {
       case Type.SELECT:
@@ -238,7 +209,7 @@ export class NodesManager {
     }
   };
 
-  private initialize = (data: TreeNode[], type: Type, searchValue: string) => {
+  private initialize = (data: TreeNode[], searchValue: string) => {
     data.forEach(treeNode => {
       const node = this.mapTreeNodeToNode(treeNode, 0, null, this.nodeMap);
       this.roots.push(node);

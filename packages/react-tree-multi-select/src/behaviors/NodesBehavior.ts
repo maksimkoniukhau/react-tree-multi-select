@@ -1,4 +1,4 @@
-import {SelectionState} from '../innerTypes';
+import {ExpansionState, SelectionState} from '../innerTypes';
 import {Node} from '../Node';
 
 export interface NodesBehavior {
@@ -18,4 +18,8 @@ export interface NodesBehavior {
     roots: Node[],
     nodeMap: Map<string, Node>
   ): SelectionState;
+
+  syncExpanded(expandedIds: Set<string>, isSearchMode: boolean, expansionState: ExpansionState): ExpansionState;
+
+  computeExpanded(node: Node, expand: boolean, isSearchMode: boolean, expansionState: ExpansionState): ExpansionState;
 }

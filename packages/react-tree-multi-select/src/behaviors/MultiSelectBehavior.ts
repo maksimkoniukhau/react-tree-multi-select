@@ -1,4 +1,4 @@
-import {SelectionState} from '../innerTypes';
+import {ExpansionState, SelectionState} from '../innerTypes';
 import {NodesBehavior} from './NodesBehavior';
 import {Node} from '../Node';
 
@@ -77,5 +77,18 @@ export class MultiSelectBehavior implements NodesBehavior {
       partiallySelectedIds,
       someDescendantSelectedIds
     };
+  };
+
+  syncExpanded(_expandedIds: Set<string>, _isSearchMode: boolean, expansionState: ExpansionState): ExpansionState {
+    return expansionState;
+  };
+
+  computeExpanded(
+    _node: Node,
+    _expand: boolean,
+    _isSearchMode: boolean,
+    expansionState: ExpansionState
+  ): ExpansionState {
+    return expansionState;
   };
 }
