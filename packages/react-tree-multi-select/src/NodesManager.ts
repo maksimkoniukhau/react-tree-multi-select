@@ -48,7 +48,7 @@ export class NodesManager {
       filteredIds: new Set<string>()
     };
     this._nodesBehavior = this.createBehavior(type);
-    this.initialize(data, searchValue);
+    this.appendData(data, searchValue);
   }
 
   get type(): Type {
@@ -137,26 +137,6 @@ export class NodesManager {
     return newExpansionState;
   };
 
-  public getDisplayed = (isSearchMode: boolean, expansionState: ExpansionState): Node[] => {
-    return this.nodes.filter(node => this.isDisplayed(node, isSearchMode, expansionState));
-  };
-
-  private isDisplayed = (node: Node, isSearchMode: boolean, expansionState: ExpansionState): boolean => {
-    return this.searchingState.filteredIds.has(node.id) && this.isVisible(node, isSearchMode, expansionState);
-  };
-
-  private isVisible = (node: Node, isSearchMode: boolean, expansionState: ExpansionState): boolean => {
-    if (!node.parent) {
-      return true;
-    }
-    return this.everyAncestor(
-      node,
-      ancestor => isSearchMode
-        ? expansionState.searchExpandedIds.has(ancestor.id)
-        : expansionState.expandedIds.has(ancestor.id)
-    );
-  };
-
   public handleSearch = (searchValue: string): void => {
     if (searchValue) {
       const newSearchExpandedIds = new Set<string>();
@@ -196,37 +176,10 @@ export class NodesManager {
     this._searchingState = newSearchingState;
   };
 
-  private createBehavior = (type: Type): NodesBehavior => {
-    switch (type) {
-      case Type.SELECT:
-        return new SelectBehavior();
-      case Type.MULTI_SELECT:
-        return new MultiSelectBehavior();
-      case Type.TREE_SELECT_FLAT:
-        return new TreeSelectFlatBehavior();
-      case Type.TREE_SELECT:
-        return new TreeSelectBehavior();
-    }
-  };
-
-  private initialize = (data: TreeNode[], searchValue: string) => {
-    data.forEach(treeNode => {
-      const node = this.mapTreeNodeToNode(treeNode, 0, null, this.nodeMap);
-      this.roots.push(node);
-    });
-
-    if (this.type === Type.TREE_SELECT || this.type === Type.TREE_SELECT_FLAT) {
-      this._nodes = convertTreeArrayToFlatArray(this.roots);
-    } else {
-      this._nodes = this.roots;
-    }
-    this.handleSearch(searchValue);
-  };
-
-  public appendData = (data: TreeNode[], searchValue: string) => {
+  public appendData = (data: TreeNode[], searchValue: string): void => {
     const roots: Node[] = [];
     data.forEach(treeNode => {
-      const node = this.mapTreeNodeToNode(treeNode, 0, null, this.nodeMap);
+      const node = this.nodesBehavior.mapTreeNodeToNode(treeNode, 0, null, this.nodeMap);
       roots.push(node);
     });
 
@@ -240,12 +193,12 @@ export class NodesManager {
     this.handleSearch(searchValue);
   };
 
-  public appendChildren = (parentNode: Node, children: TreeNode[], searchValue: string) => {
+  public appendChildren = (parentNode: Node, children: TreeNode[], searchValue: string): void => {
     parentNode.hasLoaded = true;
 
     if (children?.length > 0) {
       parentNode.children = children.map(treeNode => (
-        this.mapTreeNodeToNode(treeNode, parentNode.depth + 1, parentNode.id, this.nodeMap)
+        this.nodesBehavior.mapTreeNodeToNode(treeNode, parentNode.depth + 1, parentNode.id, this.nodeMap)
       ));
 
       this._nodes = convertTreeArrayToFlatArray(this.roots);
@@ -253,39 +206,24 @@ export class NodesManager {
     }
   };
 
-  private mapTreeNodeToNode = (
-    treeNode: TreeNode,
-    depth: number,
-    parentId: string | null,
-    nodeMap: Map<string, Node>
-  ): Node => {
-    const childrenDepth = depth + 1;
-    const children = treeNode.children?.map(child => {
-      return this.mapTreeNodeToNode(child, childrenDepth, null, nodeMap);
-    }) || [];
+  public getDisplayed = (isSearchMode: boolean, expansionState: ExpansionState): Node[] => {
+    return this.nodes.filter(node => this.isDisplayed(node, isSearchMode, expansionState));
+  };
 
-    const id = treeNode.id;
-    const skipDropdownVirtualFocus = treeNode.skipDropdownVirtualFocus ?? false;
+  private isDisplayed = (node: Node, isSearchMode: boolean, expansionState: ExpansionState): boolean => {
+    return this.searchingState.filteredIds.has(node.id) && this.isVisible(node, isSearchMode, expansionState);
+  };
 
-    const node: Node = new Node(
-      nodeMap,
-      id,
-      treeNode.label,
-      skipDropdownVirtualFocus,
-      parentId,
-      children,
-      treeNode.hasChildren ?? false,
-      depth,
-      treeNode.disabled ?? false,
-      treeNode
+  private isVisible = (node: Node, isSearchMode: boolean, expansionState: ExpansionState): boolean => {
+    if (!node.parent) {
+      return true;
+    }
+    return this.everyAncestor(
+      node,
+      ancestor => isSearchMode
+        ? expansionState.searchExpandedIds.has(ancestor.id)
+        : expansionState.expandedIds.has(ancestor.id)
     );
-
-    // After creating current Node, assign its parent to all children
-    children.forEach(child => child.parentId = node.id);
-
-    nodeMap.set(id, node);
-
-    return node;
   };
 
   private everyAncestor = (node: Node, predicate: (ancestor: Node) => boolean): boolean => {
@@ -301,6 +239,19 @@ export class NodesManager {
     if (parentNode) {
       callback(parentNode);
       this.forEachAncestor(parentNode, callback);
+    }
+  };
+
+  private createBehavior = (type: Type): NodesBehavior => {
+    switch (type) {
+      case Type.SELECT:
+        return new SelectBehavior();
+      case Type.MULTI_SELECT:
+        return new MultiSelectBehavior();
+      case Type.TREE_SELECT_FLAT:
+        return new TreeSelectFlatBehavior();
+      case Type.TREE_SELECT:
+        return new TreeSelectBehavior();
     }
   };
 }

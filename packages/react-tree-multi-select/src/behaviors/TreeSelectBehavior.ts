@@ -1,8 +1,42 @@
+import {TreeNode} from '../types';
 import {ExpansionState, SelectionState} from '../innerTypes';
 import {NodesBehavior} from './NodesBehavior';
 import {Node} from '../Node';
 
 export class TreeSelectBehavior implements NodesBehavior {
+
+  mapTreeNodeToNode = (
+    treeNode: TreeNode,
+    depth: number,
+    parentId: string | null,
+    nodeMap: Map<string, Node>
+  ): Node => {
+    const childrenDepth = depth + 1;
+    const children = treeNode.children?.map(child => {
+      return this.mapTreeNodeToNode(child, childrenDepth, null, nodeMap);
+    }) || [];
+
+    const id = treeNode.id;
+
+    const node: Node = new Node(
+      nodeMap,
+      id,
+      treeNode.label,
+      treeNode.skipDropdownVirtualFocus ?? false,
+      parentId,
+      children,
+      treeNode.hasChildren ?? false,
+      depth,
+      treeNode.disabled ?? false,
+      treeNode
+    );
+
+    // After creating current Node, assign its parent to all children
+    children.forEach(child => child.parentId = node.id);
+
+    nodeMap.set(id, node);
+    return node;
+  };
 
   syncSelected(selectedIds: Set<string>, roots: Node[]): SelectionState {
     const allSelectedIds = new Set<string>();

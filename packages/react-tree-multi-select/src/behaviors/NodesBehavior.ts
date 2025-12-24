@@ -1,7 +1,10 @@
+import {TreeNode} from '../types';
 import {ExpansionState, SelectionState} from '../innerTypes';
 import {Node} from '../Node';
 
 export interface NodesBehavior {
+
+  mapTreeNodeToNode(treeNode: TreeNode, depth: number, parentId: string | null, nodeMap: Map<string, Node>): Node;
 
   syncSelected(selectedIds: Set<string>, roots: Node[]): SelectionState;
 

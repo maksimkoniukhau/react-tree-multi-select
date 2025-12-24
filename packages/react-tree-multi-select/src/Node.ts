@@ -34,10 +34,10 @@ export class Node {
     this._name = name ?? '';
     this._skipDropdownVirtualFocus = skipDropdownVirtualFocus;
     this._parentId = parentId;
-    this._children = children ?? [];
+    this._children = children;
     this._hasChildren = hasChildren;
     this._hasLoaded = false;
-    this._depth = depth || 0;
+    this._depth = depth;
     this._disabled = disabled;
     this._initTreeNode = initTreeNode;
   }
