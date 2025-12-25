@@ -2,7 +2,7 @@ import {TreeNode, Type} from './types';
 import {ExpansionState, SearchingState, SelectionState} from './innerTypes';
 import {convertTreeArrayToFlatArray} from './utils/nodesUtils';
 import {NodesBehavior} from './behaviors/NodesBehavior';
-import {SelectBehavior} from './behaviors/SelectBehavior';
+import {SingleSelectBehavior} from './behaviors/SingleSelectBehavior';
 import {MultiSelectBehavior} from './behaviors/MultiSelectBehavior';
 import {TreeSelectFlatBehavior} from './behaviors/TreeSelectFlatBehavior';
 import {TreeSelectBehavior} from './behaviors/TreeSelectBehavior';
@@ -245,7 +245,7 @@ export class NodesManager {
   private createBehavior = (type: Type): NodesBehavior => {
     switch (type) {
       case Type.SELECT:
-        return new SelectBehavior();
+        return new SingleSelectBehavior();
       case Type.MULTI_SELECT:
         return new MultiSelectBehavior();
       case Type.TREE_SELECT_FLAT:

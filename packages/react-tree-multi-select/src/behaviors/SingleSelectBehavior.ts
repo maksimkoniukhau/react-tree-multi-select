@@ -1,43 +1,8 @@
-import {TreeNode} from '../types';
-import {ExpansionState, SelectionState} from '../innerTypes';
-import {NodesBehavior} from './NodesBehavior';
+import {SelectionState} from '../innerTypes';
+import {BaseNodesBehavior} from './BaseNodesBehavior';
 import {Node} from '../Node';
 
-export class SelectBehavior implements NodesBehavior {
-
-  mapTreeNodeToNode = (
-    treeNode: TreeNode,
-    depth: number,
-    parentId: string | null,
-    nodeMap: Map<string, Node>
-  ): Node => {
-    const id = treeNode.id;
-
-    const node: Node = new Node(
-      nodeMap,
-      id,
-      treeNode.label,
-      treeNode.skipDropdownVirtualFocus ?? false,
-      parentId,
-      [],
-      false,
-      depth,
-      treeNode.disabled ?? false,
-      treeNode
-    );
-
-    nodeMap.set(id, node);
-    return node;
-  };
-
-  syncSelected(selectedIds: Set<string>): SelectionState {
-    return {
-      selectedIds: new Set(selectedIds),
-      effectivelySelectedIds: new Set(selectedIds),
-      partiallySelectedIds: new Set(),
-      someDescendantSelectedIds: new Set()
-    };
-  };
+export class SingleSelectBehavior extends BaseNodesBehavior {
 
   computeSelected(
     node: Node,
@@ -82,18 +47,5 @@ export class SelectBehavior implements NodesBehavior {
         };
       }
     }
-  };
-
-  syncExpanded(_expandedIds: Set<string>, _isSearchMode: boolean, expansionState: ExpansionState): ExpansionState {
-    return expansionState;
-  };
-
-  computeExpanded(
-    _node: Node,
-    _expand: boolean,
-    _isSearchMode: boolean,
-    expansionState: ExpansionState
-  ): ExpansionState {
-    return expansionState;
   };
 }
