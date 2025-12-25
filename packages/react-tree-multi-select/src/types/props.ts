@@ -164,10 +164,12 @@ export interface TreeMultiSelectProps {
    * When set to `true`, the dropdown is rendered (opened).
    * When set to `false`, the dropdown is hidden (closed).
    *
+   * The component treats this as a **controlled prop**.
+   *
    * If omitted, the component manages the dropdown state internally.
    * For full control, use this prop in conjunction with the `onDropdownToggle` callback.
    */
-  openDropdown?: boolean;
+  isDropdownOpen?: boolean;
 
   /**
    * Dropdown height in pixels. If the content height is smaller than this value,

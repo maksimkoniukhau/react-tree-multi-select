@@ -56,7 +56,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     withSelectAll = false,
     withDropdownInput = false,
     closeDropdownOnNodeChange = false,
-    openDropdown,
+    isDropdownOpen: propsIsDropdownOpen,
     dropdownHeight = DEFAULT_DROPDOWN_MAX_HEIGHT,
     overscan = OVERSCAN,
     isVirtualized = true,
@@ -88,6 +88,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     nodesManager.current = new NodesManager([], type, '');
   }
 
+  const isDropdownOpenControlled = propsIsDropdownOpen !== undefined;
   const isSelectedIdsControlled = propsSelectedIds !== undefined;
   const isExpandedIdsControlled = propsExpandedIds !== undefined;
 
@@ -113,10 +114,11 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   }, [propsComponents]);
 
   useEffect(() => {
-    if (openDropdown !== undefined) {
-      setIsDropdownOpen(openDropdown);
+    if (isDropdownOpenControlled) {
+      setIsDropdownOpen(propsIsDropdownOpen);
     }
-  }, [openDropdown]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [propsIsDropdownOpen]);
 
   const isAnyNodeDisplayed = displayedNodes.length > 0;
   const isAnyNodeSelected = selectedIds.length > 0;
@@ -191,11 +193,11 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (isDisabled) {
       return;
     }
-    if (openDropdown === undefined) {
+    if (!isDropdownOpenControlled) {
       setIsDropdownOpen(isOpen);
     }
     onDropdownToggle?.(isOpen);
-  }, [isDisabled, openDropdown, onDropdownToggle]);
+  }, [isDisabled, isDropdownOpenControlled, onDropdownToggle]);
 
   useEffect(() => {
     // when dropdownVirtualFocusIds were changed and previously virtually focused element is not present there

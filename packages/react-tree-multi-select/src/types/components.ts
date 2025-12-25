@@ -3,7 +3,7 @@ import {CheckedState, Type} from './core';
 
 export interface FieldOwnProps {
   type: Type;
-  showDropdown: boolean;
+  isDropdownOpen: boolean;
   withClearAll: boolean;
   componentDisabled: boolean;
 }

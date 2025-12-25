@@ -24,7 +24,7 @@ export const ControlledIsDropdownOpenExample: FC = memo(() => {
         data={data}
         defaultSelectedIds={selectedIds}
         defaultExpandedIds={expandedIds}
-        openDropdown={open}
+        isDropdownOpen={open}
         onDropdownToggle={handleDropdownToggle}
       />
     </div>

@@ -74,7 +74,7 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
         className: `rtms-field${componentDisabled ? ' disabled' : ''}`,
         onClick
       }}
-      ownProps={{type, showDropdown: isDropdownOpen, withClearAll, componentDisabled}}
+      ownProps={{type, isDropdownOpen, withClearAll, componentDisabled}}
       customProps={components.Field.props}
     >
       <div className="rtms-field-content">

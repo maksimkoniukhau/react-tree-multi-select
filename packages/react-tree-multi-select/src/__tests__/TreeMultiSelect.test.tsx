@@ -269,7 +269,7 @@ describe('TreeMultiSelect component: isDisabled prop', () => {
   const isDisabledMatcher = (
     container: HTMLElement,
     withDropdownInput: boolean,
-    openDropdown: boolean,
+    isDropdownOpen: boolean,
     handleFocus: (event: React.FocusEvent) => void,
     handleBlur: (event: React.FocusEvent) => void,
     handleNodeChange: (node: TreeNode, selectedIds: string[]) => void,
@@ -290,7 +290,7 @@ describe('TreeMultiSelect component: isDisabled prop', () => {
       expect(getFieldInput(container)).toBeInTheDocument();
       expect(getHiddenInput(container)).not.toBeInTheDocument();
     }
-    if (openDropdown) {
+    if (isDropdownOpen) {
       expect(getDropdown(container)).toBeInTheDocument();
     } else {
       expect(getDropdown(container)).not.toBeInTheDocument();
@@ -299,8 +299,8 @@ describe('TreeMultiSelect component: isDisabled prop', () => {
   };
 
   it.each([[true, true], [false, true], [true, false], [false, false]])(
-    'tests component when isDisabled=true and withDropdownInput={%s} and openDropdown={%s}',
-    async (withDropdownInput, openDropdown) => {
+    'tests component when isDisabled=true and withDropdownInput={%s} and isDropdownOpen={%s}',
+    async (withDropdownInput, isDropdownOpen) => {
       const user: UserEvent = userEvent.setup();
 
       const handleFocus = jest.fn();
@@ -315,7 +315,7 @@ describe('TreeMultiSelect component: isDisabled prop', () => {
           expandedIds={baseExpandedIds}
           isDisabled={true}
           withDropdownInput={withDropdownInput}
-          openDropdown={openDropdown}
+          isDropdownOpen={isDropdownOpen}
           onFocus={handleFocus}
           onBlur={handleBlur}
           onNodeChange={handleNodeChange}
@@ -324,47 +324,47 @@ describe('TreeMultiSelect component: isDisabled prop', () => {
         />
       );
 
-      isDisabledMatcher(container, withDropdownInput, openDropdown, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
+      isDisabledMatcher(container, withDropdownInput, isDropdownOpen, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
 
       await user.click(getField(container));
-      isDisabledMatcher(container, withDropdownInput, openDropdown, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
+      isDisabledMatcher(container, withDropdownInput, isDropdownOpen, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
 
       await user.click(getFieldClear(container));
-      isDisabledMatcher(container, withDropdownInput, openDropdown, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
+      isDisabledMatcher(container, withDropdownInput, isDropdownOpen, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
 
       await user.click(document.body);
-      isDisabledMatcher(container, withDropdownInput, openDropdown, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
+      isDisabledMatcher(container, withDropdownInput, isDropdownOpen, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
 
       await user.click(getFieldToggle(container));
-      isDisabledMatcher(container, withDropdownInput, openDropdown, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
+      isDisabledMatcher(container, withDropdownInput, isDropdownOpen, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
 
       await user.keyboard('{tab}');
-      isDisabledMatcher(container, withDropdownInput, openDropdown, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
+      isDisabledMatcher(container, withDropdownInput, isDropdownOpen, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
 
       await user.keyboard('{shift}{tab}');
-      isDisabledMatcher(container, withDropdownInput, openDropdown, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
+      isDisabledMatcher(container, withDropdownInput, isDropdownOpen, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
 
       await user.click(document.body);
-      isDisabledMatcher(container, withDropdownInput, openDropdown, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
+      isDisabledMatcher(container, withDropdownInput, isDropdownOpen, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
 
       await user.keyboard('{tab}');
-      isDisabledMatcher(container, withDropdownInput, openDropdown, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
+      isDisabledMatcher(container, withDropdownInput, isDropdownOpen, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
 
       await user.click(getChipContainer(container, 1));
-      isDisabledMatcher(container, withDropdownInput, openDropdown, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
+      isDisabledMatcher(container, withDropdownInput, isDropdownOpen, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
 
       await user.click(getChipLabel(container, 1));
-      isDisabledMatcher(container, withDropdownInput, openDropdown, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
+      isDisabledMatcher(container, withDropdownInput, isDropdownOpen, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
 
       await user.click(getChipClear(container, 1));
-      isDisabledMatcher(container, withDropdownInput, openDropdown, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
+      isDisabledMatcher(container, withDropdownInput, isDropdownOpen, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
 
-      if (openDropdown) {
+      if (isDropdownOpen) {
         await user.click(getListItem(container, 0));
-        isDisabledMatcher(container, withDropdownInput, openDropdown, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
+        isDisabledMatcher(container, withDropdownInput, isDropdownOpen, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
         if (!withDropdownInput) {
           await user.click(getNodeToggle(container, 0));
-          isDisabledMatcher(container, withDropdownInput, openDropdown, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
+          isDisabledMatcher(container, withDropdownInput, isDropdownOpen, handleFocus, handleBlur, handleNodeChange, handleNodeToggle, handleClearAll);
         }
       }
     });
@@ -947,14 +947,14 @@ describe('TreeMultiSelect component: closeDropdownOnNodeChange prop', () => {
     });
 });
 
-describe('TreeMultiSelect component: openDropdown and onDropdownToggle props', () => {
-  const openDropdownMatcher = (
+describe('TreeMultiSelect component: isDropdownOpen and onDropdownToggle props', () => {
+  const isDropdownOpenMatcher = (
     container: HTMLElement,
-    openDropdown: boolean,
+    isDropdownOpen: boolean,
     handleDropdownToggle: (open: boolean) => void,
     handleDropdownTogglePayload: boolean | null
   ): void => {
-    if (openDropdown) {
+    if (isDropdownOpen) {
       expect(getDropdown(container)).toBeInTheDocument();
     } else {
       expect(getDropdown(container)).not.toBeInTheDocument();
@@ -980,39 +980,39 @@ describe('TreeMultiSelect component: openDropdown and onDropdownToggle props', (
       />
     );
 
-    openDropdownMatcher(container, false, handleDropdownToggle, null);
+    isDropdownOpenMatcher(container, false, handleDropdownToggle, null);
     handleDropdownToggle.mockClear();
 
     await user.click(getField(container));
-    openDropdownMatcher(container, true, handleDropdownToggle, true);
+    isDropdownOpenMatcher(container, true, handleDropdownToggle, true);
     handleDropdownToggle.mockClear();
 
     await user.keyboard('{arrowup}');
-    openDropdownMatcher(container, false, handleDropdownToggle, false);
+    isDropdownOpenMatcher(container, false, handleDropdownToggle, false);
     handleDropdownToggle.mockClear();
 
     await user.keyboard('{arrowdown}');
-    openDropdownMatcher(container, true, handleDropdownToggle, true);
+    isDropdownOpenMatcher(container, true, handleDropdownToggle, true);
     handleDropdownToggle.mockClear();
 
     await user.keyboard('{escape}');
-    openDropdownMatcher(container, false, handleDropdownToggle, false);
+    isDropdownOpenMatcher(container, false, handleDropdownToggle, false);
     handleDropdownToggle.mockClear();
 
     await user.click(getFieldToggle(container));
-    openDropdownMatcher(container, true, handleDropdownToggle, true);
+    isDropdownOpenMatcher(container, true, handleDropdownToggle, true);
     handleDropdownToggle.mockClear();
 
     await user.click(getFieldToggle(container));
-    openDropdownMatcher(container, false, handleDropdownToggle, false);
+    isDropdownOpenMatcher(container, false, handleDropdownToggle, false);
     handleDropdownToggle.mockClear();
 
     await user.click(getChipContainer(container, 0));
-    openDropdownMatcher(container, true, handleDropdownToggle, true);
+    isDropdownOpenMatcher(container, true, handleDropdownToggle, true);
     handleDropdownToggle.mockClear();
 
     await user.click(getFieldInput(container));
-    openDropdownMatcher(container, false, handleDropdownToggle, false);
+    isDropdownOpenMatcher(container, false, handleDropdownToggle, false);
     handleDropdownToggle.mockClear();
   });
 
@@ -1026,16 +1026,16 @@ describe('TreeMultiSelect component: openDropdown and onDropdownToggle props', (
         data={treeNodeData}
         selectedIds={baseSelectedIds}
         expandedIds={baseExpandedIds}
-        openDropdown={true}
+        isDropdownOpen={true}
         onDropdownToggle={handleDropdownToggle}
       />
     );
 
-    openDropdownMatcher(container, true, handleDropdownToggle, null);
+    isDropdownOpenMatcher(container, true, handleDropdownToggle, null);
     handleDropdownToggle.mockClear();
 
     await user.click(getField(container));
-    openDropdownMatcher(container, true, handleDropdownToggle, false);
+    isDropdownOpenMatcher(container, true, handleDropdownToggle, false);
     handleDropdownToggle.mockClear();
 
     rerender(
@@ -1043,16 +1043,16 @@ describe('TreeMultiSelect component: openDropdown and onDropdownToggle props', (
         data={treeNodeData}
         selectedIds={baseSelectedIds}
         expandedIds={baseExpandedIds}
-        openDropdown={false}
+        isDropdownOpen={false}
         onDropdownToggle={handleDropdownToggle}
       />
     );
     user = userEvent.setup();
-    openDropdownMatcher(container, false, handleDropdownToggle, null);
+    isDropdownOpenMatcher(container, false, handleDropdownToggle, null);
     handleDropdownToggle.mockClear();
 
     await user.click(getField(container));
-    openDropdownMatcher(container, false, handleDropdownToggle, true);
+    isDropdownOpenMatcher(container, false, handleDropdownToggle, true);
     handleDropdownToggle.mockClear();
   });
 });
