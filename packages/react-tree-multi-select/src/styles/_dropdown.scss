@@ -147,6 +147,8 @@
       .rtms-select-all-checkbox {
         display: flex;
         align-items: center;
+        width: var(--rtms-select-all-checkbox-width);
+        height: var(--rtms-select-all-checkbox-height);
       }
     }
 
