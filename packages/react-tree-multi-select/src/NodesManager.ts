@@ -1,5 +1,5 @@
 import {TreeNode, Type} from './types';
-import {ExpansionState, SearchingState, SelectionState} from './innerTypes';
+import {ExpansionState, SearchState, SelectionState} from './innerTypes';
 import {convertTreeArrayToFlatArray} from './utils/nodesUtils';
 import {NodesBehavior} from './behaviors/NodesBehavior';
 import {SingleSelectBehavior} from './behaviors/SingleSelectBehavior';
@@ -10,14 +10,14 @@ import {Node} from './Node';
 
 export class NodesManager {
 
-  private _type: Type;
+  private readonly _type: Type;
 
-  private _nodesBehavior: NodesBehavior;
+  private readonly _nodesBehavior: NodesBehavior;
 
-  private _nodeMap: Map<string, Node>;
+  private readonly _nodeMap: Map<string, Node>;
 
   // original tree structure
-  private _roots: Node[];
+  private readonly _roots: Node[];
 
   // flat structure
   private _nodes: Node[];
@@ -26,7 +26,7 @@ export class NodesManager {
 
   private _expansionState: ExpansionState;
 
-  private _searchingState: SearchingState;
+  private _searchState: SearchState;
 
   constructor(data: TreeNode[], type: Type, searchValue: string) {
     this._type = type;
@@ -43,7 +43,7 @@ export class NodesManager {
       expandedIds: new Set<string>(),
       searchExpandedIds: new Set<string>()
     };
-    this._searchingState = {
+    this._searchState = {
       matchedIds: new Set<string>(),
       filteredIds: new Set<string>()
     };
@@ -79,8 +79,8 @@ export class NodesManager {
     return this._expansionState;
   }
 
-  get searchingState(): SearchingState {
-    return this._searchingState;
+  get searchState(): SearchState {
+    return this._searchState;
   }
 
   public getSize = (): number => {
@@ -140,40 +140,40 @@ export class NodesManager {
   public handleSearch = (searchValue: string): void => {
     if (searchValue) {
       const newSearchExpandedIds = new Set<string>();
-      const newSearchingState = {
+      const newSearchState = {
         matchedIds: new Set<string>(),
         filteredIds: new Set<string>()
       };
       this.nodes.forEach(node => {
         if (node.name?.toLowerCase().includes(searchValue.toLowerCase())) {
-          newSearchingState.matchedIds.add(node.id);
-          newSearchingState.filteredIds.add(node.id);
+          newSearchState.matchedIds.add(node.id);
+          newSearchState.filteredIds.add(node.id);
           if (node.hasLoadedChildren()) {
             newSearchExpandedIds.add(node.id);
           }
           this.forEachAncestor(node, ancestor => {
-            newSearchingState.filteredIds.add(ancestor.id);
+            newSearchState.filteredIds.add(ancestor.id);
             newSearchExpandedIds.add(ancestor.id);
           });
         }
       });
       this.expansionState.searchExpandedIds = newSearchExpandedIds;
-      this._searchingState = newSearchingState;
+      this._searchState = newSearchState;
     } else {
       this.resetSearch();
     }
   };
 
   public resetSearch = (): void => {
-    const newSearchingState = {
+    const newSearchState = {
       matchedIds: new Set<string>(),
       filteredIds: new Set<string>()
     }
     this.nodes.forEach(node => {
-      newSearchingState.filteredIds.add(node.id);
+      newSearchState.filteredIds.add(node.id);
     });
     this.expansionState.searchExpandedIds = new Set();
-    this._searchingState = newSearchingState;
+    this._searchState = newSearchState;
   };
 
   public appendData = (data: TreeNode[], searchValue: string): void => {
@@ -211,7 +211,7 @@ export class NodesManager {
   };
 
   private isDisplayed = (node: Node, isSearchMode: boolean, expansionState: ExpansionState): boolean => {
-    return this.searchingState.filteredIds.has(node.id) && this.isVisible(node, isSearchMode, expansionState);
+    return this.searchState.filteredIds.has(node.id) && this.isVisible(node, isSearchMode, expansionState);
   };
 
   private isVisible = (node: Node, isSearchMode: boolean, expansionState: ExpansionState): boolean => {

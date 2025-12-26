@@ -1,7 +1,7 @@
 import React, {FC, memo} from 'react';
 import {SELECT_ALL_LABEL} from './constants';
 import {buildVirtualFocusId} from './utils/focusUtils';
-import {CheckedState, DROPDOWN_PREFIX, FOOTER_SUFFIX, SELECT_ALL_SUFFIX, Type} from './types';
+import {DROPDOWN_PREFIX, FOOTER_SUFFIX, SELECT_ALL_SUFFIX, SelectionAggregateState, Type} from './types';
 import {InnerComponents, NullableVirtualFocusId} from './innerTypes';
 import {NodesManager} from './NodesManager';
 import {Node} from './Node';
@@ -22,7 +22,7 @@ export interface ListItemProps {
   isAnyCanExpand: boolean;
   searchValue: string;
   showSelectAll: boolean;
-  selectAllCheckedState: CheckedState;
+  selectionAggregateState: SelectionAggregateState;
   virtualFocusId: NullableVirtualFocusId;
   noDataText: string;
   noMatchesText: string;
@@ -45,7 +45,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     isAnyCanExpand,
     searchValue,
     showSelectAll,
-    selectAllCheckedState,
+    selectionAggregateState,
     virtualFocusId,
     noDataText,
     noMatchesText,
@@ -62,7 +62,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
       <SelectAllWrapper
         components={components}
         label={SELECT_ALL_LABEL}
-        checkedState={selectAllCheckedState}
+        selectionAggregateState={selectionAggregateState}
         focused={virtualFocusId === buildVirtualFocusId(DROPDOWN_PREFIX, SELECT_ALL_SUFFIX)}
         onClick={onSelectAllChange}
       />
@@ -108,7 +108,7 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
       partial={nodesManager.selectionState.partiallySelectedIds.has(node.id)}
       expanded={expanded}
       focused={focused}
-      matched={nodesManager.searchingState.matchedIds.has(node.id)}
+      matched={nodesManager.searchState.matchedIds.has(node.id)}
       loaded={loadedIds.has(node.id)}
       skipDropdownVirtualFocus={node.skipDropdownVirtualFocus}
       indentation={indentation}

@@ -1,13 +1,13 @@
 import './styles/tree-multi-select.scss';
 import React, {forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 import {
-  CheckedState,
   CLEAR_ALL_SUFFIX,
   DROPDOWN_PREFIX,
   FIELD_PREFIX,
   FOOTER_SUFFIX,
   INPUT_SUFFIX,
   SELECT_ALL_SUFFIX,
+  SelectionAggregateState,
   TreeMultiSelectHandle,
   TreeMultiSelectProps,
   Type,
@@ -19,7 +19,7 @@ import {areSetsEqual, classNames, getFieldFocusableElement} from './utils/common
 import {
   filterChips,
   getOrderedIds,
-  getSelectAllCheckedState,
+  getSelectionAggregateState,
   normalizeExpandedIds,
   normalizeSelectedIds
 } from './utils/nodesUtils';
@@ -100,7 +100,9 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   );
   const [loadedIds, setLoadedIds] = useState<Set<string>>(new Set());
   const [displayedNodes, setDisplayedNodes] = useState<Node[]>([]);
-  const [selectAllCheckedState, setSelectAllCheckedState] = useState<CheckedState>(CheckedState.UNSELECTED);
+  const [selectionAggregateState, setSelectionAggregateState] = useState<SelectionAggregateState>(
+    SelectionAggregateState.NONE
+  );
   const [searchValue, setSearchValue] = useState<string>('');
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [virtualFocusId, setVirtualFocusId] = useState<NullableVirtualFocusId>(null);
@@ -235,7 +237,9 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
   }, [isDropdownOpen]);
 
   useEffect(() => {
-    const virtualFocusElement = treeMultiSelectRef.current?.querySelector(`[data-rtms-virtual-focus-id='${virtualFocusId}']`);
+    const virtualFocusElement = treeMultiSelectRef.current?.querySelector(
+      `[data-rtms-virtual-focus-id='${virtualFocusId}']`
+    );
     if (!virtualFocusElement) {
       return;
     }
@@ -248,15 +252,17 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     nodesManager.current.syncSelectedIds(new Set(normalizeSelectedIds(selectedIds, type)));
     nodesManager.current.syncExpandedIds(new Set(normalizeExpandedIds(expandedIds, type)), isSearchMode);
 
-    const newDisplayedNodes = nodesManager.current.getDisplayed(isSearchMode, nodesManager.current.expansionState);
-    const newSelectAllCheckedState = getSelectAllCheckedState(
+    const newDisplayedNodes = nodesManager.current.getDisplayed(
+      isSearchMode, nodesManager.current.expansionState
+    );
+    const newSelectionAggregateState = getSelectionAggregateState(
       [...nodesManager.current.selectionState.selectedIds],
       nodesManager.current.nodes
     );
 
     setSelectedIds(getOrderedIds(nodesManager.current.selectionState.selectedIds, nodesManager.current));
     setDisplayedNodes(newDisplayedNodes);
-    setSelectAllCheckedState(newSelectAllCheckedState);
+    setSelectionAggregateState(newSelectionAggregateState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, type]);
 
@@ -268,12 +274,12 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
         return;
       }
       nodesManager.current.syncSelectedIds(newSelectedIds);
-      const newSelectAllCheckedState = getSelectAllCheckedState(
+      const newSelectionAggregateState = getSelectionAggregateState(
         [...nodesManager.current.selectionState.selectedIds],
         nodesManager.current.nodes
       );
       setSelectedIds(getOrderedIds(nodesManager.current.selectionState.selectedIds, nodesManager.current));
-      setSelectAllCheckedState(newSelectAllCheckedState);
+      setSelectionAggregateState(newSelectionAggregateState);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [propsSelectedIds]);
@@ -424,11 +430,14 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     handleFieldClickRef.current?.(event);
   }, []);
 
-  const callClearAllHandler = useCallback((selectAllCheckedState: CheckedState, selectedIds: string[]): void => {
-    if (onClearAll) {
-      onClearAll(selectedIds, type !== Type.SELECT ? selectAllCheckedState : undefined);
-    }
-  }, [onClearAll, type]);
+  const callClearAllHandler = useCallback(
+    (selectionAggregateState: SelectionAggregateState, selectedIds: string[]): void => {
+      if (onClearAll) {
+        onClearAll(selectedIds, type !== Type.SELECT ? selectionAggregateState : undefined);
+      }
+    },
+    [onClearAll, type]
+  );
 
   const handleDeleteAllRef = useRef<(event: React.MouseEvent | React.KeyboardEvent) => void>(null);
   handleDeleteAllRef.current = (event: React.MouseEvent | React.KeyboardEvent): void => {
@@ -439,13 +448,13 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
 
     const selectionState = nodesManager.current.computeAllSelected(false, !isSelectedIdsControlled);
     const newSelectedIds = getOrderedIds(selectionState.selectedIds, nodesManager.current);
-    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedIds, nodesManager.current.nodes);
+    const newSelectionAggregateState = getSelectionAggregateState(newSelectedIds, nodesManager.current.nodes);
     if (!isSelectedIdsControlled) {
       setSelectedIds(newSelectedIds);
-      setSelectAllCheckedState(newSelectAllCheckedState);
+      setSelectionAggregateState(newSelectionAggregateState);
       setVirtualFocusId(findFieldVirtualFocusId(buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX)));
     }
-    callClearAllHandler(newSelectAllCheckedState, newSelectedIds);
+    callClearAllHandler(newSelectionAggregateState, newSelectedIds);
   };
 
   const handleDeleteAll = useCallback((event: React.MouseEvent | React.KeyboardEvent): void => {
@@ -472,11 +481,14 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     handleInputChangeRef.current?.(event);
   }, []);
 
-  const callSelectAllChangeHandler = useCallback((selectAllCheckedState: CheckedState, selectedIds: string[]): void => {
-    if (onSelectAllChange) {
-      onSelectAllChange(selectedIds, selectAllCheckedState);
-    }
-  }, [onSelectAllChange]);
+  const callSelectAllChangeHandler = useCallback(
+    (selectionAggregateState: SelectionAggregateState, selectedIds: string[]): void => {
+      if (onSelectAllChange) {
+        onSelectAllChange(selectedIds, selectionAggregateState);
+      }
+    },
+    [onSelectAllChange]
+  );
 
   const setAllSelectedRef = useRef<(selectAll: boolean) => void>(null);
   setAllSelectedRef.current = (selectAll: boolean): void => {
@@ -489,12 +501,12 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
 
     const selectionState = nodesManager.current.computeAllSelected(selectAll, !isSelectedIdsControlled);
     const newSelectedIds = getOrderedIds(selectionState.selectedIds, nodesManager.current);
-    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedIds, nodesManager.current.nodes);
+    const newSelectionAggregateState = getSelectionAggregateState(newSelectedIds, nodesManager.current.nodes);
     if (!isSelectedIdsControlled) {
       setSelectedIds(newSelectedIds);
-      setSelectAllCheckedState(newSelectAllCheckedState);
+      setSelectionAggregateState(newSelectionAggregateState);
     }
-    callSelectAllChangeHandler(newSelectAllCheckedState, newSelectedIds);
+    callSelectAllChangeHandler(newSelectionAggregateState, newSelectedIds);
   };
 
   const setAllSelected = useCallback((selectAll: boolean): void => {
@@ -506,8 +518,9 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     if (isDisabled) {
       return;
     }
-    const shouldBeUnselected = selectAllCheckedState === CheckedState.SELECTED
-      || (selectAllCheckedState === CheckedState.PARTIAL && nodesManager.current.areAllEffectivelySelected());
+    const shouldBeUnselected = selectionAggregateState === SelectionAggregateState.ALL
+      || (selectionAggregateState === SelectionAggregateState.PARTIAL
+        && nodesManager.current.areAllEffectivelySelected());
     setAllSelected(!shouldBeUnselected);
   };
 
@@ -576,10 +589,10 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
 
     const selectionState = nodesManager.current.computeSelected(node, select, !isSelectedIdsControlled);
     const newSelectedIds = getOrderedIds(selectionState.selectedIds, nodesManager.current);
-    const newSelectAllCheckedState = getSelectAllCheckedState(newSelectedIds, nodesManager.current.nodes);
+    const newSelectionAggregateState = getSelectionAggregateState(newSelectedIds, nodesManager.current.nodes);
     if (!isSelectedIdsControlled) {
       setSelectedIds(newSelectedIds);
-      setSelectAllCheckedState(newSelectAllCheckedState);
+      setSelectionAggregateState(newSelectionAggregateState);
     }
     callNodeChangeHandler(node, newSelectedIds);
   };
@@ -951,7 +964,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
 
   useImperativeHandle(ref, (): TreeMultiSelectHandle => ({
     getState: () => ({
-      allNodesSelectionState: selectAllCheckedState,
+      selectionAggregateState,
       inputValue: searchValue,
       isDropdownOpen,
       virtualFocusId
@@ -1080,7 +1093,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
           inputPlaceholder={inputPlaceholder}
           searchValue={searchValue}
           showSelectAll={showSelectAll}
-          selectAllCheckedState={selectAllCheckedState}
+          selectionAggregateState={selectionAggregateState}
           virtualFocusId={virtualFocusId}
           noDataText={noDataText}
           noMatchesText={noMatchesText}

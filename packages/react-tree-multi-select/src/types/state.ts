@@ -1,4 +1,4 @@
-import {CheckedState} from './core';
+import {SelectionAggregateState} from './core';
 import {VirtualFocusId} from './virtualFocus';
 
 /**
@@ -6,9 +6,9 @@ import {VirtualFocusId} from './virtualFocus';
  */
 export interface State {
   /**
-   * Represents the current overall selection state of all nodes in the tree.
+   * Represents the current overall selection state of all nodes.
    */
-  allNodesSelectionState: CheckedState;
+  selectionAggregateState: SelectionAggregateState;
 
   /**
    * The current search input value.

@@ -1,5 +1,5 @@
 import React, {FC, JSX, memo, RefObject, useEffect, useRef} from 'react';
-import {CheckedState, DROPDOWN_PREFIX, DropdownProps, FOOTER_SUFFIX, SELECT_ALL_SUFFIX, Type} from './types';
+import {SelectionAggregateState, DROPDOWN_PREFIX, DropdownProps, FOOTER_SUFFIX, SELECT_ALL_SUFFIX, Type} from './types';
 import {InnerComponents, NullableVirtualFocusId} from './innerTypes';
 import {buildVirtualFocusId, extractElementId, isVirtualFocusInDropdown} from './utils/focusUtils';
 import {NodesManager} from './NodesManager';
@@ -29,7 +29,7 @@ interface DropdownContainerProps {
   inputPlaceholder: string;
   searchValue: string;
   showSelectAll: boolean;
-  selectAllCheckedState: CheckedState;
+  selectionAggregateState: SelectionAggregateState;
   virtualFocusId: NullableVirtualFocusId;
   noDataText: string;
   noMatchesText: string;
@@ -64,7 +64,7 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
     inputPlaceholder,
     searchValue,
     showSelectAll,
-    selectAllCheckedState,
+    selectionAggregateState,
     virtualFocusId,
     noDataText,
     noMatchesText,
@@ -131,7 +131,7 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
         isAnyCanExpand={isAnyCanExpand}
         searchValue={searchValue}
         showSelectAll={showSelectAll}
-        selectAllCheckedState={selectAllCheckedState}
+        selectionAggregateState={selectionAggregateState}
         virtualFocusId={virtualFocusId}
         noDataText={noDataText}
         noMatchesText={noMatchesText}

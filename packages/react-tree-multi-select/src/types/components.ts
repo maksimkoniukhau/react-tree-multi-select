@@ -1,5 +1,5 @@
 import React, {JSX} from 'react';
-import {CheckedState, Type} from './core';
+import {SelectionAggregateState, Type} from './core';
 
 export interface FieldOwnProps {
   type: Type;
@@ -47,7 +47,7 @@ export interface DropdownOwnProps {
 
 export interface SelectAllContainerOwnProps {
   label: string;
-  checkedState: CheckedState;
+  selectionAggregateState: SelectionAggregateState;
   focused: boolean;
 }
 

@@ -1,10 +1,10 @@
 import React, {FC, memo, ReactNode} from 'react';
 import {
-  CheckedState,
   DROPDOWN_PREFIX,
   SELECT_ALL_SUFFIX,
   SelectAllContainerProps,
-  SelectAllContainerType
+  SelectAllContainerType,
+  SelectionAggregateState
 } from '../types';
 import {buildVirtualFocusId} from '../utils/focusUtils';
 
@@ -19,18 +19,18 @@ export const SelectAllContainer: FC<SelectAllContainerProps> = memo((props) => {
 interface SelectAllContainerWrapperProps {
   selectAllContainer: SelectAllContainerType;
   label: string;
-  checkedState: CheckedState;
+  selectionAggregateState: SelectionAggregateState;
   focused: boolean;
   onClick: (event: React.MouseEvent) => void;
   children: ReactNode;
 }
 
 export const SelectAllContainerWrapper: FC<SelectAllContainerWrapperProps> = memo((props) => {
-  const {selectAllContainer, label, checkedState, focused, onClick, children} = props;
+  const {selectAllContainer, label, selectionAggregateState, focused, onClick, children} = props;
 
-  const selectedClass = checkedState === CheckedState.SELECTED
+  const selectedClass = selectionAggregateState === SelectionAggregateState.ALL
     ? ' selected'
-    : checkedState === CheckedState.PARTIAL
+    : selectionAggregateState === SelectionAggregateState.PARTIAL
       ? ' partial'
       : '';
   const containerClasses = `rtms-sticky-item${selectedClass}${focused ? ' focused' : ''}`;
@@ -42,7 +42,7 @@ export const SelectAllContainerWrapper: FC<SelectAllContainerWrapperProps> = mem
         className: containerClasses,
         onClick
       }}
-      ownProps={{label, checkedState, focused}}
+      ownProps={{label, selectionAggregateState, focused}}
       customProps={selectAllContainer.props}
     >
       {children}

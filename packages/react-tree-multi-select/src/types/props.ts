@@ -1,5 +1,6 @@
+import React from 'react';
 import {Components} from './components';
-import {CheckedState, Type} from './core';
+import {SelectionAggregateState, Type} from './core';
 import {FooterConfig, KeyboardConfig} from './configs';
 import {TreeNode} from './nodes';
 
@@ -245,10 +246,10 @@ export interface TreeMultiSelectProps {
    * This is used to clear all selected nodes, except for nodes that are disabled.
    *
    * @param selectedIds - The list of currently selected nodes Ids.
-   * @param selectAllCheckedState - The current check state of the `SelectAll` component,
+   * @param selectionAggregateState - The current overall selection state of all nodes,
    * or `undefined` if the component type is `Type.SELECT`.
    */
-  onClearAll?: (selectedIds: string[], selectAllCheckedState: CheckedState | undefined) => void;
+  onClearAll?: (selectedIds: string[], selectionAggregateState: SelectionAggregateState | undefined) => void;
 
   /**
    * Callback triggered when the `SelectAll` component is activated by user interaction,
@@ -257,9 +258,9 @@ export interface TreeMultiSelectProps {
    * This is used to select or unselect all nodes, except for nodes that are disabled.
    *
    * @param selectedIds - The list of currently selected nodes IDs.
-   * @param selectAllCheckedState - The current check state of the `SelectAll` component.
+   * @param selectionAggregateState - The current overall selection state of all nodes.
    */
-  onSelectAllChange?: (selectedIds: string[], selectAllCheckedState: CheckedState) => void;
+  onSelectAllChange?: (selectedIds: string[], selectionAggregateState: SelectionAggregateState) => void;
 
   /**
    * Callback triggered when the component receives focus.

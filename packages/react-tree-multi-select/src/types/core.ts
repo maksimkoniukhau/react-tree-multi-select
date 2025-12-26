@@ -11,20 +11,23 @@ export enum Type {
   /** Component behaves as a multi-select. */
   MULTI_SELECT = 'MULTI_SELECT',
 
-  /** Component behaves as a simple select. */
+  /** Component behaves as a single select. */
   SELECT = 'SELECT'
 }
 
 /**
- * Enum representing the checked state for the SelectAll component.
+ * Enum representing the aggregate selection state of all nodes.
  */
-export enum CheckedState {
-  /** All items are selected. */
-  SELECTED = 'SELECTED',
+export enum SelectionAggregateState {
+  /** All nodes are selected. */
+  ALL = 'ALL',
 
-  /** Some (but not all) items are selected (partial selection). */
+  /** All selectable (non-disabled) nodes are selected. */
+  EFFECTIVE_ALL = 'EFFECTIVE_ALL',
+
+  /** Some, but not all, nodes are selected. */
   PARTIAL = 'PARTIAL',
 
-  /** No items are selected. */
-  UNSELECTED = 'UNSELECTED'
+  /** No nodes are selected. */
+  NONE = 'NONE'
 }

@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import React, {FC} from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
 import userEvent, {UserEvent} from '@testing-library/user-event';
-import {CheckedState, FooterProps, TreeMultiSelect, TreeNode, Type} from '../index';
+import {FooterProps, SelectionAggregateState, TreeMultiSelect, TreeNode, Type} from '../index';
 import {getBaseExpandedIds, getBaseSelectedIds, getBaseTreeNodeData, getTreeNodeData} from './testutils/dataUtils';
 import {
   getChipClear,
@@ -44,18 +44,23 @@ const CustomFooter: FC<FooterProps> = (props) => {
 
 const selectAllMatcher = (
   container: HTMLElement,
-  selectAllState: CheckedState,
+  selectAllState: SelectionAggregateState,
   chipsAmount: number,
   selectedNodesAmount: number,
-  handleSelectAllChange?: (selectedIds: string[], selectAllCheckedState: CheckedState) => void
+  handleSelectAllChange?: (selectedIds: string[], selectionAggregateState: SelectionAggregateState) => void
 ): void => {
   const selectAll = getStickyItem(container, 0);
   expect(selectAll).toBeInTheDocument();
-  if (selectAllState === CheckedState.UNSELECTED) {
-    expect(selectAll.classList.contains('selected')).toBeFalsy();
-    expect(selectAll.classList.contains('partial')).toBeFalsy();
-  } else {
-    expect(selectAll.classList.contains(selectAllState.toLowerCase())).toBeTruthy();
+  switch (selectAllState) {
+    case SelectionAggregateState.ALL:
+      expect(selectAll.classList.contains('selected')).toBeTruthy();
+      break;
+    case SelectionAggregateState.PARTIAL:
+      expect(selectAll.classList.contains('partial')).toBeTruthy();
+      break;
+    default:
+      expect(selectAll.classList.contains('selected')).toBeFalsy();
+      expect(selectAll.classList.contains('partial')).toBeFalsy();
   }
   expect(getChipContainers(container).length).toBe(chipsAmount);
   const selectedNodes = getListItems(container).filter(el => el.classList.contains('selected'));
@@ -274,7 +279,7 @@ describe('TreeMultiSelect component: isDisabled prop', () => {
     handleBlur: (event: React.FocusEvent) => void,
     handleNodeChange: (node: TreeNode, selectedIds: string[]) => void,
     handleNodeToggle: (node: TreeNode, expandedIds: string[]) => void,
-    handleClearAll: (selectedIds: string[], selectAllCheckedState?: CheckedState) => void
+    handleClearAll: (selectedIds: string[], selectionAggregateState?: SelectionAggregateState) => void
   ): void => {
     expect(container.contains(document.activeElement)).toBeFalsy();
     expect(getRootContainer(container)).not.toHaveClass('focused');
@@ -543,7 +548,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
     withClearAll: boolean,
     chipsAmount: number,
     selectedNodesAmount: number,
-    handleClearAll?: (selectedIds: string[], selectAllCheckedState: CheckedState | undefined) => void
+    handleClearAll?: (selectedIds: string[], selectionAggregateState: SelectionAggregateState | undefined) => void
   ): void => {
     if (withClearAll) {
       expect(getFieldClear(container)).toBeInTheDocument();
@@ -778,66 +783,66 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
     );
 
     await user.click(getField(container));
-    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0);
+    selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0);
 
     await user.click(getStickyItem(container, 0));
-    selectAllMatcher(container, CheckedState.SELECTED, 8, 8, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.ALL, 8, 8, handleSelectAllChange);
     handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
-    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0, handleSelectAllChange);
     handleSelectAllChange.mockClear();
 
     await user.keyboard('{enter}');
-    selectAllMatcher(container, CheckedState.SELECTED, 8, 8, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.ALL, 8, 8, handleSelectAllChange);
     handleSelectAllChange.mockClear();
 
     await user.keyboard('{arrowdown}');
     await user.keyboard('{enter}');
-    selectAllMatcher(container, CheckedState.PARTIAL, 7, 7);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 7, 7);
 
     await user.keyboard('{arrowdown}');
     await user.keyboard('{enter}');
-    selectAllMatcher(container, CheckedState.PARTIAL, 6, 6);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 6, 6);
 
     await user.keyboard('{arrowup}');
     await user.keyboard('{arrowup}');
     await user.keyboard('{enter}');
-    selectAllMatcher(container, CheckedState.SELECTED, 8, 8, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.ALL, 8, 8, handleSelectAllChange);
     handleSelectAllChange.mockClear();
 
     await user.keyboard('{arrowdown}');
     await user.keyboard('{arrowright}');
-    selectAllMatcher(container, CheckedState.SELECTED, 8, 11);
+    selectAllMatcher(container, SelectionAggregateState.ALL, 8, 11);
 
     await user.keyboard('{arrowdown}');
     await user.keyboard('{arrowright}');
-    selectAllMatcher(container, CheckedState.SELECTED, 8, 13);
+    selectAllMatcher(container, SelectionAggregateState.ALL, 8, 13);
 
     await user.keyboard('{arrowdown}');
     await user.keyboard('{enter}');
-    selectAllMatcher(container, CheckedState.PARTIAL, 10, 10);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 10, 10);
 
     await user.keyboard('{arrowup}');
     await user.keyboard('{enter}');
-    selectAllMatcher(container, CheckedState.SELECTED, 8, 13);
+    selectAllMatcher(container, SelectionAggregateState.ALL, 8, 13);
 
     await user.click(getListItem(container, 5));
-    selectAllMatcher(container, CheckedState.PARTIAL, 9, 11);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 9, 11);
 
     await user.click(getListItem(container, 10));
-    selectAllMatcher(container, CheckedState.PARTIAL, 8, 10);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 8, 10);
 
     await user.click(getStickyItem(container, 0));
-    selectAllMatcher(container, CheckedState.SELECTED, 8, 13, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.ALL, 8, 13, handleSelectAllChange);
     handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
-    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0, handleSelectAllChange);
     handleSelectAllChange.mockClear();
 
     await user.click(getListItem(container, 4));
-    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1);
 
     await user.click(getListItem(container, 0));
     await user.click(getListItem(container, 6));
@@ -846,17 +851,17 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
     await user.click(getListItem(container, 9));
     await user.click(getListItem(container, 10));
     await user.click(getListItem(container, 11));
-    selectAllMatcher(container, CheckedState.PARTIAL, 7, 12);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 7, 12);
 
     await user.click(getListItem(container, 12));
-    selectAllMatcher(container, CheckedState.SELECTED, 8, 13);
+    selectAllMatcher(container, SelectionAggregateState.ALL, 8, 13);
 
     await user.click(getField(container));
     expect(getDropdown(container)).not.toBeInTheDocument();
     expect(getChipContainers(container).length).toBe(8);
 
     await user.click(getField(container));
-    selectAllMatcher(container, CheckedState.SELECTED, 8, 13);
+    selectAllMatcher(container, SelectionAggregateState.ALL, 8, 13);
   });
 });
 
@@ -2409,7 +2414,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0);
+    selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0);
 
     await user.click(getListItem(container, 0));
     itemsStateMatcher(container, [
@@ -2427,7 +2432,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 3, 3);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 3, 3);
 
     await user.click(getListItem(container, 0));
     itemsStateMatcher(container, [
@@ -2445,7 +2450,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0);
+    selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0);
 
     await user.click(getListItem(container, 0));
     itemsStateMatcher(container, [
@@ -2463,7 +2468,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 3, 3);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 3, 3);
 
     await user.click(getStickyItem(container, 0));
     itemsStateMatcher(container, [
@@ -2481,7 +2486,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'selected'},
       {index: 12, state: 'selected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 10, 10, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 10, 10, handleSelectAllChange);
     handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
@@ -2500,7 +2505,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0, handleSelectAllChange);
     handleSelectAllChange.mockClear();
   });
 
@@ -2534,7 +2539,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0);
+    selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0);
 
     await user.click(getListItem(container, 0));
     itemsStateMatcher(container, [
@@ -2552,7 +2557,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 3, 3);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 3, 3);
 
     await user.click(getListItem(container, 0));
     itemsStateMatcher(container, [
@@ -2570,7 +2575,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0);
+    selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0);
 
     await user.click(getListItem(container, 7));
     itemsStateMatcher(container, [
@@ -2588,7 +2593,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0);
+    selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0);
 
     await user.click(getStickyItem(container, 0));
     itemsStateMatcher(container, [
@@ -2606,7 +2611,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'selected'},
       {index: 12, state: 'selected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 9, 9, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 9, 9, handleSelectAllChange);
     handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
@@ -2625,7 +2630,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0, handleSelectAllChange);
     handleSelectAllChange.mockClear();
   });
 
@@ -2660,7 +2665,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1);
 
     await user.click(getListItem(container, 0));
     itemsStateMatcher(container, [
@@ -2678,7 +2683,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 1, 6);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 6);
 
     await user.click(getListItem(container, 0));
     itemsStateMatcher(container, [
@@ -2696,7 +2701,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1);
 
     await user.click(getListItem(container, 7));
     itemsStateMatcher(container, [
@@ -2714,7 +2719,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 2, 2);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 2, 2);
 
     await user.click(getListItem(container, 3));
     itemsStateMatcher(container, [
@@ -2732,7 +2737,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 2, 2);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 2, 2);
 
     await user.click(getStickyItem(container, 0));
     itemsStateMatcher(container, [
@@ -2750,7 +2755,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'selected'},
       {index: 12, state: 'selected'}
     ]);
-    selectAllMatcher(container, CheckedState.SELECTED, 8, 13, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.ALL, 8, 13, handleSelectAllChange);
     handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
@@ -2769,7 +2774,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1, handleSelectAllChange);
     handleSelectAllChange.mockClear();
   });
 
@@ -2804,7 +2809,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1);
 
     await user.click(getListItem(container, 0));
     itemsStateMatcher(container, [
@@ -2822,7 +2827,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 3, 3);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 3, 3);
 
     await user.click(getListItem(container, 0));
     itemsStateMatcher(container, [
@@ -2840,7 +2845,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1);
 
     await user.click(getListItem(container, 1));
     itemsStateMatcher(container, [
@@ -2858,7 +2863,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1);
 
     await user.click(getListItem(container, 2));
     itemsStateMatcher(container, [
@@ -2876,7 +2881,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1);
 
     await user.click(getListItem(container, 3));
     itemsStateMatcher(container, [
@@ -2894,7 +2899,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1);
 
     await user.click(getStickyItem(container, 0));
     itemsStateMatcher(container, [
@@ -2912,7 +2917,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'selected'},
       {index: 12, state: 'selected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 10, 10, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 10, 10, handleSelectAllChange);
     handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
@@ -2931,7 +2936,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1, handleSelectAllChange);
     handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
@@ -2950,7 +2955,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'selected'},
       {index: 12, state: 'selected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 10, 10, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 10, 10, handleSelectAllChange);
     handleSelectAllChange.mockClear();
 
     await user.click(getListItem(container, 4));
@@ -2969,7 +2974,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'selected'},
       {index: 12, state: 'selected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 9, 9);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 9, 9);
 
     await user.click(getStickyItem(container, 0));
     itemsStateMatcher(container, [
@@ -2987,7 +2992,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'selected'},
       {index: 12, state: 'selected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 10, 10, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 10, 10, handleSelectAllChange);
     handleSelectAllChange.mockClear();
 
     await user.click(getFieldClear(container));
@@ -3006,7 +3011,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 11, state: 'unselected'},
       {index: 12, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1);
   });
 
   it('tests nodes state behavior when deep inner nodes are changing', async () => {
@@ -3042,7 +3047,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 14, state: 'unselected'},
       {index: 15, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0);
+    selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0);
 
     await user.click(getListItem(container, 7));
     itemsStateMatcher(container, [
@@ -3063,7 +3068,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 14, state: 'unselected'},
       {index: 15, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1);
 
     await user.click(getListItem(container, 7));
     itemsStateMatcher(container, [
@@ -3084,7 +3089,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 14, state: 'unselected'},
       {index: 15, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0);
+    selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0);
 
     await user.click(getListItem(container, 7));
     itemsStateMatcher(container, [
@@ -3105,7 +3110,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 14, state: 'unselected'},
       {index: 15, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1);
 
     await user.click(getListItem(container, 8));
     itemsStateMatcher(container, [
@@ -3126,7 +3131,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 14, state: 'unselected'},
       {index: 15, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 2, 2);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 2, 2);
 
     await user.click(getListItem(container, 6));
     itemsStateMatcher(container, [
@@ -3147,7 +3152,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 14, state: 'unselected'},
       {index: 15, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 1, 4);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 4);
 
     await user.click(getListItem(container, 8));
     itemsStateMatcher(container, [
@@ -3168,7 +3173,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 14, state: 'unselected'},
       {index: 15, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 2, 2);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 2, 2);
 
     await user.click(getListItem(container, 7));
     itemsStateMatcher(container, [
@@ -3189,7 +3194,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 14, state: 'unselected'},
       {index: 15, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1);
 
     await user.click(getListItem(container, 6));
     itemsStateMatcher(container, [
@@ -3210,7 +3215,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 14, state: 'unselected'},
       {index: 15, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0);
+    selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0);
 
     await user.click(getListItem(container, 7));
     itemsStateMatcher(container, [
@@ -3231,7 +3236,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 14, state: 'unselected'},
       {index: 15, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1);
 
     await user.click(getStickyItem(container, 0));
     itemsStateMatcher(container, [
@@ -3252,7 +3257,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 14, state: 'selected'},
       {index: 15, state: 'selected'}
     ]);
-    selectAllMatcher(container, CheckedState.SELECTED, 8, 16, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.ALL, 8, 16, handleSelectAllChange);
     handleSelectAllChange.mockClear();
 
     await user.click(getListItem(container, 7));
@@ -3274,7 +3279,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 14, state: 'selected'},
       {index: 15, state: 'selected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 12, 12);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 12, 12);
 
     await user.click(getListItem(container, 6));
     itemsStateMatcher(container, [
@@ -3295,7 +3300,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 14, state: 'selected'},
       {index: 15, state: 'selected'}
     ]);
-    selectAllMatcher(container, CheckedState.PARTIAL, 11, 11);
+    selectAllMatcher(container, SelectionAggregateState.PARTIAL, 11, 11);
 
     await user.click(getStickyItem(container, 0));
     itemsStateMatcher(container, [
@@ -3316,7 +3321,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 14, state: 'selected'},
       {index: 15, state: 'selected'}
     ]);
-    selectAllMatcher(container, CheckedState.SELECTED, 8, 16, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.ALL, 8, 16, handleSelectAllChange);
     handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
@@ -3338,7 +3343,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 14, state: 'unselected'},
       {index: 15, state: 'unselected'}
     ]);
-    selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange);
+    selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0, handleSelectAllChange);
     handleSelectAllChange.mockClear();
   });
 
@@ -3374,7 +3379,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
         {index: 11, state: 'unselected'},
         {index: 12, state: 'unselected'}
       ]);
-      selectAllMatcher(container, CheckedState.PARTIAL, 3, 3);
+      selectAllMatcher(container, SelectionAggregateState.PARTIAL, 3, 3);
 
       await user.click(getListItem(container, 0));
       itemsStateMatcher(container, [
@@ -3392,7 +3397,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
         {index: 11, state: 'unselected'},
         {index: 12, state: 'unselected'}
       ]);
-      selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0);
+      selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0);
 
       await user.click(getListItem(container, 0));
       itemsStateMatcher(container, [
@@ -3410,7 +3415,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
         {index: 11, state: 'unselected'},
         {index: 12, state: 'unselected'}
       ]);
-      selectAllMatcher(container, CheckedState.PARTIAL, 3, 3);
+      selectAllMatcher(container, SelectionAggregateState.PARTIAL, 3, 3);
 
       await user.click(getStickyItem(container, 0));
       itemsStateMatcher(container, [
@@ -3428,7 +3433,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
         {index: 11, state: 'selected'},
         {index: 12, state: 'selected'}
       ]);
-      selectAllMatcher(container, CheckedState.PARTIAL, 10, 10, handleSelectAllChange);
+      selectAllMatcher(container, SelectionAggregateState.PARTIAL, 10, 10, handleSelectAllChange);
       handleSelectAllChange.mockClear();
 
       await user.click(getStickyItem(container, 0));
@@ -3447,7 +3452,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
         {index: 11, state: 'unselected'},
         {index: 12, state: 'unselected'}
       ]);
-      selectAllMatcher(container, CheckedState.UNSELECTED, 0, 0, handleSelectAllChange);
+      selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0, handleSelectAllChange);
       handleSelectAllChange.mockClear();
 
       await user.click(getListItem(container, 4));
@@ -3466,7 +3471,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
         {index: 11, state: 'unselected'},
         {index: 12, state: 'unselected'}
       ]);
-      selectAllMatcher(container, CheckedState.PARTIAL, 1, 1);
+      selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1);
 
       await user.click(getListItem(container, 5));
       itemsStateMatcher(container, [
@@ -3484,7 +3489,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
         {index: 11, state: 'unselected'},
         {index: 12, state: 'unselected'}
       ]);
-      selectAllMatcher(container, CheckedState.PARTIAL, 2, 2);
+      selectAllMatcher(container, SelectionAggregateState.PARTIAL, 2, 2);
 
       await user.click(getListItem(container, 0));
       itemsStateMatcher(container, [
@@ -3502,6 +3507,6 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
         {index: 11, state: 'unselected'},
         {index: 12, state: 'unselected'}
       ]);
-      selectAllMatcher(container, CheckedState.PARTIAL, 3, 3);
+      selectAllMatcher(container, SelectionAggregateState.PARTIAL, 3, 3);
     });
 });

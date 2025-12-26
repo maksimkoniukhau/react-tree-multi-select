@@ -20,7 +20,7 @@ Basic usage
 
 ```js
 import React, {FC} from 'react';
-import {CheckedState, TreeNode, TreeMultiSelect} from 'react-tree-multi-select';
+import {SelectionAggregateState, TreeNode, TreeMultiSelect} from 'react-tree-multi-select';
 
 export const ReactTreeMultiSelectApp: FC = () => {
   
@@ -69,14 +69,14 @@ export const ReactTreeMultiSelectApp: FC = () => {
     console.log('handleNodeToggle expandedIds:', expandedIds);
   };
 
-  const handleClearAll = (selectedIds: string[], selectAllCheckedState: CheckedState | undefined): void => {
+  const handleClearAll = (selectedIds: string[], selectionAggregateState: SelectionAggregateState | undefined): void => {
     console.log('handleClearAll selectedIds:', selectedIds);
-    console.log('handleClearAll selectAllCheckedState:', selectAllCheckedState);
+    console.log('handleClearAll selectionAggregateState:', selectionAggregateState);
   };
 
-  const handleSelectAllChange = (selectedIds: string[], selectAllCheckedState: CheckedState): void => {
+  const handleSelectAllChange = (selectedIds: string[], selectionAggregateState: SelectionAggregateState): void => {
     console.log('handleSelectAllChange selectedIds:', selectedIds);
-    console.log('handleSelectAllChange selectAllCheckedState:', selectAllCheckedState);
+    console.log('handleSelectAllChange selectionAggregateState:', selectionAggregateState);
   };
 
   return (

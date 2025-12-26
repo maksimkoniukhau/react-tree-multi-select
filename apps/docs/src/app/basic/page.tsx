@@ -1,7 +1,7 @@
 'use client'
 
 import React, {FC, memo, useEffect, useState} from 'react';
-import {CheckedState, TreeMultiSelect, TreeNode, Type} from 'react-tree-multi-select';
+import {SelectionAggregateState, TreeMultiSelect, TreeNode, Type} from 'react-tree-multi-select';
 import {getBaseExpandedIds, getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
 import {Select} from '@/shared-components/Select';
 import {Checkbox} from '@/shared-components/Checkbox';
@@ -138,15 +138,15 @@ const BasicPage: FC = memo(() => {
     setExpandedIds(expandedIds);
   };
 
-  const handleClearAll = (selectedIds: string[], selectAllCheckedState: CheckedState | undefined): void => {
+  const handleClearAll = (selectedIds: string[], selectionAggregateState: SelectionAggregateState | undefined): void => {
     console.log('handleClearAll selectedIds:', selectedIds);
-    console.log('handleClearAll selectAllCheckedState:', selectAllCheckedState);
+    console.log('handleClearAll selectionAggregateState:', selectionAggregateState);
     setSelectedIds(selectedIds);
   };
 
-  const handleSelectAllChange = (selectedIds: string[], selectAllCheckedState: CheckedState): void => {
+  const handleSelectAllChange = (selectedIds: string[], selectionAggregateState: SelectionAggregateState): void => {
     console.log('handleSelectAllChange selectedIds:', selectedIds);
-    console.log('handleSelectAllChange selectAllCheckedState:', selectAllCheckedState);
+    console.log('handleSelectAllChange selectionAggregateState:', selectionAggregateState);
     setSelectedIds(selectedIds);
   };
 
