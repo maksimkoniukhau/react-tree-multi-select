@@ -30,9 +30,9 @@ export const SelectAllContainerWrapper: FC<SelectAllContainerWrapperProps> = mem
 
   const selectedClass = selectionAggregateState === SelectionAggregateState.ALL
     ? ' selected'
-    : selectionAggregateState === SelectionAggregateState.PARTIAL
-      ? ' partial'
-      : '';
+    : selectionAggregateState === SelectionAggregateState.NONE
+      ? ''
+      : ' partial';
   const containerClasses = `rtms-sticky-item${selectedClass}${focused ? ' focused' : ''}`;
 
   return (

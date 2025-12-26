@@ -246,10 +246,9 @@ export interface TreeMultiSelectProps {
    * This is used to clear all selected nodes, except for nodes that are disabled.
    *
    * @param selectedIds - The list of currently selected nodes Ids.
-   * @param selectionAggregateState - The current overall selection state of all nodes,
-   * or `undefined` if the component type is `Type.SELECT`.
+   * @param selectionAggregateState - The current overall selection state of all nodes.
    */
-  onClearAll?: (selectedIds: string[], selectionAggregateState: SelectionAggregateState | undefined) => void;
+  onClearAll?: (selectedIds: string[], selectionAggregateState: SelectionAggregateState) => void;
 
   /**
    * Callback triggered when the `SelectAll` component is activated by user interaction,

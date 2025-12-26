@@ -7,6 +7,7 @@ import {
   Components,
   SelectAllCheckboxProps,
   SelectAllCheckboxType,
+  SelectionAggregateState,
   TreeMultiSelect,
   TreeNode
 } from 'react-tree-multi-select';
@@ -14,11 +15,11 @@ import {getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
 
 const CustomSelectAllCheckbox: FC<SelectAllCheckboxProps> = (props) => (
   <div {...props.attributes}>
-    {props.ownProps.checked
+    {props.ownProps.selectionAggregateState === SelectionAggregateState.ALL
       ? <FontAwesomeIcon icon={faSquareCheck}/>
-      : props.ownProps.partial
-        ? <FontAwesomeIcon icon={faSquareMinus}/>
-        : <FontAwesomeIcon icon={faSquare}/>
+      : props.ownProps.selectionAggregateState === SelectionAggregateState.NONE
+        ? <FontAwesomeIcon icon={faSquare}/>
+        : <FontAwesomeIcon icon={faSquareMinus}/>
     }
   </div>
 );

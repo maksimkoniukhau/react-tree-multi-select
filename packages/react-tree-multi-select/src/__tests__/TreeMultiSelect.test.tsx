@@ -55,6 +55,7 @@ const selectAllMatcher = (
     case SelectionAggregateState.ALL:
       expect(selectAll.classList.contains('selected')).toBeTruthy();
       break;
+    case SelectionAggregateState.EFFECTIVE_ALL:
     case SelectionAggregateState.PARTIAL:
       expect(selectAll.classList.contains('partial')).toBeTruthy();
       break;

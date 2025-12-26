@@ -27,15 +27,21 @@ export const getOrderedIds = (setIds: Set<string>, nodesManager: NodesManager): 
   return nodesManager.nodes.filter(node => setIds.has(node.id)).map(node => node.id);
 };
 
-export const getSelectionAggregateState = (
+export const calculateSelectionAggregateState = (
   selectedIds: string[],
+  effectivelySelectedIds: string[],
   allNodes: Node[]
 ): SelectionAggregateState => {
-  return selectedIds.length === allNodes.length
-    ? SelectionAggregateState.ALL
-    : selectedIds.length === 0
-      ? SelectionAggregateState.NONE
-      : SelectionAggregateState.PARTIAL;
+  if (allNodes.length === 0) {
+    return SelectionAggregateState.NONE;
+  }
+  if (selectedIds.length === allNodes.length) {
+    return SelectionAggregateState.ALL;
+  }
+  if (effectivelySelectedIds.length === allNodes.length) {
+    return SelectionAggregateState.EFFECTIVE_ALL;
+  }
+  return selectedIds.length > 0 ? SelectionAggregateState.PARTIAL : SelectionAggregateState.NONE;
 };
 
 export const normalizeSelectedIds = (selectedIds: string[] = [], type: Type) => {

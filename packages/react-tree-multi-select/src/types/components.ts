@@ -52,8 +52,7 @@ export interface SelectAllContainerOwnProps {
 }
 
 export interface SelectAllCheckboxOwnProps {
-  checked: boolean;
-  partial: boolean;
+  selectionAggregateState: SelectionAggregateState;
 }
 
 export interface SelectAllLabelOwnProps {

@@ -26,8 +26,7 @@ export const SelectAllWrapper: FC<SelectAllWrapperProps> = memo((props) => {
     >
       <SelectAllCheckboxWrapper
         selectAllCheckbox={components.SelectAllCheckbox}
-        checked={selectionAggregateState === SelectionAggregateState.ALL}
-        partial={selectionAggregateState === SelectionAggregateState.PARTIAL}
+        selectionAggregateState={selectionAggregateState}
       />
       <SelectAllLabelWrapper selectAllLabel={components.SelectAllLabel} label={label}/>
     </SelectAllContainerWrapper>
