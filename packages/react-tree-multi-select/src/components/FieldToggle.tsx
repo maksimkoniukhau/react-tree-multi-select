@@ -1,5 +1,6 @@
 import React, {FC, memo} from 'react';
 import {FieldToggleProps, FieldToggleType} from '../types';
+import {classNames} from '../utils/commonUtils';
 
 export const FieldToggle: FC<FieldToggleProps> = memo((props) => {
   return (
@@ -27,7 +28,7 @@ interface FieldToggleWrapperProps {
 export const FieldToggleWrapper: FC<FieldToggleWrapperProps> = memo(({fieldToggle, expanded, componentDisabled}) => {
   return (
     <fieldToggle.component
-      attributes={{className: `rtms-field-toggle${expanded ? ' expanded' : ''}${componentDisabled ? ' disabled' : ''}`}}
+      attributes={{className: classNames('rtms-field-toggle', componentDisabled && 'disabled', expanded && 'expanded')}}
       ownProps={{expanded, componentDisabled}}
       customProps={fieldToggle.props}
     />

@@ -1,6 +1,7 @@
 import React, {FC, memo, RefObject} from 'react';
 import {CLEAR_ALL_SUFFIX, FIELD_PREFIX, FieldProps, INPUT_SUFFIX, Type} from '../types';
 import {InnerComponents, NullableVirtualFocusId} from '../innerTypes';
+import {classNames} from '../utils/commonUtils';
 import {filterChips} from '../utils/nodesUtils';
 import {buildVirtualFocusId} from '../utils/focusUtils';
 import {NodesManager} from '../NodesManager';
@@ -71,7 +72,7 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
     <components.Field.component
       attributes={{
         ref: fieldRef,
-        className: `rtms-field${componentDisabled ? ' disabled' : ''}`,
+        className: classNames('rtms-field', componentDisabled && 'disabled'),
         onClick
       }}
       ownProps={{type, isDropdownOpen, withClearAll, componentDisabled}}

@@ -1,5 +1,6 @@
 import React, {FC, memo, ReactNode} from 'react';
 import {ChipContainerProps, ChipContainerType, FIELD_PREFIX} from '../types';
+import {classNames} from '../utils/commonUtils';
 import {buildVirtualFocusId} from '../utils/focusUtils';
 
 export const ChipContainer: FC<ChipContainerProps> = memo((props) => {
@@ -29,7 +30,7 @@ export const ChipContainerWrapper: FC<ChipContainerWrapperProps> = memo((props) 
     <chipContainer.component
       attributes={{
         'data-rtms-virtual-focus-id': buildVirtualFocusId(FIELD_PREFIX, id),
-        className: `rtms-chip${disabled ? ' disabled' : ''}${focused ? ' focused' : ''}`,
+        className: classNames('rtms-chip', disabled && 'disabled', focused && 'focused'),
         onClick: onClick(id)
       }}
       ownProps={{label, focused, disabled, componentDisabled, withChipClear}}

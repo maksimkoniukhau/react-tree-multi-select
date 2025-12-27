@@ -1,5 +1,6 @@
 import React, {CSSProperties, FC, memo, ReactNode} from 'react';
 import {DROPDOWN_PREFIX, NodeContainerProps, NodeContainerType} from '../types';
+import {classNames} from '../utils/commonUtils';
 import {buildVirtualFocusId} from '../utils/focusUtils';
 
 export const NodeContainer: FC<NodeContainerProps> = memo((props) => {
@@ -45,12 +46,14 @@ export const NodeContainerWrapper: FC<NodeContainerWrapperProps> = memo((props) 
     children
   } = props;
 
-  const disabledClass = disabled ? ' disabled' : '';
-  const selectedClass = selected ? ' selected' : partial ? ' partial' : '';
-  const expandedClass = expanded ? ' expanded' : '';
-  const focusedClass = focused ? ' focused' : '';
-  const matchedClass = matched ? ' matched' : '';
-  const className = `rtms-list-item${disabledClass}${selectedClass}${expandedClass}${focusedClass}${matchedClass}`;
+  const className = classNames(
+    'rtms-list-item',
+    disabled && 'disabled',
+    selected ? 'selected' : partial && 'partial',
+    expanded && 'expanded',
+    focused && 'focused',
+    matched && 'matched'
+  );
 
   return (
     <nodeContainer.component

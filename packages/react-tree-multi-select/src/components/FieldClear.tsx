@@ -1,5 +1,6 @@
 import React, {FC, memo} from 'react';
 import {CLEAR_ALL_SUFFIX, FIELD_PREFIX, FieldClearProps, FieldClearType} from '../types';
+import {classNames} from '../utils/commonUtils';
 import {buildVirtualFocusId} from '../utils/focusUtils';
 
 export const FieldClear: FC<FieldClearProps> = memo((props) => {
@@ -28,7 +29,7 @@ export const FieldClearWrapper: FC<FieldClearWrapperProps> = memo((props) => {
     <fieldClear.component
       attributes={{
         'data-rtms-virtual-focus-id': buildVirtualFocusId(FIELD_PREFIX, CLEAR_ALL_SUFFIX),
-        className: `rtms-field-clear${focused ? ' focused' : ''}${componentDisabled ? ' disabled' : ''}`,
+        className: classNames('rtms-field-clear', componentDisabled && 'disabled', focused && 'focused'),
         onClick
       }}
       ownProps={{focused, componentDisabled}}

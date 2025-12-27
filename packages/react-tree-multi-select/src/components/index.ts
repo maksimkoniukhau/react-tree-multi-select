@@ -25,7 +25,7 @@ import {ChipClear} from './ChipClear';
 import {Input} from './Input';
 import {FieldClear} from './FieldClear';
 import {FieldToggle} from './FieldToggle';
-import {Dropdown} from '../DropdownContainer';
+import {Dropdown} from './Dropdown';
 import {SelectAllContainer} from './SelectAllContainer';
 import {SelectAllCheckbox} from './SelectAllCheckbox';
 import {SelectAllLabel} from './SelectAllLabel';

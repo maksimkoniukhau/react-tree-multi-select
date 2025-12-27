@@ -1,5 +1,6 @@
 import React, {FC, memo} from 'react';
 import {DROPDOWN_PREFIX, FOOTER_SUFFIX, FooterProps, FooterType} from '../types';
+import {classNames} from '../utils/commonUtils';
 import {buildVirtualFocusId} from '../utils/focusUtils';
 
 export const Footer: FC<FooterProps> = () => null;
@@ -15,7 +16,7 @@ export const FooterWrapper: FC<FooterWrapperProps> = memo(({footer, focused, onC
     <footer.component
       attributes={{
         'data-rtms-virtual-focus-id': buildVirtualFocusId(DROPDOWN_PREFIX, FOOTER_SUFFIX),
-        className: `rtms-footer${focused ? ' focused' : ''}`,
+        className: classNames('rtms-footer', focused && 'focused'),
         onClick
       }}
       ownProps={{focused}}

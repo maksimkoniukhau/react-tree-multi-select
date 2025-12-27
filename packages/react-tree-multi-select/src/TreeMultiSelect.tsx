@@ -34,7 +34,7 @@ import {
 import {NodesManager} from './NodesManager';
 import {Node} from './Node';
 import {FieldContainer} from './components/Field';
-import {DropdownContainer} from './DropdownContainer';
+import {DropdownContainer} from './components/Dropdown';
 
 export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelectProps>((props, ref) => {
   const {

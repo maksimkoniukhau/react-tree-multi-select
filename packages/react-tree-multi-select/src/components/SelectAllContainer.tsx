@@ -6,6 +6,7 @@ import {
   SelectAllContainerType,
   SelectionAggregateState
 } from '../types';
+import {classNames} from '../utils/commonUtils';
 import {buildVirtualFocusId} from '../utils/focusUtils';
 
 export const SelectAllContainer: FC<SelectAllContainerProps> = memo((props) => {
@@ -28,18 +29,21 @@ interface SelectAllContainerWrapperProps {
 export const SelectAllContainerWrapper: FC<SelectAllContainerWrapperProps> = memo((props) => {
   const {selectAllContainer, label, selectionAggregateState, focused, onClick, children} = props;
 
-  const selectedClass = selectionAggregateState === SelectionAggregateState.ALL
-    ? ' selected'
-    : selectionAggregateState === SelectionAggregateState.NONE
-      ? ''
-      : ' partial';
-  const containerClasses = `rtms-sticky-item${selectedClass}${focused ? ' focused' : ''}`;
+  const selected = selectionAggregateState === SelectionAggregateState.ALL;
+  const partial = selectionAggregateState === SelectionAggregateState.EFFECTIVE_ALL
+    || selectionAggregateState === SelectionAggregateState.PARTIAL;
+
+  const className = classNames(
+    'rtms-sticky-item',
+    selected ? 'selected' : partial && 'partial',
+    focused && 'focused'
+  );
 
   return (
     <selectAllContainer.component
       attributes={{
         'data-rtms-virtual-focus-id': buildVirtualFocusId(DROPDOWN_PREFIX, SELECT_ALL_SUFFIX),
-        className: containerClasses,
+        className,
         onClick
       }}
       ownProps={{label, selectionAggregateState, focused}}

@@ -1,5 +1,6 @@
 import React, {FC, memo} from 'react';
 import {NodeToggleProps, NodeToggleType} from '../types';
+import {classNames} from '../utils/commonUtils';
 
 export const NodeToggle: FC<NodeToggleProps> = memo((props) => {
   return (
@@ -29,7 +30,7 @@ export const NodeToggleWrapper: FC<NodeToggleWrapperProps> = memo(({nodeToggle, 
   return (
     <nodeToggle.component
       attributes={{
-        className: `rtms-node-toggle${expanded ? ' expanded' : ''}`,
+        className: classNames('rtms-node-toggle', expanded && 'expanded'),
         onClick: onClick(id)
       }}
       ownProps={{expanded}}

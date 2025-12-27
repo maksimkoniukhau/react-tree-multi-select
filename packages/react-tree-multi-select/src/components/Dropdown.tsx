@@ -1,12 +1,20 @@
 import React, {FC, JSX, memo, RefObject, useEffect, useRef} from 'react';
-import {SelectionAggregateState, DROPDOWN_PREFIX, DropdownProps, FOOTER_SUFFIX, SELECT_ALL_SUFFIX, Type} from './types';
-import {InnerComponents, NullableVirtualFocusId} from './innerTypes';
-import {buildVirtualFocusId, extractElementId, isVirtualFocusInDropdown} from './utils/focusUtils';
-import {NodesManager} from './NodesManager';
-import {Node} from './Node';
-import {ListItem} from './ListItem';
-import {VirtualizedList, VirtualizedListHandle} from './VirtualizedList';
-import {InputWrapper} from './components/Input';
+import {
+  DROPDOWN_PREFIX,
+  DropdownProps,
+  FOOTER_SUFFIX,
+  SELECT_ALL_SUFFIX,
+  SelectionAggregateState,
+  Type
+} from '../types';
+import {InnerComponents, NullableVirtualFocusId} from '../innerTypes';
+import {classNames} from '../utils/commonUtils';
+import {buildVirtualFocusId, extractElementId, isVirtualFocusInDropdown} from '../utils/focusUtils';
+import {NodesManager} from '../NodesManager';
+import {Node} from '../Node';
+import {ListItem} from '../ListItem';
+import {VirtualizedList, VirtualizedListHandle} from '../VirtualizedList';
+import {InputWrapper} from './Input';
 
 export const Dropdown: FC<DropdownProps> = memo((props) => {
   return (
@@ -149,7 +157,7 @@ export const DropdownContainer: FC<DropdownContainerProps> = memo((props) => {
     <components.Dropdown.component
       attributes={{
         style: {maxHeight: dropdownHeight},
-        className: `rtms-dropdown${componentDisabled ? ' disabled' : ''}`
+        className: classNames('rtms-dropdown', componentDisabled && 'disabled')
       }}
       ownProps={{componentDisabled}}
       customProps={components.Dropdown.props}
