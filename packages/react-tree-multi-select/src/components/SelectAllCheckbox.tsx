@@ -1,20 +1,18 @@
 import React, {FC, memo} from 'react';
 import {SelectAllCheckboxProps, SelectAllCheckboxType, SelectionAggregateState} from '../types';
+import {classNames} from '../utils/commonUtils';
+import {Checkbox} from './Checkbox';
 
 export const SelectAllCheckbox: FC<SelectAllCheckboxProps> = memo((props) => {
   const {selectionAggregateState} = props.ownProps;
 
-  const selectedClass = selectionAggregateState === SelectionAggregateState.ALL
-    ? ' selected'
-    : selectionAggregateState === SelectionAggregateState.NONE
-      ? ''
-      : ' partial';
-
-  const checkboxClasses = `rtms-checkbox${selectedClass}`;
+  const checked = selectionAggregateState === SelectionAggregateState.ALL;
+  const partial = selectionAggregateState === SelectionAggregateState.EFFECTIVE_ALL
+    || selectionAggregateState === SelectionAggregateState.PARTIAL;
 
   return (
     <div {...props.attributes}>
-      <span className={checkboxClasses}/>
+      <Checkbox checked={checked} partial={partial}/>
     </div>
   );
 });
@@ -27,13 +25,14 @@ interface SelectAllCheckboxWrapperProps {
 export const SelectAllCheckboxWrapper: FC<SelectAllCheckboxWrapperProps> = memo((props) => {
   const {selectAllCheckbox, selectionAggregateState} = props;
 
-  const selectedClass = selectionAggregateState === SelectionAggregateState.ALL
-    ? ' selected'
-    : selectionAggregateState === SelectionAggregateState.NONE
-      ? ''
-      : ' partial';
+  const selected = selectionAggregateState === SelectionAggregateState.ALL;
+  const partial = selectionAggregateState === SelectionAggregateState.EFFECTIVE_ALL
+    || selectionAggregateState === SelectionAggregateState.PARTIAL;
 
-  const className = `rtms-select-all-checkbox${selectedClass}`;
+  const className = classNames(
+    'rtms-select-all-checkbox',
+    selected ? 'selected' : partial && 'partial'
+  );
 
   return (
     <selectAllCheckbox.component

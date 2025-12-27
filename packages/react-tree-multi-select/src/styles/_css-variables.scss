@@ -46,6 +46,7 @@
   --rtms-chip-clear-color-hover: var(--rtms-color-error);
   --rtms-chip-clear-icon-width: var(--rtms-icon-width);
   --rtms-chip-clear-icon-height: var(--rtms-icon-height);
+  --rtms-chip-clear-icon-color: var(--rtms-icon-color);
 
   // Input
   --rtms-input-container-border-color: var(--rtms-border-color);
@@ -59,11 +60,13 @@
   --rtms-field-clear-color-disabled: var(--rtms-color-disabled);
   --rtms-field-clear-icon-width: var(--rtms-icon-width);
   --rtms-field-clear-icon-height: var(--rtms-icon-height);
+  --rtms-field-clear-icon-color: var(--rtms-icon-color);
 
   // FieldToggle
   --rtms-field-toggle-color-disabled: var(--rtms-color-disabled);
   --rtms-field-toggle-icon-width: var(--rtms-icon-width);
   --rtms-field-toggle-icon-height: var(--rtms-icon-height);
+  --rtms-field-toggle-icon-color: var(--rtms-icon-color);
 
   // Dropdown
   --rtms-dropdown-border-color: var(--rtms-border-color);
@@ -102,6 +105,7 @@
   --rtms-node-toggle-height: var(--rtms-icon-height);
   --rtms-node-toggle-icon-width: var(--rtms-icon-width);
   --rtms-node-toggle-icon-height: var(--rtms-icon-height);
+  --rtms-node-toggle-icon-color: var(--rtms-icon-color);
 
   // NodeCheckbox
   --rtms-node-checkbox-width: var(--rtms-icon-width);
@@ -110,13 +114,13 @@
   // Checkbox
   --rtms-checkbox-width: var(--rtms-icon-width);
   --rtms-checkbox-height: var(--rtms-icon-height);
-  --rtms-checkbox-box-shadow-color: #000000;
+  --rtms-checkbox-border-color: #b3b3b3;
   --rtms-checkbox-background-color: var(--rtms-background-color);
   --rtms-checkbox-background-color-hover: #f1f1f1;
   --rtms-checkbox-background-color-selected: #0784e7;
   --rtms-checkbox-background-color-selected-hover: #0a6bb8;
-  --rtms-checkbox-content-border-color-selected: #ffffff;
-  --rtms-checkbox-content-background-color-partial: #808080;
+  --rtms-checkbox-icon-color: var(--rtms-icon-color);
+  --rtms-checkbox-icon-color-selected: #ffffff;
 
   // Spinner
   --rtms-spinner-container-width: var(--rtms-icon-width);

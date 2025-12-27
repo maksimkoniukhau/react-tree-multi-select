@@ -1,16 +1,14 @@
 import React, {FC, memo} from 'react';
 import {NodeCheckboxProps, NodeCheckboxType} from '../types';
+import {classNames} from '../utils/commonUtils';
+import {Checkbox} from './Checkbox';
 
 export const NodeCheckbox: FC<NodeCheckboxProps> = memo((props) => {
   const {checked, partial, disabled} = props.ownProps;
 
-  const disabledClass = disabled ? ' disabled' : '';
-  const checkedClass = checked ? ' selected' : partial ? ' partial' : '';
-  const checkboxClasses = `rtms-checkbox${disabledClass}${checkedClass}`;
-
   return (
     <div {...props.attributes}>
-      <span className={checkboxClasses}/>
+      <Checkbox checked={checked} partial={partial} disabled={disabled}/>
     </div>
   );
 });
@@ -25,9 +23,11 @@ interface NodeCheckboxWrapperProps {
 export const NodeCheckboxWrapper: FC<NodeCheckboxWrapperProps> = memo((props) => {
   const {nodeCheckbox, checked, partial, disabled} = props;
 
-  const disabledClass = disabled ? ' disabled' : '';
-  const checkedClass = checked ? ' selected' : partial ? ' partial' : '';
-  const className = `rtms-node-checkbox${disabledClass}${checkedClass}`;
+  const className = classNames(
+    'rtms-node-checkbox',
+    disabled && 'disabled',
+    checked ? 'selected' : partial && 'partial'
+  );
 
   return (
     <nodeCheckbox.component
