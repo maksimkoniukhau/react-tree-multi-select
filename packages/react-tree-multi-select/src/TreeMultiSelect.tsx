@@ -10,6 +10,7 @@ import {
   SelectionAggregateState,
   TreeMultiSelectHandle,
   TreeMultiSelectProps,
+  TreeNode,
   Type,
   VirtualFocusId
 } from './types';
@@ -36,7 +37,11 @@ import {Node} from './Node';
 import {FieldContainer} from './components/Field';
 import {DropdownContainer} from './components/Dropdown';
 
-export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelectProps>((props, ref) => {
+export const TreeMultiSelect = forwardRef(
+  <T extends TreeNode<T>>(
+    props: TreeMultiSelectProps<T>,
+    ref: React.Ref<TreeMultiSelectHandle<T>>
+  ) => {
   const {
     data,
     type = Type.TREE_SELECT,
@@ -968,7 +973,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     setDisplayedNodes(newDisplayedNodes);
   };
 
-  useImperativeHandle(ref, (): TreeMultiSelectHandle => ({
+  useImperativeHandle(ref, (): TreeMultiSelectHandle<T> => ({
     getState: () => ({
       selectionAggregateState,
       inputValue: searchValue,

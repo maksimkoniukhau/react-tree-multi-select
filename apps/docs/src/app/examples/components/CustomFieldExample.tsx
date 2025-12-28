@@ -33,20 +33,17 @@ export const CustomFieldExample: FC = () => {
           {
             id: '1',
             label: 'Company1',
-            children: [{id: '1.1', label: 'Company1Branch1'}, {id: '1.2', label: 'Company1Branch2'}],
-            expanded: true
+            children: [{id: '1.1', label: 'Company1Branch1'}, {id: '1.2', label: 'Company1Branch2'}]
           },
           {
             id: '2',
             label: 'Company2',
-            children: [{id: '2.1', label: 'Company2Branch1'}, {id: '2.2', label: 'Company2Branch2'}],
-            expanded: true
+            children: [{id: '2.1', label: 'Company2Branch1'}, {id: '2.2', label: 'Company2Branch2'}]
           },
           {
             id: '3',
             label: 'Company3',
-            children: [{id: '3.1', label: 'Company3Branch1', disabled: true}, {id: '3.2', label: 'Company3Branch2'}],
-            expanded: true
+            children: [{id: '3.1', label: 'Company3Branch1', disabled: true}, {id: '3.2', label: 'Company3Branch2'}]
           }
         ]}
         defaultSelectedIds={['2.2']}

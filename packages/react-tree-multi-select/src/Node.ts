@@ -1,33 +1,34 @@
 import {TreeNode} from './types';
 
-export class Node {
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+export class Node<T extends TreeNode = any> {
 
-  private _nodeMap: Map<string, Node>;
+  private _nodeMap: Map<string, Node<T>>;
 
   private readonly _id: string;
   private readonly _name: string;
   private readonly _skipDropdownVirtualFocus: boolean;
-  private _parentId: string | null;
-  private _children: Node[];
+  private readonly _parentId: string | null;
+  private _children: Node<T>[];
   private readonly _hasChildren: boolean;
   private _hasLoaded: boolean;
   private readonly _depth: number;
   private readonly _disabled: boolean;
 
   // original TreeNode
-  private readonly _initTreeNode: TreeNode;
+  private readonly _initTreeNode: T;
 
   constructor(
-    nodeMap: Map<string, Node>,
+    nodeMap: Map<string, Node<T>>,
     id: string,
     name: string,
     skipDropdownVirtualFocus: boolean,
     parentId: string | null,
-    children: Node[],
+    children: Node<T>[],
     hasChildren: boolean,
     depth: number,
     disabled: boolean,
-    initTreeNode: TreeNode
+    initTreeNode: T
   ) {
     this._nodeMap = nodeMap;
     this._id = id;
@@ -54,22 +55,18 @@ export class Node {
     return this._skipDropdownVirtualFocus;
   }
 
-  get parent(): Node | null {
+  get parent(): Node<T> | null {
     if (!this._parentId) {
       return null;
     }
     return this._nodeMap.get(this._parentId) ?? null;
   }
 
-  set parentId(parentId: string | null) {
-    this._parentId = parentId;
-  }
-
-  get children(): Node[] {
+  get children(): Node<T>[] {
     return this._children;
   }
 
-  set children(children: Node[]) {
+  set children(children: Node<T>[]) {
     this._children = children;
   }
 
@@ -93,7 +90,7 @@ export class Node {
     return this._disabled;
   }
 
-  get initTreeNode(): TreeNode {
+  get initTreeNode(): T {
     return this._initTreeNode;
   }
 

@@ -11,7 +11,8 @@ import {DROPDOWN_PREFIX, FIELD_PREFIX, VirtualFocusId} from './virtualFocus';
  * All methods operate on the most recent internal state at the moment
  * they are called.
  */
-export interface TreeMultiSelectHandle {
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+export interface TreeMultiSelectHandle<T extends TreeNode<T> = any> {
   /**
    * Returns a snapshot of the current internal component state.
    *
@@ -29,7 +30,7 @@ export interface TreeMultiSelectHandle {
    * @param id - The unique identifier of the node.
    * @returns The matching `TreeNode` if found; otherwise `undefined`.
    */
-  getById: (id: string) => TreeNode | undefined;
+  getById: (id: string) => T | undefined;
 
   /**
    * Opens (renders) the dropdown.

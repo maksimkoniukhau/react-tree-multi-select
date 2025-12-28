@@ -10,11 +10,12 @@ import {TreeNode} from './nodes';
  * Defines all configuration options, event callbacks, and customization points
  * for controlling the behavior, appearance, and data handling of the component.
  */
-export interface TreeMultiSelectProps {
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+export interface TreeMultiSelectProps<T extends TreeNode<T> = any> {
   /**
    * The data to be rendered in the component.
    */
-  data: TreeNode[];
+  data: T[];
 
   /**
    * Specifies the type of the component, determining its behavior and rendering.
@@ -229,7 +230,7 @@ export interface TreeMultiSelectProps {
    * @param node - The node that was changed.
    * @param selectedIds - The list of currently selected nodes IDs.
    */
-  onNodeChange?: (node: TreeNode, selectedIds: string[]) => void;
+  onNodeChange?: (node: T, selectedIds: string[]) => void;
 
   /**
    * Callback triggered when a node is toggled (expanded or collapsed).
@@ -237,7 +238,7 @@ export interface TreeMultiSelectProps {
    * @param node - The node that was toggled.
    * @param expandedIds - The list of currently expanded nodes IDs.
    */
-  onNodeToggle?: (node: TreeNode, expandedIds: string[]) => void;
+  onNodeToggle?: (node: T, expandedIds: string[]) => void;
 
   /**
    * Callback triggered when the `FieldClear` component is activated by user interaction,
@@ -301,7 +302,7 @@ export interface TreeMultiSelectProps {
    * @param inputValue - The current search input value.
    * @param displayedNodes - An array of TreeNode objects currently displayed in the dropdown.
    */
-  onDropdownLastItemReached?: (inputValue: string, displayedNodes: TreeNode[]) => void;
+  onDropdownLastItemReached?: (inputValue: string, displayedNodes: T[]) => void;
 
   /**
    * Callback for loading additional data to be appended to the end of the existing dataset.
@@ -318,7 +319,7 @@ export interface TreeMultiSelectProps {
    *
    * @returns A Promise resolving to an array of TreeNode objects to append.
    */
-  onLoadData?: () => Promise<TreeNode[]>;
+  onLoadData?: () => Promise<T[]>;
 
   /**
    * Callback for loading children of a specific node on demand.
@@ -336,5 +337,5 @@ export interface TreeMultiSelectProps {
    * @param nodeId - The unique identifier of the node whose children are being loaded.
    * @returns A Promise resolving to an array of TreeNode objects to be set as the node’s children.
    */
-  onLoadChildren?: (id: string) => Promise<TreeNode[]>;
+  onLoadChildren?: (id: string) => Promise<T[]>;
 }

@@ -1,7 +1,8 @@
 /**
  * Interface representing a node.
  */
-export interface TreeNode {
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+export interface TreeNode<T extends TreeNode<T> = any> {
   /**
    * Unique identifier for the node.
    *
@@ -24,7 +25,7 @@ export interface TreeNode {
   /**
    * Optional child nodes, enabling a nested tree structure.
    */
-  children?: TreeNode[];
+  children?: T[];
 
   /**
    * Whether the node is disabled.
@@ -50,9 +51,4 @@ export interface TreeNode {
    * child nodes are explicitly provided.
    */
   hasChildren?: boolean;
-
-  /**
-   * Additional properties can be added as needed.
-   */
-  [key: PropertyKey]: unknown;
 }
