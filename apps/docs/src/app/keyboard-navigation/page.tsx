@@ -10,7 +10,7 @@ const KeyboardNavigationPage: FC = memo(() => {
 
   return (
     <>
-      <div className="page-content" style={{marginBottom: '250px'}}>
+      <div className="page-content">
         <Content/>
       </div>
       <TOC headings={headings}/>

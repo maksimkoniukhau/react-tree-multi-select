@@ -166,8 +166,10 @@ code {
     .page-content {
       padding: 0 10px 10px;
       overflow-x: clip;
+      margin-bottom: 250px;
 
       &.api-page {
+        margin-bottom: 0;
         .code-container {
           max-height: unset;
         }

@@ -8,7 +8,7 @@ import {LargeDataExample} from '@/examples/LargeDataExample';
 const VirtualizationPage: FC = memo(() => {
 
   return (
-    <div className="page-content" style={{marginBottom: '250px'}}>
+    <div className="page-content">
       <h2>{'Virtualization'}</h2>
       <div className="paragraph">
         {'By default, '}<b>{'react-tree-multi-select'}</b>{` uses virtualization to render items efficiently.

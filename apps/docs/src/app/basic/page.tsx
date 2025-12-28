@@ -42,6 +42,11 @@ const BasicPage: FC = memo(() => {
   const [emptyData, setEmptyData] = useState<boolean>(false);
 
   useEffect(() => {
+    setSelectedIds(getBaseSelectedIds());
+    setExpandedIds(getBaseExpandedIds());
+  }, [type]);
+
+  useEffect(() => {
     setData(emptyData ? [] : getTreeNodeData(disabledNodes));
   }, [disabledNodes, emptyData]);
 
@@ -159,7 +164,7 @@ const BasicPage: FC = memo(() => {
   };
 
   return (
-    <div className="page-content" style={{marginBottom: '100px'}}>
+    <div className="page-content">
       <h2>{'Basic Features'}</h2>
       <div className="paragraph">
         {'Toggle different options in order to see how the component behaves and looks depends on properties passed to it.'}
@@ -242,22 +247,6 @@ const BasicPage: FC = memo(() => {
           onSelectAllChange={handleSelectAllChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
-        />
-      </div>
-      <div style={{marginTop: '20px'}} className="paragraph">
-        {'You can pass data without children to component. Component will looks and behaves as a multiselect with checkboxes.'}
-      </div>
-      <div className="tree-multi-select-wrapper">
-        <TreeMultiSelect
-          data={[
-            {id: '1', label: 'label1'},
-            {id: '2', label: 'label2'},
-            {id: '3', label: 'label3'},
-            {id: '4', label: 'label4'},
-            {id: '5', label: 'label5'}
-          ]}
-          id="rtms-multi-select"
-          withClearAll
         />
       </div>
     </div>

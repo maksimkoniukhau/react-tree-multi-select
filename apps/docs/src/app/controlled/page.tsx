@@ -4,7 +4,7 @@ import Content from './mdx-page.mdx';
 const ControlledPage: FC = memo(() => {
 
   return (
-    <div className="page-content" style={{marginBottom: '250px'}}>
+    <div className="page-content">
       <Content/>
     </div>
   );
