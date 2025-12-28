@@ -172,7 +172,7 @@ const BasicPage: FC = memo(() => {
             {name: Type.TREE_SELECT, value: Type.TREE_SELECT},
             {name: Type.TREE_SELECT_FLAT, value: Type.TREE_SELECT_FLAT},
             {name: Type.MULTI_SELECT, value: Type.MULTI_SELECT},
-            {name: Type.SELECT, value: Type.SELECT}
+            {name: Type.SINGLE_SELECT, value: Type.SINGLE_SELECT}
           ]}
           onChange={handleOptionChange('type')}/>
         <Input label="inputPlaceholder:" initValue={INPUT_PLACEHOLDER}

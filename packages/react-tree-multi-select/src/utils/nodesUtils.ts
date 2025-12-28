@@ -45,7 +45,7 @@ export const calculateSelectionAggregateState = (
 };
 
 export const normalizeSelectedIds = (selectedIds: string[] = [], type: Type) => {
-  return type === Type.SELECT ? selectedIds.slice(0, 1) : selectedIds;
+  return type === Type.SINGLE_SELECT ? selectedIds.slice(0, 1) : selectedIds;
 };
 
 export const normalizeExpandedIds = (expandedIds: string[] = [], type: Type) => {

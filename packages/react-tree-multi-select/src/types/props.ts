@@ -151,7 +151,7 @@ export interface TreeMultiSelectProps {
   withDropdownInput?: boolean;
 
   /**
-   * Closes the dropdown automatically after a node is changed (selected/unselected in dropdown).
+   * Closes the dropdown automatically after a node is changed (selected/deselected in dropdown).
    * Useful when `type` is `Type.SELECT`.
    *
    * @default false
@@ -223,7 +223,7 @@ export interface TreeMultiSelectProps {
   onDropdownToggle?: (isOpen: boolean) => void;
 
   /**
-   * Callback triggered when a node is selected or unselected.
+   * Callback triggered when a node is selected or deselected.
    * This includes interactions from the dropdown as well as chip removal in the field.
    *
    * @param node - The node that was changed.
@@ -254,7 +254,7 @@ export interface TreeMultiSelectProps {
    * Callback triggered when the `SelectAll` component is activated by user interaction,
    * such as a mouse click or pressing the Enter key.
    *
-   * This is used to select or unselect all nodes, except for nodes that are disabled.
+   * This is used to select or deselect all nodes, except for nodes that are disabled.
    *
    * @param selectedIds - The list of currently selected nodes IDs.
    * @param selectionAggregateState - The current overall selection state of all nodes.

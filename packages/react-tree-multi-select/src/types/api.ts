@@ -62,7 +62,7 @@ export interface TreeMultiSelectHandle {
   /**
    * Toggles the selection state of all selectable nodes.
    *
-   * - If all selectable nodes are currently selected, this will unselect all of them.
+   * - If all selectable nodes are currently selected, this will deselect all of them.
    * - Otherwise, it will select all selectable nodes.
    */
   toggleAllSelection: () => void;
@@ -114,7 +114,7 @@ export interface TreeMultiSelectHandle {
   /**
    * Deselects a node explicitly.
    *
-   * Does nothing if the node is already deselected or not selectable.
+   * Does nothing if the node is already unselected or not selectable.
    *
    * @param id - The unique identifier of the node to deselect.
    * If omitted, the currently virtually focused node will be deselected if it exists and is selectable.

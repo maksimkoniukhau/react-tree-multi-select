@@ -11,8 +11,8 @@ export enum Type {
   /** Component behaves as a multi-select. */
   MULTI_SELECT = 'MULTI_SELECT',
 
-  /** Component behaves as a single select. */
-  SELECT = 'SELECT'
+  /** Component behaves as a single-select. */
+  SINGLE_SELECT = 'SINGLE_SELECT'
 }
 
 /**

@@ -104,7 +104,7 @@ describe('TreeMultiSelect component: inputPlaceholder prop', () => {
   it.each([[true, Type.TREE_SELECT], [false, Type.TREE_SELECT],
     [true, Type.TREE_SELECT_FLAT], [false, Type.TREE_SELECT_FLAT],
     [true, Type.MULTI_SELECT], [false, Type.MULTI_SELECT],
-    [true, Type.SELECT], [false, Type.SELECT]])(
+    [true, Type.SINGLE_SELECT], [false, Type.SINGLE_SELECT]])(
     'tests component with default inputPlaceholder and withDropdownInput={%s} and component type={%s}',
     async (withDropdownInput, type) => {
       const user: UserEvent = userEvent.setup();
@@ -135,7 +135,7 @@ describe('TreeMultiSelect component: inputPlaceholder prop', () => {
   it.each([['search nodes', true, Type.TREE_SELECT], ['search nodes', false, Type.TREE_SELECT],
     ['search options', true, Type.TREE_SELECT_FLAT], ['search options', false, Type.TREE_SELECT_FLAT],
     ['custom placeholder', true, Type.MULTI_SELECT], ['custom placeholder', false, Type.MULTI_SELECT],
-    ['some text', true, Type.SELECT], ['some text', false, Type.SELECT]])(
+    ['some text', true, Type.SINGLE_SELECT], ['some text', false, Type.SINGLE_SELECT]])(
     'tests component when inputPlaceholder={%s} and withDropdownInput={%s} and component type={%s}',
     async (inputPlaceholder, withDropdownInput, type) => {
       const user: UserEvent = userEvent.setup();
@@ -602,7 +602,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
           data={presents ? getTreeNodeData([]) : []}
           defaultSelectedIds={['1']}
           withClearAll={withClearAll ? undefined : withClearAll}
-          type={Type.SELECT}
+          type={Type.SINGLE_SELECT}
         />
       );
       withClearAllPresentsMatcher(container, withClearAll, presents);
@@ -760,7 +760,7 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
     rerender(
       <TreeMultiSelect
         data={treeNodeData}
-        type={Type.SELECT}
+        type={Type.SINGLE_SELECT}
         withSelectAll
         onSelectAllChange={handleSelectAllChange}
       />
@@ -3348,7 +3348,7 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
     handleSelectAllChange.mockClear();
   });
 
-  it('tests nodes state behavior when deep inner node is disabled and deselected and all other descendants are selected',
+  it('tests nodes state behavior when deep inner node is disabled and unselected and all other descendants are selected',
     async () => {
       const user: UserEvent = userEvent.setup();
 

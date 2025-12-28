@@ -244,7 +244,7 @@ export class NodesManager {
 
   private createBehavior = (type: Type): NodesBehavior => {
     switch (type) {
-      case Type.SELECT:
+      case Type.SINGLE_SELECT:
         return new SingleSelectBehavior();
       case Type.MULTI_SELECT:
         return new MultiSelectBehavior();

@@ -95,7 +95,9 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
     ? nodesManager.expansionState.searchExpandedIds.has(node.id)
     : nodesManager.expansionState.expandedIds.has(node.id);
   const canExpand = node.canExpand();
-  const indentation = !(type === Type.MULTI_SELECT || type === Type.SELECT) && isAnyCanExpand && !canExpand;
+  const indentation = !(type === Type.MULTI_SELECT || type === Type.SINGLE_SELECT)
+    && isAnyCanExpand
+    && !canExpand;
 
   return (
     <NodeWrapper
@@ -112,8 +114,8 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
       loaded={loadedIds.has(node.id)}
       skipDropdownVirtualFocus={node.skipDropdownVirtualFocus}
       indentation={indentation}
-      withToggle={type !== Type.MULTI_SELECT && type !== Type.SELECT && canExpand}
-      withCheckbox={type !== Type.MULTI_SELECT && type !== Type.SELECT}
+      withToggle={type !== Type.MULTI_SELECT && type !== Type.SINGLE_SELECT && canExpand}
+      withCheckbox={type !== Type.MULTI_SELECT && type !== Type.SINGLE_SELECT}
       onNodeChange={onNodeChange}
       onNodeToggle={onNodeToggle}
     />

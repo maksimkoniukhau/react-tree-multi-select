@@ -70,7 +70,7 @@ export const CustomFieldExample: FC = () => {
         components={brandComponents}
       />
       <TreeMultiSelect
-        type={Type.SELECT}
+        type={Type.SINGLE_SELECT}
         data={[
           {id: '1', label: '100'},
           {id: '2', label: '200'},

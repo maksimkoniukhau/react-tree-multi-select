@@ -614,7 +614,7 @@ export const TreeMultiSelect = forwardRef<TreeMultiSelectHandle, TreeMultiSelect
     }
     const node = nodesManager.current.findById(id);
     if (!node || node.disabled
-      || (type === Type.SELECT && nodesManager.current.selectionState.effectivelySelectedIds.has(node.id))) {
+      || (type === Type.SINGLE_SELECT && nodesManager.current.selectionState.effectivelySelectedIds.has(node.id))) {
       return;
     }
 
