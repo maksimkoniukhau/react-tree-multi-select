@@ -3,21 +3,23 @@ import {ExpansionState} from '../innerTypes';
 import {BaseNodesBehavior} from './BaseNodesBehavior';
 import {Node} from '../Node';
 
-export abstract class HierarchicalBehavior extends BaseNodesBehavior {
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+export abstract class HierarchicalBehavior<T extends TreeNode<T> = any> extends BaseNodesBehavior<T> {
 
   mapTreeNodeToNode = (
-    treeNode: TreeNode,
+    treeNode: T,
     depth: number,
     parentId: string | null,
-    nodeMap: Map<string, Node>
+    nodeMap: Map<string, Node>,
+    treeNodeMap: Map<string, T>
   ): Node => {
     const id = treeNode.id;
     const childrenDepth = depth + 1;
     const children = treeNode.children?.map(child => {
-      return this.mapTreeNodeToNode(child, childrenDepth, id, nodeMap);
+      return this.mapTreeNodeToNode(child, childrenDepth, id, nodeMap, treeNodeMap);
     }) || [];
 
-    return this.createNode(id, treeNode, depth, parentId, nodeMap, children);
+    return this.createNode(id, treeNode, depth, parentId, nodeMap, treeNodeMap, children);
   };
 
   syncExpanded(expandedIds: Set<string>, isSearchMode: boolean, expansionState: ExpansionState): ExpansionState {
