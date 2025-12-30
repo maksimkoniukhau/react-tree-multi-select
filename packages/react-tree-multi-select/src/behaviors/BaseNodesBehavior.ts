@@ -3,15 +3,17 @@ import {ExpansionState, SelectionState} from '../innerTypes';
 import {NodesBehavior} from './NodesBehavior';
 import {Node} from '../Node';
 
-export abstract class BaseNodesBehavior implements NodesBehavior {
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+export abstract class BaseNodesBehavior<T extends TreeNode<T> = any> implements NodesBehavior<T> {
 
   mapTreeNodeToNode = (
-    treeNode: TreeNode,
+    treeNode: T,
     depth: number,
     parentId: string | null,
-    nodeMap: Map<string, Node>
+    nodeMap: Map<string, Node>,
+    treeNodeMap: Map<string, T>
   ): Node => {
-    return this.createNode(treeNode.id, treeNode, depth, parentId, nodeMap);
+    return this.createNode(treeNode.id, treeNode, depth, parentId, nodeMap, treeNodeMap);
   };
 
   syncSelected(selectedIds: Set<string>, _roots: Node[]): SelectionState {
@@ -71,13 +73,15 @@ export abstract class BaseNodesBehavior implements NodesBehavior {
 
   protected createNode(
     id: string,
-    treeNode: TreeNode,
+    treeNode: T,
     depth: number,
     parentId: string | null,
     nodeMap: Map<string, Node>,
+    treeNodeMap: Map<string, T>,
     children: Node[] = []
   ): Node {
     const node: Node = new Node(
+      treeNodeMap,
       nodeMap,
       id,
       treeNode.label,
@@ -86,10 +90,10 @@ export abstract class BaseNodesBehavior implements NodesBehavior {
       children,
       treeNode.hasChildren ?? false,
       depth,
-      treeNode.disabled ?? false,
-      treeNode
+      treeNode.disabled ?? false
     );
 
+    treeNodeMap.set(id, treeNode);
     nodeMap.set(id, node);
     return node;
   };

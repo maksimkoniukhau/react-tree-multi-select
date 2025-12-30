@@ -88,9 +88,9 @@ export const TreeMultiSelect = forwardRef(
 
   const isComponentFocused = useRef<boolean>(false);
 
-  const nodesManager = useRef<NodesManager>(null!);
+  const nodesManager = useRef<NodesManager<T>>(null!);
   if (!nodesManager.current) {
-    nodesManager.current = new NodesManager([], type, '');
+    nodesManager.current = new NodesManager<T>([], type, '');
   }
 
   const isDropdownOpenControlled = propsIsDropdownOpen !== undefined;
@@ -253,7 +253,7 @@ export const TreeMultiSelect = forwardRef(
   }, [virtualFocusId]);
 
   useEffect(() => {
-    nodesManager.current = new NodesManager(data, type, searchValue);
+    nodesManager.current = new NodesManager<T>(data, type, searchValue);
     nodesManager.current.syncSelectedIds(new Set(normalizeSelectedIds(selectedIds, type)));
     nodesManager.current.syncExpandedIds(new Set(normalizeExpandedIds(expandedIds, type)), isSearchMode);
 

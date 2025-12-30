@@ -331,8 +331,7 @@ export interface TreeMultiSelectProps<T extends TreeNode<T> = any> {
    * which will be set as the children of the specified node.
    *
    * Note: The component does not perform deduplication, merging, or conflict
-   * resolution. The returned nodes replace any existing children of the node,
-   * so ensure the data returned is complete and correct for that node.
+   * resolution, so ensure the data returned is complete and correct for that node.
    *
    * @param nodeId - The unique identifier of the node whose children are being loaded.
    * @returns A Promise resolving to an array of TreeNode objects to be set as the node’s children.

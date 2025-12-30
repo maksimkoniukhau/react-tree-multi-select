@@ -8,28 +8,31 @@ import {TreeSelectFlatBehavior} from './behaviors/TreeSelectFlatBehavior';
 import {TreeSelectBehavior} from './behaviors/TreeSelectBehavior';
 import {Node} from './Node';
 
-export class NodesManager {
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+export class NodesManager<T extends TreeNode<T> = any> {
 
   private readonly _type: Type;
 
-  private readonly _nodesBehavior: NodesBehavior;
+  private readonly _nodesBehavior: NodesBehavior<T>;
+
+  private readonly _treeNodeMap: Map<string, T>;
+  // original tree structure
+  private readonly _treeNodeRoots: T[];
 
   private readonly _nodeMap: Map<string, Node>;
-
   // original tree structure
   private readonly _roots: Node[];
-
   // flat structure
   private _nodes: Node[];
 
   private _selectionState: SelectionState;
-
   private _expansionState: ExpansionState;
-
   private _searchState: SearchState;
 
-  constructor(data: TreeNode[], type: Type, searchValue: string) {
+  constructor(data: T[], type: Type, searchValue: string) {
     this._type = type;
+    this._treeNodeMap = new Map<string, T>();
+    this._treeNodeRoots = [];
     this._nodeMap = new Map<string, Node>();
     this._roots = [];
     this._nodes = [];
@@ -55,8 +58,16 @@ export class NodesManager {
     return this._type;
   }
 
-  private get nodesBehavior(): NodesBehavior {
+  private get nodesBehavior(): NodesBehavior<T> {
     return this._nodesBehavior;
+  }
+
+  private get treeNodeMap(): Map<string, T> {
+    return this._treeNodeMap as Map<string, T>;
+  }
+
+  private get treeNodeRoots(): T[] {
+    return this._treeNodeRoots as T[];
   }
 
   private get nodeMap(): Map<string, Node> {
@@ -176,13 +187,14 @@ export class NodesManager {
     this._searchState = newSearchState;
   };
 
-  public appendData = (data: TreeNode[], searchValue: string): void => {
+  public appendData = (data: T[], searchValue: string): void => {
     const roots: Node[] = [];
     data.forEach(treeNode => {
-      const node = this.nodesBehavior.mapTreeNodeToNode(treeNode, 0, null, this.nodeMap);
+      const node = this.nodesBehavior.mapTreeNodeToNode(treeNode, 0, null, this.nodeMap, this.treeNodeMap);
       roots.push(node);
     });
 
+    this.treeNodeRoots.push(...data);
     this.roots.push(...roots);
 
     if (this.type === Type.TREE_SELECT || this.type === Type.TREE_SELECT_FLAT) {
@@ -193,12 +205,21 @@ export class NodesManager {
     this.handleSearch(searchValue);
   };
 
-  public appendChildren = (parentNode: Node, children: TreeNode[], searchValue: string): void => {
+  public appendChildren = (parentNode: Node, children: T[], searchValue: string): void => {
     parentNode.hasLoaded = true;
+
+    // source modification!!! initTreeNode should be cloned firstly.
+   // parentNode.initTreeNode.children = children;
 
     if (children?.length > 0) {
       parentNode.children = children.map(treeNode => (
-        this.nodesBehavior.mapTreeNodeToNode(treeNode, parentNode.depth + 1, parentNode.id, this.nodeMap)
+        this.nodesBehavior.mapTreeNodeToNode(
+          treeNode,
+          parentNode.depth + 1,
+          parentNode.id,
+          this.nodeMap,
+          this.treeNodeMap
+        )
       ));
 
       this._nodes = convertTreeArrayToFlatArray(this.roots);
@@ -242,7 +263,7 @@ export class NodesManager {
     }
   };
 
-  private createBehavior = (type: Type): NodesBehavior => {
+  private createBehavior = (type: Type): NodesBehavior<T> => {
     switch (type) {
       case Type.SINGLE_SELECT:
         return new SingleSelectBehavior();

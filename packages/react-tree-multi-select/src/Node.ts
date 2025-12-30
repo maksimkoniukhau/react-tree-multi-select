@@ -1,9 +1,10 @@
 import {TreeNode} from './types';
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-export class Node<T extends TreeNode = any> {
+export class Node<T extends TreeNode<T> = any> {
 
-  private _nodeMap: Map<string, Node<T>>;
+  private readonly _treeNodeMap: Map<string, T>;
+  private readonly _nodeMap: Map<string, Node<T>>;
 
   private readonly _id: string;
   private readonly _name: string;
@@ -15,10 +16,8 @@ export class Node<T extends TreeNode = any> {
   private readonly _depth: number;
   private readonly _disabled: boolean;
 
-  // original TreeNode
-  private readonly _initTreeNode: T;
-
   constructor(
+    treeNodeMap: Map<string, T>,
     nodeMap: Map<string, Node<T>>,
     id: string,
     name: string,
@@ -27,9 +26,9 @@ export class Node<T extends TreeNode = any> {
     children: Node<T>[],
     hasChildren: boolean,
     depth: number,
-    disabled: boolean,
-    initTreeNode: T
+    disabled: boolean
   ) {
+    this._treeNodeMap = treeNodeMap;
     this._nodeMap = nodeMap;
     this._id = id;
     this._name = name ?? '';
@@ -40,7 +39,6 @@ export class Node<T extends TreeNode = any> {
     this._hasLoaded = false;
     this._depth = depth;
     this._disabled = disabled;
-    this._initTreeNode = initTreeNode;
   }
 
   get id(): string {
@@ -91,7 +89,7 @@ export class Node<T extends TreeNode = any> {
   }
 
   get initTreeNode(): T {
-    return this._initTreeNode;
+    return this._treeNodeMap.get(this.id)!;
   }
 
   public hasLoadedChildren = (): boolean => {
