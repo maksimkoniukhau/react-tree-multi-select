@@ -16,8 +16,6 @@ export class NodesManager<T extends TreeNode<T> = any> {
   private readonly _nodesBehavior: NodesBehavior<T>;
 
   private readonly _treeNodeMap: Map<string, T>;
-  // original tree structure
-  private readonly _treeNodeRoots: T[];
 
   private readonly _nodeMap: Map<string, Node>;
   // original tree structure
@@ -32,7 +30,6 @@ export class NodesManager<T extends TreeNode<T> = any> {
   constructor(data: T[], type: Type, searchValue: string) {
     this._type = type;
     this._treeNodeMap = new Map<string, T>();
-    this._treeNodeRoots = [];
     this._nodeMap = new Map<string, Node>();
     this._roots = [];
     this._nodes = [];
@@ -64,10 +61,6 @@ export class NodesManager<T extends TreeNode<T> = any> {
 
   private get treeNodeMap(): Map<string, T> {
     return this._treeNodeMap as Map<string, T>;
-  }
-
-  private get treeNodeRoots(): T[] {
-    return this._treeNodeRoots as T[];
   }
 
   private get nodeMap(): Map<string, Node> {
@@ -194,7 +187,6 @@ export class NodesManager<T extends TreeNode<T> = any> {
       roots.push(node);
     });
 
-    this.treeNodeRoots.push(...data);
     this.roots.push(...roots);
 
     if (this.type === Type.TREE_SELECT || this.type === Type.TREE_SELECT_FLAT) {
@@ -207,9 +199,6 @@ export class NodesManager<T extends TreeNode<T> = any> {
 
   public appendChildren = (parentNode: Node, children: T[], searchValue: string): void => {
     parentNode.hasLoaded = true;
-
-    // source modification!!! initTreeNode should be cloned firstly.
-   // parentNode.initTreeNode.children = children;
 
     if (children?.length > 0) {
       parentNode.children = children.map(treeNode => (
