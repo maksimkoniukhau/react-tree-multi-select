@@ -9,8 +9,7 @@ import {
   SELECT_ALL_SUFFIX,
   TreeMultiSelect,
   TreeMultiSelectHandle,
-  TreeNode,
-  VirtualFocusId
+  TreeNode
 } from 'react-tree-multi-select';
 import {getBaseExpandedIds, getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
 
@@ -22,25 +21,6 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
   const [selectedIds] = useState<string[]>(getBaseSelectedIds());
   const [expandedIds] = useState<string[]>(getBaseExpandedIds());
 
-  const buildVirtualFocusId = (
-    region: typeof FIELD_PREFIX | typeof DROPDOWN_PREFIX,
-    elementId: string
-  ): VirtualFocusId => {
-    return `${region}${elementId}`;
-  };
-
-  const extractElementId = (virtualFocusId: VirtualFocusId | null): string => {
-    return virtualFocusId?.replace(FIELD_PREFIX, '').replace(DROPDOWN_PREFIX, '') ?? '';
-  };
-
-  const isVirtualFocusInField = (virtualFocusId: VirtualFocusId | null): boolean => {
-    return virtualFocusId?.startsWith(FIELD_PREFIX) ?? false;
-  };
-
-  const isVirtualFocusInDropdown = (virtualFocusId: VirtualFocusId | null): boolean => {
-    return virtualFocusId?.startsWith(DROPDOWN_PREFIX) ?? false;
-  };
-
   const withDropdownInput = false;
 
   const handleKeyDown = (event: React.KeyboardEvent): boolean | undefined => {
@@ -51,7 +31,7 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
     const {inputValue, isDropdownOpen, virtualFocusId} = rtmsAPI.getState();
     switch (event.key) {
       case 'ArrowLeft':
-        if (isVirtualFocusInDropdown(virtualFocusId)) {
+        if (rtmsAPI.isVirtualFocusInDropdown(virtualFocusId)) {
           rtmsAPI.collapseNode();
           if (inputValue) {
             event.preventDefault(); // Prevent the caret from moving inside the input.
@@ -63,7 +43,7 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
         }
         return true;
       case 'ArrowRight':
-        if (isVirtualFocusInDropdown(virtualFocusId)) {
+        if (rtmsAPI.isVirtualFocusInDropdown(virtualFocusId)) {
           rtmsAPI.expandNode();
           if (inputValue) {
             event.preventDefault(); // Prevent the caret from moving inside the input.
@@ -75,7 +55,7 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
         }
         return true;
       case 'ArrowUp':
-        if (isDropdownOpen && isVirtualFocusInDropdown(virtualFocusId)) {
+        if (isDropdownOpen && rtmsAPI.isVirtualFocusInDropdown(virtualFocusId)) {
           rtmsAPI.focusPrevItem();
         } else {
           rtmsAPI.toggleDropdown();
@@ -84,7 +64,7 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
         return true;
       case 'ArrowDown':
         if (isDropdownOpen) {
-          if (isVirtualFocusInDropdown(virtualFocusId)) {
+          if (rtmsAPI.isVirtualFocusInDropdown(virtualFocusId)) {
             rtmsAPI.focusNextItem();
           } else {
             rtmsAPI.focusFirstItem('dropdown:');
@@ -95,7 +75,7 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
         event.preventDefault();
         return true;
       case 'Home':
-        if (isVirtualFocusInDropdown(virtualFocusId)) {
+        if (rtmsAPI.isVirtualFocusInDropdown(virtualFocusId)) {
           rtmsAPI.focusFirstItem();
           event.preventDefault();
         } else {
@@ -106,7 +86,7 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
         }
         return true;
       case 'End':
-        if (isVirtualFocusInDropdown(virtualFocusId)) {
+        if (rtmsAPI.isVirtualFocusInDropdown(virtualFocusId)) {
           rtmsAPI.focusLastItem();
           event.preventDefault();
         } else {
@@ -117,15 +97,15 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
         }
         return true;
       case 'Enter':
-        if (!virtualFocusId || isVirtualFocusInField(virtualFocusId)) {
+        if (!virtualFocusId || rtmsAPI.isVirtualFocusInField(virtualFocusId)) {
           rtmsAPI.toggleDropdown();
           if (!(!virtualFocusId
-            || buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX) === virtualFocusId
-            || buildVirtualFocusId(FIELD_PREFIX, CLEAR_ALL_SUFFIX) === virtualFocusId)) {
+            || rtmsAPI.buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX) === virtualFocusId
+            || rtmsAPI.buildVirtualFocusId(FIELD_PREFIX, CLEAR_ALL_SUFFIX) === virtualFocusId)) {
             // chip is focused. any action can be performed
           }
         } else {
-          if (buildVirtualFocusId(DROPDOWN_PREFIX, SELECT_ALL_SUFFIX) === virtualFocusId) {
+          if (rtmsAPI.buildVirtualFocusId(DROPDOWN_PREFIX, SELECT_ALL_SUFFIX) === virtualFocusId) {
             rtmsAPI.toggleAllSelection();
           } else {
             rtmsAPI.toggleNodeSelection();
@@ -134,13 +114,13 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
         event.preventDefault();
         return true;
       case 'Backspace':
-        if (!inputValue && isVirtualFocusInField(virtualFocusId)
-          && buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX) !== virtualFocusId) {
-          if (buildVirtualFocusId(FIELD_PREFIX, CLEAR_ALL_SUFFIX) === virtualFocusId) {
+        if (!inputValue && rtmsAPI.isVirtualFocusInField(virtualFocusId)
+          && rtmsAPI.buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX) !== virtualFocusId) {
+          if (rtmsAPI.buildVirtualFocusId(FIELD_PREFIX, CLEAR_ALL_SUFFIX) === virtualFocusId) {
             rtmsAPI.deselectAll();
           } else {
             rtmsAPI.deselectNode();
-            if (!rtmsAPI.getById(extractElementId(virtualFocusId))?.disabled) {
+            if (!rtmsAPI.getById(rtmsAPI.extractElementId(virtualFocusId))?.disabled) {
               rtmsAPI.focusPrevItem();
             }
           }

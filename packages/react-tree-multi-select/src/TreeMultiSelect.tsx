@@ -103,7 +103,7 @@ export const TreeMultiSelect = forwardRef(
     const [expandedIds, setExpandedIds] = useState<string[]>(
       () => normalizeExpandedIds(isExpandedIdsControlled ? propsExpandedIds : defaultExpandedIds, type)
     );
-    const [loadedIds, setLoadedIds] = useState<Set<string>>(new Set());
+    const [loadedIds, setLoadedIds] = useState<Set<string>>(() => new Set());
     const [displayedNodes, setDisplayedNodes] = useState<Node[]>([]);
     const [selectionAggregateState, setSelectionAggregateState] = useState<SelectionAggregateState>(
       SelectionAggregateState.NONE
@@ -1006,6 +1006,7 @@ export const TreeMultiSelect = forwardRef(
         virtualFocusId
       }),
       getById: (id: string) => nodesManager.current.findById(id)?.initTreeNode,
+      loadData: async () => await handleLoadData(),
       openDropdown: () => toggleDropdown(true),
       closeDropdown: () => toggleDropdown(false),
       toggleDropdown: () => toggleDropdown(!isDropdownOpen),
@@ -1071,7 +1072,16 @@ export const TreeMultiSelect = forwardRef(
               : prev
         });
       },
-      loadData: async () => await handleLoadData()
+      buildVirtualFocusId: (region: typeof FIELD_PREFIX | typeof DROPDOWN_PREFIX, elementId: string) => (
+        buildVirtualFocusId(region, elementId)
+      ),
+      extractElementId: (focusId?: VirtualFocusId | null) => extractElementId(focusId ?? virtualFocusId),
+      isVirtualFocusInField: (focusId?: VirtualFocusId | null) => (
+        isVirtualFocusInField(focusId ?? virtualFocusId)
+      ),
+      isVirtualFocusInDropdown: (focusId?: VirtualFocusId | null) => (
+        isVirtualFocusInDropdown(focusId ?? virtualFocusId)
+      )
     }));
 
     const dataRtmsType = useMemo(() => type.toLowerCase().replaceAll('_', '-'), [type]);

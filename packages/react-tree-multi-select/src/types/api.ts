@@ -33,6 +33,17 @@ export interface TreeMultiSelectHandle<T extends TreeNode<T> = any> {
   getById: (id: string) => T | undefined;
 
   /**
+   * Loads additional data and appends it to the current dataset.
+   *
+   * This method calls the `onLoadData` callback internally and merges the returned
+   * nodes with the existing data. It does nothing if `onLoadData` is not provided
+   * or returns an empty array.
+   *
+   * @returns A Promise that resolves once the data has been loaded and appended.
+   */
+  loadData: () => Promise<void>;
+
+  /**
    * Opens (renders) the dropdown.
    */
   openDropdown: () => void;
@@ -187,13 +198,43 @@ export interface TreeMultiSelectHandle<T extends TreeNode<T> = any> {
   focusNextItem: (virtualFocusId?: VirtualFocusId) => void;
 
   /**
-   * Loads additional data and appends it to the current dataset.
+   * Builds a virtual focus identifier for a focusable element.
    *
-   * This method calls the `onLoadData` callback internally and merges the returned
-   * nodes with the existing data. It does nothing if `onLoadData` is not provided
-   * or returns an empty array.
-   *
-   * @returns A Promise that resolves once the data has been loaded and appended.
+   * @param region - The focus region (`FIELD` or `DROPDOWN`) in which the element resides.
+   * @param elementId - The unique identifier of the element within that region.
+   * @returns A `VirtualFocusId` representing the virtually focusable element.
    */
-  loadData: () => Promise<void>;
+  buildVirtualFocusId: (region: typeof FIELD_PREFIX | typeof DROPDOWN_PREFIX, elementId: string) => VirtualFocusId;
+
+  /**
+   * Extracts the underlying element identifier from a virtual focus identifier.
+   *
+   * If the provided `virtualFocusId` is `null` or `undefined`, an empty string is returned.
+   *
+   * @param virtualFocusId - The virtual focus identifier from which the element identifier should be extracted.
+   * @returns The element identifier string, or an empty string if unavailable.
+   */
+  extractElementId: (virtualFocusId?: VirtualFocusId | null) => string;
+
+  /**
+   * Determines whether the virtual focus resides in the field region.
+   *
+   * If `virtualFocusId` is omitted, the current internal virtual focus value is used.
+   * Returns `false` if there is no virtual focus.
+   *
+   * @param virtualFocusId - The virtual focus identifier to evaluate.
+   * @returns `true` if the virtual focus is within the field region, otherwise `false`.
+   */
+  isVirtualFocusInField: (virtualFocusId?: VirtualFocusId | null) => boolean;
+
+  /**
+   * Determines whether the virtual focus resides in the dropdown region.
+   *
+   * If `virtualFocusId` is omitted, the current internal virtual focus value is used.
+   * Returns `false` if there is no virtual focus.
+   *
+   * @param virtualFocusId - The virtual focus identifier to evaluate.
+   * @returns `true` if the virtual focus is within the dropdown region, otherwise `false`.
+   */
+  isVirtualFocusInDropdown: (virtualFocusId?: VirtualFocusId | null) => boolean;
 }
