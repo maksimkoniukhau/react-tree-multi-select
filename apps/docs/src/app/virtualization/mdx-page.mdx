@@ -1,0 +1,43 @@
+import {loadExampleSource} from '@/utils/fsUtils';
+import {Alert} from '@/shared-components/Alert';
+import {DemoContainer} from '@/shared-components/DemoContainer';
+import {LargeDataExample} from '@/examples/virtualization/LargeDataExample';
+import {NonVirtualizedExample} from '@/examples/virtualization/NonVirtualizedExample';
+
+# Virtualization
+
+By default, **react-tree-multi-select** uses virtualization to render items efficiently.<br/>
+Virtualization helps improve performance by only rendering the visible portion of a large list,
+which makes it the recommended choice in most cases.<br/>
+The following example demonstrates the component rendering a large number of nodes with virtualization enabled.
+
+<DemoContainer
+    code={loadExampleSource('virtualization/LargeDataExample.tsx')}
+    title="Large data with virtualization"
+>
+    <LargeDataExample/>
+</DemoContainer>
+
+## Disabling Virtualization
+
+You can disable virtualization by passing the `isVirtualized={false}` prop.<br/>
+A common reason to do this is when you want the dropdown width to automatically adjust to the size of its content.<br/>
+Virtualization uses absolute positioning for list items and only renders a subset of them at a time,
+which prevents the dropdown from resizing based on its full content.
+
+To disable virtualization and make the dropdown adjust its width automatically:
+1. Pass `isVirtualized={false}` to your component.
+2. Add `width: auto` to the `.rtms-dropdown` class in your styles.
+
+<Alert type={'important'}>
+    Only disable virtualization if you have a relatively small number of items, since rendering all items at once can reduce performance.
+</Alert>
+
+This example demonstrates the component when virtualization is disabled, allowing the dropdown to resize automatically.
+
+<DemoContainer
+    code={loadExampleSource('virtualization/NonVirtualizedExample.tsx')}
+    title="Non virtualized list"
+>
+    <NonVirtualizedExample/>
+</DemoContainer>
