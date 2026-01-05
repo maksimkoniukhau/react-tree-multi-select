@@ -325,7 +325,8 @@ export interface TreeMultiSelectProps<T extends TreeNode<T> = any> {
    * Callback for loading children of a specific node on demand.
    *
    * This function is called automatically by the component when the user expands a node that has not yet loaded
-   * its children. It enables lazy loading of hierarchical data for large trees or server-driven datasets.
+   * its children (i.e., the node’s `hasChildren` prop is `true`, and its children prop is not set or empty).
+   * It enables lazy loading of hierarchical data for large trees or server-driven datasets.
    *
    * The function should return a Promise resolving to an array of TreeNode objects,
    * which will be set as the children of the specified node.

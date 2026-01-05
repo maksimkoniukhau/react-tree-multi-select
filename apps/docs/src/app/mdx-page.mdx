@@ -1,0 +1,25 @@
+import {loadExampleSource} from '@/utils/fsUtils';
+import {CodeBlock} from '@/shared-components/CodeBlock';
+import {DemoContainer} from '@/shared-components/DemoContainer';
+import {SimpleUsageExample} from '@/examples/SimpleUsageExample';
+
+# Getting Started
+
+**react-tree-multi-select** is a fast, highly customizable and feature-rich component that combines
+`tree-select`, `multi-select` and `single-select` functionality into a single versatile solution.
+
+## Installation
+
+**react-tree-multi-select** is distributed as an NPM package.<br/>
+In order to use, install **react-tree-multi-select** in your React project.
+
+<CodeBlock code={'npm install react-tree-multi-select'}/>
+
+## Usage
+
+<DemoContainer
+    code={loadExampleSource('SimpleUsageExample.tsx')}
+    title="Simple usage"
+>
+    <SimpleUsageExample/>
+</DemoContainer>
