@@ -1,6 +1,6 @@
 'use client'
 
-import React, {FC, SetStateAction, useEffect, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {SelectionAggregateState, TreeMultiSelect, TreeNode, Type} from 'react-tree-multi-select';
 import {getBaseExpandedIds, getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
 import {Select} from '@/shared-components/Select';
@@ -70,35 +70,6 @@ export const BasicFeaturesExample: FC = () => {
     setExpandedIds(expandedNodes ? getBaseExpandedIds() : []);
   }, [expandedNodes]);
 
-  const setters = {
-    type: setType,
-    inputPlaceholder: setInputPlaceholder,
-    noDataText: setNoDataText,
-    noMatchesText: setNoMatchesText,
-    isDisabled: setIsDisabled,
-    isSearchable: setIsSearchable,
-    withChipClear: setWithChipClear,
-    withClearAll: setWithClearAll,
-    withSelectAll: setWithSelectAll,
-    withDropdownInput: setWithDropdownInput,
-    closeDropdownOnNodeChange: setCloseDropdownOnNodeChange,
-    dropdownHeight: setDropdownHeight,
-    overscan: setOverscan,
-    isVirtualized: setIsVirtualized,
-    loopLeft: setLoopLeft,
-    loopRight: setLoopRight,
-    loopUp: setLoopUp,
-    loopDown: setLoopDown,
-    selectedNodes: setSelectedNodes,
-    expandedNodes: setExpandedNodes,
-    disabledNodes: setDisabledNodes,
-    emptyData: setEmptyData
-  };
-
-  const handleOptionChange = (name: keyof typeof setters) => (value: string | number | boolean): void => {
-    setters[name]?.(value as ((SetStateAction<Type> & SetStateAction<string>) & SetStateAction<boolean>) & SetStateAction<number>);
-  };
-
   const handleNodeChange = (node: TreeNode, selectedIds: string[]): void => {
     console.log('handleNodeChange node:', node);
     console.log('handleNodeChange selectedIds:', selectedIds);
@@ -148,39 +119,44 @@ export const BasicFeaturesExample: FC = () => {
                 {name: Type.MULTI_SELECT, value: Type.MULTI_SELECT},
                 {name: Type.SINGLE_SELECT, value: Type.SINGLE_SELECT}
               ]}
-              onChange={handleOptionChange('type')}
+              onChange={(v) => setType(Type[v as keyof typeof Type])}
             />
-            <Input label="inputPlaceholder:" value={inputPlaceholder}
-                   onChange={handleOptionChange('inputPlaceholder')}/>
-            <Input label="noDataText:" value={noDataText} onChange={handleOptionChange('noDataText')}/>
-            <Input label="noMatchesText:" value={noMatchesText} onChange={handleOptionChange('noMatchesText')}/>
-            <Checkbox label="isDisabled" checked={isDisabled} onChange={handleOptionChange('isDisabled')}/>
-            <Checkbox label="isSearchable" checked={isSearchable} onChange={handleOptionChange('isSearchable')}/>
-            <Checkbox label="withChipClear" checked={withChipClear} onChange={handleOptionChange('withChipClear')}/>
-            <Checkbox label="withClearAll" checked={withClearAll} onChange={handleOptionChange('withClearAll')}/>
-            <Checkbox label="withSelectAll" checked={withSelectAll} onChange={handleOptionChange('withSelectAll')}/>
-            <Checkbox label="withDropdownInput" checked={withDropdownInput}
-                      onChange={handleOptionChange('withDropdownInput')}/>
+            <Input label="inputPlaceholder:" value={inputPlaceholder} onChange={(v) => setInputPlaceholder(v)}/>
+            <Input label="noDataText:" value={noDataText} onChange={(v) => setNoDataText(v)}/>
+            <Input label="noMatchesText:" value={noMatchesText} onChange={(v) => setNoMatchesText(v)}/>
+            <Checkbox label="isDisabled" checked={isDisabled} onChange={(v) => setIsDisabled(v)}/>
+            <Checkbox label="isSearchable" checked={isSearchable} onChange={(v) => setIsSearchable(v)}/>
+            <Checkbox label="withChipClear" checked={withChipClear} onChange={(v) => setWithChipClear(v)}/>
+            <Checkbox label="withClearAll" checked={withClearAll} onChange={(v) => setWithClearAll(v)}/>
+            <Checkbox label="withSelectAll" checked={withSelectAll} onChange={(v) => setWithSelectAll(v)}/>
+            <Checkbox label="withDropdownInput" checked={withDropdownInput} onChange={(v) => setWithDropdownInput(v)}/>
           </div>
           <div>
-            <Checkbox label="closeDropdownOnNodeChange" checked={closeDropdownOnNodeChange}
-                      onChange={handleOptionChange('closeDropdownOnNodeChange')}/>
-            <Input label="dropdownHeight:" value={dropdownHeight}
-                   onChange={handleOptionChange('dropdownHeight')} type="number"/>
-            <Input label="overscan:" value={overscan} onChange={handleOptionChange('overscan')} type="number"/>
-            <Checkbox label="isVirtualized" checked={isVirtualized} onChange={handleOptionChange('isVirtualized')}/>
+            <Checkbox
+              label="closeDropdownOnNodeChange"
+              checked={closeDropdownOnNodeChange}
+              onChange={(v) => setCloseDropdownOnNodeChange(v)}
+            />
+            <Input
+              label="dropdownHeight:"
+              value={dropdownHeight}
+              onChange={(v) => setDropdownHeight(Number(v))}
+              type="number"
+            />
+            <Input label="overscan:" value={overscan} onChange={(v) => setOverscan(Number(v))} type="number"/>
+            <Checkbox label="isVirtualized" checked={isVirtualized} onChange={(v) => setIsVirtualized(v)}/>
             <div className="config-container">
               <span>{'keyboardConfig:'}</span>
               <div style={{marginLeft: '15px'}}>
                 <div>{'field:'}</div>
                 <div style={{marginLeft: '15px'}}>
-                  <Checkbox label="loopLeft" checked={loopLeft} onChange={handleOptionChange('loopLeft')}/>
-                  <Checkbox label="loopRight" checked={loopRight} onChange={handleOptionChange('loopRight')}/>
+                  <Checkbox label="loopLeft" checked={loopLeft} onChange={(v) => setLoopLeft(v)}/>
+                  <Checkbox label="loopRight" checked={loopRight} onChange={(v) => setLoopRight(v)}/>
                 </div>
                 <div>{'dropdown:'}</div>
                 <div style={{marginLeft: '15px'}}>
-                  <Checkbox label="loopUp" checked={loopUp} onChange={handleOptionChange('loopUp')}/>
-                  <Checkbox label="loopDown" checked={loopDown} onChange={handleOptionChange('loopDown')}/>
+                  <Checkbox label="loopUp" checked={loopUp} onChange={(v) => setLoopUp(v)}/>
+                  <Checkbox label="loopDown" checked={loopDown} onChange={(v) => setLoopDown(v)}/>
                 </div>
               </div>
             </div>
@@ -189,10 +165,10 @@ export const BasicFeaturesExample: FC = () => {
       </div>
       <div>{'Data initial props:'}</div>
       <div className="basic-options">
-        <Checkbox label="selected nodes" checked={selectedNodes} onChange={handleOptionChange('selectedNodes')}/>
-        <Checkbox label="expanded nodes" checked={expandedNodes} onChange={handleOptionChange('expandedNodes')}/>
-        <Checkbox label="disabled nodes" checked={disabledNodes} onChange={handleOptionChange('disabledNodes')}/>
-        <Checkbox label="empty data" checked={emptyData} onChange={handleOptionChange('emptyData')}/>
+        <Checkbox label="selected nodes" checked={selectedNodes} onChange={(v) => setSelectedNodes(v)}/>
+        <Checkbox label="expanded nodes" checked={expandedNodes} onChange={(v) => setExpandedNodes(v)}/>
+        <Checkbox label="disabled nodes" checked={disabledNodes} onChange={(v) => setDisabledNodes(v)}/>
+        <Checkbox label="empty data" checked={emptyData} onChange={(v) => setEmptyData(v)}/>
       </div>
       <TreeMultiSelect
         data={data}
