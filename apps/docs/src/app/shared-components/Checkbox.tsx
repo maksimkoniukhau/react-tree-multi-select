@@ -1,17 +1,14 @@
-import React, {FC, memo, useState} from 'react';
+import React, {FC, memo} from 'react';
 
 export interface CheckboxProps {
   label: string;
-  initChecked: boolean;
+  checked: boolean;
   onChange: (checked: boolean) => void;
 }
 
-export const Checkbox: FC<CheckboxProps> = memo(({label, initChecked, onChange}) => {
-
-  const [checked, setChecked] = useState<boolean>(initChecked);
+export const Checkbox: FC<CheckboxProps> = memo(({label, checked, onChange}) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setChecked(e.target.checked);
     onChange(e.target.checked);
   };
 

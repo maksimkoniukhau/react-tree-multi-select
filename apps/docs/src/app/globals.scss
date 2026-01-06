@@ -170,6 +170,7 @@ code {
 
       &.api-page {
         margin-bottom: 0;
+
         .code-container {
           max-height: unset;
         }
@@ -219,16 +220,13 @@ code {
       }
 
       .basic-options {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
         border: 1px solid gray;
-        padding: 10px;
+        padding: 5px;
         margin-bottom: 20px;
+      }
 
-        .delimiter {
-          border-bottom: 1px solid gray;
-        }
+      .config-container, .select-container, .input-container, .checkbox-container {
+        padding: 5px;
       }
 
       .select-container, .input-container {

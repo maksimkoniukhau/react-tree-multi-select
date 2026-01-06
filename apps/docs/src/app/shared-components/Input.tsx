@@ -1,18 +1,15 @@
-import React, {FC, HTMLInputTypeAttribute, memo, useState} from 'react';
+import React, {FC, HTMLInputTypeAttribute, memo} from 'react';
 
 export interface InputProps {
   label: string;
-  initValue: string | number;
+  value: string | number;
   onChange: (value: string) => void;
   type?: HTMLInputTypeAttribute;
 }
 
-export const Input: FC<InputProps> = memo(({label, initValue, onChange, type = 'text'}) => {
-
-  const [value, setValue] = useState<string | number>(initValue);
+export const Input: FC<InputProps> = memo(({label, value, onChange, type = 'text'}) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setValue(e.target.value);
     onChange(e.target.value);
   };
 
