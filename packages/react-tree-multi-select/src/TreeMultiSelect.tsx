@@ -724,7 +724,11 @@ export const TreeMultiSelect = forwardRef(
       callNodeToggleHandler(node, newExpandedIds);
 
       if (!node.hasLoadedChildren() && node.hasChildren && !node.hasLoaded && !loadedIds.has(node.id)) {
-        setLoadedIds(prev => new Set(prev.add(node.id)));
+        setLoadedIds(prev => {
+          const next = new Set(prev);
+          next.add(node.id);
+          return next;
+        });
         try {
           const newChildren = await onLoadChildren?.(node.id) ?? [];
           nodesManager.current.appendChildren(node, newChildren, searchValue);
@@ -738,8 +742,9 @@ export const TreeMultiSelect = forwardRef(
           }
         } finally {
           setLoadedIds(prev => {
-            prev.delete(node.id);
-            return new Set(prev);
+            const next = new Set(prev);
+            next.delete(node.id);
+            return next;
           });
         }
         setDisplayedNodes(nodesManager.current.getDisplayed(isSearchMode, nodesManager.current.expansionState));
