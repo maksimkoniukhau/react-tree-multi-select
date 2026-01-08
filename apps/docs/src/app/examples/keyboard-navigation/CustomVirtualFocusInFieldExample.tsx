@@ -2,10 +2,12 @@
 
 import React, {FC, useState} from 'react';
 import {
+  buildVirtualFocusId,
   ChipContainerProps,
   ChipContainerType,
   Components,
   components,
+  FIELD_PREFIX,
   FieldProps,
   FieldType,
   InputProps,
@@ -31,7 +33,10 @@ const CustomChipContainer: FC<ChipContainerProps> = (props) => {
 
 const CustomField: FC<FieldProps> = (props) => (
   <div {...props.attributes}>
-    <div data-rtms-virtual-focus-id="field:custom-id-1" className="field-virtual-focusable">
+    <div
+      data-rtms-virtual-focus-id={`${buildVirtualFocusId(FIELD_PREFIX, 'custom-id-1')}`}
+      className="field-virtual-focusable"
+    >
       {`I'm focusable`}
     </div>
     {props.children}

@@ -2,10 +2,14 @@
 
 import React, {FC, useRef, useState} from 'react';
 import {
+  buildVirtualFocusId,
   CLEAR_ALL_SUFFIX,
   DROPDOWN_PREFIX,
+  extractElementId,
   FIELD_PREFIX,
   INPUT_SUFFIX,
+  isVirtualFocusInDropdown,
+  isVirtualFocusInField,
   SELECT_ALL_SUFFIX,
   TreeMultiSelect,
   TreeMultiSelectHandle,
@@ -31,7 +35,7 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
     const {inputValue, isDropdownOpen, virtualFocusId} = rtmsAPI.getState();
     switch (event.key) {
       case 'ArrowLeft':
-        if (rtmsAPI.isVirtualFocusInDropdown(virtualFocusId)) {
+        if (isVirtualFocusInDropdown(virtualFocusId)) {
           rtmsAPI.collapseNode();
           if (inputValue) {
             event.preventDefault(); // Prevent the caret from moving inside the input.
@@ -43,7 +47,7 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
         }
         return true;
       case 'ArrowRight':
-        if (rtmsAPI.isVirtualFocusInDropdown(virtualFocusId)) {
+        if (isVirtualFocusInDropdown(virtualFocusId)) {
           rtmsAPI.expandNode();
           if (inputValue) {
             event.preventDefault(); // Prevent the caret from moving inside the input.
@@ -55,7 +59,7 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
         }
         return true;
       case 'ArrowUp':
-        if (isDropdownOpen && rtmsAPI.isVirtualFocusInDropdown(virtualFocusId)) {
+        if (isDropdownOpen && isVirtualFocusInDropdown(virtualFocusId)) {
           rtmsAPI.focusPrevItem();
         } else {
           rtmsAPI.toggleDropdown();
@@ -64,7 +68,7 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
         return true;
       case 'ArrowDown':
         if (isDropdownOpen) {
-          if (rtmsAPI.isVirtualFocusInDropdown(virtualFocusId)) {
+          if (isVirtualFocusInDropdown(virtualFocusId)) {
             rtmsAPI.focusNextItem();
           } else {
             rtmsAPI.focusFirstItem(DROPDOWN_PREFIX);
@@ -75,7 +79,7 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
         event.preventDefault();
         return true;
       case 'Home':
-        if (rtmsAPI.isVirtualFocusInDropdown(virtualFocusId)) {
+        if (isVirtualFocusInDropdown(virtualFocusId)) {
           rtmsAPI.focusFirstItem();
           event.preventDefault();
         } else {
@@ -86,7 +90,7 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
         }
         return true;
       case 'End':
-        if (rtmsAPI.isVirtualFocusInDropdown(virtualFocusId)) {
+        if (isVirtualFocusInDropdown(virtualFocusId)) {
           rtmsAPI.focusLastItem();
           event.preventDefault();
         } else {
@@ -97,15 +101,15 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
         }
         return true;
       case 'Enter':
-        if (!virtualFocusId || rtmsAPI.isVirtualFocusInField(virtualFocusId)) {
+        if (!virtualFocusId || isVirtualFocusInField(virtualFocusId)) {
           rtmsAPI.toggleDropdown();
           if (!(!virtualFocusId
-            || rtmsAPI.buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX) === virtualFocusId
-            || rtmsAPI.buildVirtualFocusId(FIELD_PREFIX, CLEAR_ALL_SUFFIX) === virtualFocusId)) {
+            || buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX) === virtualFocusId
+            || buildVirtualFocusId(FIELD_PREFIX, CLEAR_ALL_SUFFIX) === virtualFocusId)) {
             // chip is focused. any action can be performed
           }
         } else {
-          if (rtmsAPI.buildVirtualFocusId(DROPDOWN_PREFIX, SELECT_ALL_SUFFIX) === virtualFocusId) {
+          if (buildVirtualFocusId(DROPDOWN_PREFIX, SELECT_ALL_SUFFIX) === virtualFocusId) {
             rtmsAPI.toggleAllSelection();
           } else {
             rtmsAPI.toggleNodeSelection();
@@ -114,13 +118,13 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
         event.preventDefault();
         return true;
       case 'Backspace':
-        if (!inputValue && rtmsAPI.isVirtualFocusInField(virtualFocusId)
-          && rtmsAPI.buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX) !== virtualFocusId) {
-          if (rtmsAPI.buildVirtualFocusId(FIELD_PREFIX, CLEAR_ALL_SUFFIX) === virtualFocusId) {
+        if (!inputValue && isVirtualFocusInField(virtualFocusId)
+          && buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX) !== virtualFocusId) {
+          if (buildVirtualFocusId(FIELD_PREFIX, CLEAR_ALL_SUFFIX) === virtualFocusId) {
             rtmsAPI.deselectAll();
           } else {
             rtmsAPI.deselectNode();
-            if (!rtmsAPI.getById(rtmsAPI.extractElementId(virtualFocusId))?.disabled) {
+            if (!rtmsAPI.getById(extractElementId(virtualFocusId))?.disabled) {
               rtmsAPI.focusPrevItem();
             }
           }

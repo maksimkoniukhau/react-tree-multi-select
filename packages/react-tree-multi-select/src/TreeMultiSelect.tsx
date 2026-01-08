@@ -1076,17 +1076,7 @@ export const TreeMultiSelect = forwardRef(
               ? getNextDropdownVirtualFocusId(focusId)
               : prev
         });
-      },
-      buildVirtualFocusId: (region: typeof FIELD_PREFIX | typeof DROPDOWN_PREFIX, elementId: string) => (
-        buildVirtualFocusId(region, elementId)
-      ),
-      extractElementId: (focusId?: VirtualFocusId | null) => extractElementId(focusId ?? virtualFocusId),
-      isVirtualFocusInField: (focusId?: VirtualFocusId | null) => (
-        isVirtualFocusInField(focusId ?? virtualFocusId)
-      ),
-      isVirtualFocusInDropdown: (focusId?: VirtualFocusId | null) => (
-        isVirtualFocusInDropdown(focusId ?? virtualFocusId)
-      )
+      }
     }));
 
     const dataRtmsType = useMemo(() => type.toLowerCase().replaceAll('_', '-'), [type]);
