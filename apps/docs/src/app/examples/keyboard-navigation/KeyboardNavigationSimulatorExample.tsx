@@ -67,7 +67,7 @@ export const KeyboardNavigationSimulatorExample: FC = () => {
           if (rtmsAPI.isVirtualFocusInDropdown(virtualFocusId)) {
             rtmsAPI.focusNextItem();
           } else {
-            rtmsAPI.focusFirstItem('dropdown:');
+            rtmsAPI.focusFirstItem(DROPDOWN_PREFIX);
           }
         } else {
           rtmsAPI.openDropdown();
