@@ -20,7 +20,7 @@ export const Header: FC = memo(() => {
       <div className={`overlay-menu${isOpen ? " open" : ""}`}>
         <div className="overlay-menu-header">
           <h4>{HEADER_TITLE}</h4>
-          <button className="btn" onClick={() => setIsOpen(false)}>
+          <button className="btn close-btn" onClick={() => setIsOpen(false)}>
             <FontAwesomeIcon icon={faXmark} size="xl" color="gray"/>
           </button>
         </div>

@@ -5,7 +5,6 @@ import React from 'react';
 import {COPYRIGHT_TEXT} from '@/const';
 import {Header} from '@/shared-components/Header';
 import {Menu} from '@/shared-components/Menu';
-import {NavigationProvider} from '@/shared-components/NavigationProvider';
 
 export const metadata: Metadata = {
   title: "react-tree-multi-select docs",
@@ -21,9 +20,7 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
       <Header/>
       <main className="content">
         <Menu/>
-        <NavigationProvider>
-          {children}
-        </NavigationProvider>
+        {children}
       </main>
       <footer className="footer">
         <span>{COPYRIGHT_TEXT}</span>
