@@ -16,6 +16,7 @@ export abstract class BaseNodesBehavior<T extends TreeNode<T> = any> implements 
     return this.createNode(treeNode.id, treeNode, depth, parentId, nodeMap, treeNodeMap);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   syncSelected(selectedIds: Set<string>, _roots: Node[]): SelectionState {
     return {
       selectedIds: new Set(selectedIds),
@@ -29,6 +30,7 @@ export abstract class BaseNodesBehavior<T extends TreeNode<T> = any> implements 
     node: Node,
     select: boolean,
     selectionState: SelectionState,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _nodeMap: Map<string, Node>
   ): SelectionState {
     if (node.disabled) {
