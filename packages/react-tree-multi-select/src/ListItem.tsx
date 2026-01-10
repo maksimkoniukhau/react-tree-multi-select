@@ -112,7 +112,6 @@ export const ListItem: FC<ListItemProps> = memo((props) => {
       focused={focused}
       matched={nodesManager.searchState.matchedIds.has(node.id)}
       loaded={loadedIds.has(node.id)}
-      skipDropdownVirtualFocus={node.skipDropdownVirtualFocus}
       indentation={indentation}
       withToggle={type !== Type.MULTI_SELECT && type !== Type.SINGLE_SELECT && canExpand}
       withCheckbox={type !== Type.MULTI_SELECT && type !== Type.SINGLE_SELECT}

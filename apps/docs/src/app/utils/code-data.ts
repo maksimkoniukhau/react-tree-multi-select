@@ -44,15 +44,24 @@ export const virtualFocusIdDefinition = `field:<elementId>
 dropdown:<elementId>`;
 
 export const dropdownVirtualFocusIdsDefinition = `const getDropdownVirtualFocusIds = (): VirtualFocusId[] => {
-    const focusableElements: VirtualFocusId[] = [];
-    if (showSelectAll) {
-      focusableElements.push(\`\${DROPDOWN_PREFIX}\${SELECT_ALL_SUFFIX}\`);
+  const focusableElements: VirtualFocusId[] = [];
+  if (showSelectAll) {
+    const id = buildVirtualFocusId(DROPDOWN_PREFIX, SELECT_ALL_SUFFIX);
+    if (!excludedDropdownVirtualFocusIds.has(id)) {
+      focusableElements.push(id);
     }
-    focusableElements.push(...displayedNodes
-      .filter(node => !node.skipDropdownVirtualFocus)
-      .map(node => buildVirtualFocusId(\`\${DROPDOWN_PREFIX}\${node.id}\`));
-    if (showFooter) {
-      focusableElements.push(\`\${DROPDOWN_PREFIX}\${FOOTER_SUFFIX}\`);
+  }
+    for (const node of displayedNodes) {
+      const id = buildVirtualFocusId(DROPDOWN_PREFIX, node.id);
+      if (!excludedDropdownVirtualFocusIds.has(id)) {
+        focusableElements.push(id);
+      }
     }
-    return focusableElements;
-  };`;
+  if (showFooter) {
+    const id = buildVirtualFocusId(DROPDOWN_PREFIX, FOOTER_SUFFIX);
+    if (!excludedDropdownVirtualFocusIds.has(id)) {
+      focusableElements.push(id);
+    }
+  }
+  return focusableElements;
+};`;

@@ -8,7 +8,6 @@ export class Node<T extends TreeNode<T> = any> {
 
   private readonly _id: string;
   private readonly _name: string;
-  private readonly _skipDropdownVirtualFocus: boolean;
   private readonly _parentId: string | null;
   private _children: Node<T>[];
   private readonly _hasChildren: boolean;
@@ -21,7 +20,6 @@ export class Node<T extends TreeNode<T> = any> {
     nodeMap: Map<string, Node<T>>,
     id: string,
     name: string,
-    skipDropdownVirtualFocus: boolean,
     parentId: string | null,
     children: Node<T>[],
     hasChildren: boolean,
@@ -32,7 +30,6 @@ export class Node<T extends TreeNode<T> = any> {
     this._nodeMap = nodeMap;
     this._id = id;
     this._name = name ?? '';
-    this._skipDropdownVirtualFocus = skipDropdownVirtualFocus;
     this._parentId = parentId;
     this._children = children;
     this._hasChildren = hasChildren;
@@ -47,10 +44,6 @@ export class Node<T extends TreeNode<T> = any> {
 
   get name(): string {
     return this._name;
-  }
-
-  get skipDropdownVirtualFocus(): boolean {
-    return this._skipDropdownVirtualFocus;
   }
 
   get parent(): Node<T> | null {

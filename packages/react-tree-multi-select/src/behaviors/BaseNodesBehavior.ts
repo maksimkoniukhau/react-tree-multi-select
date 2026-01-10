@@ -87,7 +87,6 @@ export abstract class BaseNodesBehavior<T extends TreeNode<T> = any> implements 
       nodeMap,
       id,
       treeNode.label,
-      treeNode.skipDropdownVirtualFocus ?? false,
       parentId,
       children,
       treeNode.hasChildren ?? false,

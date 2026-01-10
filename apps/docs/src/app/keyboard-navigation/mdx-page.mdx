@@ -4,7 +4,9 @@ import {Alert} from '@/shared-components/Alert';
 import {CodeBlock} from '@/shared-components/CodeBlock';
 import {DemoContainer} from '@/shared-components/DemoContainer';
 import {CustomVirtualFocusInFieldExample} from '@/examples/keyboard-navigation/CustomVirtualFocusInFieldExample';
-import {SkipDropdownVirtualFocusExample} from '@/examples/keyboard-navigation/SkipDropdownVirtualFocusExample';
+import {
+    ExcludedDropdownVirtualFocusIdsExample
+} from '@/examples/keyboard-navigation/ExcludedDropdownVirtualFocusIdsExample';
 import {KeyboardNavigationSimulatorExample} from '@/examples/keyboard-navigation/KeyboardNavigationSimulatorExample';
 
 # Keyboard Navigation
@@ -73,15 +75,15 @@ This deterministic model ensures stable keyboard navigation, even when not all e
     you to style it accordingly.
 </Alert>
 
-You can exclude a specific node from the dropdown's virtual focus system by setting the `skipDropdownVirtualFocus` prop on the corresponding TreeNode.
+You can exclude specific elements from the virtual focus system by passing the `excludedVirtualFocusIds` in the `virtualFocusConfig` prop.
 
-Example — Skipping disabled nodes from dropdown virtual focus system:
+Example — Excluding disabled nodes from dropdown virtual focus system:
 
 <DemoContainer
-    code={loadExampleSource('keyboard-navigation/SkipDropdownVirtualFocusExample.tsx')}
-    title="Skip Dropdown virtual focus"
+    code={loadExampleSource('keyboard-navigation/ExcludedDropdownVirtualFocusIdsExample.tsx')}
+    title="Exclude Dropdown virtual focus ids"
 >
-    <SkipDropdownVirtualFocusExample/>
+    <ExcludedDropdownVirtualFocusIdsExample/>
 </DemoContainer>
 
 ## Unifying the Two Systems

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Components} from './components';
 import {SelectionAggregateState, Type} from './core';
-import {FooterConfig, KeyboardConfig} from './configs';
+import {FooterConfig, KeyboardConfig, VirtualFocusConfig} from './configs';
 import {TreeNode} from './nodes';
 
 /**
@@ -207,6 +207,11 @@ export interface TreeMultiSelectProps<T extends TreeNode<T> = any> {
    * Controls keyboard navigation behavior for the component.
    */
   keyboardConfig?: KeyboardConfig;
+
+  /**
+   * Controls virtual focus behavior for the component.
+   */
+  virtualFocusConfig?: VirtualFocusConfig;
 
   /**
    * Custom components used to override the default UI elements of the TreeMultiSelect.

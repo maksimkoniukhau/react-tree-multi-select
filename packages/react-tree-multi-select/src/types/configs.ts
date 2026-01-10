@@ -1,3 +1,25 @@
+import {VirtualFocusId} from './virtualFocus';
+
+/**
+ * Controls when the Footer component is rendered in the dropdown.
+ */
+export type FooterConfig = {
+  /**
+   * Renders the Footer when the component is in the search mode (when the input contains value).
+   *
+   * @default false
+   */
+  showWhenSearching?: boolean;
+
+  /**
+   * Renders the Footer when no items are available in the dropdown
+   * (takes precedence over `showWhenSearching` if both apply).
+   *
+   * @default false
+   */
+  showWhenNoItems?: boolean;
+};
+
 /**
  * Configuration options for keyboard behavior in the Field component.
  */
@@ -56,21 +78,16 @@ export type KeyboardConfig = {
 };
 
 /**
- * Controls when the Footer component is rendered in the dropdown.
+ * Controls virtual focus behavior for the component.
  */
-export type FooterConfig = {
+export type VirtualFocusConfig = {
   /**
-   * Renders the Footer when the component is in the search mode (when the input contains value).
+   * Virtual focus IDs excluded from the virtual focus system.
    *
-   * @default false
+   * Items listed here:
+   *  - Cannot receive focus via keyboard navigation
+   *  - Cannot receive focus via mouse or pointer interaction
+   *  - Can still respond to actions such as click, select, or expand
    */
-  showWhenSearching?: boolean;
-
-  /**
-   * Renders the Footer when no items are available in the dropdown
-   * (takes precedence over `showWhenSearching` if both apply).
-   *
-   * @default false
-   */
-  showWhenNoItems?: boolean;
+  excludedVirtualFocusIds?: VirtualFocusId[];
 };

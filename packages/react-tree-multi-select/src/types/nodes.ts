@@ -33,14 +33,6 @@ export interface TreeNode<T extends TreeNode<T> = any> {
   disabled?: boolean;
 
   /**
-   * When `true`, this node is excluded from the dropdown's virtual focus system.
-   * It will not be focusable via keyboard navigation or mouse interaction within the dropdown.
-   *
-   * @default false
-   */
-  skipDropdownVirtualFocus?: boolean;
-
-  /**
    * Indicates whether the node has child nodes.
    *
    * When set to `true`, the node is treated as expandable, even if its `children`

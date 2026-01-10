@@ -18,7 +18,6 @@ export interface NodeWrapperProps {
   focused: boolean;
   matched: boolean;
   loaded: boolean;
-  skipDropdownVirtualFocus: boolean;
   indentation: boolean;
   withToggle: boolean;
   withCheckbox: boolean;
@@ -39,7 +38,6 @@ export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
     focused,
     matched,
     loaded,
-    skipDropdownVirtualFocus,
     indentation,
     withToggle,
     withCheckbox,
@@ -59,7 +57,6 @@ export const NodeWrapper: FC<NodeWrapperProps> = memo((props) => {
       expanded={expanded}
       focused={focused}
       matched={matched}
-      skipDropdownVirtualFocus={skipDropdownVirtualFocus}
       indentation={indentation}
       onClick={onNodeChange}
     >

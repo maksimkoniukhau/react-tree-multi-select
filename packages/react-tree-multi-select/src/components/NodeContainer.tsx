@@ -22,7 +22,6 @@ interface NodeContainerWrapperProps {
   expanded: boolean;
   focused: boolean;
   matched: boolean;
-  skipDropdownVirtualFocus: boolean;
   indentation: boolean;
   onClick: (id: string) => (event: React.MouseEvent) => void;
   children: ReactNode;
@@ -40,7 +39,6 @@ export const NodeContainerWrapper: FC<NodeContainerWrapperProps> = memo((props) 
     expanded,
     focused,
     matched,
-    skipDropdownVirtualFocus,
     indentation,
     onClick,
     children
@@ -63,7 +61,7 @@ export const NodeContainerWrapper: FC<NodeContainerWrapperProps> = memo((props) 
           '--rtms-list-item-indentation': indentation ? 1 : 0
         } as CSSProperties,
         className,
-        ...(!skipDropdownVirtualFocus && {'data-rtms-virtual-focus-id': buildVirtualFocusId(DROPDOWN_PREFIX, id)}),
+        'data-rtms-virtual-focus-id': buildVirtualFocusId(DROPDOWN_PREFIX, id),
         onClick: onClick(id)
       }}
       ownProps={{label, disabled, selected, partial, expanded, focused, matched}}

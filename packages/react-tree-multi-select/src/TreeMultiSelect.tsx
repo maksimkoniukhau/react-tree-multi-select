@@ -67,6 +67,7 @@ export const TreeMultiSelect = forwardRef(
       isVirtualized = true,
       footerConfig,
       keyboardConfig: propsKeyboardConfig,
+      virtualFocusConfig,
       components: propsComponents,
       onDropdownToggle,
       onNodeChange,
@@ -163,7 +164,13 @@ export const TreeMultiSelect = forwardRef(
       }
     }, [showFooterWhenSearching, showFooterWhenNoItems, hasCustomFooter, isAnyNodeDisplayed, isSearchMode]);
 
-    const keyboardConfig = getKeyboardConfig(propsKeyboardConfig);
+    const keyboardConfig = useMemo(() => {
+      return getKeyboardConfig(propsKeyboardConfig);
+    }, [propsKeyboardConfig]);
+
+    const excludedDropdownVirtualFocusIds = useMemo(() => {
+      return new Set(virtualFocusConfig?.excludedVirtualFocusIds?.filter(isVirtualFocusInDropdown));
+    }, [virtualFocusConfig]);
 
     const getFieldVirtualFocusIds = (): VirtualFocusId[] => {
       const virtualFocusableElements = Array.from(
@@ -181,16 +188,25 @@ export const TreeMultiSelect = forwardRef(
     const dropdownVirtualFocusIds: VirtualFocusId[] = useMemo(() => {
       const focusableElements: VirtualFocusId[] = [];
       if (showSelectAll) {
-        focusableElements.push(buildVirtualFocusId(DROPDOWN_PREFIX, SELECT_ALL_SUFFIX));
+        const id = buildVirtualFocusId(DROPDOWN_PREFIX, SELECT_ALL_SUFFIX);
+        if (!excludedDropdownVirtualFocusIds.has(id)) {
+          focusableElements.push(id);
+        }
       }
-      focusableElements.push(...displayedNodes
-        .filter(node => !node.skipDropdownVirtualFocus)
-        .map(node => buildVirtualFocusId(DROPDOWN_PREFIX, node.id)));
+      for (const node of displayedNodes) {
+        const id = buildVirtualFocusId(DROPDOWN_PREFIX, node.id);
+        if (!excludedDropdownVirtualFocusIds.has(id)) {
+          focusableElements.push(id);
+        }
+      }
       if (showFooter) {
-        focusableElements.push(buildVirtualFocusId(DROPDOWN_PREFIX, FOOTER_SUFFIX));
+        const id = buildVirtualFocusId(DROPDOWN_PREFIX, FOOTER_SUFFIX);
+        if (!excludedDropdownVirtualFocusIds.has(id)) {
+          focusableElements.push(id);
+        }
       }
       return focusableElements;
-    }, [displayedNodes, showSelectAll, showFooter]);
+    }, [displayedNodes, showSelectAll, showFooter, excludedDropdownVirtualFocusIds]);
 
     const findDropdownVirtualFocusId = useCallback((virtualFocusId: VirtualFocusId): NullableVirtualFocusId => {
       return dropdownVirtualFocusIds.find(id => id === virtualFocusId) ?? null;
