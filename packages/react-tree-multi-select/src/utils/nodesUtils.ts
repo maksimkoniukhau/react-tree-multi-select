@@ -16,11 +16,11 @@ export const convertTreeArrayToFlatArray = (treeArray: Node[]): Node[] => {
   return flatArray;
 };
 
-export const filterChips = (nodesManager: NodesManager): Node[] => {
-  return nodesManager.type === Type.TREE_SELECT
-    ? nodesManager.nodes.filter(node => nodesManager.selectionState.selectedIds.has(node.id)
-      && (!node.parent || !nodesManager.selectionState.selectedIds.has(node.parent.id)))
-    : nodesManager.nodes.filter(node => nodesManager.selectionState.selectedIds.has(node.id));
+export const filterChips = (type: Type, nodes: Node[], selectedIds: Set<string>): Node[] => {
+  return type === Type.TREE_SELECT
+    ? nodes.filter(node => selectedIds.has(node.id)
+      && (!node.parent || !selectedIds.has(node.parent.id)))
+    : nodes.filter(node => selectedIds.has(node.id));
 };
 
 export const getOrderedIds = (setIds: Set<string>, nodesManager: NodesManager): string[] => {

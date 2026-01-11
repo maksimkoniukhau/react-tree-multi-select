@@ -2,9 +2,8 @@ import React, {FC, memo, RefObject} from 'react';
 import {CLEAR_ALL_SUFFIX, FIELD_PREFIX, FieldProps, INPUT_SUFFIX, Type} from '../types';
 import {InnerComponents, NullableVirtualFocusId} from '../innerTypes';
 import {classNames} from '../utils/commonUtils';
-import {filterChips} from '../utils/nodesUtils';
 import {buildVirtualFocusId} from '../utils/focusUtils';
-import {NodesManager} from '../NodesManager';
+import {Node} from '../Node';
 import {ChipWrapper} from './ChipWrapper';
 import {InputWrapper} from './Input';
 import {FieldClearWrapper} from './FieldClear';
@@ -22,8 +21,7 @@ interface FieldContainerProps {
   fieldRef: RefObject<HTMLDivElement | null>;
   fieldInputRef: RefObject<HTMLInputElement | null>;
   type: Type;
-  nodesManager: NodesManager;
-  selectedIds: string[];
+  displayedChips: Node[],
   isDropdownOpen: boolean;
   withClearAll: boolean;
   showClearAll: boolean;
@@ -48,7 +46,7 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
     fieldRef,
     fieldInputRef,
     type,
-    nodesManager,
+    displayedChips,
     isDropdownOpen,
     withClearAll,
     showClearAll,
@@ -79,7 +77,7 @@ export const FieldContainer: FC<FieldContainerProps> = memo((props) => {
       customProps={components.Field.props}
     >
       <div className="rtms-field-content">
-        {filterChips(nodesManager)
+        {displayedChips
           .map(node => (
             <ChipWrapper
               key={node.id}

@@ -106,6 +106,7 @@ export const TreeMultiSelect = forwardRef(
     );
     const [loadedIds, setLoadedIds] = useState<Set<string>>(() => new Set());
     const [displayedNodes, setDisplayedNodes] = useState<Node[]>([]);
+    const [displayedChips, setDisplayedChips] = useState<Node[]>([]);
     const [selectionAggregateState, setSelectionAggregateState] = useState<SelectionAggregateState>(
       SelectionAggregateState.NONE
     );
@@ -284,6 +285,7 @@ export const TreeMultiSelect = forwardRef(
 
       setSelectedIds(getOrderedIds(nodesManager.current.selectionState.selectedIds, nodesManager.current));
       setDisplayedNodes(newDisplayedNodes);
+      setDisplayedChips(filterChips(type, nodesManager.current.nodes, nodesManager.current.selectionState.selectedIds));
       setSelectionAggregateState(newSelectionAggregateState);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data, type]);
@@ -302,6 +304,7 @@ export const TreeMultiSelect = forwardRef(
           nodesManager.current.nodes
         );
         setSelectedIds(getOrderedIds(nodesManager.current.selectionState.selectedIds, nodesManager.current));
+        setDisplayedChips(filterChips(type, nodesManager.current.nodes, nodesManager.current.selectionState.selectedIds));
         setSelectionAggregateState(newSelectionAggregateState);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -476,6 +479,7 @@ export const TreeMultiSelect = forwardRef(
       );
       if (!isSelectedIdsControlled) {
         setSelectedIds(newSelectedIds);
+        setDisplayedChips(filterChips(type, nodesManager.current.nodes, selectionState.selectedIds));
         setSelectionAggregateState(newSelectionAggregateState);
         setVirtualFocusId(findFieldVirtualFocusId(buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX)));
       }
@@ -531,6 +535,7 @@ export const TreeMultiSelect = forwardRef(
       );
       if (!isSelectedIdsControlled) {
         setSelectedIds(newSelectedIds);
+        setDisplayedChips(filterChips(type, nodesManager.current.nodes, selectionState.selectedIds));
         setSelectionAggregateState(newSelectionAggregateState);
       }
       callSelectAllChangeHandler(newSelectionAggregateState, newSelectedIds);
@@ -619,6 +624,7 @@ export const TreeMultiSelect = forwardRef(
       );
       if (!isSelectedIdsControlled) {
         setSelectedIds(newSelectedIds);
+        setDisplayedChips(filterChips(type, nodesManager.current.nodes, selectionState.selectedIds));
         setSelectionAggregateState(newSelectionAggregateState);
       }
       callNodeChangeHandler(node, newSelectedIds);
@@ -918,7 +924,7 @@ export const TreeMultiSelect = forwardRef(
           break;
         case 'Enter':
           if (!virtualFocusId || isVirtualFocusInField(virtualFocusId)) {
-            const chipId = filterChips(nodesManager.current)
+            const chipId = displayedChips
               ?.find(node => buildVirtualFocusId(FIELD_PREFIX, node.id) === virtualFocusId)
               ?.id;
             if (chipId) {
@@ -1116,8 +1122,7 @@ export const TreeMultiSelect = forwardRef(
           fieldRef={fieldRef}
           fieldInputRef={fieldInputRef}
           type={type}
-          nodesManager={nodesManager.current}
-          selectedIds={selectedIds}
+          displayedChips={displayedChips}
           isDropdownOpen={isDropdownOpen}
           withClearAll={withClearAll}
           showClearAll={showClearAll}
