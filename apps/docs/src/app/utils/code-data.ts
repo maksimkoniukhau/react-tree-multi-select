@@ -10,20 +10,6 @@ export const customComponentMergeClassname = `const CustomChipLabel: FC<ChipLabe
   </div>
 );`;
 
-export const customComponentBuiltin = `const CustomChipContainer: FC<ChipContainerProps> = (props) => (
-  <>
-    <Tooltip id="chip-tooltip" render={({content}) => (<span>{content}</span>)}/>
-    <components.ChipContainer
-      {...props}
-      attributes={{
-        ...props.attributes,
-        "data-tooltip-id": "chip-tooltip",
-        "data-tooltip-content": \`Tooltip for the \${props.ownProps.label}\`,
-        "data-tooltip-place": "top"
-      }}/>
-  </>
-);`;
-
 export const customProps = `const components: Components = useMemo(() => (
     {
       ChipLabel: {
@@ -42,26 +28,3 @@ export const tsSupport = `const createComponents = (label: string): Components<{
 
 export const virtualFocusIdDefinition = `field:<elementId> 
 dropdown:<elementId>`;
-
-export const dropdownVirtualFocusIdsDefinition = `const getDropdownVirtualFocusIds = (): VirtualFocusId[] => {
-  const focusableElements: VirtualFocusId[] = [];
-  if (showSelectAll) {
-    const id = buildVirtualFocusId(DROPDOWN_PREFIX, SELECT_ALL_SUFFIX);
-    if (!excludedDropdownVirtualFocusIds.has(id)) {
-      focusableElements.push(id);
-    }
-  }
-    for (const node of displayedNodes) {
-      const id = buildVirtualFocusId(DROPDOWN_PREFIX, node.id);
-      if (!excludedDropdownVirtualFocusIds.has(id)) {
-        focusableElements.push(id);
-      }
-    }
-  if (showFooter) {
-    const id = buildVirtualFocusId(DROPDOWN_PREFIX, FOOTER_SUFFIX);
-    if (!excludedDropdownVirtualFocusIds.has(id)) {
-      focusableElements.push(id);
-    }
-  }
-  return focusableElements;
-};`;
