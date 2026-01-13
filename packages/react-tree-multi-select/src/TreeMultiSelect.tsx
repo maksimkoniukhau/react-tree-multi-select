@@ -746,7 +746,7 @@ export const TreeMultiSelect = forwardRef(
       }
       callNodeToggleHandler(node, newExpandedIds);
 
-      if (!node.hasLoadedChildren() && node.hasChildren && !node.hasLoaded && !loadedIds.has(node.id)) {
+      if (expand && !node.hasLoadedChildren() && node.hasChildren && !node.hasLoaded && !loadedIds.has(node.id)) {
         setLoadedIds(prev => {
           const next = new Set(prev);
           next.add(node.id);

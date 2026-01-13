@@ -339,7 +339,7 @@ export interface TreeMultiSelectProps<T extends TreeNode<T> = any> {
    * Note: The component does not perform deduplication, merging, or conflict
    * resolution, so ensure the data returned is complete and correct for that node.
    *
-   * @param nodeId - The unique identifier of the node whose children are being loaded.
+   * @param id - The unique identifier of the node whose children are being loaded.
    * @returns A Promise resolving to an array of TreeNode objects to be set as the node’s children.
    */
   onLoadChildren?: (id: string) => Promise<T[]>;
