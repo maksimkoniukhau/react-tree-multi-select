@@ -10,14 +10,12 @@ import {generateRandomTreeNodeData, getAllExpandedIds} from '@/utils/utils';
 }*/
 export const NonVirtualizedExample: FC = memo(() => {
 
-  const [data] = useState<TreeNode[]>(generateRandomTreeNodeData(3, 3));
-  const [expandedIds] = useState<string[]>(getAllExpandedIds(data));
+  const [data] = useState<TreeNode[]>(generateRandomTreeNodeData(3, 5));
 
   return (
     <div className="non-virtualized-example">
       <TreeMultiSelect
         data={data}
-        defaultExpandedIds={expandedIds}
         isVirtualized={false}
       />
     </div>
