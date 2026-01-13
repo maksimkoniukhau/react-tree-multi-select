@@ -10,7 +10,7 @@ export interface CodeBlockProps {
 
 export const CodeBlock: FC<CodeBlockProps> = ({code}) => {
 
-  const html = highlighter.codeToHtml(code, {lang: 'typescript', theme: 'light-plus'});
+  const html = highlighter.codeToHtml(code ?? '', {lang: 'typescript', theme: 'light-plus'});
 
   return (
     <div className="code-container" dangerouslySetInnerHTML={{__html: html}}/>

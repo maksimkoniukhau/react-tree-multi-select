@@ -10,6 +10,20 @@ export const customComponentMergeClassname = `const CustomChipLabel: FC<ChipLabe
   </div>
 );`;
 
+export const customComponentBuiltin = `const CustomChipContainer: FC<ChipContainerProps> = (props) => (
+  <>
+    <Tooltip id="chip-tooltip" render={({content}) => (<span>{content}</span>)}/>
+    <components.ChipContainer
+      {...props}
+      attributes={{
+        ...props.attributes,
+        "data-tooltip-id": "chip-tooltip",
+        "data-tooltip-content": \`Tooltip for the \${props.ownProps.label}\`,
+        "data-tooltip-place": "top"
+      }}/>
+  </>
+);`;
+
 export const customProps = `const components: Components = useMemo(() => (
     {
       ChipLabel: {
