@@ -64,17 +64,6 @@ const commonConfig: Configuration = {
   ],
 };
 
-const umdConfig: Configuration = {
-  ...commonConfig,
-  output: {
-    filename: 'index.cjs',
-    path: resolve(__dirname, 'dist'),
-    library: {
-      type: 'commonjs2',
-    },
-  },
-};
-
 const moduleConfig: Configuration = {
   ...commonConfig,
   experiments: {
@@ -90,4 +79,4 @@ const moduleConfig: Configuration = {
   },
 };
 
-module.exports = [umdConfig, moduleConfig];
+module.exports = [moduleConfig];
