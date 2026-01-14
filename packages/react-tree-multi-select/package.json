@@ -1,7 +1,7 @@
 {
   "name": "react-tree-multi-select",
-  "version": "3.4.0",
-  "description": "React component that combines tree select, multi-select and simple select functionality into a single versatile solution",
+  "version": "4.0.0",
+  "description": "React component that combines tree-select, multi-select and single-select functionality into a single versatile solution",
   "author": "Maksim Koniukau",
   "repository": {
     "type": "git",

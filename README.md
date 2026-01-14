@@ -4,7 +4,7 @@
 
 # React Tree Multi Select
 
-**react-tree-multi-select** is a fast, highly customizable and feature-rich component that combines **tree select**, **multi-select** and simple **select** functionality into a single versatile solution.
+**react-tree-multi-select** is a fast, highly customizable and feature-rich component that combines **tree-select**, **multi-select** and **single-select** functionality into a single versatile solution.
 
 See [documentation website](https://react-tree-multi-select.vercel.app/) for documentation and live examples.
 
