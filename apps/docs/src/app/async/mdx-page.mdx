@@ -1,10 +1,14 @@
 import {loadExampleSource} from '@/utils/fsUtils';
+import {Alert} from '@/shared-components/Alert';
 import {DemoContainer} from '@/shared-components/DemoContainer';
 import {LoadChildrenExample} from '@/examples/async/LoadChildrenExample';
 
 # Async
 
-Async children loading.
+## Async children loading
+
+**react-tree-multi-select** supports *lazy loading of node children* via the `onLoadChildren` prop.
+Children are loaded *on demand* when the user expands a node that declares it has children (`hasChildren: true`).
 
 <DemoContainer
     code={loadExampleSource('async/LoadChildrenExample.tsx')}
@@ -12,3 +16,34 @@ Async children loading.
 >
     <LoadChildrenExample/>
 </DemoContainer>
+
+### Expansion and loading behavior
+
+1. A node is rendered with `hasChildren: true`
+2. The user expands the node
+3. The component calls `onLoadChildren(nodeId)`
+4. The returned children are merged into the tree
+5. The node is expanded and rendered with its loaded children
+
+### Selection behavior
+
+#### Uncontrolled mode
+
+When the component manages its own selection state (`selectedIds` is not provided):
+ - If a *selected* parent node loads children asynchronously, those children are automatically selected
+ - A single `onNodeChange` callback is triggered after the children are loaded and auto-selected,
+and it is invoked for the parent node that was expanded
+
+#### Controlled mode
+
+When `selectedIds` is provided:
+ - The component does not auto-select asynchronously loaded children
+ - The parent application is responsible for updating selectedIds
+ - This guarantees that the external state remains the single source of truth
+
+<Alert type={'note'}>
+    - `onLoadChildren` is called only once (if successful) per node
+    - The component tracks loading state internally
+    - Node toggle are rendered when `hasChildren` is `true`, even if children are not yet loaded
+    - Children provided via initial data are treated as already loaded
+</Alert>

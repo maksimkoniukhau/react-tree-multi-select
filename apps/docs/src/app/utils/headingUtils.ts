@@ -17,7 +17,7 @@ export const getHeadings = (source: string): Heading[] => {
   const headings: Heading[] = [];
 
   const visit = (node: any): void => {
-    if (node.type === 'heading') {
+    if (node.type === 'heading' && node.depth <= 3) {
       const text = node.children
         .filter((n: any) => n.type === 'text')
         .map((n: any) => n.value)
