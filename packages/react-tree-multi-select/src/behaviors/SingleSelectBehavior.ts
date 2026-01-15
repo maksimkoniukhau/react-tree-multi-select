@@ -14,7 +14,7 @@ export class SingleSelectBehavior extends BaseNodesBehavior {
       return selectionState;
     }
     const selectedIds = selectionState.selectedIds;
-    if (selectedIds.size > 0 && selectedIds.values().every(id => nodeMap.get(id)?.disabled)) {
+    if (selectedIds.size > 0 && [...selectedIds].every(id => nodeMap.get(id)?.disabled)) {
       return selectionState;
     } else {
       return {
@@ -36,7 +36,7 @@ export class SingleSelectBehavior extends BaseNodesBehavior {
       return selectionState;
     } else {
       const selectedIds = selectionState.selectedIds;
-      if (selectedIds.size > 0 && selectedIds.values().every(id => nodeMap.get(id)?.disabled)) {
+      if (selectedIds.size > 0 && [...selectedIds].every(id => nodeMap.get(id)?.disabled)) {
         return selectionState;
       } else {
         return {
