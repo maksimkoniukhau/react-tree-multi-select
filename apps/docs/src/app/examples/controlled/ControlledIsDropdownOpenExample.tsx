@@ -2,28 +2,24 @@
 
 import React, {FC, memo, useState} from 'react';
 import {TreeMultiSelect, TreeNode} from 'react-tree-multi-select';
-import {getBaseExpandedIds, getBaseSelectedIds, getTreeNodeData} from '@/utils/utils';
+import {getTreeNodeData} from '@/utils/utils';
 
 export const ControlledIsDropdownOpenExample: FC = memo(() => {
 
-  const [data] = useState<TreeNode[]>(getTreeNodeData(true));
-  const [selectedIds] = useState<string[]>(getBaseSelectedIds());
-  const [expandedIds] = useState<string[]>(getBaseExpandedIds());
-  const [open, setOpen] = useState<boolean>(true);
+  const [data] = useState<TreeNode[]>(getTreeNodeData());
+  const [open, setOpen] = useState<boolean>(false);
 
-  const handleDropdownToggle = (open: boolean): void => {
-    setOpen(open);
+  const handleDropdownToggle = (isOpen: boolean): void => {
+    setOpen(isOpen);
   };
 
   return (
     <div className="controlled-example">
       <button className="btn" onClick={() => handleDropdownToggle(!open)}>
-        Toggle dropdown
+        Toggle dropdown visibility
       </button>
       <TreeMultiSelect
         data={data}
-        defaultSelectedIds={selectedIds}
-        defaultExpandedIds={expandedIds}
         isDropdownOpen={open}
         onDropdownToggle={handleDropdownToggle}
       />

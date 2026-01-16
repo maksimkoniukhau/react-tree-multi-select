@@ -7,7 +7,7 @@ import React, {FC, memo} from 'react';
 export enum MENU_ITEM {
   GETTING_STARTED = 'Getting Started',
   BASIC = 'Basic',
-  CONTROLLED = 'Controlled',
+  CONTROLLED = 'Controlled/Uncontrolled',
   VIRTUALIZATION = 'Virtualization',
   INFINITE_SCROLL = 'Infinite Scroll',
   ASYNC = 'Async',
