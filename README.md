@@ -69,7 +69,7 @@ export const ReactTreeMultiSelectApp: FC = () => {
     console.log('handleNodeToggle expandedIds:', expandedIds);
   };
 
-  const handleClearAll = (selectedIds: string[], selectionAggregateState: SelectionAggregateState | undefined): void => {
+  const handleClearAll = (selectedIds: string[], selectionAggregateState: SelectionAggregateState): void => {
     console.log('handleClearAll selectedIds:', selectedIds);
     console.log('handleClearAll selectionAggregateState:', selectionAggregateState);
   };

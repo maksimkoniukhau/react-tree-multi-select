@@ -82,7 +82,7 @@ export const BasicFeaturesExample: FC = () => {
     setExpandedIds(expandedIds);
   };
 
-  const handleClearAll = (selectedIds: string[], selectionAggregateState: SelectionAggregateState | undefined): void => {
+  const handleClearAll = (selectedIds: string[], selectionAggregateState: SelectionAggregateState): void => {
     console.log('handleClearAll selectedIds:', selectedIds);
     console.log('handleClearAll selectionAggregateState:', selectionAggregateState);
     setSelectedIds(selectedIds);

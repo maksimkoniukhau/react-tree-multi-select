@@ -549,7 +549,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
     withClearAll: boolean,
     chipsAmount: number,
     selectedNodesAmount: number,
-    handleClearAll?: (selectedIds: string[], selectionAggregateState: SelectionAggregateState | undefined) => void
+    handleClearAll?: (selectedIds: string[], selectionAggregateState: SelectionAggregateState) => void
   ): void => {
     if (withClearAll) {
       expect(getFieldClear(container)).toBeInTheDocument();
