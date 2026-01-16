@@ -1,14 +1,121 @@
 import {loadExampleSource} from '@/utils/fsUtils';
+import {Alert} from '@/shared-components/Alert';
 import {DemoContainer} from '@/shared-components/DemoContainer';
+import {ControlledSelectionExample} from '@/examples/controlled/ControlledSelectionExample';
+import {UncontrolledSelectionExample} from '@/examples/controlled/UncontrolledSelectionExample';
+import {ControlledExpansionExample} from '@/examples/controlled/ControlledExpansionExample';
+import {UncontrolledExpansionExample} from '@/examples/controlled/UncontrolledExpansionExample';
 import {ControlledIsDropdownOpenExample} from '@/examples/controlled/ControlledIsDropdownOpenExample';
 
-# Controlled
+# Controlled vs Uncontrolled
 
-**react-tree-multi-select** allows you to externally control the dropdown’s open and close state using the `isDropdownOpen` prop.<br/>
-This gives you full control over when the dropdown is rendered or hidden.<br/>
-By pairing `isDropdownOpen` with the `onDropdownToggle` callback, you can synchronize the dropdown’s visibility state with your application’s state,
-enabling custom behaviors such as toggling from external controls or reacting to other UI events.<br/>
-Here’s how to implement controlled dropdown behavior:
+**react-tree-multi-select** supports both **controlled** and **uncontrolled** behavior for several internal
+states of the component (such as dropdown visibility, selection, expansion, etc.).<br/>
+By default, the component operates in **uncontrolled** mode, meaning it manages its own internal state.
+For certain props, you may opt into **controlled** mode by providing the corresponding value prop.
+
+When a state is controlled:
+ - The component derives its state exclusively from props
+ - Internal state updates are disabled for that feature
+ - You are responsible for updating the value in response to callbacks
+
+This design allows you to:
+ - Keep simple cases easy with internal state
+ - Fully synchronize state with your application when needed
+ - Mix controlled and uncontrolled behavior **per feature**
+
+### How it works
+
+For most controllable features, the component follows this pattern:<br/>
+**Controlled** - `value`<br/>
+**Uncontrolled** - `defaultValue`
+
+ - If the controlled prop is provided, the component uses it as the source of truth.
+ - If it is not provided, the component initializes its internal state from the corresponding `default*` prop (if any)
+and manages the state internally afterward.
+ - Changes to `default*` props after the initial render are ignored.
+
+This pattern applies consistently across different features (selection, expansion, etc.).
+
+<Alert type={'note'}>
+    A feature must be either controlled or uncontrolled.
+    You may mix controlled and uncontrolled **across different features**.
+</Alert>
+
+### Key rules
+
+ - Providing a controlled prop disables internal state for that feature
+ - `default*` props are **read once on mount**
+ - Controlled and uncontrolled modes should **not be mixed for the same state**
+
+## Selection
+
+### Controlled selection
+
+When `selectedIds` is provided:
+ - The component does not update selection internally
+ - Selection is derived entirely from this prop
+ - You must update it in response to selection change callbacks
+
+<DemoContainer
+    code={loadExampleSource('controlled/ControlledSelectionExample.tsx')}
+    title="Controlled selectedIds"
+>
+    <ControlledSelectionExample/>
+</DemoContainer>
+
+### Uncontrolled selection
+
+Use this when you want:
+ - Initial selection
+ - Internal state management afterward
+
+<DemoContainer
+    code={loadExampleSource('controlled/UncontrolledSelectionExample.tsx')}
+    title="Uncontrolled selectedIds"
+>
+    <UncontrolledSelectionExample/>
+</DemoContainer>
+
+## Expansion
+
+### Controlled expansion
+
+When `expandedIds` is provided:
+ - Expansion state is fully controlled by the parent
+ - The component never mutates expansion internally
+
+<DemoContainer
+    code={loadExampleSource('controlled/ControlledExpansionExample.tsx')}
+    title="Controlled expandedIds"
+>
+    <ControlledExpansionExample/>
+</DemoContainer>
+
+### Uncontrolled expansion
+
+Use this when you want:
+ - Initial expansion
+ - Internal state management afterward
+
+<DemoContainer
+    code={loadExampleSource('controlled/UncontrolledExpansionExample.tsx')}
+    title="Uncontrolled expandedIds"
+>
+    <UncontrolledExpansionExample/>
+</DemoContainer>
+
+## Dropdown Visibility
+
+### Controlled dropdown open
+
+When `isDropdownOpen` is provided:
+ - The component derives the dropdown’s visibility state entirely from this prop
+ - Internal open/close state is disabled
+ - You should update `isDropdownOpen` in response to `onDropdownToggle` callback
+
+This allows you to fully control when the dropdown is rendered or hidden and to synchronize its visibility with your application’s state,
+enabling custom behaviors such as toggling the dropdown from external controls or reacting to other UI events.
 
 <DemoContainer
     code={loadExampleSource('controlled/ControlledIsDropdownOpenExample.tsx')}
