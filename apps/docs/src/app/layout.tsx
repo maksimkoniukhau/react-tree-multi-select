@@ -3,6 +3,7 @@ import './globals.scss';
 import {Metadata} from 'next';
 import React from 'react';
 import {COPYRIGHT_TEXT} from '@/const';
+import {loadLibVersion} from '@/utils/fsUtils';
 import {Header} from '@/shared-components/Header';
 import {Menu} from '@/shared-components/Menu';
 
@@ -13,11 +14,13 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({children}: Readonly<{ children: React.ReactNode; }>) {
+  const libVersion = loadLibVersion();
+
   return (
     <html lang="en">
     <body>
     <div className="app">
-      <Header/>
+      <Header libVersion={libVersion}/>
       <main className="content">
         <Menu/>
         {children}
