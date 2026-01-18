@@ -245,16 +245,20 @@ const buildTreeNodes = (treeNodes: TreeNode[], disabled: string[] = []): TreeNod
   });
 };
 
-export const getBaseTreeNodeData = (): TreeNode[] => {
-  return buildTreeNodes(treeNodes, ['2', '3', '4', '7', '8', '9', '18', '35', '40', '41', '42', '43']);
-};
-
 export const getBaseSelectedIds = (): string[] => {
   return ['3', '6', '7', '8', '9', '18', '23', '28', '29', '30', '31', '32', '41'];
 };
 
 export const getBaseExpandedIds = (): string[] => {
   return ['1', '2', '11', '12', '40'];
+};
+
+export const getBaseDisabledIds = (): string[] => {
+  return ['2', '3', '4', '7', '8', '9', '18', '35', '40', '41', '42', '43'];
+};
+
+export const getBaseTreeNodeData = (): TreeNode[] => {
+  return buildTreeNodes(treeNodes, getBaseDisabledIds());
 };
 
 export const getTreeNodeData = (disabled?: string[]): TreeNode[] => {

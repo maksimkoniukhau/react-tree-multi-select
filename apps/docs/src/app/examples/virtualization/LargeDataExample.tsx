@@ -27,10 +27,10 @@ export const LargeDataExample: FC = memo(() => {
   return (
     <div className="large-data-example">
       <Select
-        label="Choose amount of nodes:"
+        label="Choose number of nodes:"
         options={[
-          {name: `${largeTreeNodeData25.amount}`, value: '25'},
-          {name: `${largeTreeNodeData50.amount}`, value: '50'}
+          {name: `${largeTreeNodeData25.count}`, value: '25'},
+          {name: `${largeTreeNodeData50.count}`, value: '50'}
         ]}
         onChange={handleOptionChange}
       />
