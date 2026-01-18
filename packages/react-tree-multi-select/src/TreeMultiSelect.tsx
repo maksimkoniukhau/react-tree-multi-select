@@ -62,6 +62,7 @@ export const TreeMultiSelect = forwardRef(
       withDropdownInput = false,
       closeDropdownOnNodeChange = false,
       isDropdownOpen: propsIsDropdownOpen,
+      defaultIsDropdownOpen = false,
       dropdownHeight = DEFAULT_DROPDOWN_MAX_HEIGHT,
       overscan = OVERSCAN,
       isVirtualized = true,
@@ -111,7 +112,9 @@ export const TreeMultiSelect = forwardRef(
       SelectionAggregateState.NONE
     );
     const [searchValue, setSearchValue] = useState<string>('');
-    const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(
+      () => isDropdownOpenControlled ? propsIsDropdownOpen : defaultIsDropdownOpen
+    );
     const [virtualFocusId, setVirtualFocusId] = useState<NullableVirtualFocusId>(null);
     const [dropdownMounted, setIsDropdownMounted] = useState<boolean>(false);
     // Store components in state to avoid async rendering issues (e.g., flickering)

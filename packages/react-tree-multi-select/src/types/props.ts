@@ -174,6 +174,16 @@ export interface TreeMultiSelectProps<T extends TreeNode<T> = any> {
   isDropdownOpen?: boolean;
 
   /**
+   * Controls whether the dropdown should be open initially (uncontrolled mode).
+   *
+   * - Used only when `isDropdownOpen` is not provided.
+   * - Initializes the internal open/close state on first render.
+   * - The component manages the dropdown’s visibility internally afterward.
+   * - Changes to this prop after the initial render are ignored.
+   */
+  defaultIsDropdownOpen?: boolean;
+
+  /**
    * Dropdown height in pixels. If the content height is smaller than this value,
    * the dropdown height is automatically reduced to fit the content.
    *
