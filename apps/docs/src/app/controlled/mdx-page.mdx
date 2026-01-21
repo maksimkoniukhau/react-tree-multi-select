@@ -6,6 +6,7 @@ import {UncontrolledSelectionExample} from '@/examples/controlled/UncontrolledSe
 import {ControlledExpansionExample} from '@/examples/controlled/ControlledExpansionExample';
 import {UncontrolledExpansionExample} from '@/examples/controlled/UncontrolledExpansionExample';
 import {ControlledIsDropdownOpenExample} from '@/examples/controlled/ControlledIsDropdownOpenExample';
+import {UncontrolledIsDropdownOpenExample} from '@/examples/controlled/UncontrolledIsDropdownOpenExample';
 
 # Controlled vs Uncontrolled
 
@@ -22,7 +23,7 @@ When a state is controlled:
 This design allows you to:
  - Keep simple cases easy with internal state
  - Fully synchronize state with your application when needed
- - Mix controlled and uncontrolled behavior **per feature**
+ - Mix controlled and uncontrolled behavior across features
 
 ### How it works
 
@@ -39,14 +40,8 @@ This pattern applies consistently across different features (selection, expansio
 
 <Alert type={'note'}>
     A feature must be either controlled or uncontrolled.
-    You may mix controlled and uncontrolled **across different features**.
+    You may mix controlled and uncontrolled behavior **across different features**.
 </Alert>
-
-### Key rules
-
- - Providing a controlled prop disables internal state for that feature
- - `default*` props are **read once on mount**
- - Controlled and uncontrolled modes should **not be mixed for the same state**
 
 ## Selection
 
@@ -122,4 +117,20 @@ enabling custom behaviors such as toggling the dropdown from external controls o
     title="Controlled isDropdownOpen"
 >
     <ControlledIsDropdownOpenExample/>
+</DemoContainer>
+
+### Uncontrolled dropdown open
+
+When `defaultIsDropdownOpen` is provided:
+ - The component initializes its internal dropdown visibility state using this value
+ - The dropdown open/close state is managed internally afterward
+ - You do not need to handle `onDropdownToggle` unless you want to observe changes
+
+This mode is useful when you want the dropdown to start open or closed but do not need to control its visibility from your application state.
+
+<DemoContainer
+    code={loadExampleSource('controlled/UncontrolledIsDropdownOpenExample.tsx')}
+    title="Uncontrolled isDropdownOpen"
+>
+    <UncontrolledIsDropdownOpenExample/>
 </DemoContainer>
