@@ -6,6 +6,25 @@ import {VirtualFocusId} from './virtualFocus';
  */
 export interface State {
   /**
+   * The IDs of the nodes that are currently selected.
+   *
+   * - In **controlled mode**, this value mirrors the `selectedIds` prop.
+   * - In **uncontrolled mode**, this value is managed internally by the component.
+   * - For `Type.SELECT`, this array contains at most **one ID**.
+   */
+  selectedIds: string[];
+
+  /**
+   * The IDs of the nodes that are currently expanded.
+   *
+   * - In **controlled mode**, this value mirrors the `expandedIds` prop.
+   * - In **uncontrolled mode**, this value is managed internally by the component.
+   * - For component types other than `Type.TREE_SELECT` and `Type.TREE_SELECT_FLAT`,
+   * this value is always an **empty array**.
+   */
+  expandedIds: string[];
+
+  /**
    * Represents the current overall selection state of all nodes.
    */
   selectionAggregateState: SelectionAggregateState;

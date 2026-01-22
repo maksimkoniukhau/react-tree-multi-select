@@ -100,12 +100,12 @@ export const TreeMultiSelect = forwardRef(
     const isExpandedIdsControlled = propsExpandedIds !== undefined;
 
     const [selectedIds, setSelectedIds] = useState<string[]>(
-      () => normalizeSelectedIds(isSelectedIdsControlled ? propsSelectedIds : defaultSelectedIds, type)
+      normalizeSelectedIds(isSelectedIdsControlled ? propsSelectedIds : defaultSelectedIds, type)
     );
     const [expandedIds, setExpandedIds] = useState<string[]>(
-      () => normalizeExpandedIds(isExpandedIdsControlled ? propsExpandedIds : defaultExpandedIds, type)
+      normalizeExpandedIds(isExpandedIdsControlled ? propsExpandedIds : defaultExpandedIds, type)
     );
-    const [loadedIds, setLoadedIds] = useState<Set<string>>(() => new Set());
+    const [loadedIds, setLoadedIds] = useState<Set<string>>(new Set());
     const [displayedNodes, setDisplayedNodes] = useState<Node[]>([]);
     const [displayedChips, setDisplayedChips] = useState<Node[]>([]);
     const [selectionAggregateState, setSelectionAggregateState] = useState<SelectionAggregateState>(
@@ -113,7 +113,7 @@ export const TreeMultiSelect = forwardRef(
     );
     const [searchValue, setSearchValue] = useState<string>('');
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(
-      () => isDropdownOpenControlled ? propsIsDropdownOpen : defaultIsDropdownOpen
+      isDropdownOpenControlled ? propsIsDropdownOpen : defaultIsDropdownOpen
     );
     const [virtualFocusId, setVirtualFocusId] = useState<NullableVirtualFocusId>(null);
     const [dropdownMounted, setIsDropdownMounted] = useState<boolean>(false);
@@ -1030,6 +1030,8 @@ export const TreeMultiSelect = forwardRef(
 
     useImperativeHandle(ref, (): TreeMultiSelectHandle<T> => ({
       getState: () => ({
+        selectedIds,
+        expandedIds,
         selectionAggregateState,
         inputValue: searchValue,
         isDropdownOpen,
