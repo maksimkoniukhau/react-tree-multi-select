@@ -505,6 +505,11 @@ export const TreeMultiSelect = forwardRef(
 
       const newDisplayedNodes = nodesManager.current.getDisplayed(Boolean(value), nodesManager.current.expansionState);
 
+      const newExpandedIds = getOrderedIds(
+        value ? nodesManager.current.expansionState.searchExpandedIds : nodesManager.current.expansionState.expandedIds,
+        nodesManager.current
+      );
+      setExpandedIds(newExpandedIds);
       setDisplayedNodes(newDisplayedNodes);
       setSearchValue(value);
       setVirtualFocusId(findFieldVirtualFocusId(buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX)));
