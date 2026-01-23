@@ -1,10 +1,24 @@
 import '@testing-library/jest-dom';
 
-import React, {FC} from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import React, {createRef, FC} from 'react';
+import {act, fireEvent, render, screen} from '@testing-library/react';
 import userEvent, {UserEvent} from '@testing-library/user-event';
-import {FooterProps, SelectionAggregateState, TreeMultiSelect, TreeNode, Type} from '../index';
-import {getBaseExpandedIds, getBaseSelectedIds, getBaseTreeNodeData, getTreeNodeData} from './testutils/dataUtils';
+import {
+  buildVirtualFocusId,
+  CLEAR_ALL_SUFFIX,
+  DROPDOWN_PREFIX,
+  FIELD_PREFIX,
+  FooterProps,
+  INPUT_SUFFIX,
+  SELECT_ALL_SUFFIX,
+  SelectionAggregateState,
+  TreeMultiSelect,
+  TreeMultiSelectHandle,
+  TreeNode,
+  Type
+} from '../index';
+import {INPUT_PLACEHOLDER, NO_DATA_TEXT, NO_MATCHES_TEXT} from '../constants';
+import {baseExpandedIds, baseSelectedIds, baseTreeNodeData, getTreeNodeData} from './testutils/dataUtils';
 import {
   getChipClear,
   getChipClears,
@@ -27,11 +41,18 @@ import {
   getStickyItem,
   getStickyItems
 } from './testutils/selectorUtils';
-import {INPUT_PLACEHOLDER, NO_DATA_TEXT, NO_MATCHES_TEXT} from '../constants';
+import {
+  expansionMatcher,
+  isDropdownOpenFullMatcher,
+  isDropdownOpenMatcher,
+  selectAllFullMatcher,
+  selectAllMatcher,
+  selectionMatcher
+} from './testutils/matcherUtils';
 
-const baseTreeNodeData = getBaseTreeNodeData();
-const baseSelectedIds = getBaseSelectedIds();
-const baseExpandedIds = getBaseExpandedIds();
+const inputVirtualFocusId = buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX);
+const clearAllVirtualFocusId = buildVirtualFocusId(FIELD_PREFIX, CLEAR_ALL_SUFFIX);
+const selectAllVirtualFocusId = buildVirtualFocusId(DROPDOWN_PREFIX, SELECT_ALL_SUFFIX);
 
 const footerText = 'Custom Footer';
 const CustomFooter: FC<FooterProps> = (props) => {
@@ -40,35 +61,6 @@ const CustomFooter: FC<FooterProps> = (props) => {
       <label>{footerText}</label>
     </div>
   );
-};
-
-const selectAllMatcher = (
-  container: HTMLElement,
-  selectAllState: SelectionAggregateState,
-  chipsCount: number,
-  selectedNodesCount: number,
-  handleSelectAllChange?: (selectedIds: string[], selectionAggregateState: SelectionAggregateState) => void
-): void => {
-  const selectAll = getStickyItem(container, 0);
-  expect(selectAll).toBeInTheDocument();
-  switch (selectAllState) {
-    case SelectionAggregateState.ALL:
-      expect(selectAll.classList.contains('selected')).toBeTruthy();
-      break;
-    case SelectionAggregateState.EFFECTIVE_ALL:
-    case SelectionAggregateState.PARTIAL:
-      expect(selectAll.classList.contains('partial')).toBeTruthy();
-      break;
-    default:
-      expect(selectAll.classList.contains('selected')).toBeFalsy();
-      expect(selectAll.classList.contains('partial')).toBeFalsy();
-  }
-  expect(getChipContainers(container).length).toBe(chipsCount);
-  const selectedNodes = getListItems(container).filter(el => el.classList.contains('selected'));
-  expect(selectedNodes.length).toBe(selectedNodesCount);
-  if (handleSelectAllChange) {
-    expect(handleSelectAllChange).toHaveBeenCalledTimes(1);
-  }
 };
 
 describe('TreeMultiSelect component: base', () => {
@@ -549,7 +541,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
     withClearAll: boolean,
     chipsCount: number,
     selectedNodesCount: number,
-    handleClearAll?: (selectedIds: string[], selectionAggregateState: SelectionAggregateState) => void
+    handleClearAll?: jest.Mock
   ): void => {
     if (withClearAll) {
       expect(getFieldClear(container)).toBeInTheDocument();
@@ -561,6 +553,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
     expect(selectedNodes.length).toBe(selectedNodesCount);
     if (handleClearAll) {
       expect(handleClearAll).toHaveBeenCalledTimes(1);
+      handleClearAll.mockClear();
     }
   };
 
@@ -643,7 +636,6 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
 
     await user.click(getFieldClear(container));
     withClearAllMatcher(container, false, 1, 1, handleClearAll);
-    handleClearAll.mockClear();
 
     await user.click(getListItem(container, 0));
     withClearAllMatcher(container, true, 2, 2);
@@ -652,8 +644,7 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
     await user.keyboard('{enter}');
     await user.keyboard('{arrowright}');
     await user.keyboard('{Backspace}');
-    withClearAllMatcher(container, false, 1, 1);
-    handleClearAll.mockClear();
+    withClearAllMatcher(container, false, 1, 1, handleClearAll);
 
     rerender(
       <TreeMultiSelect
@@ -678,14 +669,12 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
 
     await user.click(getFieldClear(container));
     withClearAllMatcher(container, false, 0, 0, handleClearAll);
-    handleClearAll.mockClear();
 
     await user.click(getStickyItem(container, 0));
     withClearAllMatcher(container, true, 8, 10);
 
     await user.click(getFieldClear(container));
     withClearAllMatcher(container, false, 0, 0, handleClearAll);
-    handleClearAll.mockClear();
 
     rerender(
       <TreeMultiSelect
@@ -709,14 +698,12 @@ describe('TreeMultiSelect component: withClearAll prop', () => {
 
     await user.click(getFieldClear(container));
     withClearAllMatcher(container, false, 0, 0, handleClearAll);
-    handleClearAll.mockClear();
 
     await user.click(getStickyItem(container, 0));
     withClearAllMatcher(container, true, 8, 8);
 
     await user.click(getFieldClear(container));
     withClearAllMatcher(container, false, 0, 0, handleClearAll);
-    handleClearAll.mockClear();
 
     await user.click(getListItem(container, 0));
     withClearAllMatcher(container, true, 1, 1);
@@ -788,15 +775,12 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
 
     await user.click(getStickyItem(container, 0));
     selectAllMatcher(container, SelectionAggregateState.ALL, 8, 8, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
     selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
 
     await user.keyboard('{enter}');
     selectAllMatcher(container, SelectionAggregateState.ALL, 8, 8, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
 
     await user.keyboard('{arrowdown}');
     await user.keyboard('{enter}');
@@ -810,7 +794,6 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
     await user.keyboard('{arrowup}');
     await user.keyboard('{enter}');
     selectAllMatcher(container, SelectionAggregateState.ALL, 8, 8, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
 
     await user.keyboard('{arrowdown}');
     await user.keyboard('{arrowright}');
@@ -836,11 +819,9 @@ describe('TreeMultiSelect component: withSelectAll prop', () => {
 
     await user.click(getStickyItem(container, 0));
     selectAllMatcher(container, SelectionAggregateState.ALL, 8, 13, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
     selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
 
     await user.click(getListItem(container, 4));
     selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1);
@@ -954,24 +935,6 @@ describe('TreeMultiSelect component: closeDropdownOnNodeChange prop', () => {
 });
 
 describe('TreeMultiSelect component: isDropdownOpen and onDropdownToggle props', () => {
-  const isDropdownOpenMatcher = (
-    container: HTMLElement,
-    isDropdownOpen: boolean,
-    handleDropdownToggle: (open: boolean) => void,
-    handleDropdownTogglePayload: boolean | null
-  ): void => {
-    if (isDropdownOpen) {
-      expect(getDropdown(container)).toBeInTheDocument();
-    } else {
-      expect(getDropdown(container)).not.toBeInTheDocument();
-    }
-    if (handleDropdownTogglePayload != null) {
-      expect(handleDropdownToggle).toHaveBeenCalledWith(handleDropdownTogglePayload);
-    } else {
-      expect(handleDropdownToggle).not.toHaveBeenCalled();
-    }
-  };
-
   it('tests uncontrolled component', async () => {
     const user: UserEvent = userEvent.setup();
 
@@ -987,39 +950,30 @@ describe('TreeMultiSelect component: isDropdownOpen and onDropdownToggle props',
     );
 
     isDropdownOpenMatcher(container, false, handleDropdownToggle, null);
-    handleDropdownToggle.mockClear();
 
     await user.click(getField(container));
     isDropdownOpenMatcher(container, true, handleDropdownToggle, true);
-    handleDropdownToggle.mockClear();
 
     await user.keyboard('{arrowup}');
     isDropdownOpenMatcher(container, false, handleDropdownToggle, false);
-    handleDropdownToggle.mockClear();
 
     await user.keyboard('{arrowdown}');
     isDropdownOpenMatcher(container, true, handleDropdownToggle, true);
-    handleDropdownToggle.mockClear();
 
     await user.keyboard('{escape}');
     isDropdownOpenMatcher(container, false, handleDropdownToggle, false);
-    handleDropdownToggle.mockClear();
 
     await user.click(getFieldToggle(container));
     isDropdownOpenMatcher(container, true, handleDropdownToggle, true);
-    handleDropdownToggle.mockClear();
 
     await user.click(getFieldToggle(container));
     isDropdownOpenMatcher(container, false, handleDropdownToggle, false);
-    handleDropdownToggle.mockClear();
 
     await user.click(getChipContainer(container, 0));
     isDropdownOpenMatcher(container, true, handleDropdownToggle, true);
-    handleDropdownToggle.mockClear();
 
     await user.click(getFieldInput(container));
     isDropdownOpenMatcher(container, false, handleDropdownToggle, false);
-    handleDropdownToggle.mockClear();
   });
 
   it('tests controlled component', async () => {
@@ -1038,11 +992,9 @@ describe('TreeMultiSelect component: isDropdownOpen and onDropdownToggle props',
     );
 
     isDropdownOpenMatcher(container, true, handleDropdownToggle, null);
-    handleDropdownToggle.mockClear();
 
     await user.click(getField(container));
     isDropdownOpenMatcher(container, true, handleDropdownToggle, false);
-    handleDropdownToggle.mockClear();
 
     rerender(
       <TreeMultiSelect
@@ -1055,11 +1007,9 @@ describe('TreeMultiSelect component: isDropdownOpen and onDropdownToggle props',
     );
     user = userEvent.setup();
     isDropdownOpenMatcher(container, false, handleDropdownToggle, null);
-    handleDropdownToggle.mockClear();
 
     await user.click(getField(container));
     isDropdownOpenMatcher(container, false, handleDropdownToggle, true);
-    handleDropdownToggle.mockClear();
   });
 });
 
@@ -1177,7 +1127,6 @@ describe('TreeMultiSelect component: isVirtualized prop', () => {
     expect(getListItems(container).length).toBe(isVirtualized ? 13 : 21);
 
     await user.click(getNodeToggle(container, 6));
-    screen.debug();
     expect(getListItems(container).length).toBe(isVirtualized ? 13 : 23);
 
     await user.click(getNodeToggle(container, 12));
@@ -2488,7 +2437,6 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 12, state: 'selected'}
     ]);
     selectAllMatcher(container, SelectionAggregateState.PARTIAL, 10, 10, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
     itemsStateMatcher(container, [
@@ -2507,7 +2455,6 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 12, state: 'unselected'}
     ]);
     selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
   });
 
   it('tests nodes state behavior when click disabled and unselected node', async () => {
@@ -2613,7 +2560,6 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 12, state: 'selected'}
     ]);
     selectAllMatcher(container, SelectionAggregateState.PARTIAL, 9, 9, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
     itemsStateMatcher(container, [
@@ -2632,7 +2578,6 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 12, state: 'unselected'}
     ]);
     selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
   });
 
   it('tests nodes state behavior when deep inner node is disabled and selected', async () => {
@@ -2757,7 +2702,6 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 12, state: 'selected'}
     ]);
     selectAllMatcher(container, SelectionAggregateState.ALL, 8, 13, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
     itemsStateMatcher(container, [
@@ -2776,7 +2720,6 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 12, state: 'unselected'}
     ]);
     selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
   });
 
   it('tests nodes state behavior when parent inner node is disabled and one its child is selected', async () => {
@@ -2919,7 +2862,6 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 12, state: 'selected'}
     ]);
     selectAllMatcher(container, SelectionAggregateState.PARTIAL, 10, 10, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
     itemsStateMatcher(container, [
@@ -2938,7 +2880,6 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 12, state: 'unselected'}
     ]);
     selectAllMatcher(container, SelectionAggregateState.PARTIAL, 1, 1, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
     itemsStateMatcher(container, [
@@ -2957,7 +2898,6 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 12, state: 'selected'}
     ]);
     selectAllMatcher(container, SelectionAggregateState.PARTIAL, 10, 10, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
 
     await user.click(getListItem(container, 4));
     itemsStateMatcher(container, [
@@ -2994,7 +2934,6 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 12, state: 'selected'}
     ]);
     selectAllMatcher(container, SelectionAggregateState.PARTIAL, 10, 10, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
 
     await user.click(getFieldClear(container));
     itemsStateMatcher(container, [
@@ -3259,7 +3198,6 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 15, state: 'selected'}
     ]);
     selectAllMatcher(container, SelectionAggregateState.ALL, 8, 16, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
 
     await user.click(getListItem(container, 7));
     itemsStateMatcher(container, [
@@ -3323,7 +3261,6 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 15, state: 'selected'}
     ]);
     selectAllMatcher(container, SelectionAggregateState.ALL, 8, 16, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
 
     await user.click(getStickyItem(container, 0));
     itemsStateMatcher(container, [
@@ -3345,7 +3282,6 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       {index: 15, state: 'unselected'}
     ]);
     selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0, handleSelectAllChange);
-    handleSelectAllChange.mockClear();
   });
 
   it('tests nodes state behavior when deep inner node is disabled and unselected and all other descendants are selected',
@@ -3435,7 +3371,6 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
         {index: 12, state: 'selected'}
       ]);
       selectAllMatcher(container, SelectionAggregateState.PARTIAL, 10, 10, handleSelectAllChange);
-      handleSelectAllChange.mockClear();
 
       await user.click(getStickyItem(container, 0));
       itemsStateMatcher(container, [
@@ -3454,7 +3389,6 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
         {index: 12, state: 'unselected'}
       ]);
       selectAllMatcher(container, SelectionAggregateState.NONE, 0, 0, handleSelectAllChange);
-      handleSelectAllChange.mockClear();
 
       await user.click(getListItem(container, 4));
       itemsStateMatcher(container, [
@@ -3510,4 +3444,231 @@ describe('TreeMultiSelect component: nodes state behavior', () => {
       ]);
       selectAllMatcher(container, SelectionAggregateState.PARTIAL, 3, 3);
     });
+});
+
+describe('TreeMultiSelect component: imperative API', () => {
+  it('tests sync imperative API', async () => {
+    const user: UserEvent = userEvent.setup();
+
+    const rtmsRef = createRef<TreeMultiSelectHandle>();
+
+    const handleDropdownToggle = jest.fn();
+    const handleNodeChange = jest.fn();
+    const handleNodeToggle = jest.fn();
+    const handleSelectAllChange = jest.fn();
+
+    const {container} = render(
+      <TreeMultiSelect
+        ref={rtmsRef}
+        data={getTreeNodeData([])}
+        defaultSelectedIds={baseSelectedIds}
+        defaultExpandedIds={baseExpandedIds}
+        withSelectAll={true}
+        isVirtualized={false}
+        onDropdownToggle={handleDropdownToggle}
+        onNodeChange={handleNodeChange}
+        onNodeToggle={handleNodeToggle}
+        onSelectAllChange={handleSelectAllChange}
+      />
+    );
+
+    expect(rtmsRef.current).not.toBeNull();
+
+    await user.keyboard('{tab}');
+    expect(container.contains(document.activeElement)).toBeTruthy();
+    expect(getRootContainer(container)).toHaveClass('focused');
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(inputVirtualFocusId);
+    expect(rtmsRef.current!.getState().inputValue).toEqual('');
+    isDropdownOpenFullMatcher(container, false, rtmsRef.current!.getState().isDropdownOpen, handleDropdownToggle, null);
+
+    await act(async () => rtmsRef.current!.openDropdown());
+    isDropdownOpenFullMatcher(container, true, rtmsRef.current!.getState().isDropdownOpen, handleDropdownToggle, true);
+
+    await act(async () => rtmsRef.current!.closeDropdown());
+    isDropdownOpenFullMatcher(container, false, rtmsRef.current!.getState().isDropdownOpen, handleDropdownToggle, false);
+
+    await act(async () => rtmsRef.current!.toggleDropdown());
+    isDropdownOpenFullMatcher(container, true, rtmsRef.current!.getState().isDropdownOpen, handleDropdownToggle, true);
+
+    await act(async () => rtmsRef.current!.toggleDropdown());
+    isDropdownOpenFullMatcher(container, false, rtmsRef.current!.getState().isDropdownOpen, handleDropdownToggle, false);
+
+    await act(async () => rtmsRef.current!.openDropdown());
+    isDropdownOpenFullMatcher(container, true, rtmsRef.current!.getState().isDropdownOpen, handleDropdownToggle, true);
+
+    await act(async () => rtmsRef.current!.selectAll());
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(inputVirtualFocusId);
+    selectAllFullMatcher(container, SelectionAggregateState.ALL, rtmsRef.current!.getState().selectionAggregateState, 8, 21, handleSelectAllChange);
+
+    await act(async () => rtmsRef.current!.deselectAll());
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(inputVirtualFocusId);
+    selectAllFullMatcher(container, SelectionAggregateState.NONE, rtmsRef.current!.getState().selectionAggregateState, 0, 0, handleSelectAllChange);
+
+    await act(async () => rtmsRef.current!.toggleAllSelection());
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(inputVirtualFocusId);
+    selectAllFullMatcher(container, SelectionAggregateState.ALL, rtmsRef.current!.getState().selectionAggregateState, 8, 21, handleSelectAllChange);
+
+    await act(async () => rtmsRef.current!.toggleAllSelection());
+    selectAllFullMatcher(container, SelectionAggregateState.NONE, rtmsRef.current!.getState().selectionAggregateState, 0, 0, handleSelectAllChange);
+
+    await act(async () => rtmsRef.current!.closeDropdown());
+    isDropdownOpenFullMatcher(container, false, rtmsRef.current!.getState().isDropdownOpen, handleDropdownToggle, false);
+
+    await act(async () => rtmsRef.current!.selectAll());
+    await act(async () => rtmsRef.current!.openDropdown());
+    isDropdownOpenFullMatcher(container, true, rtmsRef.current!.getState().isDropdownOpen, handleDropdownToggle, true);
+    selectAllFullMatcher(container, SelectionAggregateState.ALL, rtmsRef.current!.getState().selectionAggregateState, 8, 21, handleSelectAllChange);
+
+    await act(async () => rtmsRef.current!.closeDropdown());
+    isDropdownOpenFullMatcher(container, false, rtmsRef.current!.getState().isDropdownOpen, handleDropdownToggle, false);
+
+    await act(async () => rtmsRef.current!.deselectAll());
+    await act(async () => rtmsRef.current!.openDropdown());
+    isDropdownOpenFullMatcher(container, true, rtmsRef.current!.getState().isDropdownOpen, handleDropdownToggle, true);
+    selectAllFullMatcher(container, SelectionAggregateState.NONE, rtmsRef.current!.getState().selectionAggregateState, 0, 0, handleSelectAllChange);
+
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(inputVirtualFocusId);
+    expansionMatcher(['1', '2', '11', '12', '40'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 0);
+    await act(async () => rtmsRef.current!.collapseNode('1'));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(inputVirtualFocusId);
+    expansionMatcher(['2', '11', '12', '40'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+
+    await user.keyboard('j');
+    expect(getFieldInput(container)).toHaveValue('j');
+    expect(rtmsRef.current!.getState().inputValue).toEqual('j');
+    expansionMatcher(['1', '2', '11', '36'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 0);
+
+    await act(async () => rtmsRef.current!.collapseNode('1'));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(inputVirtualFocusId);
+    expansionMatcher(['2', '11', '36'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+
+    await act(async () => rtmsRef.current!.expandNode('1'));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(inputVirtualFocusId);
+    expansionMatcher(['1', '2', '11', '36'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+
+    await user.keyboard('a');
+    expect(getFieldInput(container)).toHaveValue('ja');
+    expect(rtmsRef.current!.getState().inputValue).toEqual('ja');
+    expansionMatcher(['1', '11', '36'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 0);
+
+    await user.keyboard('{Control>}a{Backspace}');
+    expect(rtmsRef.current!.getState().inputValue).toEqual('');
+    expansionMatcher(['2', '11', '12', '40'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 0);
+
+    await act(async () => rtmsRef.current!.collapseNode('2'));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(inputVirtualFocusId);
+    expansionMatcher(['11', '12', '40'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+
+    await act(async () => rtmsRef.current!.focusFirstItem(DROPDOWN_PREFIX));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(selectAllVirtualFocusId);
+
+    await act(async () => rtmsRef.current!.focusNextItem());
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(DROPDOWN_PREFIX, '1'));
+
+    await act(async () => rtmsRef.current!.toggleNodeExpansion());
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(DROPDOWN_PREFIX, '1'));
+    expansionMatcher(['1', '11', '12', '40'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+
+    await act(async () => rtmsRef.current!.toggleNodeExpansion('2'));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(DROPDOWN_PREFIX, '1'));
+    expansionMatcher(['1', '2', '11', '12', '40'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+
+    await act(async () => rtmsRef.current!.focusPrevItem());
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(selectAllVirtualFocusId);
+
+    await act(async () => rtmsRef.current!.focusNextItem(buildVirtualFocusId(DROPDOWN_PREFIX, '1')));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(DROPDOWN_PREFIX, '2'));
+
+    await act(async () => rtmsRef.current!.collapseNode());
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(DROPDOWN_PREFIX, '2'));
+    expansionMatcher(['1', '11', '12', '40'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+
+    await act(async () => rtmsRef.current!.expandNode());
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(DROPDOWN_PREFIX, '2'));
+    expansionMatcher(['1', '2', '11', '12', '40'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+
+    await act(async () => rtmsRef.current!.focusFirstItem());
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(selectAllVirtualFocusId);
+
+    await act(async () => rtmsRef.current!.focusPrevItem(buildVirtualFocusId(DROPDOWN_PREFIX, '2')));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(DROPDOWN_PREFIX, '1'));
+
+    selectionMatcher([], rtmsRef.current!.getState().selectedIds, handleNodeChange, 0);
+    await act(async () => rtmsRef.current!.selectNode());
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(DROPDOWN_PREFIX, '1'));
+    selectionMatcher(['1', '2', '3', '4', '5', '6'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 1);
+
+    await act(async () => rtmsRef.current!.deselectNode('4'));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(DROPDOWN_PREFIX, '1'));
+    selectionMatcher(['3', '5', '6'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 1);
+
+    await act(async () => rtmsRef.current!.selectNode('4'));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(DROPDOWN_PREFIX, '1'));
+    selectionMatcher(['1', '2', '3', '4', '5', '6'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 1);
+
+    await act(async () => rtmsRef.current!.focusNextItem());
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(DROPDOWN_PREFIX, '2'));
+
+    await act(async () => rtmsRef.current!.deselectNode());
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(DROPDOWN_PREFIX, '2'));
+    selectionMatcher(['5', '6'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 1);
+    selectAllFullMatcher(container, SelectionAggregateState.PARTIAL, rtmsRef.current!.getState().selectionAggregateState, 2, 2);
+
+    await act(async () => rtmsRef.current!.focusLastItem());
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(DROPDOWN_PREFIX, '43'));
+
+    await act(async () => rtmsRef.current!.toggleNodeSelection());
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(DROPDOWN_PREFIX, '43'));
+    selectionMatcher(['5', '6', '43'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 1);
+    selectAllFullMatcher(container, SelectionAggregateState.PARTIAL, rtmsRef.current!.getState().selectionAggregateState, 3, 3);
+
+    await act(async () => rtmsRef.current!.toggleNodeSelection('6'));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(DROPDOWN_PREFIX, '43'));
+    selectionMatcher(['5', '43'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 1);
+    selectAllFullMatcher(container, SelectionAggregateState.PARTIAL, rtmsRef.current!.getState().selectionAggregateState, 2, 2);
+
+    await act(async () => rtmsRef.current!.focusFirstItem(FIELD_PREFIX));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(FIELD_PREFIX, '5'));
+
+    await act(async () => rtmsRef.current!.toggleNodeSelection('6'));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(FIELD_PREFIX, '5'));
+    selectionMatcher(['5', '6', '43'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 1);
+    selectAllFullMatcher(container, SelectionAggregateState.PARTIAL, rtmsRef.current!.getState().selectionAggregateState, 3, 3);
+
+    await act(async () => rtmsRef.current!.focusNextItem());
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(FIELD_PREFIX, '6'));
+
+    await act(async () => rtmsRef.current!.focusLastItem());
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(clearAllVirtualFocusId);
+
+    await act(async () => rtmsRef.current!.focusLastItem(DROPDOWN_PREFIX));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(DROPDOWN_PREFIX, '43'));
+
+    await act(async () => rtmsRef.current!.focusLastItem(FIELD_PREFIX));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(clearAllVirtualFocusId);
+
+    await act(async () => rtmsRef.current!.focusNextItem(buildVirtualFocusId(DROPDOWN_PREFIX, '1')));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(DROPDOWN_PREFIX, '2'));
+
+    await act(async () => rtmsRef.current!.focusFirstItem(FIELD_PREFIX));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(buildVirtualFocusId(FIELD_PREFIX, '5'));
+
+    await act(async () => rtmsRef.current!.focusNextItem(buildVirtualFocusId(FIELD_PREFIX, '43')));
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(inputVirtualFocusId);
+
+    const jsNode = rtmsRef.current!.getById('1');
+    expect(jsNode).not.toBeUndefined();
+    expect(jsNode).not.toBeNull();
+
+    expect(jsNode.label).toEqual('JavaScript');
+
+    const springNode = rtmsRef.current!.getById('12');
+    expect(springNode).not.toBeUndefined();
+    expect(springNode).not.toBeNull();
+
+    expect(springNode.label).toEqual('Spring');
+
+    const notExistNode = rtmsRef.current!.getById('123');
+    expect(notExistNode).toBeUndefined();
+  });
 });
