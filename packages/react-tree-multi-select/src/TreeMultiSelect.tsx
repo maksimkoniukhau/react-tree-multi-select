@@ -1030,7 +1030,13 @@ export const TreeMultiSelect = forwardRef(
       }
       nodesManager.current.appendData(newData, searchValue);
       const newDisplayedNodes = nodesManager.current.getDisplayed(isSearchMode, nodesManager.current.expansionState);
+      const newSelectionAggregateState = calculateSelectionAggregateState(
+        [...nodesManager.current.selectionState.selectedIds],
+        [...nodesManager.current.selectionState.effectivelySelectedIds],
+        nodesManager.current.nodes
+      );
       setDisplayedNodes(newDisplayedNodes);
+      setSelectionAggregateState(newSelectionAggregateState);
     };
 
     useImperativeHandle(ref, (): TreeMultiSelectHandle<T> => ({
