@@ -1,4 +1,4 @@
-import {TreeNode} from '../../types';
+import {TreeNode} from '../../index';
 
 export const treeNodes: TreeNode[] = [
   {
@@ -232,6 +232,52 @@ export const treeNodes: TreeNode[] = [
   }
 ];
 
+export const randomNumber = (min: number, max: number): number => {
+  return Math.ceil(Math.random() * (max - min) + min);
+};
+
+export const randomString = (length: number): string => {
+  let result = '';
+  const characters = ' ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 ';
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(randomNumber(0, charactersLength));
+    counter += 1;
+  }
+  return result;
+};
+
+const fillArrayWithSelectedIds = (data: TreeNode[], selectedIds: string[]): void => {
+  data?.forEach(node => {
+    selectedIds.push(node.id);
+    if (node.children?.length) {
+      fillArrayWithSelectedIds(node.children, selectedIds);
+    }
+  });
+};
+
+export const getAllSelectedIds = (data: TreeNode[]): string[] => {
+  const selectedIds: string[] = [];
+  fillArrayWithSelectedIds(data, selectedIds);
+  return selectedIds;
+};
+
+const fillArrayWithExpandedIds = (data: TreeNode[], expandedIds: string[]): void => {
+  data?.forEach(node => {
+    if (node.children?.length) {
+      expandedIds.push(node.id);
+      fillArrayWithExpandedIds(node.children, expandedIds);
+    }
+  });
+};
+
+export const getAllExpandedIds = (data: TreeNode[]): string[] => {
+  const expandedIds: string[] = [];
+  fillArrayWithExpandedIds(data, expandedIds);
+  return expandedIds;
+};
+
 const buildTreeNodes = (treeNodes: TreeNode[], disabled: string[] = []): TreeNode[] => {
   return treeNodes.map(treeNode => {
     const result: TreeNode = {
@@ -243,6 +289,23 @@ const buildTreeNodes = (treeNodes: TreeNode[], disabled: string[] = []): TreeNod
     }
     return result;
   });
+};
+
+export const generateRandomTreeNodeData = (
+  count: number, depth: number, startCount: number = 0, parentPath: string = ''
+): TreeNode[] => {
+  const hasChildren = depth > 0;
+  const res: TreeNode[] = [];
+  for (let i = startCount; i < startCount + count; i++) {
+    const delimiter = parentPath ? '.' : '';
+    const path = parentPath + delimiter + `${i}`;
+    res.push({
+      id: path,
+      label: `${path} - ${randomString(20)}`,
+      children: hasChildren ? generateRandomTreeNodeData(count, depth - 1, 0, path) : []
+    });
+  }
+  return res;
 };
 
 export const baseSelectedIds = ['3', '6', '7', '8', '9', '18', '23', '28', '29', '30', '31', '32', '41'];

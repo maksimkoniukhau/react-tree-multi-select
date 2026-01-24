@@ -1,9 +1,22 @@
+import {screen} from '@testing-library/react';
+import {SelectionAggregateState} from '../../index';
 import {getChipContainers, getDropdown, getListItems, getStickyItem} from './selectorUtils';
-import {SelectionAggregateState} from '../../types';
 
 const arraysEqual = (a: string[], b: string[]): boolean => {
   if (a.length !== b.length) return false;
   return a.every((value, index) => value === b[index]);
+};
+
+export const noDataTextMatcher = (container: HTMLElement, noDataText: string, isPresent: boolean): void => {
+  if (isPresent) {
+    expect(getDropdown(container)).toBeInTheDocument();
+    expect(getListItems(container).length).not.toBeGreaterThan(0);
+    expect(screen.queryByText(noDataText)).toBeInTheDocument();
+  } else {
+    expect(getDropdown(container)).toBeInTheDocument();
+    expect(getListItems(container).length).toBeGreaterThan(0);
+    expect(screen.queryByText(noDataText)).not.toBeInTheDocument();
+  }
 };
 
 export const isDropdownOpenMatcher = (
