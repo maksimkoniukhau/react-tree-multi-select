@@ -1,9 +1,14 @@
 import createMDX from '@next/mdx';
 
+const buildYear = new Date().getFullYear();
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     transpilePackages: ['react-tree-multi-select'],
-    pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx']
+    pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
+    env: {
+        BUILD_YEAR: buildYear,
+    }
 };
 
 const withMDX = createMDX({});

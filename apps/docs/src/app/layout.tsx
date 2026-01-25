@@ -2,8 +2,7 @@ import './globals.scss';
 
 import {Metadata} from 'next';
 import React from 'react';
-import {COPYRIGHT_TEXT} from '@/const';
-import {loadLibVersion} from '@/utils/fsUtils';
+import {loadLibAuthor, loadLibLicense, loadLibVersion} from '@/utils/fsUtils';
 import {Header} from '@/shared-components/Header';
 import {Menu} from '@/shared-components/Menu';
 
@@ -15,6 +14,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: Readonly<{ children: React.ReactNode; }>) {
   const libVersion = loadLibVersion();
+  const libAuthor = loadLibAuthor();
+  const libLicense = loadLibLicense();
+  const startYear = 2025;
+  const buildYear = Number(process.env.BUILD_YEAR);
+  const fullYear = `${startYear}${buildYear > startYear ? `–${buildYear}` : ''}`
 
   return (
     <html lang="en">
@@ -26,7 +30,7 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
         {children}
       </main>
       <footer className="footer">
-        <span>{COPYRIGHT_TEXT}</span>
+        <span>{`Copyright © ${libAuthor}, ${fullYear}. ${libLicense} License.`}</span>
       </footer>
     </div>
     </body>

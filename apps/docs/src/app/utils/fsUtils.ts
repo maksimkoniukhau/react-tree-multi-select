@@ -23,3 +23,13 @@ export const loadLibVersion = (): string => {
   const pkg = JSON.parse(loadLibRoot('package.json'));
   return pkg.version;
 };
+
+export const loadLibAuthor = (): string => {
+  const pkg = JSON.parse(loadLibRoot('package.json'));
+  return pkg.author;
+};
+
+export const loadLibLicense = (): string => {
+  const pkg = JSON.parse(loadLibRoot('package.json'));
+  return pkg.license;
+};
