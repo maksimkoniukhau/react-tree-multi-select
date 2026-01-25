@@ -308,6 +308,22 @@ export const generateRandomTreeNodeData = (
   return res;
 };
 
+export const generateRandomTreeNodesWithHasChildren = (
+  count: number, hasChildren: boolean, parentPath: string = ''
+): TreeNode[] => {
+  const res: TreeNode[] = [];
+  for (let i = 0; i < count; i++) {
+    const delimiter = parentPath ? '.' : '';
+    const path = parentPath + delimiter + `${i}`;
+    res.push({
+      id: path,
+      label: `${path} - ${randomString(20)}`,
+      hasChildren
+    });
+  }
+  return res;
+};
+
 export const baseSelectedIds = ['3', '6', '7', '8', '9', '18', '23', '28', '29', '30', '31', '32', '41'];
 
 export const baseExpandedIds = ['1', '2', '11', '12', '40'];

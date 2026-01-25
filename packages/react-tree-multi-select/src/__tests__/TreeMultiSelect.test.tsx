@@ -18,7 +18,14 @@ import {
   Type
 } from '../index';
 import {INPUT_PLACEHOLDER, NO_DATA_TEXT, NO_MATCHES_TEXT} from '../constants';
-import {baseExpandedIds, baseSelectedIds, baseTreeNodeData, getTreeNodeData} from './testutils/dataUtils';
+import {
+  baseExpandedIds,
+  baseSelectedIds,
+  baseTreeNodeData,
+  generateRandomTreeNodesWithHasChildren,
+  getTreeNodeData,
+  randomString
+} from './testutils/dataUtils';
 import {
   getChipClear,
   getChipClears,
@@ -51,6 +58,7 @@ import {
   selectionMatcher
 } from './testutils/matcherUtils';
 import {LoadDataTestWrapper} from './testwrappers/LoadDataTestWrapper';
+import {LoadChildrenTestWrapper} from './testwrappers/LoadChildrenTestWrapper';
 
 const inputVirtualFocusId = buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX);
 const clearAllVirtualFocusId = buildVirtualFocusId(FIELD_PREFIX, CLEAR_ALL_SUFFIX);
@@ -3669,12 +3677,10 @@ describe('TreeMultiSelect component: imperative API', () => {
     const handleSelectAllChange = jest.fn();
     const handleLoadData = jest.fn();
 
-    const data = [{id: '0', label: '0', children: [{id: '0.0', label: '0.0'}]}, {id: '1', label: '1'}];
-
     const {container} = render(
       <TreeMultiSelect
         ref={rtmsRef}
-        data={data}
+        data={[{id: '0', label: '0', children: [{id: '0.0', label: '0.0'}]}, {id: '1', label: '1'}]}
         defaultExpandedIds={['0']}
         withSelectAll
         isVirtualized={false}
@@ -3705,12 +3711,12 @@ describe('TreeMultiSelect component: imperative API', () => {
 
     await act(async () => rtmsRef.current!.loadData());
     expect(handleLoadData).toHaveBeenCalledTimes(1);
+    handleLoadData.mockClear();
     expect(getListItems(container).length).toBe(3);
     expansionMatcher(['0'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 0);
     selectionMatcher([], rtmsRef.current!.getState().selectedIds, handleNodeChange, 0);
     selectAllFullMatcher(container, SelectionAggregateState.NONE, rtmsRef.current!.getState().selectionAggregateState, 0, 0);
 
-    handleLoadData.mockClear();
     await act(async () => rtmsRef.current!.selectNode('0'));
     expect(handleLoadData).not.toHaveBeenCalled();
     expect(getListItems(container).length).toBe(3);
@@ -3720,6 +3726,7 @@ describe('TreeMultiSelect component: imperative API', () => {
 
     await act(async () => rtmsRef.current!.loadData());
     expect(handleLoadData).toHaveBeenCalledTimes(1);
+    handleLoadData.mockClear();
     expect(getListItems(container).length).toBe(3);
     expansionMatcher(['0'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 0);
     selectionMatcher(['0', '0.0'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 0);
@@ -3955,5 +3962,230 @@ describe('TreeMultiSelect component: imperative API', () => {
       0
     );
     selectAllFullMatcher(container, SelectionAggregateState.ALL, rtmsRef.current!.getState().selectionAggregateState, 8, 24);
+  });
+});
+
+describe('TreeMultiSelect component: onLoadChildren prop', () => {
+  it('tests onLoadChildren basic', async () => {
+    const user: UserEvent = userEvent.setup();
+
+    const rtmsRef = createRef<TreeMultiSelectHandle>();
+
+    const handleDropdownToggle = jest.fn();
+    const handleNodeChange = jest.fn();
+    const handleNodeToggle = jest.fn();
+    const handleSelectAllChange = jest.fn();
+    const handleLoadChildrenMock = jest.fn();
+
+    let withChildren = true;
+
+    const handleLoadChildren = (id: string): Promise<TreeNode[]> => {
+      handleLoadChildrenMock(id);
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          const loadedChildren = generateRandomTreeNodesWithHasChildren(2, withChildren, id);
+          if (!withChildren) {
+            loadedChildren.forEach(child => {
+              const childChildren: TreeNode[] = [];
+              for (let i = 0; i < loadedChildren.length; i++) {
+                childChildren.push({id: `${child.id}.${i}`, label: randomString(20), hasChildren: true});
+              }
+              child.children = childChildren;
+            });
+          }
+          resolve(loadedChildren);
+        }, 0);
+      });
+    };
+
+    const {container} = render(
+      <TreeMultiSelect
+        ref={rtmsRef}
+        data={generateRandomTreeNodesWithHasChildren(2, true)}
+        withSelectAll={true}
+        isVirtualized={false}
+        onDropdownToggle={handleDropdownToggle}
+        onNodeChange={handleNodeChange}
+        onNodeToggle={handleNodeToggle}
+        onSelectAllChange={handleSelectAllChange}
+        onLoadChildren={handleLoadChildren}
+      />
+    );
+
+    expect(rtmsRef.current).not.toBeNull();
+
+    await user.keyboard('{tab}');
+    expect(container.contains(document.activeElement)).toBeTruthy();
+    expect(getRootContainer(container)).toHaveClass('focused');
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(inputVirtualFocusId);
+    expect(rtmsRef.current!.getState().inputValue).toEqual('');
+    isDropdownOpenFullMatcher(container, false, rtmsRef.current!.getState().isDropdownOpen, handleDropdownToggle, null);
+
+    await act(async () => rtmsRef.current!.openDropdown());
+    isDropdownOpenFullMatcher(container, true, rtmsRef.current!.getState().isDropdownOpen, handleDropdownToggle, true);
+    expect(getListItems(container).length).toBe(2);
+    expansionMatcher([], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 0);
+    selectionMatcher([], rtmsRef.current!.getState().selectedIds, handleNodeChange, 0);
+    selectAllFullMatcher(container, SelectionAggregateState.NONE, rtmsRef.current!.getState().selectionAggregateState, 0, 0);
+
+    await act(async () => rtmsRef.current!.expandNode('0'));
+    expect(getListItems(container).length).toBe(4);
+    expect(handleLoadChildrenMock).toHaveBeenCalledTimes(1);
+    handleLoadChildrenMock.mockClear();
+    expansionMatcher(['0'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+    selectionMatcher([], rtmsRef.current!.getState().selectedIds, handleNodeChange, 0);
+    selectAllFullMatcher(container, SelectionAggregateState.NONE, rtmsRef.current!.getState().selectionAggregateState, 0, 0);
+
+    await act(async () => rtmsRef.current!.expandNode('1'));
+    expect(getListItems(container).length).toBe(6);
+    expect(handleLoadChildrenMock).toHaveBeenCalledTimes(1);
+    handleLoadChildrenMock.mockClear();
+    expansionMatcher(['0', '1'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+    selectionMatcher([], rtmsRef.current!.getState().selectedIds, handleNodeChange, 0);
+    selectAllFullMatcher(container, SelectionAggregateState.NONE, rtmsRef.current!.getState().selectionAggregateState, 0, 0);
+
+    await act(async () => rtmsRef.current!.selectNode('1.0'));
+    expect(getListItems(container).length).toBe(6);
+    expansionMatcher(['0', '1'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 0);
+    selectionMatcher(['1.0'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 1);
+    selectAllFullMatcher(container, SelectionAggregateState.PARTIAL, rtmsRef.current!.getState().selectionAggregateState, 1, 1);
+
+    await act(async () => rtmsRef.current!.expandNode('1.0'));
+    expect(getListItems(container).length).toBe(8);
+    expect(handleLoadChildrenMock).toHaveBeenCalledTimes(1);
+    handleLoadChildrenMock.mockClear();
+    expansionMatcher(['0', '1', '1.0'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+    selectionMatcher(['1.0', '1.0.0', '1.0.1'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 1);
+    selectAllFullMatcher(container, SelectionAggregateState.PARTIAL, rtmsRef.current!.getState().selectionAggregateState, 1, 3);
+
+    await act(async () => rtmsRef.current!.collapseNode('1.0'));
+    expect(getListItems(container).length).toBe(6);
+    expect(handleLoadChildrenMock).not.toHaveBeenCalled();
+    expansionMatcher(['0', '1'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+    selectionMatcher(['1.0', '1.0.0', '1.0.1'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 0);
+    selectAllFullMatcher(container, SelectionAggregateState.PARTIAL, rtmsRef.current!.getState().selectionAggregateState, 1, 1);
+
+    await act(async () => rtmsRef.current!.expandNode('1.0'));
+    expect(getListItems(container).length).toBe(8);
+    expect(handleLoadChildrenMock).not.toHaveBeenCalled();
+    expansionMatcher(['0', '1', '1.0'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+    selectionMatcher(['1.0', '1.0.0', '1.0.1'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 0);
+    selectAllFullMatcher(container, SelectionAggregateState.PARTIAL, rtmsRef.current!.getState().selectionAggregateState, 1, 3);
+
+    await act(async () => rtmsRef.current!.expandNode('1.0.0'));
+    expect(getListItems(container).length).toBe(10);
+    expect(handleLoadChildrenMock).toHaveBeenCalledTimes(1);
+    handleLoadChildrenMock.mockClear();
+    expansionMatcher(['0', '1', '1.0', '1.0.0'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+    selectionMatcher(['1.0', '1.0.0', '1.0.0.0', '1.0.0.1', '1.0.1'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 1);
+    selectAllFullMatcher(container, SelectionAggregateState.PARTIAL, rtmsRef.current!.getState().selectionAggregateState, 1, 5);
+
+    withChildren = false;
+    await act(async () => rtmsRef.current!.expandNode('0.0'));
+    expect(getListItems(container).length).toBe(12);
+    expect(handleLoadChildrenMock).toHaveBeenCalledTimes(1);
+    handleLoadChildrenMock.mockClear();
+    expansionMatcher(['0', '0.0', '1', '1.0', '1.0.0'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+    selectionMatcher(['1.0', '1.0.0', '1.0.0.0', '1.0.0.1', '1.0.1'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 0);
+    selectAllFullMatcher(container, SelectionAggregateState.PARTIAL, rtmsRef.current!.getState().selectionAggregateState, 1, 5);
+
+    await act(async () => rtmsRef.current!.expandNode('0.0.0'));
+    expect(getListItems(container).length).toBe(14);
+    expect(handleLoadChildrenMock).not.toHaveBeenCalled();
+    expansionMatcher(['0', '0.0', '0.0.0', '1', '1.0', '1.0.0'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+    selectionMatcher(['1.0', '1.0.0', '1.0.0.0', '1.0.0.1', '1.0.1'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 0);
+    selectAllFullMatcher(container, SelectionAggregateState.PARTIAL, rtmsRef.current!.getState().selectionAggregateState, 1, 5);
+
+    await act(async () => rtmsRef.current!.expandNode('0.0.0.0'));
+    expect(getListItems(container).length).toBe(16);
+    expect(handleLoadChildrenMock).toHaveBeenCalledTimes(1);
+    handleLoadChildrenMock.mockClear();
+    expansionMatcher(['0', '0.0', '0.0.0', '0.0.0.0', '1', '1.0', '1.0.0'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+    selectionMatcher(['1.0', '1.0.0', '1.0.0.0', '1.0.0.1', '1.0.1'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 0);
+    selectAllFullMatcher(container, SelectionAggregateState.PARTIAL, rtmsRef.current!.getState().selectionAggregateState, 1, 5);
+  });
+
+  it('tests onLoadChildren controlled selectedIds', async () => {
+    const user: UserEvent = userEvent.setup();
+
+    const rtmsRef = createRef<TreeMultiSelectHandle>();
+
+    const handleDropdownToggle = jest.fn();
+    const handleNodeChange = jest.fn();
+    const handleNodeToggle = jest.fn();
+    const handleSelectAllChange = jest.fn();
+    const handleLoadChildrenMock = jest.fn();
+
+    const {container} = render(
+      <LoadChildrenTestWrapper
+        ref={rtmsRef}
+        handleDropdownToggle={handleDropdownToggle}
+        handleNodeChange={handleNodeChange}
+        handleNodeToggle={handleNodeToggle}
+        handleSelectAllChange={handleSelectAllChange}
+        handleLoadChildren={handleLoadChildrenMock}
+        selectedIds={['1.0']}
+      />
+    );
+
+    expect(rtmsRef.current).not.toBeNull();
+
+    await user.keyboard('{tab}');
+    expect(container.contains(document.activeElement)).toBeTruthy();
+    expect(getRootContainer(container)).toHaveClass('focused');
+    expect(rtmsRef.current!.getState().virtualFocusId).toEqual(inputVirtualFocusId);
+    expect(rtmsRef.current!.getState().inputValue).toEqual('');
+    isDropdownOpenFullMatcher(container, false, rtmsRef.current!.getState().isDropdownOpen, handleDropdownToggle, null);
+
+    await act(async () => rtmsRef.current!.openDropdown());
+    isDropdownOpenFullMatcher(container, true, rtmsRef.current!.getState().isDropdownOpen, handleDropdownToggle, true);
+    expect(getListItems(container).length).toBe(2);
+    expansionMatcher([], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 0);
+    selectionMatcher([], rtmsRef.current!.getState().selectedIds, handleNodeChange, 0);
+    selectAllFullMatcher(container, SelectionAggregateState.NONE, rtmsRef.current!.getState().selectionAggregateState, 0, 0);
+
+    await act(async () => rtmsRef.current!.expandNode('1'));
+    expect(getListItems(container).length).toBe(4);
+    expect(handleLoadChildrenMock).toHaveBeenCalledTimes(1);
+    handleLoadChildrenMock.mockClear();
+    expansionMatcher(['1'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+    selectionMatcher([], rtmsRef.current!.getState().selectedIds, handleNodeChange, 0);
+    selectAllFullMatcher(container, SelectionAggregateState.NONE, rtmsRef.current!.getState().selectionAggregateState, 0, 0);
+
+    await act(async () => rtmsRef.current!.selectNode('1.0'));
+    expect(getListItems(container).length).toBe(4);
+    expansionMatcher(['1'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 0);
+    selectionMatcher(['1.0'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 1);
+    selectAllFullMatcher(container, SelectionAggregateState.PARTIAL, rtmsRef.current!.getState().selectionAggregateState, 1, 1);
+
+    await act(async () => rtmsRef.current!.expandNode('1.0'));
+    expect(getListItems(container).length).toBe(6);
+    expect(handleLoadChildrenMock).toHaveBeenCalledTimes(1);
+    handleLoadChildrenMock.mockClear();
+    expansionMatcher(['1', '1.0'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+    selectionMatcher(['1.0', '1.0.0', '1.0.1'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 0);
+    selectAllFullMatcher(container, SelectionAggregateState.PARTIAL, rtmsRef.current!.getState().selectionAggregateState, 1, 3);
+
+    await act(async () => rtmsRef.current!.collapseNode('1.0'));
+    expect(getListItems(container).length).toBe(4);
+    expect(handleLoadChildrenMock).not.toHaveBeenCalled();
+    expansionMatcher(['1'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+    selectionMatcher(['1.0', '1.0.0', '1.0.1'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 0);
+    selectAllFullMatcher(container, SelectionAggregateState.PARTIAL, rtmsRef.current!.getState().selectionAggregateState, 1, 1);
+
+    await act(async () => rtmsRef.current!.expandNode('1.0'));
+    expect(getListItems(container).length).toBe(6);
+    expect(handleLoadChildrenMock).not.toHaveBeenCalled();
+    expansionMatcher(['1', '1.0'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+    selectionMatcher(['1.0', '1.0.0', '1.0.1'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 0);
+    selectAllFullMatcher(container, SelectionAggregateState.PARTIAL, rtmsRef.current!.getState().selectionAggregateState, 1, 3);
+
+    await act(async () => rtmsRef.current!.expandNode('1.0.0'));
+    expect(getListItems(container).length).toBe(8);
+    expect(handleLoadChildrenMock).toHaveBeenCalledTimes(1);
+    handleLoadChildrenMock.mockClear();
+    expansionMatcher(['1', '1.0', '1.0.0'], rtmsRef.current!.getState().expandedIds, handleNodeToggle, 1);
+    selectionMatcher(['1.0', '1.0.0', '1.0.1'], rtmsRef.current!.getState().selectedIds, handleNodeChange, 0);
+    selectAllFullMatcher(container, SelectionAggregateState.PARTIAL, rtmsRef.current!.getState().selectionAggregateState, 1, 3);
   });
 });
