@@ -41,15 +41,13 @@ export const LoadDataTestWrapper = forwardRef<TreeMultiSelectHandle, LoadDataTes
 
   const handleLoadData = async (): Promise<TreeNode[]> => {
     return new Promise((resolve) => {
-      setTimeout(() => {
-        const newData = generateRandomTreeNodeData(2, 1, page * 2);
-        setPage(page + 1);
-        if (withSelectedLoadedData) {
-          setSelectedIds(prev => [...prev, ...getAllSelectedIds(newData)]);
-        }
-        setExpandedIds(prevExpandedIds => [...prevExpandedIds, ...getAllExpandedIds(newData)]);
-        resolve(newData);
-      }, 0);
+      const newData = generateRandomTreeNodeData(2, 1, page * 2);
+      setPage(page + 1);
+      if (withSelectedLoadedData) {
+        setSelectedIds(prev => [...prev, ...getAllSelectedIds(newData)]);
+      }
+      setExpandedIds(prevExpandedIds => [...prevExpandedIds, ...getAllExpandedIds(newData)]);
+      resolve(newData);
     });
   };
 

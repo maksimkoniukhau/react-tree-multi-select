@@ -3982,19 +3982,17 @@ describe('TreeMultiSelect component: onLoadChildren prop', () => {
     const handleLoadChildren = (id: string): Promise<TreeNode[]> => {
       handleLoadChildrenMock(id);
       return new Promise((resolve) => {
-        setTimeout(() => {
-          const loadedChildren = generateRandomTreeNodesWithHasChildren(2, withChildren, id);
-          if (!withChildren) {
-            loadedChildren.forEach(child => {
-              const childChildren: TreeNode[] = [];
-              for (let i = 0; i < loadedChildren.length; i++) {
-                childChildren.push({id: `${child.id}.${i}`, label: randomString(20), hasChildren: true});
-              }
-              child.children = childChildren;
-            });
-          }
-          resolve(loadedChildren);
-        }, 0);
+        const loadedChildren = generateRandomTreeNodesWithHasChildren(2, withChildren, id);
+        if (!withChildren) {
+          loadedChildren.forEach(child => {
+            const childChildren: TreeNode[] = [];
+            for (let i = 0; i < loadedChildren.length; i++) {
+              childChildren.push({id: `${child.id}.${i}`, label: randomString(20), hasChildren: true});
+            }
+            child.children = childChildren;
+          });
+        }
+        resolve(loadedChildren);
       });
     };
 

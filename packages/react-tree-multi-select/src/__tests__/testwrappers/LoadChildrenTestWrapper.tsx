@@ -43,13 +43,11 @@ export const LoadChildrenTestWrapper = forwardRef<TreeMultiSelectHandle, LoadChi
   const handleLoadChildren = (id: string): Promise<TreeNode[]> => {
     handleLoadChildrenProps(id);
     return new Promise((resolve) => {
-      setTimeout(() => {
-        const loadedChildren = generateRandomTreeNodesWithHasChildren(2, true, id);
-        if (selectedIdsProps.includes(id)) {
-          setSelectedIds(prev => [...prev, ...getAllSelectedIds(loadedChildren)]);
-        }
-        resolve(loadedChildren);
-      }, 0);
+      const loadedChildren = generateRandomTreeNodesWithHasChildren(2, true, id);
+      if (selectedIdsProps.includes(id)) {
+        setSelectedIds(prev => [...prev, ...getAllSelectedIds(loadedChildren)]);
+      }
+      resolve(loadedChildren);
     });
   };
 
