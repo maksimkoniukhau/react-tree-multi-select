@@ -93,7 +93,7 @@ export const ReactTreeMultiSelectApp: FC = () => {
 ```
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/maksimkoniukhau/react-tree-multi-select/blob/main/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/maksimkoniukhau/react-tree-multi-select/blob/main/packages/react-tree-multi-select/LICENSE) file for details.
 
 ## Support
 If you find my work helpful, you can support me by buying me a coffee. Thank you for your support!
