@@ -16,7 +16,7 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
   const libVersion = loadLibVersion();
   const libAuthor = loadLibAuthor();
   const libLicense = loadLibLicense();
-  const startYear = 2025;
+  const startYear = 2024;
   const buildYear = Number(process.env.BUILD_YEAR);
   const fullYear = `${startYear}${buildYear > startYear ? `–${buildYear}` : ''}`
 
