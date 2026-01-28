@@ -1,6 +1,6 @@
 import createMDX from '@next/mdx';
 
-const buildYear = new Date().getFullYear();
+const buildYear = new Date().getFullYear().toString();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
