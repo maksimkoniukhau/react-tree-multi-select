@@ -16,12 +16,9 @@ jobs:
         node-version: [ 20.x, 22.x, 24.x ]
         react-version: [ 18.3.1, 19.2.1 ]
 
-    defaults:
-      run:
-        working-directory: ./packages/react-tree-multi-select
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
@@ -30,23 +27,33 @@ jobs:
           cache: 'npm'
           cache-dependency-path: ./package-lock.json
 
-      - run: npm ci --workspaces=false
+      - name: Pack library
+        working-directory: ./packages/react-tree-multi-select
+        run: npm pack
 
-      - name: Replace React with ${{ matrix.react-version }}
+      - name: Run isolated library tests
         run: |
-          npm uninstall react react-dom
-          npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }} --no-save
+          # Create isolated temp folder
+          mkdir isolated
+          cd isolated
 
-      - name: Ensure single React version
-        run: npm ls react react-dom
+          # Init temp package.json
+          npm init -y
 
-      - run: npm run build
+          # Install React version for this matrix job
+          npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }}
 
-      - name: Run tests with coverage
-        run: npm test -- --coverage
+          # Install library tarball
+          npm install ../packages/react-tree-multi-select/react-tree-multi-select-*.tgz
+
+          # Verify React version
+          npm ls react react-dom
+
+          # Run Jest tests with coverage
+          npx jest --coverage
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./packages/react-tree-multi-select/coverage
+          directory: ./isolated/node_modules/react-tree-multi-select/coverage
