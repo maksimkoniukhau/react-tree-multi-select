@@ -37,6 +37,9 @@ jobs:
           npm uninstall react react-dom
           npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }} --no-save
 
+      - name: Ensure single React version
+        run: npm ls react react-dom
+
       - run: npm run build
 
       - name: Run tests with coverage
