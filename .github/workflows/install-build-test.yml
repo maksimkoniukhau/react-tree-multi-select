@@ -41,6 +41,12 @@ jobs:
         working-directory: packages/react-tree-multi-select
         run: npm run build
 
+      - name: Print React version used by Node
+        working-directory: packages/react-tree-multi-select
+        env:
+          NODE_PATH: ${{ github.workspace }}/isolated/node_modules
+        run: node -e "console.log('React version:', require('react').version)"
+
       - name: Run tests with isolated React
         working-directory: packages/react-tree-multi-select
         env:
