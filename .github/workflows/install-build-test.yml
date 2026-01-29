@@ -25,36 +25,32 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install library dependencies
+      - name: Build library
         working-directory: packages/react-tree-multi-select
-        run: npm install
+        run: |
+          npm install
+          npm run build
 
-      - name: Setup isolated React
+      - name: Setup isolated project
         run: |
           mkdir isolated
           cd isolated
           npm init -y
           npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }}
-          npm ls react react-dom
 
-      - name: Build library
-        working-directory: packages/react-tree-multi-select
-        run: npm run build
+      - name: Install library
+        run: |
+          cd isolated
+          npm install ../packages/react-tree-multi-select
 
-      - name: Print React version used by Node
-        working-directory: packages/react-tree-multi-select
-        env:
-          NODE_PATH: ${{ github.workspace }}/isolated/node_modules
-        run: node -e "console.log('React version:', require('react').version)"
+      - name: Run tests
+        run: |
+          cd isolated/node_modules/react-tree-multi-select
+          node -e "console.log('React version used:', require('react').version)"
+          npm test -- --coverage
 
-      - name: Run tests with isolated React
-        working-directory: packages/react-tree-multi-select
-        env:
-          NODE_PATH: ${{ github.workspace }}/isolated/node_modules
-        run: npm test -- --coverage
-
-      - name: Upload coverage reports to Codecov
+      - name: Upload coverage
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          directory: packages/react-tree-multi-select/coverage
+          directory: isolated/node_modules/react-tree-multi-select/coverage
