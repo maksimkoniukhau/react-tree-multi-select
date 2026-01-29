@@ -30,23 +30,30 @@ jobs:
         run: |
           npm install
           npm run build
+          npm pack
 
-      - name: Setup isolated project
+      - name: Setup isolated environment
         run: |
           mkdir isolated
           cd isolated
           npm init -y
+
           npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }}
 
-      - name: Install library
-        run: |
-          cd isolated
-          npm install ../packages/react-tree-multi-select
+          npm install ../packages/react-tree-multi-select/react-tree-multi-select-*.tgz
 
-      - name: Run tests
-        run: |
-          cd isolated/node_modules/react-tree-multi-select
+          npm install \
+            jest \
+            jest-environment-jsdom \
+            @testing-library/react \
+            @testing-library/jest-dom \
+            ts-jest \
+            typescript \
+            --no-save
+
           node -e "console.log('React version used:', require('react').version)"
+
+          cd node_modules/react-tree-multi-select
           npm test -- --coverage
 
       - name: Upload coverage
