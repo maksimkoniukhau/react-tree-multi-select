@@ -32,8 +32,9 @@ jobs:
 
       - run: npm ci
 
-      - name: Install React ${{ matrix.react-version }}
+      - name: Replace React with ${{ matrix.react-version }}
         run: |
+          npm uninstall react react-dom
           npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }} --no-save
 
       - run: npm run build
