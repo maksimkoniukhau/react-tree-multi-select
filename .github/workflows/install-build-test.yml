@@ -16,6 +16,10 @@ jobs:
         node-version: [ 20.x, 22.x, 24.x ]
         react-version: [ 18.3.1, 19.2.1 ]
 
+    defaults:
+      run:
+        working-directory: ./packages/react-tree-multi-select
+
     steps:
       - uses: actions/checkout@v4
 
@@ -26,7 +30,7 @@ jobs:
           cache: 'npm'
           cache-dependency-path: ./package-lock.json
 
-      - run: npm ci
+      - run: npm ci --workspaces=false
 
       - name: Replace React with ${{ matrix.react-version }}
         run: |
@@ -36,9 +40,10 @@ jobs:
       - name: Ensure single React version
         run: npm ls react react-dom
 
+      - run: npm run build
+
       - name: Run tests with coverage
         run: npm test -- --coverage
-        working-directory: ./packages/react-tree-multi-select
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
