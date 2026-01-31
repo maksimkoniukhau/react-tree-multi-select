@@ -1,0 +1,46 @@
+name: react-matrix-test
+
+on:
+  push:
+    branches:
+      - react-matrix-test
+  pull_request:
+    branches:
+      - react-matrix-test
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 20.x ]
+        react-version: [17.0.2, 18.3.1, 19.2.1]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: ./package-lock.json
+
+      - name: Install library dependencies
+        working-directory: packages/react-tree-multi-select
+        run: npm install
+
+      - name: Setup isolated React
+        run: |
+          mkdir react-tree-multi-select-test
+          rsync -a --exclude node_modules packages/react-tree-multi-select/ react-tree-multi-select-test/
+          cd react-tree-multi-select-test
+          npm install
+          npm uninstall react react-dom
+          npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }}
+          npm ls react react-dom
+          npm build
+          npm test
