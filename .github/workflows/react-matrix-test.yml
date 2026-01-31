@@ -46,7 +46,14 @@ jobs:
           npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }}
           npm ls react react-dom
 
-      - name: Run tests
-        run: |
-          npm run build
-          npm test
+      - name: Build library
+        run: npm run build
+
+      - name: Run tests with coverage
+        run: npm test -- --coverage
+
+      - name: Upload coverage report to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./react-tree-multi-select-isolated/coverage
