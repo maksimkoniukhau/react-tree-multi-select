@@ -14,9 +14,14 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         node-version: [ 20.x, 22.x, 24.x ]
         react-version: [ 18.3.1, 19.2.4 ]
+
+    defaults:
+      run:
+        working-directory: ./react-tree-multi-select-isolated
 
     steps:
       - name: Checkout repository
@@ -27,16 +32,21 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: ./package-lock.json
 
-      - name: Run isolated library tests
+      - name: Copy library to isolated folder
+        working-directory: .
         run: |
-          mkdir react-tree-multi-select-test
-          rsync -a --exclude node_modules packages/react-tree-multi-select/ react-tree-multi-select-test/
-          cd react-tree-multi-select-test
+          mkdir react-tree-multi-select-isolated
+          rsync -a --exclude node_modules packages/react-tree-multi-select/ react-tree-multi-select-isolated/
+
+      - name: Install React from matrix
+        run: |
           npm install
           npm uninstall react react-dom
           npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }}
           npm ls react react-dom
+
+      - name: Run tests
+        run: |
           npm run build
           npm test
