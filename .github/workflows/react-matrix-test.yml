@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         node-version: [ 20.x, 22.x, 24.x ]
-        react-version: [18.3.1, 19.2.1]
+        react-version: [ 18.3.1, 19.2.4 ]
 
     steps:
       - name: Checkout repository
@@ -39,4 +39,4 @@ jobs:
           npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }}
           npm ls react react-dom
           npm run build
-          npm run test
+          npm test
