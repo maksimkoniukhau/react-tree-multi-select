@@ -48,7 +48,7 @@ jobs:
       - name: Use React from matrix
         run: |
           npm uninstall react react-dom
-          npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }}
+          npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }} --legacy-peer-deps
           npm ls react react-dom
 
       - name: Build library
