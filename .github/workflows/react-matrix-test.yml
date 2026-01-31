@@ -39,9 +39,11 @@ jobs:
           mkdir react-tree-multi-select-isolated
           rsync -a --exclude node_modules packages/react-tree-multi-select/ react-tree-multi-select-isolated/
 
-      - name: Install React from matrix
+      - name: Install dependencies
+        run: npm install
+
+      - name: Use React from matrix
         run: |
-          npm install
           npm uninstall react react-dom
           npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }}
           npm ls react react-dom

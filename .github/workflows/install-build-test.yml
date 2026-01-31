@@ -1,37 +1,59 @@
-name: install-build-test
+name: build-test
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
-  build:
-
+  build-test:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         node-version: [ 20.x, 22.x, 24.x ]
+        react-version: [ 18.3.1, 19.2.4 ]
 
     defaults:
       run:
-        working-directory: ./packages/react-tree-multi-select
+        working-directory: ./react-tree-multi-select-isolated
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: npm ci
-      - run: npm run build
+
+      - name: Copy library to isolated folder
+        working-directory: .
+        run: |
+          mkdir react-tree-multi-select-isolated
+          rsync -a --exclude node_modules packages/react-tree-multi-select/ react-tree-multi-select-isolated/
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Use React from matrix
+        run: |
+          npm uninstall react react-dom
+          npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }}
+          npm ls react react-dom
+
+      - name: Build library
+        run: npm run build
+
       - name: Run tests with coverage
         run: npm test -- --coverage
-      - name: Upload coverage reports to Codecov
+
+      - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./packages/react-tree-multi-select/coverage
+          directory: ./react-tree-multi-select-isolated/coverage
