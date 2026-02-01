@@ -7,6 +7,10 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+env:
+  LIB_PATH: 'packages/react-tree-multi-select/'
+  ISOLATED_PATH: '/react-tree-multi-select-isolated'
+
 jobs:
   build-test:
     runs-on: ubuntu-latest
@@ -19,7 +23,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./react-tree-multi-select-isolated
+        working-directory: ${{ env.ISOLATED_PATH }}
 
     steps:
       - name: Checkout repository
@@ -34,8 +38,8 @@ jobs:
       - name: Copy library to isolated folder
         working-directory: .
         run: |
-          mkdir react-tree-multi-select-isolated
-          rsync -a --exclude node_modules packages/react-tree-multi-select/ react-tree-multi-select-isolated/
+          mkdir ${{ env.ISOLATED_PATH }}
+          rsync -a --exclude node_modules ${{ env.LIB_PATH }} ${{ env.ISOLATED_PATH }}
 
       - name: Install dependencies
         run: npm install
@@ -43,7 +47,7 @@ jobs:
       - name: Use React from matrix
         run: |
           npm uninstall react react-dom
-          npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }}
+          npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }} --legacy-peer-deps
           npm ls react react-dom
 
       - name: Build library
@@ -56,4 +60,4 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./react-tree-multi-select-isolated/coverage
+          directory: ${{ env.ISOLATED_PATH }}/coverage

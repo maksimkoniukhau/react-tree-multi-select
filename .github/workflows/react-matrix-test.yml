@@ -11,7 +11,7 @@ on:
 
 env:
   LIB_PATH: 'packages/react-tree-multi-select/'
-  ISOLATED_PATH: '/tmp/react-tree-multi-select-isolated'
+  ISOLATED_PATH: '/react-tree-multi-select-isolated'
 
 jobs:
   test:
