@@ -10,6 +10,9 @@ on:
   workflow_dispatch:
 
 env:
+  NODE_VERSIONS: '["20.x", "22.x", "24.x"]'
+  REACT_VERSIONS: '["18.3.1", "19.2.4"]'
+  LIB_PATH: 'packages/react-tree-multi-select/'
   ISOLATED_PATH: '/tmp/react-tree-multi-select-isolated'
 
 jobs:
@@ -19,8 +22,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [ 20.x, 22.x, 24.x ]
-        react-version: [ 18.3.1, 19.2.4 ]
+        node-version: ${{ fromJSON(env.NODE_VERSIONS) }}
+        react-version: ${{ fromJSON(env.REACT_VERSIONS) }}
 
     defaults:
       run:
@@ -40,7 +43,7 @@ jobs:
         working-directory: .
         run: |
           mkdir ${{ env.ISOLATED_PATH }}
-          rsync -a --exclude node_modules packages/react-tree-multi-select/ ${{ env.ISOLATED_PATH }}
+          rsync -a --exclude node_modules ${{ env.LIB_PATH }} ${{ env.ISOLATED_PATH }}
 
       - name: Install dependencies
         run: npm install
