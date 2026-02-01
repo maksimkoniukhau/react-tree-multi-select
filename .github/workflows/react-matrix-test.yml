@@ -10,8 +10,6 @@ on:
   workflow_dispatch:
 
 env:
-  NODE_VERSIONS: '["20.x", "22.x", "24.x"]'
-  REACT_VERSIONS: '["18.3.1", "19.2.4"]'
   LIB_PATH: 'packages/react-tree-multi-select/'
   ISOLATED_PATH: '/tmp/react-tree-multi-select-isolated'
 
@@ -22,8 +20,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ${{ fromJSON(env.NODE_VERSIONS) }}
-        react-version: ${{ fromJSON(env.REACT_VERSIONS) }}
+        node-version: [ 20.x, 22.x, 24.x ]
+        react-version: [ 18.3.1, 19.2.4 ]
 
     defaults:
       run:
