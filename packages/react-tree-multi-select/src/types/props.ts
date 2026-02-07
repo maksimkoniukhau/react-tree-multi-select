@@ -88,6 +88,25 @@ export interface TreeMultiSelectProps<T extends TreeNode<T> = any> {
   inputPlaceholder?: string;
 
   /**
+   * The current value of the search input.
+   *
+   * - When provided, the component treats this prop as **controlled**.
+   * - The component does not manage the search input value internally.
+   * - You must update this value in response to search input change event.
+   */
+  inputValue?: string;
+
+  /**
+   * The initial value of the search input (uncontrolled mode).
+   *
+   * - Used **only when `inputValue` is not provided**.
+   * - Initializes the internal search state on first render.
+   * - The component manages the search input value internally afterward.
+   * - Changes to this prop after the initial render are ignored.
+   */
+  defaultInputValue?: string;
+
+  /**
    * Text displayed when there is no data to show in the dropdown.
    *
    * @default "No data"

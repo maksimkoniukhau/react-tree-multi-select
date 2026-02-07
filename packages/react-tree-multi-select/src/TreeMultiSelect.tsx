@@ -52,6 +52,8 @@ export const TreeMultiSelect = forwardRef(
       id = '',
       className = '',
       inputPlaceholder = INPUT_PLACEHOLDER,
+      inputValue: propsInputValue,
+      defaultInputValue = '',
       noDataText = NO_DATA_TEXT,
       noMatchesText = NO_MATCHES_TEXT,
       isDisabled = false,
@@ -96,9 +98,10 @@ export const TreeMultiSelect = forwardRef(
       nodesManager.current = new NodesManager<T>([], type, '');
     }
 
-    const isDropdownOpenControlled = propsIsDropdownOpen !== undefined;
     const isSelectedIdsControlled = propsSelectedIds !== undefined;
     const isExpandedIdsControlled = propsExpandedIds !== undefined;
+    const isInputValueControlled = propsInputValue !== undefined;
+    const isDropdownOpenControlled = propsIsDropdownOpen !== undefined;
 
     const [selectedIds, setSelectedIds] = useState<string[]>(
       normalizeSelectedIds(isSelectedIdsControlled ? propsSelectedIds : defaultSelectedIds, type)
@@ -112,7 +115,9 @@ export const TreeMultiSelect = forwardRef(
     const [selectionAggregateState, setSelectionAggregateState] = useState<SelectionAggregateState>(
       SelectionAggregateState.NONE
     );
-    const [searchValue, setSearchValue] = useState<string>('');
+    const [searchValue, setSearchValue] = useState<string>(
+      isInputValueControlled ? propsInputValue : defaultInputValue
+    );
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(
       isDropdownOpenControlled ? propsIsDropdownOpen : defaultIsDropdownOpen
     );
@@ -338,19 +343,28 @@ export const TreeMultiSelect = forwardRef(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [propsExpandedIds]);
 
+    useEffect(() => {
+      if (isInputValueControlled) {
+        handleInputValueChange(propsInputValue);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [propsInputValue]);
+
     const resetState = useCallback(() => {
       if (isDisabled) {
         return;
       }
       if (isDropdownOpen || isSearchMode || virtualFocusId) {
-        nodesManager.current.resetSearch();
-        const newDisplayedNodes = nodesManager.current.getDisplayed(false, nodesManager.current.expansionState);
-        setDisplayedNodes(newDisplayedNodes);
+        if (!isInputValueControlled) {
+          nodesManager.current.resetSearch();
+          const newDisplayedNodes = nodesManager.current.getDisplayed(false, nodesManager.current.expansionState);
+          setDisplayedNodes(newDisplayedNodes);
+          setSearchValue('');
+        }
         toggleDropdown(false);
         setVirtualFocusId(null);
-        setSearchValue('');
       }
-    }, [isDisabled, isDropdownOpen, isSearchMode, virtualFocusId, toggleDropdown]);
+    }, [isDisabled, isDropdownOpen, isInputValueControlled, isSearchMode, virtualFocusId, toggleDropdown]);
 
     const focusComponentElement = (): void => {
       if (dropdownInputRef.current) {
@@ -495,13 +509,7 @@ export const TreeMultiSelect = forwardRef(
       handleDeleteAllRef.current?.(event);
     }, []);
 
-    const handleInputChangeRef = useRef<(event: React.ChangeEvent<HTMLInputElement>) => void>(null);
-    handleInputChangeRef.current = (event: React.ChangeEvent<HTMLInputElement>): void => {
-      if (isDisabled) {
-        return;
-      }
-      const value = event.currentTarget.value;
-
+    const handleInputValueChange = (value: string) => {
       nodesManager.current.handleSearch(value);
 
       const newDisplayedNodes = nodesManager.current.getDisplayed(Boolean(value), nodesManager.current.expansionState);
@@ -510,10 +518,21 @@ export const TreeMultiSelect = forwardRef(
         value ? nodesManager.current.expansionState.searchExpandedIds : nodesManager.current.expansionState.expandedIds,
         nodesManager.current
       );
+
       setExpandedIds(newExpandedIds);
       setDisplayedNodes(newDisplayedNodes);
       setSearchValue(value);
+    };
+
+    const handleInputChangeRef = useRef<(event: React.ChangeEvent<HTMLInputElement>) => void>(null);
+    handleInputChangeRef.current = (event: React.ChangeEvent<HTMLInputElement>): void => {
+      if (isDisabled) {
+        return;
+      }
       setVirtualFocusId(findFieldVirtualFocusId(buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX)));
+      if (!isInputValueControlled) {
+        handleInputValueChange(event.currentTarget.value);
+      }
       onInputChange?.(event);
     };
 

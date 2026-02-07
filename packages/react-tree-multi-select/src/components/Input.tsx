@@ -21,6 +21,15 @@ interface InputWrapperProps {
 export const InputWrapper: FC<InputWrapperProps> = memo((props) => {
   const {input, inputRef, placeholder, value, onChange, componentDisabled, region} = props;
 
+  const handleFocus = () => {
+    const input = inputRef.current;
+    if (!input) {
+      return;
+    }
+    const length = input.value.length;
+    input.setSelectionRange(length, length);
+  };
+
   return (
     <input.component
       attributes={{
@@ -29,6 +38,7 @@ export const InputWrapper: FC<InputWrapperProps> = memo((props) => {
         className: "rtms-input",
         placeholder,
         value,
+        onFocus: handleFocus,
         onChange,
         disabled: componentDisabled,
       }}
