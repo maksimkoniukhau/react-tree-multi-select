@@ -73,13 +73,6 @@ const CustomFooter: FC<FooterProps> = (props) => {
   );
 };
 
-describe('React version test', () => {
-  it('Logs react version', () => {
-    console.log('REACT_VERSION_USED:', React.version);
-    expect(React.version).toBeDefined();
-  });
-});
-
 describe('TreeMultiSelect component: base', () => {
   it('renders component', () => {
     render(<TreeMultiSelect data={baseTreeNodeData} selectedIds={baseSelectedIds} expandedIds={baseExpandedIds}/>);
