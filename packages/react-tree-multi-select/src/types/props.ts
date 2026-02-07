@@ -232,6 +232,13 @@ export interface TreeMultiSelectProps<T extends TreeNode<T> = any> {
   components?: Components;
 
   /**
+   * Callback triggered when the search input value changes.
+   *
+   * @param event - The React change event from the search input.
+   */
+  onInputChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+
+  /**
    * Callback triggered when the dropdown is opened or closed.
    *
    * @param isOpen - `true` if the dropdown was opened, `false` if it was closed.

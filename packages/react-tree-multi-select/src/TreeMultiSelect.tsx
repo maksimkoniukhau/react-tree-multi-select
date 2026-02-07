@@ -70,6 +70,7 @@ export const TreeMultiSelect = forwardRef(
       keyboardConfig: propsKeyboardConfig,
       virtualFocusConfig,
       components: propsComponents,
+      onInputChange,
       onDropdownToggle,
       onNodeChange,
       onNodeToggle,
@@ -513,6 +514,7 @@ export const TreeMultiSelect = forwardRef(
       setDisplayedNodes(newDisplayedNodes);
       setSearchValue(value);
       setVirtualFocusId(findFieldVirtualFocusId(buildVirtualFocusId(FIELD_PREFIX, INPUT_SUFFIX)));
+      onInputChange?.(event);
     };
 
     const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>): void => {
