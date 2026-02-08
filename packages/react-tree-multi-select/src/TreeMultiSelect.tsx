@@ -1022,8 +1022,10 @@ export const TreeMultiSelect = forwardRef(
     };
 
     const handleComponentMouseDown = (event: React.MouseEvent) => {
-      // needed for staying focus on input
-      event.preventDefault();
+      if (event.target !== fieldInputRef?.current && event.target !== dropdownInputRef?.current) {
+        // needed for staying focus on input
+        event.preventDefault();
+      }
     };
 
     const handleDropdownLastItemReached = useCallback(() => {
