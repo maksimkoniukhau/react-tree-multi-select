@@ -5,6 +5,8 @@ import {ControlledSelectionExample} from '@/examples/controlled/ControlledSelect
 import {UncontrolledSelectionExample} from '@/examples/controlled/UncontrolledSelectionExample';
 import {ControlledExpansionExample} from '@/examples/controlled/ControlledExpansionExample';
 import {UncontrolledExpansionExample} from '@/examples/controlled/UncontrolledExpansionExample';
+import {ControlledInputValueExample} from '@/examples/controlled/ControlledInputValueExample';
+import {UncontrolledInputValueExample} from '@/examples/controlled/UncontrolledInputValueExample';
 import {ControlledIsDropdownOpenExample} from '@/examples/controlled/ControlledIsDropdownOpenExample';
 import {UncontrolledIsDropdownOpenExample} from '@/examples/controlled/UncontrolledIsDropdownOpenExample';
 
@@ -98,6 +100,41 @@ Use this when you want:
     title="Uncontrolled expandedIds"
 >
     <UncontrolledExpansionExample/>
+</DemoContainer>
+
+## Input value
+
+### Controlled input value
+
+When `inputValue` is provided:
+ - The component does not manage the search input value internally
+ - The input value is derived entirely from this prop
+ - You should update it in response to `onInputChange` callback
+
+This allows you to fully control the search behavior and synchronize the input value with your application’s state,
+enabling custom logic such as debouncing, server-side filtering, or sharing the search value across components.
+
+<DemoContainer
+    code={loadExampleSource('controlled/ControlledInputValueExample.tsx')}
+    title="Controlled inputValue"
+>
+    <ControlledInputValueExample/>
+</DemoContainer>
+
+### Uncontrolled input value
+
+When `defaultInputValue` is provided:
+ - The component initializes its internal search input state using this value
+ - The input value is managed internally afterward
+ - Changes to this prop after the initial render are ignored
+
+This mode is useful when you only need to set the initial search value and prefer the component to handle the state automatically.
+
+<DemoContainer
+    code={loadExampleSource('controlled/UncontrolledInputValueExample.tsx')}
+    title="Uncontrolled inputValue"
+>
+    <UncontrolledInputValueExample/>
 </DemoContainer>
 
 ## Dropdown Visibility

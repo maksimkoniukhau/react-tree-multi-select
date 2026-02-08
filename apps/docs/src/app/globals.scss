@@ -233,7 +233,7 @@ code {
       }
 
       .config-container, .select-container, .input-container, .checkbox-container {
-        padding: 5px;
+        padding: 2px 5px;
       }
 
       .select-container, .input-container {
@@ -295,8 +295,12 @@ code {
       }
 
       .controlled-example {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
         button {
-          margin-bottom: 10px;
+          align-self: flex-start;
         }
       }
 
