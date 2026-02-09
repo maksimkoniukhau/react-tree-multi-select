@@ -15,9 +15,9 @@ export const ControlledIsDropdownOpenExample: FC = memo(() => {
 
   return (
     <div className="controlled-example">
-      <button className="btn" onClick={() => handleDropdownToggle(!open)}>
-        Toggle dropdown visibility
-      </button>
+      <div className="example-top-content">
+        <button className="btn" onClick={() => handleDropdownToggle(!open)}>Toggle dropdown visibility</button>
+      </div>
       <TreeMultiSelect
         data={data}
         isDropdownOpen={open}

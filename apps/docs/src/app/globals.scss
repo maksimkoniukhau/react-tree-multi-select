@@ -299,8 +299,9 @@ code {
         flex-direction: column;
         gap: 10px;
 
-        button {
-          align-self: flex-start;
+        .example-top-content {
+          display: flex;
+          align-items: center;
         }
       }
 

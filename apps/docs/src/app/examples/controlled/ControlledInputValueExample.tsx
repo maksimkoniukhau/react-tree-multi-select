@@ -22,7 +22,7 @@ export const ControlledInputValueExample: FC = memo(() => {
 
   return (
     <div className="controlled-example">
-      <div style={{display: 'flex'}}>
+      <div className="example-top-content">
         <input value={value} onChange={handleInputChange}/>
         <Checkbox label="Keep dropdown open" checked={keepOpen} onChange={(v) => setKeepOpen(v)}/>
       </div>
