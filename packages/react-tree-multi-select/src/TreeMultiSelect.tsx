@@ -285,8 +285,12 @@ export const TreeMultiSelect = forwardRef(
 
     useEffect(() => {
       nodesManager.current = new NodesManager<T>(data, type, searchValue);
-      nodesManager.current.syncSelectedIds(new Set(normalizeSelectedIds(selectedIds, type)));
-      nodesManager.current.syncExpandedIds(new Set(normalizeExpandedIds(expandedIds, type)), isSearchMode);
+      if (selectedIds.length > 0) {
+        nodesManager.current.syncSelectedIds(new Set(normalizeSelectedIds(selectedIds, type)));
+      }
+      if (expandedIds.length > 0) {
+        nodesManager.current.syncExpandedIds(new Set(normalizeExpandedIds(expandedIds, type)), isSearchMode);
+      }
 
       const newDisplayedNodes = nodesManager.current.getDisplayed(
         isSearchMode, nodesManager.current.expansionState
