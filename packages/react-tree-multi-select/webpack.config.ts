@@ -2,7 +2,6 @@ import * as sass from 'sass';
 import {resolve} from 'path';
 import {Configuration} from 'webpack';
 import TerserPlugin from 'terser-webpack-plugin';
-import ESLintPlugin from 'eslint-webpack-plugin';
 
 const commonConfig: Configuration = {
   entry: './src/index.ts',
@@ -55,13 +54,6 @@ const commonConfig: Configuration = {
       }),
     ],
   },
-  plugins: [
-    new ESLintPlugin({
-      extensions: ['js', 'jsx', 'ts', 'tsx'],
-      emitWarning: true,
-      failOnError: false,
-    }),
-  ],
 };
 
 const moduleConfig: Configuration = {

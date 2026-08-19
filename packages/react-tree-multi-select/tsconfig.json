@@ -17,10 +17,11 @@
     "strict": true,
     "strictPropertyInitialization": false,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "target": "esnext",
     "declaration": true,
     "emitDeclarationOnly": true,
+    "noUncheckedSideEffectImports": false,
     "types": [
       "node"
     ]
