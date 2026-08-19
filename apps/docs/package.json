@@ -32,7 +32,7 @@
     "@types/node": "^26.2.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
-    "eslint": "^10.8.1",
+    "eslint": "^9.39.5",
     "eslint-config-next": "^16.3.1",
     "shiki": "^4.4.3",
     "tailwindcss": "^4.3.3",

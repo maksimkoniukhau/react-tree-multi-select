@@ -2,7 +2,7 @@
   "name": "react-tree-multi-select",
   "version": "4.2.0",
   "description": "React component that combines tree-select, multi-select and single-select functionality into a single versatile solution",
-  "author": "Maksim Koniukau",
+  "author": "Maksim Koniukhau",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/maksimkoniukhau/react-tree-multi-select.git"
@@ -38,7 +38,7 @@
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
+    "@eslint/js": "^9.39.5",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",
