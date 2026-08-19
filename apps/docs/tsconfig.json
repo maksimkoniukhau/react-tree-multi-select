@@ -18,6 +18,13 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "noUncheckedSideEffectImports": false,
+    "types": [
+      "node",
+      "mdx",
+      "react",
+      "react-dom"
+    ],
     "plugins": [
       {
         "name": "next"
